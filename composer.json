@@ -1,6 +1,6 @@
 {
     "name": "byjg/anydataset",
-    "description": "A data abstration layer in PHP with several repository types and standartize interface to operate it",
+    "description": "A data abstration layer in PHP with several repository types and standard interface.",
     "authors": [
         {
             "name": "João Gilberto Magalhães",
