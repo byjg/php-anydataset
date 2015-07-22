@@ -1,0 +1,23 @@
+{
+    "name": "byjg/anydataset",
+    "description": "A data abstration layer in PHP with several repository types and standartize interface to operate it",
+    "authors": [
+        {
+            "name": "João Gilberto Magalhães",
+            "email": "joao@byjg.com.br"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ByJG\\AnyDataset\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+		"php": ">=5.4.0",
+        "byjg/xmlutil": "~1.0",
+		"byjg/sparqllib": "dev-master",
+		"neitanod/forceutf8": "dev-master"
+	},
+    "license": "MIT"
+}
