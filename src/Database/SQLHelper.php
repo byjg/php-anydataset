@@ -131,8 +131,7 @@ class SQLHelper
 		}
 		elseif ($valores[0]==SQLFieldType::Date)
 		{
-			$dateStamp = DateUtil::TimeStampFromStr($valores[1], DATEFORMAT::DMY);
-			$date = DateUtil::FormatDate($dateStamp, DATEFORMAT::YMD);
+            $date = ($valores[1] instanceof \DateTime ? $valores[1]->format(DBBaseFunctions::YMDH): $valores[1]);
 			$param[$name] = $date;
 			if ( ($this->_db->getDbType() == 'oci8') || ( ($this->_db->getDbType() == 'dsn') && (strpos($this->_db->getDbConnectionString(), "oci8"))) )
 			{

@@ -4,15 +4,12 @@ namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\AnyDatasetContext;
 use ByJG\AnyDataset\Exception\NotImplementedException;
+use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\CachedDBDataset;
 use ByJG\AnyDataset\Repository\DBDataSet;
 use ByJG\AnyDataset\Repository\IIterator;
 use ByJG\Cache\ICacheEngine;
-use Xmlnuke\Util\LogWrapper;
 
-/**
- * @package xmlnuke
- */
 abstract class BaseDBAccess
 {
 
@@ -94,7 +91,7 @@ abstract class BaseDBAccess
 		$start = 0;
 		if ($debug)
 		{
-			$log = \ByJG\AnyDataset\LogHandler::getInstance();
+			$log = LogHandler::getInstance();
 			$log->debug("Class name: " . get_class($this));
 			$log->debug("SQL: " . $sql);
 			if ($param != null)
@@ -147,7 +144,7 @@ abstract class BaseDBAccess
 		$start = 0;
 		if ($debug)
 		{
-			$log = \ByJG\AnyDataset\LogHandler::getInstance();
+			$log = LogHandler::getInstance();
 			$log->debug("Class name: " . get_class($this));
 			$log->debug("SQL: " . $sql);
 			if ($param != null)
@@ -182,7 +179,7 @@ abstract class BaseDBAccess
 		$start = 0;
 		if ($debug)
 		{
-			$log = \ByJG\AnyDataset\LogHandler::getInstance();
+			$log = LogHandler::getInstance();
 			$log->debug("Class name: " . get_class($this));
 			$log->debug("SQL: " . $sql);
 			if ($param != null)

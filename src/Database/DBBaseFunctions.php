@@ -3,14 +3,17 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Repository\DBDataSet;
-use Xmlnuke\Core\Enum\DATEFORMAT;
-use Xmlnuke\Util\DateUtil;
+use DateTime;
 
-/**
- * @package xmlnuke
- */
 abstract class DBBaseFunctions implements IDBFunctions
 {
+
+    const DMY = "d-m-Y";
+    const MDY = "m-d-Y";
+    const YMD = "Y-m-d";
+    const DMYH = "d-m-Y H:i:s";
+    const MDYH = "m-d-Y H:i:s";
+    const YMDH = "Y-m-d H:i:s";
 
 	/**
 	 * Given two or more string the system will return the string containing de proper SQL commands to concatenate these string;
@@ -80,27 +83,29 @@ abstract class DBBaseFunctions implements IDBFunctions
 	}
 
     /**
-	 * Format a string to database readable format.
-	 * @param string $date
-     * @param DATEFORMAT $dateFormat
+     * Format a string date to a string database readable format.
+     *
+     * @param string $date
+     * @param string $dateFormat
      * @return string
-     * @example $db->getDbFunctions()->toDate('26/01/1974', DATEFORMAT::DMY);
-	 */
-	function toDate($date, $dateFormat, $hour = false)
+     */
+	function toDate($date, $dateFormat)
 	{
-		return DateUtil::ConvertDate($date, $dateFormat, DATEFORMAT::YMD, "-", $hour);
+        $dateTime = DateTime::createFromFormat($dateFormat, $date);
+        return $dateTime->format(self::YMDH);
 	}
 
     /**
-	 * Format a string from database to a user readable format.
-	 * @param string $date
-     * @param DATEFORMAT $dateFormat
+     * Format a string database readable format to a string date in a free format.
+     *
+     * @param string $date
+     * @param string $dateFormat
      * @return string
-     * @example $db->getDbFunctions()->toDate('26/01/1974', DATEFORMAT::DMY);
-	 */
-	function fromDate($date, $dateFormat, $hour = false)
+     */
+	function fromDate($date, $dateFormat)
 	{
-		return DateUtil::ConvertDate($date, DATEFORMAT::YMD, $dateFormat, "/", $hour);
+        $dateTime = DateTime::createFromFormat(self::YMDH, $date);
+        return $dateTime->format($dateFormat);
 	}
 
 	/**

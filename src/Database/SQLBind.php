@@ -3,14 +3,9 @@
 namespace ByJG\AnyDataset\Database;
 
 /**
- * @package xmlnuke
- */
-
-/**
  * Class to create and manipulate Several Data Types
  *
  */
-
 class SQLBind
 {
 	/**

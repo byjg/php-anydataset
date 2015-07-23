@@ -6,7 +6,6 @@ namespace ByJG\AnyDataset\Enum;
  * Constants to represent relational operators.
  *
  * Use this in AddRelation method.
- * @package xmlnuke
  */
 class Relation
 {

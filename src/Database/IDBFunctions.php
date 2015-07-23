@@ -3,7 +3,6 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Repository\DBDataSet;
-use Xmlnuke\Core\Enum\DATEFORMAT;
 
 interface IDBFunctions
 {
@@ -58,22 +57,22 @@ interface IDBFunctions
 	function SQLDate($fmt, $col=false);
 
     /**
-	 * Format a string to database readable format.
-	 * @param string $date
-     * @param DATEFORMAT $dateFormat
+     * Format a string date to a string database readable format.
+     *
+     * @param string $date
+     * @param string $dateFormat
      * @return string
-     * @example $db->getDbFunctions()->toDate('26/01/1974', DATEFORMAT::DMY);
-	 */
-	function toDate($date, $dateFormat, $hour = false);
+     */
+	function toDate($date, $dateFormat);
 
     /**
-	 * Format a string from database to a user readable format.
-	 * @param string $date
-     * @param DATEFORMAT $dateFormat
+     * Format a string database readable format to a string date in a free format.
+     *
+     * @param string $date
+     * @param string $dateFormat
      * @return string
-     * @example $db->getDbFunctions()->toDate('26/01/1974', DATEFORMAT::DMY);
-	 */
-	function fromDate($date, $dateFormat, $hour = false);
+     */
+	function fromDate($date, $dateFormat);
 
 	/**
 	 *

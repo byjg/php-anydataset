@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\Repository\ArrayIIterator;
+use InvalidArgumentException;
 use MongoClient;
 use MongoCollection;
 use MongoDate;
@@ -9,15 +11,15 @@ use MongoDB;
 use stdClass;
 
 class MongoDBDriver implements INoSQLDriver
-{	
+{
 	/**
 	 * @var MongoDB
 	 */
 	protected $_db = null;
-	
+
 	/**
 	 *
-	 * @var MongoClient; 
+	 * @var MongoClient;
 	 */
 	protected $_client = null;
 
@@ -47,21 +49,22 @@ class MongoDBDriver implements INoSQLDriver
 	 * @param string $collection
 	 */
 	public function __construct($connMngt, $collection)
-	{	
+	{
 		$this->_connectionManagement = $connMngt;
-		
+
 		$hosts = $this->_connectionManagement->getServer();
 		$port = $this->_connectionManagement->getPort() == '' ? 27017 : $this->_connectionManagement->getPort();
 		$database = $this->_connectionManagement->getDatabase();
 		$username = $this->_connectionManagement->getUsername();
 		$password = $this->_connectionManagement->getPassword();
 
-		if ($username != '' && $password != '')
-			$auth = array('username'=>$username, 'password'=>$password, 'connect' => 'true');
-		else
-			$auth = array('connect' => 'true');
+		if ($username != '' && $password != '') {
+            $auth = array('username' => $username, 'password' => $password, 'connect' => 'true');
+        } else {
+            $auth = array('connect' => 'true');
+        }
 
-		$connecting_string =  sprintf('mongodb://%s:%d', $hosts, $port);
+        $connecting_string =  sprintf('mongodb://%s:%d', $hosts, $port);
 		$this->_client = new MongoClient($connecting_string, $auth);
 		$this->_db = new MongoDB($this->_client, $database);
 
@@ -71,12 +74,12 @@ class MongoDBDriver implements INoSQLDriver
 	/**
 	 * Closes and destruct the MongoDB connection
 	 */
-	public function __destruct() 
+	public function __destruct()
 	{
 		$this->_client->close();
 		$this->_db = null;
 	}
-	
+
 
 	/**
 	 *
@@ -97,10 +100,11 @@ class MongoDBDriver implements INoSQLDriver
 	}
 
 	/**
-	 * Return a XMLNuke Iterator
+	 * Return a IIterator
+     *
 	 * @param array $filter
 	 * @param array $fields
-	 * @return \ByJG\AnyDataset\Repository\ArrayIIterator
+	 * @return ArrayIIterator
 	 */
 	public function getIterator($filter = null, $fields = null)
 	{
@@ -115,7 +119,7 @@ class MongoDBDriver implements INoSQLDriver
 		$cursor = $this->_collection->find($filter, $fields);
 		$arrIt = iterator_to_array($cursor);
 
-		return new \ByJG\AnyDataset\Repository\ArrayIIterator($arrIt);
+		return new ArrayIIterator($arrIt);
 	}
 
 	/**
@@ -176,7 +180,7 @@ class MongoDBDriver implements INoSQLDriver
 	{
 		if (is_null($filter))
 		{
-			throw new \InvalidArgumentException('You need to set the filter for update, or pass an empty array for all fields');
+			throw new InvalidArgumentException('You need to set the filter for update, or pass an empty array for all fields');
 		}
 
 		$update = array();
@@ -199,7 +203,7 @@ class MongoDBDriver implements INoSQLDriver
 				$update['$set'][$key] = $value;
 			}
 		}
-		
+
 		if (is_null($options))
 		{
 			$options = array('new' => true);

@@ -11,7 +11,6 @@ use ReflectionClass;
 use ReflectionProperty;
 use SimpleXMLElement;
 use stdClass;
-use Xmlnuke\Core\Locale\LanguageCollection;
 
 
 class ObjectHandler
@@ -124,17 +123,6 @@ class ObjectHandler
 			}
 			return $this->_current;
 		}
-		elseif ($this->_model instanceof LanguageCollection)
-		{
-			$keys = $this->_model->getCollection();
-			$l10n = XmlUtil::CreateChild($this->_current, "l10n");
-			foreach ($keys as $key=>$value)
-			{
-				XmlUtil::CreateChild($l10n, $key, $value);
-			}
-			return $this->_current;
-		}
-
 
 		$classMeta = $this->getClassInfo();
 
@@ -631,10 +619,11 @@ class ObjectHandler
 	 */
 	public static function xml2json($domnode, $jsonFunction = "")
 	{
-		if (!($domnode instanceof DOMNode))
-			throw new InvalidArgumentException("xml2json requires a \DOMNode descendant");
+		if (!($domnode instanceof DOMNode)) {
+            throw new InvalidArgumentException("xml2json requires a \DOMNode descendant");
+        }
 
-		$xml = simplexml_import_dom($domnode);
+        $xml = simplexml_import_dom($domnode);
 
 		$pre = $pos = "";
 		if (!empty($jsonFunction))
@@ -643,17 +632,18 @@ class ObjectHandler
 			$pos = ")";
 		}
 
-		if ($xml->getName() == "xmlnuke")
-			$array = (array)$xml->children();
-		else
-			$array = (array)$xml;
+		if ($xml->getName() == "xmlnuke") {
+            $array = (array) $xml->children();
+        } else {
+            $array = (array) $xml;
+        }
 
-		array_walk($array, "ByJG\AnyDataset\Model\ObjectHandler::mapArray");
+        array_walk($array, "ByJG\AnyDataset\Model\ObjectHandler::mapArray");
 
 		// Check an special case from Xml
-		if (isset($array[\Xmlnuke\Core\Engine\ObjectHandler::ObjectArray]))
+		if (isset($array[ObjectHandler::ObjectArray]))
 		{
-			$json = json_encode($array[\Xmlnuke\Core\Engine\ObjectHandler::ObjectArray]);
+			$json = json_encode($array[ObjectHandler::ObjectArray]);
 		}
 		else
 		{

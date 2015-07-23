@@ -2,8 +2,6 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use Xmlnuke\Core\Enum\DATEFORMAT;
-
 class DBPGSqlFunctions extends DBBaseFunctions
 {
 
@@ -14,15 +12,15 @@ class DBPGSqlFunctions extends DBBaseFunctions
 	 		$var = func_get_arg($i);
 	 		$sql .= ($i==0 ? "" : " || ") . $var;
 	 	}
-	 	
+
 	 	return $sql;
-	} 
+	}
 
 	/**
 	 * Given a SQL returns it with the proper LIMIT or equivalent method included
 	 * @param string $sql
 	 * @param int $start
-	 * @param int $qty 
+	 * @param int $qty
 	 * @return string
 	 */
 	function Limit($sql, $start, $qty)
@@ -40,7 +38,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
 	/**
 	 * Given a SQL returns it with the proper TOP or equivalent method included
 	 * @param string $sql
-	 * @param int $qty 
+	 * @param int $qty
 	 * @return string
 	 */
 	function Top($sql, $qty)
@@ -49,7 +47,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
 	}
 
 	/**
-	 * Return if the database provider have a top or similar function 
+	 * Return if the database provider have a top or similar function
 	 * @return unknown_type
 	 */
 	function hasTop()
@@ -58,7 +56,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
 	}
 
 	/**
-	 * Return if the database provider have a limit function 
+	 * Return if the database provider have a limit function
 	 * @return bool
 	 */
 	function hasLimit()
@@ -130,38 +128,40 @@ class DBPGSqlFunctions extends DBBaseFunctions
 					$i++;
 					$ch = substr($fmt,$i,1);
 				}
-				if (strpos('-/.:;, ',$ch) !== false) $s .= $ch;
-				else $s .= '"'.$ch.'"';
-
-			}
+				if (strpos('-/.:;, ', $ch) !== false) {
+                    $s .= $ch;
+                } else {
+                    $s .= '"' . $ch . '"';
+                }
+            }
 		}
 		return $s. "')";
 	}
 
     /**
-	 * Format a string to database readable format.
-	 * @param string $date
-     * @param DATEFORMAT $dateFormat
+     * Format a string date to a string database readable format.
+     *
+     * @param string $date
+     * @param string $dateFormat
      * @return string
-     * @example $db->getDbFunctions()->toDate('26/01/1974', DATEFORMAT::DMY);
-	 */
-	function toDate($date, $dateFormat, $hour = false)
+     */
+	function toDate($date, $dateFormat)
 	{
-		return parent::toDate($date, $dateFormat, $hour);
+		return parent::toDate($date, $dateFormat);
 	}
-	
+
     /**
-	 * Format a string from database to a user readable format.
-	 * @param string $date
-     * @param DATEFORMAT $dateFormat
+     * Format a string database readable format to a string date in a free format.
+     *
+     * @param string $date
+     * @param string $dateFormat
      * @return string
-     * @example $db->getDbFunctions()->toDate('26/01/1974', DATEFORMAT::DMY);
-	 */
-	function fromDate($date, $dateFormat, $hour = false)
+     */
+	function fromDate($date, $dateFormat)
 	{
-		return parent::fromDate($date, $dateFormat, $hour);
+		return parent::fromDate($date, $dateFormat);
 	}
-	
+
 	function executeAndGetInsertedId($dbdataset, $sql, $param, $sequence = null)
 	{
 		$id = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
@@ -173,7 +173,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
 		}
 
 		return $id;
-	}	
+	}
 }
 
 ?>
