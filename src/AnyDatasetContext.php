@@ -32,4 +32,9 @@ class AnyDatasetContext
     {
         return $this->config->getAnydatasetconfig('debug');
     }
+
+    public function getConnectionString($name)
+    {
+        return $this->config->getAnydatasetconfig("connections.$name");
+    }
 }

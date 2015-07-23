@@ -94,9 +94,9 @@ abstract class BaseDBAccess
 		$start = 0;
 		if ($debug)
 		{
-			$log = LogWrapper::getLogger("database.basedbaccess");
-			$log->trace("Class name: " . get_class($this));
-			$log->trace("SQL: " . $sql);
+			$log = \ByJG\AnyDataset\LogHandler::getInstance();
+			$log->debug("Class name: " . get_class($this));
+			$log->debug("SQL: " . $sql);
 			if ($param != null)
 			{
 				$s = "";
@@ -108,7 +108,7 @@ abstract class BaseDBAccess
 					}
 					$s .= "[$key]=$value";
 				}
-				$log->trace("Params: $s");
+				$log->debug("Params: $s");
 			}
 			$start = microtime(true);
 		}
@@ -126,7 +126,7 @@ abstract class BaseDBAccess
 		if ($debug)
 		{
 			$end = microtime(true);
-			$log->trace("Execution time: " . ($end - $start) . " seconds ");
+			$log->debug("Execution time: " . ($end - $start) . " seconds ");
 		}
 
 		return $id;
@@ -147,9 +147,9 @@ abstract class BaseDBAccess
 		$start = 0;
 		if ($debug)
 		{
-			$log = LogWrapper::getLogger("database.basedbaccess");
-			$log->trace("Class name: " . get_class($this));
-			$log->trace("SQL: " . $sql);
+			$log = \ByJG\AnyDataset\LogHandler::getInstance();
+			$log->debug("Class name: " . get_class($this));
+			$log->debug("SQL: " . $sql);
 			if ($param != null)
 			{
 				$s = "";
@@ -161,7 +161,7 @@ abstract class BaseDBAccess
 					}
 					$s .= "[$key]=$value";
 				}
-				$log->trace("Params: $s");
+				$log->debug("Params: $s");
 			}
 			$start = microtime(true);
 		}
@@ -169,7 +169,7 @@ abstract class BaseDBAccess
 		if ($debug)
 		{
 			$end = microtime(true);
-			$log->trace("Execution Time: " . ($end - $start) . " segundos ");
+			$log->debug("Execution Time: " . ($end - $start) . " segundos ");
 		}
 		return $it;
 	}
@@ -182,9 +182,9 @@ abstract class BaseDBAccess
 		$start = 0;
 		if ($debug)
 		{
-			$log = LogWrapper::getLogger("database.basedbaccess");
-			$log->trace("Class name: " . get_class($this));
-			$log->trace("SQL: " . $sql);
+			$log = \ByJG\AnyDataset\LogHandler::getInstance();
+			$log->debug("Class name: " . get_class($this));
+			$log->debug("SQL: " . $sql);
 			if ($param != null)
 			{
 				$s = "";
@@ -196,7 +196,7 @@ abstract class BaseDBAccess
 					}
 					$s .= "[$key]=$value";
 				}
-				$log->trace("Params: $s");
+				$log->debug("Params: $s");
 			}
 			$start = microtime(true);
 		}
@@ -204,7 +204,7 @@ abstract class BaseDBAccess
 		if ($debug)
 		{
 			$end = microtime(true);
-			$log->trace("Execution Time: " . ($end - $start) . " segundos ");
+			$log->debug("Execution Time: " . ($end - $start) . " segundos ");
 		}
 		return $scalar;
 	}

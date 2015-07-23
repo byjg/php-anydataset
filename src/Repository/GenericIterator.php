@@ -36,6 +36,8 @@ abstract class GenericIterator implements IIterator, Iterator
             $singleRow = $this->moveNext();
             $retArray[] = $singleRow->toArray();
         }
+
+        return $retArray;
     }
 
 	/* ------------------------------------- */

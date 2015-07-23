@@ -16,11 +16,18 @@
     "minimun-stability": "dev", 
     "require": {
 		"php": ">=5.4.0",
+		"ext-json": "*",
         "byjg/xmlutil": "~1.0",
 		"byjg/sparqllib": "dev-master",
+		"byjg/singleton-pattern": "~1.0",
 		"neitanod/forceutf8": "dev-master",
+        "monolog/monolog": "1.*", 
         "sheikhheera/iconfig": "dev-master",
         "byjg/cache-engine": "~1.0"
 	},
+    "suggest": {
+		"ext-curl": "*",
+        "ext-pdo_mysql": "*"
+    },
     "license": "MIT"
 }

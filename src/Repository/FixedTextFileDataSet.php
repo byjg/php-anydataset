@@ -6,7 +6,6 @@ use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotFoundException;
 use Exception;
 use InvalidArgumentException;
-use Xmlnuke\Core\Processor\FilenameProcessor;
 
 class FixedTextFileDataSet
 {
@@ -30,29 +29,19 @@ class FixedTextFileDataSet
 		{
 			throw new InvalidArgumentException("You must define an array of field definition.");
 		}
+
+		$this->_source = $source;
+		$this->_sourceType = "HTTP";
+
 		if (strpos($source, "http://")===false)
 		{
-			if ($source instanceof FilenameProcessor)
-			{
-				$this->_source = $source->FullQualifiedNameAndPath;
-			}
-			else
-			{
-				$this->_source = $source;
-			}
-			if (!file_exists($this->_source))
+            if (!file_exists($this->_source))
 			{
 				throw new NotFoundException("The specified file " . $this->_source . " does not exists")	;
 			}
 
 			$this->_sourceType = "FILE";
 		}
-		else
-		{
-			$this->_source = $source;
-			$this->_sourceType = "HTTP";
-		}
-
 
 		$this->_fieldDefinition = $fieldDefinition;
 	}
@@ -134,4 +123,3 @@ class FixedTextFileDataSet
         }
     }
 }
-?>

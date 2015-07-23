@@ -3,8 +3,13 @@
 return [
     'debug' => false,
     'connections' => [
-        'name' => [
-            'test' => 'mysql://root@localhost/test'
+        'test' => [
+            'name' => 'mysql://root@localhost/test',
+            'type' => 'dsn'
+        ],
+        'testpw' => [
+            'name' => 'mysql://root:mypass@localhost:3306/test',
+            'type' => 'dsn'
         ]
     ]
 ];

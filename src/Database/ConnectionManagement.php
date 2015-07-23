@@ -2,14 +2,9 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Enum\Relation;
+use ByJG\AnyDataset\AnyDatasetContext;
 use ByJG\AnyDataset\Exception\DatabaseException;
-use ByJG\AnyDataset\Exception\NotFoundException;
-use ByJG\AnyDataset\Repository\AnyDataset;
-use ByJG\AnyDataset\Repository\IteratorFilter;
-use ByJG\AnyDataset\Repository\SingleRow;
 use InvalidArgumentException;
-use Xmlnuke\Core\Processor\AnydatasetFilenameProcessor;
 
 class ConnectionManagement
 {
@@ -101,11 +96,12 @@ class ConnectionManagement
 	}
 	public function getExtraParam($key)
 	{
-		if (array_key_exists($key, $this->_extraParam))
-			return $this->_extraParam[$key];
-		else
-			return "";
-	}
+		if (array_key_exists($key, $this->_extraParam)) {
+            return $this->_extraParam[$key];
+        } else {
+            return "";
+        }
+    }
 
 	protected $_file;
 	public function setFilePath($value)
@@ -125,123 +121,81 @@ class ConnectionManagement
 	 */
 	public function __construct($dbname)
 	{
+
+        $config = [
+            'url' => $dbname
+        ];
 		if (!preg_match('~^(\w+)://~', $dbname))
 		{
-			$configFile = new AnydatasetFilenameProcessor ( "_db");
-			if (!$configFile->Exists())
-			{
-				throw new NotFoundException ( "Database file config '_db.anydata.xml' not found!");
-			}
-
-			$config = new AnyDataset ( $configFile );
-			$filter = new IteratorFilter ( );
-			$filter->addRelation ( "dbname", Relation::Equal, $dbname );
-			$it = $config->getIterator ( $filter );
-			if (! $it->hasNext ())
-			{
-				throw new DatabaseException ( "Connection string " . $dbname . " not found in _db.anydata.xml config!", 1001 );
-			}
-
-			$data = $it->moveNext ();
-		}
-		else
-		{
-			$data = new SingleRow();
-			$data->AddField('dbtype', 'dsn');
-			$data->AddField('dbconnectionstring', $dbname);
+            $config = AnyDatasetContext::getInstance()->getConnectionString();
 		}
 
-		$this->setDbType ( $data->getField ( "dbtype" ) );
-		$this->setDbConnectionString ( $data->getField ( "dbconnectionstring" ) );
-		//$this->addExtraParam("unixsocket", $data->getField("unixsocket") );
-		//$this->addExtraParam("parammodel", $data->getField("parammodel"));
+		$this->setDbType ( 'dsn' );
+		$this->setDbConnectionString ( $config['url'] );
 
-		if ($this->getDbType () == 'dsn')
-		{
-			/*
-		    DSN=DRIVER://USERNAME[:PASSWORD]@SERVER[:PORT]/DATABASE[?KEY1=VALUE1&KEY2=VALUE2&...]
+        /*
+        DSN=DRIVER://USERNAME[:PASSWORD]@SERVER[:PORT]/DATABASE[?KEY1=VALUE1&KEY2=VALUE2&...]
 
-			or
+        or
 
-			DSN=DRIVER:///path[?PARAMETERS]
+        DSN=DRIVER:///path[?PARAMETERS]
 
-			or
+        or
 
-			DSN=DRIVER://C:/PATH[?PARAMETERS]
+        DSN=DRIVER://C:/PATH[?PARAMETERS]
 
-			------------------
-		    PARAMETERS ARE Working:
-			    unixsocket - for SQLRelayDriver
-				parammodel - ALL
-			    protocol - OCI8Driver
-			    codepage - OCI8Driver
-    		*/
+        ------------------
+        PARAMETERS ARE Working:
+            unixsocket - for SQLRelayDriver
+            parammodel - ALL
+            protocol - OCI8Driver
+            codepage - OCI8Driver
+        */
 
-			$patDriver = "(?P<driver>[\w\.]+)\:\/\/";
-			$patCredentials = "(?P<username>[\w\.$!%&\-_]+)(?::(?P<password>[\w\.$!%&#\*\+=\[\]\(\)\-_]+))?@";
-			$patHost = "(?P<host>[\w\-\.,_]+)(?::(?P<port>\d+))?";
-			$patDatabase = "\/(?P<database>[\w\-\.]+)";
-			$patExtra = "(?:\?(?P<extraparam>(?:[\w\-\.]+=[\w\-%\.\/]+&?)*))?";
-			$patFile = "(?P<path>(?:\w\:)?\/(?:[\w\-\.]+\/?)+)?";
+        $patDriver = "(?P<driver>[\w\.]+)\:\/\/";
+        $patCredentials = "(?P<username>[\w\.$!%&\-_]+)(?::(?P<password>[\w\.$!%&#\*\+=\[\]\(\)\-_]+))?@";
+        $patHost = "(?P<host>[\w\-\.,_]+)(?::(?P<port>\d+))?";
+        $patDatabase = "\/(?P<database>[\w\-\.]+)";
+        $patExtra = "(?:\?(?P<extraparam>(?:[\w\-\.]+=[\w\-%\.\/]+&?)*))?";
+        $patFile = "(?P<path>(?:\w\:)?\/(?:[\w\-\.]+\/?)+)?";
 
-			// Try to parse the connection string.
-			$pat = "/$patDriver($patCredentials$patHost$patDatabase|$patFile)$patExtra/i";
-			$parts = array();
-			if (!preg_match($pat, $this->_dbconnectionstring, $parts))
-				throw new InvalidArgumentException("Connection string " . $this->_dbconnectionstring . " is invalid! Please fix it.");
+        // Try to parse the connection string.
+        $pat = "/$patDriver($patCredentials$patHost$patDatabase|$patFile)$patExtra/i";
+        $parts = array();
+        if (!preg_match($pat, $this->_dbconnectionstring, $parts)) {
+            throw new InvalidArgumentException("Connection string " . $this->_dbconnectionstring . " is invalid! Please fix it.");
+        }
 
-			// Set the Driver
-			$this->setDriver ( $parts ['driver'] );
+        // Set the Driver
+        $this->setDriver ( $parts ['driver'] );
 
-			if (!isset($parts['path']) && !isset($parts['host']))
-                                throw new InvalidArgumentException("Connection string " . $this->_dbconnectionstring . " is invalid! Please fix it.");
+        if (!isset($parts['path']) && !isset($parts['host'])) {
+            throw new InvalidArgumentException("Connection string " . $this->_dbconnectionstring . " is invalid! Please fix it.");
+        }
 
 
-			// If a path pattern was found set it; otherwise define the database properties
-			if (array_key_exists('path', $parts) && (!empty($parts['path'])))
-				$this->setFilePath ($parts['path']);
-			else
-			{
-				$this->setUsername ( $parts ['username'] );
-				$this->setPassword ( $parts ['password'] );
-				$this->setServer ( $parts ['host'] );
-				$this->setPort ( $parts ['port'] );
-				$this->setDatabase ( $parts ['database'] );
-			}
+        // If a path pattern was found set it; otherwise define the database properties
+        if (array_key_exists('path', $parts) && (!empty($parts['path']))) {
+            $this->setFilePath($parts['path']);
+        } else {
+            $this->setUsername($parts ['username']);
+            $this->setPassword($parts ['password']);
+            $this->setServer($parts ['host']);
+            $this->setPort($parts ['port']);
+            $this->setDatabase($parts ['database']);
+        }
 
-			// If extra param is defined, set it.
-			if (array_key_exists('extraparam', $parts) && (!empty($parts['extraparam'])))
-			{
-				$arrAux = explode('&', $parts['extraparam']);
-				foreach($arrAux as $item)
-				{
-					$aux = explode("=", $item);
-					$this->addExtraParam($aux[0], $aux[1]);
-				}
-			}
-
-			$user = $this->getUsername();
-			$pass = $this->getPassword();
-		}
-		else if ( $this->getDbType() == "literal" )
-		{
-			$parts = explode("|", $this->_dbconnectionstring);
-			$this->_dbconnectionstring = $parts[0];
-			$this->setUsername($parts[1]);
-			$this->setPassword($parts[2]);
-		}
-		else if ($this->_dbconnectionstring != "")
-		{
-			$connection_string = explode( ";", $this->_dbconnectionstring );
-			$this->setDriver ( $this->getDbType () );
-			$this->setUsername ( $connection_string [1] );
-			$this->setPassword ( $connection_string [2] );
-			$this->setServer ( $connection_string [0] );
-			$this->setDatabase ( $connection_string [3] );
-		}
+        // If extra param is defined, set it.
+        if (array_key_exists('extraparam', $parts) && (!empty($parts['extraparam'])))
+        {
+            $arrAux = explode('&', $parts['extraparam']);
+            foreach($arrAux as $item)
+            {
+                $aux = explode("=", $item);
+                $this->addExtraParam($aux[0], $aux[1]);
+            }
+        }
 	}
 
 }
 
-
-?>

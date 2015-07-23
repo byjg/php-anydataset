@@ -2,15 +2,14 @@
 
 require "vendor/autoload.php";
 
-$webRequest = new \ByJG\Util\WebRequest('http://www.byjg.com.br/ws/cep');
+$db = new \ByJG\AnyDataset\Repository\DBDataSet('mysql://root:aaaaaaa@10.10.10.101/development');
 
-echo $webRequest->get([
-	'httpmethod' => 'obterVersao'
-]) . "\n";
+$iterator = $db->getIterator('select * from airports where idairports = [[idairports]]', ['idairports' => 898]);
 
-echo $webRequest->post([
-	'httpmethod' => 'obterLogradouro',
-	'cep' => '30130000'
-]) . "\n";
+print_r($iterator->toArray());
 
-echo $webRequest->soapCall('obterLogradouro', ['cep' => '30130000']) . "\n";
+//foreach ($iterator as $row)
+//{
+//    print_r($row->toArray());
+//}
+
