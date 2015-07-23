@@ -2,9 +2,9 @@
 
 namespace Tests\Sample;
 
-use ByJG\AnyDataset\Model\BaseModel as BaseModelGeneric;
+use ByJG\AnyDataset\Model\BaseModel;
 
-class BaseModel extends BaseModelGeneric
+class SampleModel extends BaseModel
 {
 	public $Id = "";
 	protected $_Name = "";

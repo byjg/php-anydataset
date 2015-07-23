@@ -1,6 +1,5 @@
 <?php
 
-use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Repository\IIterator;
 use ByJG\AnyDataset\Repository\SparQLDataSet;
 
@@ -33,7 +32,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException DatasetException
+	 * @expectedException \ByJG\AnyDataset\Exception\DatasetException
 	 */
 	function test_wrongSparQLDataSet()
 	{
@@ -46,7 +45,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException DatasetException
+	 * @expectedException \ByJG\AnyDataset\Exception\DatasetException
 	 */
 	function test_wrongSparQLDataSet2()
 	{

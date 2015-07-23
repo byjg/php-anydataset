@@ -30,7 +30,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetPropertyPattern()
 	{
-		$object = new \Tests\Sample\BaseModel();
+		$object = new \Tests\Sample\SampleModel();
 
 		$object->setPropertyPattern('/(.*)/', '$1');
 		$this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
@@ -44,7 +44,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetPropertyPatternNull()
 	{
-		$object = new \Tests\Sample\BaseModel();
+		$object = new \Tests\Sample\SampleModel();
 		$object->setPropertyPattern(null, null);
 
 		$this->assertEquals(null, $object->getPropertyPattern());
@@ -55,7 +55,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetPropertyPattern()
 	{
-		$object = new \Tests\Sample\BaseModel();
+		$object = new \Tests\Sample\SampleModel();
 
 		$this->assertEquals(array('/([^A-Za-z0-9])/', ''), $object->getPropertyPattern());
 	}
@@ -69,7 +69,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 		$sr->AddField("id", 10);
 		$sr->AddField("name", "Testing");
 
-		$object = new \Tests\Sample\BaseModel($sr);
+		$object = new \Tests\Sample\SampleModel($sr);
 
 		$this->assertEquals(10, $object->Id);
 		$this->assertEquals("Testing", $object->getName());
@@ -87,7 +87,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 		$sr->AddField("name", "Testing");
 		$anydata->appendRow($sr);
 
-		$object = new \Tests\Sample\BaseModel($anydata->getIterator());
+		$object = new \Tests\Sample\SampleModel($anydata->getIterator());
 
 		$this->assertEquals(10, $object->Id);
 		$this->assertEquals("Testing", $object->getName());
@@ -100,7 +100,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	{
 		$model = new \Tests\Sample\ModelGetter(10, 'Testing');
 
-		$object = new \Tests\Sample\BaseModel($model);
+		$object = new \Tests\Sample\SampleModel($model);
 
 		$this->assertEquals(10, $object->Id);
 		$this->assertEquals("Testing", $object->getName());
@@ -116,7 +116,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 		$model->Id = 10;
 		$model->Name = "Testing";
 
-		$object = new \Tests\Sample\BaseModel($model);
+		$object = new \Tests\Sample\SampleModel($model);
 
 		$this->assertEquals(10, $object->Id);
 		$this->assertEquals("Testing", $object->getName());
@@ -126,7 +126,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 		$model2->id = 10;
 		$model2->name = "Testing";
 
-		$object = new \Tests\Sample\BaseModel($model2);
+		$object = new \Tests\Sample\SampleModel($model2);
 
 		$this->assertEquals(10, $object->Id);
 		$this->assertEquals("Testing", $object->getName());
@@ -143,7 +143,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 			"Name" => "Testing"
 		);
 
-		$object = new \Tests\Sample\BaseModel($array);
+		$object = new \Tests\Sample\SampleModel($array);
 
 		$this->assertEquals(10, $object->Id);
 		$this->assertEquals("Testing", $object->getName());

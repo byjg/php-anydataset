@@ -1,7 +1,5 @@
 <?php
 
-use ByJG\AnyDataset\Exception\DatasetException;
-use ByJG\AnyDataset\Exception\IteratorException;
 use ByJG\AnyDataset\Repository\IIterator;
 use ByJG\AnyDataset\Repository\JSONDataSet;
 use ByJG\AnyDataset\Repository\SingleRow;
@@ -75,7 +73,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException DatasetException
+	 * @expectedException \ByJG\AnyDataset\Exception\DatasetException
 	 */
 	function test_jsonNotWellFormatted()
 	{
@@ -115,7 +113,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException IteratorException
+	 * @expectedException \ByJG\AnyDataset\Exception\IteratorException
 	 */
 	function test_navigateJSONComplexIteratorWrongPath2()
 	{

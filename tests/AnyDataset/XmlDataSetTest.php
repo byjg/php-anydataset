@@ -95,7 +95,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \Whoops\Exception\ErrorException
+	 * @expectedException \InvalidArgumentException
 	 */
 	function test_xmlNotWellFormatted()
 	{
