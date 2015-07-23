@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\AnyDatasetContext;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Repository\CachedDBDataset;
 use ByJG\AnyDataset\Repository\DBDataSet;
@@ -89,7 +90,7 @@ abstract class BaseDBAccess
 	{
 		$dbfunction = $this->getDbFunctions();
 
-		$debug = $this->_context->getDebugStatus();
+		$debug = AnyDatasetContext::getInstance()->getDebug();
 		$start = 0;
 		if ($debug)
 		{
@@ -142,7 +143,7 @@ abstract class BaseDBAccess
 	{
 		$db = $this->getDBDataSet($ttl > 0);
 
-		$debug = $this->_context->getDebugStatus();
+		$debug = AnyDatasetContext::getInstance()->getDebug();
 		$start = 0;
 		if ($debug)
 		{
@@ -177,7 +178,7 @@ abstract class BaseDBAccess
 	{
 		$this->getDBDataSet();
 
-		$debug = $this->_context->getDebugStatus();
+		$debug = AnyDatasetContext::getInstance()->getDebug();
 		$start = 0;
 		if ($debug)
 		{

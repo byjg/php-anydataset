@@ -480,10 +480,8 @@ class ObjectHandler
 
 	protected function replaceVars($name, $text)
 	{
-		$context = Context::getInstance();
-
 		# Host
-		$host = $context->UrlBase() != "" ? $context->UrlBase() : ($context->get("SERVER_PORT") == 443 ? "https://" : "http://") . $context->get("HTTP_HOST");
+		$host = ($_GET("SERVER_PORT") == 443 ? "https://" : "http://") . $_GET("HTTP_HOST");
 
 		# Replace Part One
 		$text = preg_replace(array("/\{[hH][oO][sS][tT]\}/", "/\{[cC][lL][aA][sS][sS]\}/"), array($host, $name), $text);
