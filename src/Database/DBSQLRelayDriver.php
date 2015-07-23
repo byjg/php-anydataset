@@ -1,8 +1,6 @@
 <?php
 
-/**
- * @package xmlnuke
- */
+
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Database\ConnectionManagement;
