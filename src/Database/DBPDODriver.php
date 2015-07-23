@@ -86,11 +86,11 @@ class DBPDODriver implements IDBDriver
 	{
 		if ($array)
 		{
-			list($sql, $array) = XmlnukeProviderFactory::ParseSQL ( $this->_connectionManagement, $sql, $array );
+			list($sql, $array) = SQLBind::ParseSQL ( $this->_connectionManagement, $sql, $array );
 			$stmt = $this->_db->prepare ( $sql );
 			foreach ( $array as $key => $value )
 			{
-				$stmt->bindValue ( ":" . XmlnukeProviderFactory::KeyAdj ( $key ), $value );
+				$stmt->bindValue ( ":" . SQLBind::KeyAdj ( $key ), $value );
 			}
 		}
 		else

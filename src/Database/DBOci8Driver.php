@@ -81,7 +81,7 @@ class DBOci8Driver implements IDBDriver
 
 	protected function getOci8Cursor($sql, $array = null)
 	{
-		list($query, $array) = XmlnukeProviderFactory::ParseSQL ( $this->_connectionManagement, $sql, $array );
+		list($query, $array) = SQLBind::ParseSQL ( $this->_connectionManagement, $sql, $array );
 
 		//$query = ForceUTF8\Encoding::toWin1252($query);
 

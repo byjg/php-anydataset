@@ -6,7 +6,7 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\Database\ConnectionManagement;
 use ByJG\AnyDataset\Database\IDBDriver;
 use ByJG\AnyDataset\Database\SQLHelper;
-use ByJG\AnyDataset\Database\XmlnukeProviderFactory;
+use ByJG\AnyDataset\Database\SQLBind;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;
@@ -58,7 +58,7 @@ class DBSQLRelayDriver implements IDBDriver
 
 		if ($array)
 		{
-			list($sql, $array) = XmlnukeProviderFactory::ParseSQL ( $this->_connectionManagement, $sql, $array );
+			list($sql, $array) = SQLBind::ParseSQL ( $this->_connectionManagement, $sql, $array );
 
 			sqlrcur_prepareQuery ( $cur, $sql );
 			$bindCount = 1;
