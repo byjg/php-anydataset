@@ -29,8 +29,8 @@
 
 namespace ByJG\AnyDataset\Repository;
 
+use ByJG\AnyDataset\Exception\NotImplementedException;
 use Iterator;
-use Xmlnuke\Core\Exception\NotImplementedException;
 
 /**
  * @package xmlnuke

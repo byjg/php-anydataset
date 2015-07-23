@@ -1,42 +1,18 @@
 <?php
 
-/*
- * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
- *  Copyright:
- *
- *  XMLNuke: A Web Development Framework based on XML.
- *
- *  Main Specification and Implementation: Joao Gilberto Magalhaes, joao at byjg dot com
- *
- *  This file is part of XMLNuke project. Visit http://www.xmlnuke.com
- *  for more information.
- *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
- */
-
 /**
  * @package xmlnuke
  */
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Repository\SQLRelayIterator;
-use Xmlnuke\Core\Exception\DataBaseException;
+use ByJG\AnyDataset\Database\ConnectionManagement;
+use ByJG\AnyDataset\Database\IDBDriver;
+use ByJG\AnyDataset\Database\SQLHelper;
+use ByJG\AnyDataset\Database\XmlnukeProviderFactory;
+use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
-use Xmlnuke\Core\Exception\NotImplementedException;
+use ByJG\AnyDataset\Exception\NotAvailableException;
+use ByJG\AnyDataset\Repository\SQLRelayIterator;
 
 class DBSQLRelayDriver implements IDBDriver
 {
@@ -161,9 +137,13 @@ class DBSQLRelayDriver implements IDBDriver
 
 			$ret = sqlrcon_commit($this->_conn);
 			if ($ret === 0)
-				throw new DataBaseException ('Commit failed');
+			{
+				throw new DataBaseException('Commit failed');
+			}
 			else if ($ret === -1)
-				throw new DataBaseException ('An error occurred. Commit failed');
+			{
+				throw new DataBaseException('An error occurred. Commit failed');
+			}
 
 			sqlrcon_autoCommitOn($this->_conn);
 		}
@@ -177,9 +157,13 @@ class DBSQLRelayDriver implements IDBDriver
 
 			$ret = sqlrcon_rollback($this->_conn);
 			if ($ret === 0)
-				throw new DatabaseException ('Commit failed');
+			{
+				throw new DatabaseException('Commit failed');
+			}
 			else if ($ret === -1)
-				throw new DatabaseException ('An error occurred. Commit failed');
+			{
+				throw new DatabaseException('An error occurred. Commit failed');
+			}
 
 			sqlrcon_autoCommitOn($this->_conn);
 		}
@@ -203,12 +187,12 @@ class DBSQLRelayDriver implements IDBDriver
 
 	public function getAttribute($name)
 	{
-		throw new NotImplementedException('Method not implemented for SQL Relay Driver');
+		throw new NotAvailableException('Method not implemented for SQL Relay Driver');
 	}
 
 	public function setAttribute($name, $value)
 	{
-		throw new NotImplementedException('Method not implemented for SQL Relay Driver');
+		throw new NotAvailableException('Method not implemented for SQL Relay Driver');
 	}
 
 }

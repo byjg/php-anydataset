@@ -34,7 +34,7 @@
 namespace ByJG\AnyDataset\Repository;
 
 use InvalidArgumentException;
-use Xmlnuke\Core\Cache\ICacheEngine;
+use ByJG\Cache\ICacheEngine;
 
 class CachedDBDataset extends DBDataSet
 {
