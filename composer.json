@@ -18,7 +18,7 @@
 		"php": ">=5.4.0",
 		"ext-json": "*",
         "byjg/xmlutil": "~1.0",
-		"byjg/sparqllib": "dev-master",
+		"byjg/sparqllib": "~1.0",
 		"byjg/singleton-pattern": "~1.0",
 		"neitanod/forceutf8": "dev-master",
         "monolog/monolog": "1.*", 
