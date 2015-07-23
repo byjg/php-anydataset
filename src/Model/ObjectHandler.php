@@ -469,7 +469,9 @@ class ObjectHandler
 	protected function replaceVars($name, $text)
 	{
 		# Host
-		$host = ($_GET("SERVER_PORT") == 443 ? "https://" : "http://") . $_GET("HTTP_HOST");
+        $port = isset($_SERVER["SERVER_PORT"]) ? $_SERVER["SERVER_PORT"] : 80;
+        $httpHost = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : 'localhost';
+		$host = ($port == 443 ? "https://" : "http://") . $httpHost;
 
 		# Replace Part One
 		$text = preg_replace(array("/\{[hH][oO][sS][tT]\}/", "/\{[cC][lL][aA][sS][sS]\}/"), array($host, $name), $text);
