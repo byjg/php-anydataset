@@ -46,7 +46,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_ObjectGetter_1elem()
@@ -69,7 +69,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_ObjectGetter_2elem()
@@ -99,7 +99,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_ObjectPublic_1elem()
@@ -122,7 +122,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_ObjectPublic_2elem()
@@ -152,7 +152,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_StdClass_1()
@@ -175,7 +175,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_StdClass_Model()
@@ -205,7 +205,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_1()
@@ -230,7 +230,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_2()
@@ -264,7 +264,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_StdClass_Array()
@@ -292,7 +292,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_Scalar()
@@ -318,7 +318,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_Mixed()
@@ -346,7 +346,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_Array()
@@ -382,7 +382,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_Array_2 ()
@@ -412,7 +412,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_Array_3()
@@ -450,7 +450,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Array_Array_5()
@@ -492,7 +492,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Collection_DontCreateNode()
@@ -517,7 +517,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Collection_CreateNode()
@@ -544,7 +544,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_Collection_SkipParentAndRenameChild()
@@ -569,7 +569,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Xmlnuke\Core\Engine\ObjectHandler::CreateObjectFromModel
+	 * @covers ByJG\AnyDataset\Model\ObjectHandler::CreateObjectFromModel
 	 * @todo   Implement testCreateObjectFromModel().
 	 */
 	public function testCreateObjectFromModel_OnlyScalarAtFirstLevel()
