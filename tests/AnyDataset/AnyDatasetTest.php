@@ -48,7 +48,7 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
 				. '</row>'
 			. '</anydataset>'
 		);
-		$xmlDomValidate = \ByJG\Util\XmlUtil::CreateXmlDocumentFromStr($this->object->XML());
+		$xmlDomValidate = \ByJG\Util\XmlUtil::CreateXmlDocumentFromStr($this->object->xml());
 
 		$this->assertEquals($xmlDom, $xmlDomValidate);
 	}

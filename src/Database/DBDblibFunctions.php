@@ -8,7 +8,7 @@ use ByJG\AnyDataset\Repository\DBDataSet;
 
 class DBDblibFunctions extends DBBaseFunctions
 {
-	function Concat($s1, $s2 = null)
+	function concat($s1, $s2 = null)
 	{
 	 	for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
 	 	{
@@ -26,7 +26,7 @@ class DBDblibFunctions extends DBBaseFunctions
 	 * @param int $qty
 	 * @return string
 	 */
-	function Limit($sql, $start, $qty)
+	function limit($sql, $start, $qty)
 	{
 		throw new NotAvailableException("DBLib does not support LIMIT feature.");
 	}
@@ -37,7 +37,7 @@ class DBDblibFunctions extends DBBaseFunctions
 	 * @param int $qty
 	 * @return string
 	 */
-	function Top($sql, $qty)
+	function top($sql, $qty)
 	{
 		return preg_replace("/^\s*(select) /i", "\\1 top $qty ", $sql);
 	}
@@ -66,7 +66,7 @@ class DBDblibFunctions extends DBBaseFunctions
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
 	 */
-	function SQLDate($fmt, $col=false)
+	function sqlDate($fmt, $col=false)
 	{
 		if (!$col) $col = "getdate()";
 		$s = '';

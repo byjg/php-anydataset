@@ -103,10 +103,10 @@ class SQLHelper
 		$paramName = "[[" . $name . "]]";
 		if (!is_array($valores))
 		{
-			$valores = array(SQLFieldType::Text, $valores);
+			$valores = array(SQLFieldType::TEXT, $valores);
 		}
 
-		if ($valores[0]== SQLFieldType::Boolean)
+		if ($valores[0]== SQLFieldType::BOOLEAN)
 		{
 			if ($valores[1]=="1")
 			{
@@ -122,12 +122,12 @@ class SQLHelper
 		{
 			return "null";
 		}
-		elseif ($valores[0]==SQLFieldType::Text)
+		elseif ($valores[0]==SQLFieldType::TEXT)
 		{
 			$param[$name] = trim($valores[1]);
 			return $paramName;
 		}
-		elseif ($valores[0]==SQLFieldType::Date)
+		elseif ($valores[0]==SQLFieldType::DATE)
 		{
             $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DBBaseFunctions::YMDH): $valores[1]);
 			$param[$name] = $date;
@@ -140,7 +140,7 @@ class SQLHelper
 				return $paramName;
 			}
 		}
-		elseif ($valores[0]==SQLFieldType::Number)
+		elseif ($valores[0]==SQLFieldType::NUMBER)
 		{
 			$search = ($decimalpoint == ".") ? "," : ".";
 			$valores[1] = trim(str_replace($search, $decimalpoint, $valores[1]));

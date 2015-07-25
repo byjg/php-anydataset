@@ -124,7 +124,7 @@ class AnyDataset
 	 * Returns the AnyDataset XML representative structure.
 	 * @return string XML String
 	 */
-	public function XML()
+	public function xml()
 	{
 		return $this->getDomObject()->saveXML();
 	}
@@ -153,7 +153,7 @@ class AnyDataset
      * @param type $file
      * @throws DatabaseException
      */
-	public function Save($file = null)
+	public function save($file = null)
 	{
 		if (!is_null( $file ))
 		{
@@ -331,19 +331,19 @@ class AnyDataset
 	 * @param string $field
 	 * @return void
 	 */
-	public function Sort($field)
+	public function sort($field)
 	{
 		if (count($this->_collection) == 0)
 		{
 			return;
 		}
 
-		$this->_collection = $this->quicksort_exec ( $this->_collection, $field );
+		$this->_collection = $this->quickSortExec ( $this->_collection, $field );
 
 		return;
 	}
 
-	protected function quicksort_exec($seq, $field )
+	protected function quickSortExec($seq, $field )
 	{
 		if (! count ( $seq ))
 			return $seq;
@@ -362,7 +362,7 @@ class AnyDataset
 			}
 		}
 
-		return array_merge ( $this->quicksort_exec ( $x, $field ), array ($k ), $this->quicksort_exec ( $y, $field ) );
+		return array_merge ( $this->quickSortExec ( $x, $field ), array ($k ), $this->quickSortExec ( $y, $field ) );
 	}
 
     public static function fixUTF8($document)

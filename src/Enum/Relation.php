@@ -12,36 +12,36 @@ class Relation
 	/**
 	 * "Equal" relational operator
 	 */
-	const Equal = 0;
+	const EQUAL = 0;
 
 	/**
 	 * "Less than" relational operator
 	 */
-	const LessThan = 1;
+	const LESS_THAN = 1;
 
 	/**
 	 * "Greater than" relational operator
 	 */
-	const GreaterThan = 2;
+	const GREATER_THAN = 2;
 
 	/**
 	 * "Less or Equal Than" relational operator
 	 */
-	const LessOrEqualThan = 3;
+	const LESS_OR_EQUAL_THAN = 3;
 	/**
 	 * "Greater or equal than" relational operator
 	 */
-	const GreaterOrEqualThan = 4;
+	const GREATER_OR_EQUAL_THAN = 4;
 	/**
 	 * "Not equal" relational operator
 	 */
-	const NotEqual = 5;
+	const NOT_EQUAL = 5;
 	/**
 	 * "Starts with" unary comparator
 	 */
-	const StartsWith = 6;
+	const STARTS_WITH = 6;
 	/**
 	 * "Contains" unary comparator
 	 */
-	const Contains = 7;
+	const CONTAINS = 7;
 }

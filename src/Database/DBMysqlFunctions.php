@@ -8,7 +8,7 @@ class DBMySQLFunctions extends DBBaseFunctions
 {
     private $sysTimeStamp = 'NOW()';
 
-	function Concat($s1, $s2 = null)
+	function concat($s1, $s2 = null)
 	{
 		$sql = "concat(";
 	 	for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
@@ -28,7 +28,7 @@ class DBMySQLFunctions extends DBBaseFunctions
 	 * @param int $qty
 	 * @return string
 	 */
-	function Limit($sql, $start, $qty)
+	function limit($sql, $start, $qty)
 	{
 		if (strpos($sql, ' LIMIT ') === false)
 		{
@@ -46,9 +46,9 @@ class DBMySQLFunctions extends DBBaseFunctions
 	 * @param int $qty
 	 * @return string
 	 */
-	function Top($sql, $qty)
+	function top($sql, $qty)
 	{
-		return $this->Limit($sql, 0, $qty);
+		return $this->limit($sql, 0, $qty);
 	}
 
 	/**
@@ -76,7 +76,7 @@ class DBMySQLFunctions extends DBBaseFunctions
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
 	 */
-    function SQLDate($fmt, $col=false)
+    function sqlDate($fmt, $col=false)
 	{
 		if (!$col) $col = $this->sysTimeStamp;
 		$s = 'DATE_FORMAT('.$col.",'";

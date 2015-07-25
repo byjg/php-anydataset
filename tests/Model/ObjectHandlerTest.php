@@ -54,7 +54,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$model = new ModelGetter(10, 'Joao');
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -80,7 +80,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -107,7 +107,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$model = new ModelPublic(10, 'Joao');
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -133,7 +133,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		);
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -162,7 +162,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$model->Name = 'Joao';
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -186,7 +186,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$model->Object = new ModelGetter(20, 'JG');
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -217,7 +217,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -247,7 +247,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -277,7 +277,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -305,7 +305,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -332,7 +332,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -367,7 +367,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -397,7 +397,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -431,7 +431,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
 
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -472,7 +472,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
 
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -502,7 +502,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$modellist->addItem(new ModelGetter(20, 'JG'));
 
 		$this->object = new ObjectHandler($this->root, $modellist, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -527,7 +527,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$modellist->addItem(new ModelGetter(20, 'JG'));
 
 		$this->object = new ObjectHandler($this->root, $modellist, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -554,7 +554,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$modellist->addItem(new ModelGetter(20, 'JG'));
 
 		$this->object = new ObjectHandler($this->root, $modellist, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -581,7 +581,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 			];
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -604,7 +604,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$model->varEmptyString = '';   // Sould not created
 
 		$this->object = new ObjectHandler($this->root, $model, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(
@@ -631,7 +631,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
 		$iterator = $model->getIterator();
 
 		$this->object = new ObjectHandler($this->root, $iterator, 'xmlnuke');
-		$result = $this->object->CreateObjectFromModel();
+		$result = $this->object->createObjectFromModel();
 
 		$this->assertEquals(
 			XmlUtil::CreateXmlDocumentFromStr(

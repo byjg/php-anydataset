@@ -158,42 +158,42 @@ class IteratorFilter
 		$result = "";
 		switch ($relation)
 		{
-			case Relation::Equal:
+			case Relation::EQUAL:
 			{
 				$result = $field . "=" . $value;
 				break;
 			}
-			case Relation::GreaterThan:
+			case Relation::GREATER_THAN:
 			{
 				$result = $field . ">" . $value;
 				break;
 			}
-			case Relation::LessThan:
+			case Relation::LESS_THAN:
 			{
 				$result = $field . "<" . $value;
 				break;
 			}
-			case Relation::GreaterOrEqualThan:
+			case Relation::GREATER_OR_EQUAL_THAN:
 			{
 				$result = $field . ">=" . $value;
 				break;
 			}
-			case Relation::LessOrEqualThan:
+			case Relation::LESS_OR_EQUAL_THAN:
 			{
 				$result = $field . "<=" . $value;
 				break;
 			}
-			case Relation::NotEqual:
+			case Relation::NOT_EQUAL:
 			{
 				$result = $field . "!=" . $value;
 				break;
 			}
-			case Relation::StartsWith:
+			case Relation::STARTS_WITH:
 			{
 				$result = " starts-with($field, $value) ";
 				break;
 			}
-			case Relation::Contains:
+			case Relation::CONTAINS:
 			{
 				$result = " contains($field, $value) ";
 				break;
@@ -227,43 +227,43 @@ class IteratorFilter
 		$valueparam = " [[" . $paramName . "]] ";
 		switch ($relation)
 		{
-			case Relation::Equal:
+			case Relation::EQUAL:
 			{
 				$result = $field . "=" . $valueparam;
 				break;
 			}
-			case Relation::GreaterThan:
+			case Relation::GREATER_THAN:
 			{
 				$result = $field . ">" . $valueparam;
 				break;
 			}
-			case Relation::LessThan:
+			case Relation::LESS_THAN:
 			{
 				$result = $field . "<" . $valueparam;
 				break;
 			}
-			case Relation::GreaterOrEqualThan:
+			case Relation::GREATER_OR_EQUAL_THAN:
 			{
 				$result = $field . ">=" . $valueparam;
 				break;
 			}
-			case Relation::LessOrEqualThan:
+			case Relation::LESS_OR_EQUAL_THAN:
 			{
 				$result = $field . "<=" . $valueparam;
 				break;
 			}
-			case Relation::NotEqual:
+			case Relation::NOT_EQUAL:
 			{
 				$result = $field . "!=" . $valueparam;
 				break;
 			}
-			case Relation::StartsWith:
+			case Relation::STARTS_WITH:
 			{
 				$param[$paramName] = $value . "%";
 				$result = $field . " like " . $valueparam;
 				break;
 			}
-			case Relation::Contains:
+			case Relation::CONTAINS:
 			{
 				$param[$paramName] = "%" . $value . "%";
 				$result = $field . " like " . $valueparam;
@@ -308,42 +308,42 @@ class IteratorFilter
 			{
 				switch ($relation)
 				{
-					case Relation::Equal:
+					case Relation::EQUAL:
 					{
 						$result[$pos] &= ($valueparam == $value);
 						break;
 					}
-					case Relation::GreaterThan:
+					case Relation::GREATER_THAN:
 					{
 						$result[$pos] &= ($valueparam > $value);
 						break;
 					}
-					case Relation::LessThan:
+					case Relation::LESS_THAN:
 					{
 						$result[$pos] &= ($valueparam < $value);
 						break;
 					}
-					case Relation::GreaterOrEqualThan:
+					case Relation::GREATER_OR_EQUAL_THAN:
 					{
 						$result[$pos] &= ($valueparam >= $value);
 						break;
 					}
-					case Relation::LessOrEqualThan:
+					case Relation::LESS_OR_EQUAL_THAN:
 					{
 						$result[$pos] &= ($valueparam <= $value);
 						break;
 					}
-					case Relation::NotEqual:
+					case Relation::NOT_EQUAL:
 					{
 						$result[$pos] &= ($valueparam != $value);
 						break;
 					}
-					case Relation::StartsWith:
+					case Relation::STARTS_WITH:
 					{
 						$result[$pos] &= (strpos($valueparam, $value) === 0);
 						break;
 					}
-					case Relation::Contains:
+					case Relation::CONTAINS:
 					{
 						$result[$pos] &= (strpos($valueparam, $value) !== false);
 						break;

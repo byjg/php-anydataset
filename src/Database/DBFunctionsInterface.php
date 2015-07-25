@@ -16,7 +16,7 @@ interface DBFunctionsInterface
 	 * @param string $s2
 	 * @return string
 	 */
-	function Concat($s1, $s2 = null);
+	function concat($s1, $s2 = null);
 
 	/**
 	 * Given a SQL returns it with the proper LIMIT or equivalent method included
@@ -25,7 +25,7 @@ interface DBFunctionsInterface
 	 * @param int $qty
 	 * @return string
 	 */
-	function Limit($sql, $start, $qty);
+	function limit($sql, $start, $qty);
 
 	/**
 	 * Given a SQL returns it with the proper TOP or equivalent method included
@@ -33,7 +33,7 @@ interface DBFunctionsInterface
 	 * @param int $qty
 	 * @return string
 	 */
-	function Top($sql, $qty);
+	function top($sql, $qty);
 
 	/**
 	 * Return if the database provider have a top or similar function
@@ -54,7 +54,7 @@ interface DBFunctionsInterface
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
 	 */
-	function SQLDate($fmt, $col=false);
+	function sqlDate($fmt, $col=false);
 
     /**
      * Format a string date to a string database readable format.

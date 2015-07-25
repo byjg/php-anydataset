@@ -4,9 +4,9 @@ namespace ByJG\AnyDataset\Enum;
 
 class SQLFieldType
 {
-	const Literal = 'F';
-	const Text = 'T';
-	const Number = 'N';
-	const Date = 'D';
-	const Boolean = 'B';
+	const LITERAL = 'F';
+	const TEXT = 'T';
+	const NUMBER = 'N';
+	const DATE = 'D';
+	const BOOLEAN = 'B';
 }

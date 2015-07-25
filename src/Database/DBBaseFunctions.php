@@ -24,7 +24,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
 	 * @param string $s2
 	 * @return string
 	 */
-	function Concat($s1, $s2 = null)
+	function concat($s1, $s2 = null)
 	{
 		return "";
 	}
@@ -36,7 +36,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
 	 * @param int $qty
 	 * @return string
 	 */
-	function Limit($sql, $start, $qty)
+	function limit($sql, $start, $qty)
 	{
 		return $sql;
 	}
@@ -47,7 +47,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
 	 * @param int $qty
 	 * @return string
 	 */
-	function Top($sql, $qty)
+	function top($sql, $qty)
 	{
 		return $sql;
 	}
@@ -77,7 +77,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
 	 */
-	function SQLDate($fmt, $col=false)
+	function sqlDate($fmt, $col=false)
 	{
 		return "";
 	}
