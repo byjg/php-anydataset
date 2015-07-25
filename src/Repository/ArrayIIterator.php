@@ -2,16 +2,16 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use InvalidArgumentException;
 use ByJG\AnyDataset\Repository\AnyDataset;
 use ByJG\AnyDataset\Repository\GenericIterator;
 use ByJG\AnyDataset\Repository\IIterator;
 use ByJG\AnyDataset\Repository\SingleRow;
+use InvalidArgumentException;
 
 class ArrayIIterator extends GenericIterator
 {
 	/**
-	*@var array
+	* @var array
 	*/
 	protected $_rows;
 
@@ -23,13 +23,12 @@ class ArrayIIterator extends GenericIterator
 	protected $_keys;
 
 	/**
-	/*@var int
+	/* @var int
 	*/
 	protected $_currentRow;
 
 	/**
-	*@access public
-	*@return IIterator
+	* @return IIterator
 	*/
 	public function __construct($rows)
 	{
@@ -43,8 +42,7 @@ class ArrayIIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return int
+	* @return int
 	*/
 	public function Count()
 	{
@@ -52,8 +50,7 @@ class ArrayIIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return bool
+	* @return bool
 	*/
 	public function hasNext()
 	{
@@ -61,8 +58,7 @@ class ArrayIIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return SingleRow
+	* @return SingleRow
 	*/
 	public function moveNext()
 	{
@@ -96,4 +92,3 @@ class ArrayIIterator extends GenericIterator
  		return $this->_currentRow;
  	}
 }
-?>

@@ -84,4 +84,3 @@ interface IDBFunctions
 	function executeAndGetInsertedId($dbdataset, $sql, $param);
 }
 
-?>

@@ -4,6 +4,7 @@ namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Repository\GenericIterator;
 use ByJG\AnyDataset\Repository\SingleRow;
+use DOMNodeList;
 
 /**
  * Iterator class is a structure used to navigate forward in a AnyDataset structure.
@@ -12,24 +13,21 @@ class AnyIterator extends GenericIterator
 {
 
 	/**
-	*@desc Row Elements
-	*@access private
-	*@var array
+	* Row Elements
+	* @var array
 	*/
 	private $_list;
 
 	/**
-	*@access private
-	*@var int
-	*@desc Current row number
+	* Current row number
+	* @var int
 	*/
 	private	$_curRow;//int
 
 	/**
-	*@access public
-	*@param \DOMNodeList $list \DOMNodeList
-	*@return void
-	*@desc Iterator constructor
+	* Iterator constructor
+	* @param DOMNodeList $list \DOMNodeList
+	* @return void
 	*/
 	public function __construct($list)
 	{
@@ -38,9 +36,8 @@ class AnyIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return int
-	*@desc How many elements have
+	* How many elements have
+	* @return int
 	*/
 	public function Count()
 	{
@@ -48,9 +45,8 @@ class AnyIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return bool - True if exist more rows, otherwise false
-	*@desc Ask the Iterator is exists more rows. Use before moveNext method.
+	* Ask the Iterator is exists more rows. Use before moveNext method.
+	* @return bool True if exist more rows, otherwise false
 	*/
 	public function hasNext()
 	{
@@ -58,9 +54,8 @@ class AnyIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return SingleRow
-	*@desc Return the next row.
+	* Return the next row.
+	* @return SingleRow
 	*/
 	public function moveNext()
 	{
@@ -80,4 +75,3 @@ class AnyIterator extends GenericIterator
  	}
 
 }
-?>

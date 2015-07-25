@@ -170,4 +170,3 @@ class DBDblibFunctions extends DBBaseFunctions
 	}
 }
 
-?>

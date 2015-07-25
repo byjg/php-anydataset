@@ -125,4 +125,3 @@ abstract class DBBaseFunctions implements IDBFunctions
 
 
 
-?>

@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use PDO;
 use ByJG\AnyDataset\Database\ConnectionManagement;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
@@ -26,8 +25,7 @@ class DBDataSet
 	protected $_dbDriver = null;
 
 	/**
-	 *@param string $dbname - Name of file without '_db' and extention '.xml'.
-	 *@desc Constructor
+	 * @param string $dbname Name of file without '_db' and extention '.xml'.
 	 */
 	public function __construct($dbname)
 	{
@@ -74,9 +72,9 @@ class DBDataSet
 	}
 
 	/**
-	 *@access public
-	 *@param string $tablename
-	 *@return array
+	 * @access public
+	 * @param string $tablename
+	 * @return array
 	 */
 	public function getAllFields($tablename)
 	{
@@ -84,10 +82,10 @@ class DBDataSet
 	}
 
 	/**
-	 *@access public
-	 *@param string $sql
-	 *@param array $array
-	 *@return Resource
+	 * @access public
+	 * @param string $sql
+	 * @param array $array
+	 * @return Resource
 	 */
 	public function execSQL($sql, $array = null)
 	{
@@ -110,11 +108,11 @@ class DBDataSet
 	}
 
 	/**
-	 *@access public
-	 *@param IIterator $it
-	 *@param string $fieldPK
-	 *@param string $fieldName
-	 *@return Resource
+	 * @access public
+	 * @param IIterator $it
+	 * @param string $fieldPK
+	 * @param string $fieldName
+	 * @return Resource
 	 */
 	public function getArrayField(IIterator $it, $fieldPK, $fieldName)
 	{
@@ -128,8 +126,8 @@ class DBDataSet
 	}
 
 	/**
-	 *@access public
-	 *@return PDO
+	 * @access public
+	 * @return \PDO
 	 */
 	public function getDBConnection()
 	{

@@ -109,4 +109,4 @@ class Oci8Iterator extends GenericIterator
  		return $this->_moveNextRow;
  	}
 }
-?>
+

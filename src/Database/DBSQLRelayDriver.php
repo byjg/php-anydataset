@@ -112,13 +112,15 @@ class DBSQLRelayDriver implements IDBDriver
 			throw new DatasetException(sqlrcur_errorMessage($cur));
 		}
 
-		$fields = array ();
+		$fields = [];
 		for ($col=0; $col<sqlrcur_colCount($cur); $col++)
 		{
 			$fields[] = strtolower(sqlrcur_getColumnName($cur, $col));
 		}
 
 		sqlrcur_free($cur);
+
+		return $fields;
 	}
 
 	public function beginTransaction()

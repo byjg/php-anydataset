@@ -302,4 +302,3 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 	}
 
 }
-?>

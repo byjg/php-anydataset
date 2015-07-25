@@ -164,11 +164,11 @@ class DBOci8Driver implements IDBDriver
 
         $this->_transaction = OCI_COMMIT_ON_SUCCESS;
 
-		$r = oci_commit($this->_conn);
-		if (!r)
+		$result = oci_commit($this->_conn);
+		if (!$result)
 		{
-			$e = oci_error($this->conn);
-			throw new DataBaseException($e['message']);
+			$error = oci_error($this->conn);
+			throw new DataBaseException($error['message']);
 		}
 	}
 

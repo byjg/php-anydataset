@@ -2,10 +2,9 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use Exception;
+use ByJG\AnyDataset\Repository\DBIterator;
 use PDO;
 use PDOStatement;
-use ByJG\AnyDataset\Repository\DBIterator;
 
 class DBPDODriver implements IDBDriver
 {	
@@ -15,8 +14,6 @@ class DBPDODriver implements IDBDriver
 	protected $_db = null;
 	
 	/**
-	 * Enter description here...
-	 *
 	 * @var ConnectionManagement
 	 */
 	protected $_connectionManagement;
@@ -28,17 +25,19 @@ class DBPDODriver implements IDBDriver
 		if (is_null($strcnn))
 		{
 			if ($this->_connectionManagement->getFilePath() != "")
-				$strcnn = $this->_connectionManagement->getDriver () . ":" . $this->_connectionManagement->getFilePath ();
+			{
+				$strcnn = $this->_connectionManagement->getDriver() . ":" . $this->_connectionManagement->getFilePath();
+			}
 			else
 			{
-				$strcnn = $this->_connectionManagement->getDriver () . ":dbname=" . $this->_connectionManagement->getDatabase ();
+				$strcnn = $this->_connectionManagement->getDriver() . ":dbname=" . $this->_connectionManagement->getDatabase();
 				if ($this->_connectionManagement->getExtraParam("unixsocket") != "")
 					$strcnn .= ";unix_socket=" . $this->_connectionManagement->getExtraParam("unixsocket");
 				else
 				{
-					$strcnn .= ";host=" . $this->_connectionManagement->getServer ();
+					$strcnn .= ";host=" . $this->_connectionManagement->getServer();
 					if ($this->_connectionManagement->getPort() != "")
-						$strcnn .= ";port=" . $this->_connectionManagement->getPort ();
+						$strcnn .= ";port=" . $this->_connectionManagement->getPort();
 				}
 			}
 		}

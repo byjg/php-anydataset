@@ -4,7 +4,6 @@ namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\Util\XmlUtil;
-use DOMDocument;
 use ForceUTF8\Encoding;
 use InvalidArgumentException;
 
@@ -42,20 +41,20 @@ use InvalidArgumentException;
 class AnyDataset
 {
 	/**
-	 *@access private
-	 *@var SingleRow[]
-	 *@desc Internal structure represent the current SingleRow
+	 * Internal structure represent the current SingleRow
+	 * @var SingleRow[]
 	 */
 	private $_collection;
+
 	/**
-	 *@access private
-	 *@var int
-	 *@desc Current node anydataset works
+	 * Current node anydataset works
+	 * @var int
 	 */
 	private $_currentRow;
+
 	/**
-	 *@var string
-	 *@desc Path to anydataset file
+	 * Path to anydataset file
+	 * @var string
 	 */
 	private $_path;
 
@@ -80,18 +79,17 @@ class AnyDataset
 			{
 				throw new \InvalidArgumentException('I expected a string as a file name');
 			}
-			$this->CreateFrom( $this->_path );
+			$this->createFrom( $this->_path );
 		}
 	}
 
 
 	/**
-	 *@access private
-	 *@return void
-	 *@param string $filepath - Path and Filename to be read
-	 *@desc Private method used to read and populate anydataset class from specified file
+	 * Private method used to read and populate anydataset class from specified file
+	 * @param string $filepath Path and Filename to be read
+	 * @return null
 	 */
-	private function CreateFrom($filepath)
+	private function createFrom($filepath)
 	{
 		if (file_exists($filepath))
 		{
@@ -123,9 +121,8 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@return string - XML String
-	 *@desc Returns the AnyDataset XML representative structure.
+	 * Returns the AnyDataset XML representative structure.
+	 * @return string XML String
 	 */
 	public function XML()
 	{
@@ -133,9 +130,8 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@return DOMDocument - XmlDocument object
-	 *@desc Returns the AnyDataset XmlDocument representive object
+	 * Returns the AnyDataset XmlDocument representive object
+	 * @return \DOMDocument XmlDocument object
 	 */
 	public function getDomObject()
 	{
@@ -179,10 +175,9 @@ class AnyDataset
 	}
 
 	/**
-	 * @access public
+	 * Append one row to AnyDataset.
 	 * @param SingleRow $sr
 	 * @return void
-	 * @desc Append one row to AnyDataset.
 	 */
 	public function appendRow($sr = null)
 	{
@@ -225,10 +220,9 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@param int $rowNumber
-	 *@param SingleRow row
-	 *@desc Insert one row before specified position.
+	 * Insert one row before specified position.
+	 * @param int $rowNumber
+	 * @param SingleRow row
 	 */
 	public function insertRowBefore($rowNumber, SingleRow $row = null)
 	{
@@ -283,11 +277,10 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@param string $name - Field name
-	 *@param string $value - Field value
-	 *@return void
-	 *@desc Add a single string field to an existing row
+	 * Add a single string field to an existing row
+	 * @param string $name - Field name
+	 * @param string $value - Field value
+	 * @return void
 	 */
 	public function addField($name, $value)
 	{
@@ -299,10 +292,9 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@param IteratorFilter $itf
-	 *@return IIterator
-	 *@desc Get an Iterator filtered by an IteratorFilter
+	 * Get an Iterator filtered by an IteratorFilter
+	 * @param IteratorFilter $itf
+	 * @return IIterator
 	 */
 	public function getIterator(IteratorFilter $itf = null)
 	{
@@ -317,11 +309,10 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@param IteratorFilter $itf
-	 *@param string $fieldName
-	 *@return array
-	 *@desc
+	 * @desc
+	 * @param IteratorFilter $itf
+	 * @param string $fieldName
+	 * @return array
 	 */
 	public function getArray($itf, $fieldName)
 	{

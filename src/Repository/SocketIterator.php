@@ -34,7 +34,6 @@ class SocketIterator extends GenericIterator
 		}
 
 		$linha = "";
-		$rowseptemp = str_replace("\\", "", $this->_rowsep);
 		while (!feof($this->_handle))
 		{
 			$x = fgets($this->_handle, 4096);

@@ -526,7 +526,7 @@ class ObjectHandler
 		return $result;
 	}
 
-	protected static function mapArray(&$value, $key)
+	protected static function mapArray(&$value, $key = null)
 	{
 		if ($value instanceof SimpleXMLElement)
 		{
@@ -544,10 +544,7 @@ class ObjectHandler
 				}
 				$x[$k][] = (array)$v + $arText;
 			}
-			$x = (array)$value->attributes() + $x;
-
-
-			$value = $x;
+			$value = (array)$value->attributes() + $x;
 		}
 
 		// Fix empty arrays or with one element only.

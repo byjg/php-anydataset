@@ -54,8 +54,6 @@ class FixedTextFileDataSet
 	*/
 	public function getIterator()
 	{
-		$errno = null;
-		$errstr = null;
 		if ($this->_sourceType == "HTTP")
 		{
             return $this->getIteratorHttp();

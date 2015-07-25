@@ -18,12 +18,6 @@ class XmlIterator extends GenericIterator
 	private $_nodeList = null;
 
 	/**
-	 * String
-	 *
-	 * @var string
-	 */
-	private $_rowNode = null;
-	/**
 	 * Enter description here...
 	 *
 	 * @var string[]

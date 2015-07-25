@@ -7,9 +7,8 @@ use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
 use ByJG\AnyDataset\Repository\DBDataSet;
 use ByJG\AnyDataset\Repository\SingleRow;
+use DateTime;
 use Exception;
-use Xmlnuke\Core\Enum\DATEFORMAT;
-use Xmlnuke\Util\DateUtil;
 
 class SQLHelper
 {
@@ -130,7 +129,7 @@ class SQLHelper
 		}
 		elseif ($valores[0]==SQLFieldType::Date)
 		{
-            $date = ($valores[1] instanceof \DateTime ? $valores[1]->format(DBBaseFunctions::YMDH): $valores[1]);
+            $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DBBaseFunctions::YMDH): $valores[1]);
 			$param[$name] = $date;
 			if ( ($this->_db->getDbType() == 'oci8') || ( ($this->_db->getDbType() == 'dsn') && (strpos($this->_db->getDbConnectionString(), "oci8"))) )
 			{
