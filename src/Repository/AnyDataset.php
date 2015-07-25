@@ -71,8 +71,13 @@ class AnyDataset
 		$this->_path = null;
 		if (!is_null($file))
 		{
-			if (!is_string($file))
+			if (is_string($file))
 			{
+				$ext = pathinfo($file, PATHINFO_EXTENSION);
+				if (empty($ext))
+				{
+					$file .= '.anydata.xml';
+				}
 				$this->_path = $file;
 			}
 			else
@@ -186,6 +191,7 @@ class AnyDataset
 			if ($sr instanceof SingleRow )
 			{
 				$this->_collection[] = $sr;
+				$sr->acceptChanges();
 			}
 			elseif (is_array($sr))
 			{
@@ -200,9 +206,9 @@ class AnyDataset
 		{
 			$sr = new SingleRow();
 			$this->_collection[] = $sr;
+			$sr->acceptChanges();
 		}
-		$sr->acceptChanges();
-		$this->_currentRow = sizeof($this->_collection) - 1;
+		$this->_currentRow = count($this->_collection) - 1;
 	}
 
 	/**
@@ -212,31 +218,32 @@ class AnyDataset
 	 */
 	public function import(IteratorInterface $it)
 	{
-		while ($it->hasNext())
+		foreach ($it as $singleRow)
 		{
-			$sr = $it->moveNext();
-			$this->appendRow($sr);
+			$this->appendRow($singleRow);
 		}
 	}
 
 	/**
 	 * Insert one row before specified position.
 	 * @param int $rowNumber
-	 * @param SingleRow row
+	 * @param mixed row
 	 */
-	public function insertRowBefore($rowNumber, SingleRow $row = null)
+	public function insertRowBefore($rowNumber, $row = null)
 	{
-		if ($row >= sizeof($this->_collection))
+		if ($rowNumber > count($this->_collection))
 		{
-			$this->appendRow ();
+			$this->appendRow($row);
 		}
 		else
 		{
-			if (is_null($row))
+			$singleRow = $row;
+			if (!($row instanceof SingleRow))
 			{
-				$row = new SingleRow();
+				$singleRow = new SingleRow($row);
 			}
-			array_splice($this->_collection, $rowNumber, 0, $row);
+			array_splice($this->_collection, $rowNumber, 0, '');
+			$this->_collection[$rowNumber] = $singleRow;
 		}
 	}
 

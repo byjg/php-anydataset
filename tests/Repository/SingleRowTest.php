@@ -289,6 +289,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(10, $sr->getField("Id"));
 		$this->assertEquals("Testing", $sr->getField("Name"));
+		$this->assertEquals(['Id'=>10, 'Name'=>'Testing'], $sr->toArray());
 	}
 
 	public function testConstructor_ModelGetter()
@@ -299,6 +300,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(10, $sr->getField("Id"));
 		$this->assertEquals("Testing", $sr->getField("Name"));
+		$this->assertEquals(['Id'=>10, 'Name'=>'Testing'], $sr->toArray());
 	}
 
 	public function testConstructor_stdClass()
@@ -311,6 +313,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(10, $sr->getField("Id"));
 		$this->assertEquals("Testing", $sr->getField("Name"));
+		$this->assertEquals(['Id'=>10, 'Name'=>'Testing'], $sr->toArray());
 	}
 
 	public function testConstructor_Array()
@@ -321,6 +324,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(10, $sr->getField("Id"));
 		$this->assertEquals("Testing", $sr->getField("Name"));
+		$this->assertEquals($array, $sr->toArray());
 	}
 
 	public function testConstructor_PropertyPattern()
@@ -337,6 +341,5 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(10, $sr->getField("Id_Model"));
 		$this->assertEquals("Testing", $sr->getField("Client_Name"));
 	}
-
 
 }

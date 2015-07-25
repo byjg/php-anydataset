@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<anydataset>
+	<row>
+		<field name="field1">value1</field>
+		<field name="field2">value2</field>
+	</row>
+	<row>
+		<field name="field1">othervalue1</field>
+		<field name="field2">othervalue2</field>
+	</row>
+</anydataset>
