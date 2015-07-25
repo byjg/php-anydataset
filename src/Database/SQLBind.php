@@ -47,7 +47,7 @@ class SQLBind
         $paramSubstName = SQLBind::getParamModel ( $connData );
 		foreach ( $params as $key => $value )
 		{
-			$arg = str_replace ( "_", SQLBind::KeyAdj ( $key ), $paramSubstName );
+			$arg = str_replace ( "_", SQLBind::keyAdj ( $key ), $paramSubstName );
 
             $count = 0;
             $sql = preg_replace("/(\[\[$key\]\]|:" . $key . "[\s\W]|:$key\$)/", $arg . ' ', $sql, -1, $count);
@@ -61,7 +61,7 @@ class SQLBind
 		return array($sql, $params);
 	}
 
-	public static function KeyAdj($key)
+	public static function keyAdj($key)
 	{
 		return str_replace ( ".", "_", $key );
 	}

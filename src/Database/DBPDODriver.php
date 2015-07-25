@@ -89,7 +89,7 @@ class DBPDODriver implements DBDriverInterface
 			$stmt = $this->_db->prepare ( $sql );
 			foreach ( $array as $key => $value )
 			{
-				$stmt->bindValue ( ":" . SQLBind::KeyAdj ( $key ), $value );
+				$stmt->bindValue ( ":" . SQLBind::keyAdj ( $key ), $value );
 			}
 		}
 		else

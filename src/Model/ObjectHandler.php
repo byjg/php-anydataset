@@ -29,7 +29,7 @@ class ObjectHandler
 	const CLASS_NAMESPACE = "ClassNamespace";
 	const CLASS_DONT_CREATE_NODE_CLASS = "ClassDontCreateClassNode";
 
-	const NodeRefs = "NodeRefs";
+	const NODE_REFS = "NodeRefs";
 
 	const PROP_IGNORE = "PropIgnore";
 	const PROP_NAME = "PropName";
@@ -192,7 +192,7 @@ class ObjectHandler
 
 		#----------
 		# Node References
-		$classMeta[ObjectHandler::NodeRefs] = array();
+		$classMeta[ObjectHandler::NODE_REFS] = array();
 
 		return $classMeta;
 	}
@@ -421,25 +421,25 @@ class ObjectHandler
 					}
 					elseif ($propMeta[ObjectHandler::PROP_IS_BLANK_NODE] != "")
 					{
-						if (!array_key_exists($propMeta[ObjectHandler::PROP_IS_BLANK_NODE], $classMeta[ObjectHandler::NodeRefs]))
+						if (!array_key_exists($propMeta[ObjectHandler::PROP_IS_BLANK_NODE], $classMeta[ObjectHandler::NODE_REFS]))
 						{
-							$classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]] = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_IS_BLANK_NODE]);
-							XmlUtil::AddAttribute($classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]], "rdf:parseType", "Resource");
+							$classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]] = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_IS_BLANK_NODE]);
+							XmlUtil::AddAttribute($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]], "rdf:parseType", "Resource");
 						}
 
 						if ($propMeta[ObjectHandler::PROP_IS_RESOURCE_URI])
 						{
-							$blankNodeType = XmlUtil::CreateChild($classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]], "rdf:type");
+							$blankNodeType = XmlUtil::CreateChild($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]], "rdf:type");
 							XmlUtil::AddAttribute($blankNodeType, "rdf:resource", $propMeta[ObjectHandler::PROP_VALUE]);
 						}
 						else
 						{
-							XmlUtil::CreateChild($classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]], $propMeta[ObjectHandler::PROP_NAME], $propMeta[ObjectHandler::PROP_VALUE]);
+							XmlUtil::CreateChild($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]], $propMeta[ObjectHandler::PROP_NAME], $propMeta[ObjectHandler::PROP_VALUE]);
 						}
 					}
-					elseif (($propMeta[ObjectHandler::PROP_ATTRIBUTE_OF] != "") && (array_key_exists($propMeta[ObjectHandler::PROP_ATTRIBUTE_OF], $classMeta[ObjectHandler::NodeRefs])))
+					elseif (($propMeta[ObjectHandler::PROP_ATTRIBUTE_OF] != "") && (array_key_exists($propMeta[ObjectHandler::PROP_ATTRIBUTE_OF], $classMeta[ObjectHandler::NODE_REFS])))
 					{
-						XmlUtil::AddAttribute ($classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PROP_ATTRIBUTE_OF]], $propMeta[ObjectHandler::PROP_NAME], $propMeta[ObjectHandler::PROP_VALUE]);
+						XmlUtil::AddAttribute ($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_ATTRIBUTE_OF]], $propMeta[ObjectHandler::PROP_NAME], $propMeta[ObjectHandler::PROP_VALUE]);
 					}
 					elseif ((preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $propMeta[ObjectHandler::PROP_VALUE])) && $classMeta[ObjectHandler::CLASS_IS_RDF])
 					{
@@ -459,7 +459,7 @@ class ObjectHandler
 				# Save Reference for "isAttributeOf" attribute.
 				if (!is_null($used))
 				{
-					$classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PROP_NAME]] = $used;
+					$classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_NAME]] = $used;
 				}
 			}
 		}
