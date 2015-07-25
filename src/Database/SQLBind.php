@@ -14,7 +14,7 @@ class SQLBind
 	 * @param ConnectionManagement $connData
 	 * @return string
 	 */
-	public static function GetParamModel($connData)
+	public static function getParamModel(ConnectionManagement $connData)
 	{
 		if ($connData->getExtraParam("parammodel") != "")
 		{
@@ -38,13 +38,13 @@ class SQLBind
 	 * @param array $param
 	 * @return array An array with the adjusted SQL and PARAMs
 	 */
-	public static function ParseSQL($connData, $sql, $params = null)
+	public static function parseSQL(ConnectionManagement $connData, $sql, $params = null)
 	{
 		if ($params == null) {
             return $sql;
         }
 
-        $paramSubstName = SQLBind::GetParamModel ( $connData );
+        $paramSubstName = SQLBind::getParamModel ( $connData );
 		foreach ( $params as $key => $value )
 		{
 			$arg = str_replace ( "_", SQLBind::KeyAdj ( $key ), $paramSubstName );

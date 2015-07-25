@@ -211,7 +211,7 @@ class AnyDataset
 	 *
 	 * @param IIterator $it
 	 */
-	public function import($it)
+	public function import(IIterator $it)
 	{
 		while ($it->hasNext())
 		{
@@ -301,7 +301,7 @@ class AnyDataset
 	 *@return IIterator
 	 *@desc Get an Iterator filtered by an IteratorFilter
 	 */
-	public function getIterator($itf = null)
+	public function getIterator(IteratorFilter $itf = null)
 	{
 		if ($itf == null)
 		{

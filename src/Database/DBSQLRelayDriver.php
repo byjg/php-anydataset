@@ -58,7 +58,7 @@ class DBSQLRelayDriver implements IDBDriver
 
 		if ($array)
 		{
-			list($sql, $array) = SQLBind::ParseSQL ( $this->_connectionManagement, $sql, $array );
+			list($sql, $array) = SQLBind::parseSQL ( $this->_connectionManagement, $sql, $array );
 
 			sqlrcur_prepareQuery ( $cur, $sql );
 			$bindCount = 1;

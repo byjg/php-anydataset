@@ -131,7 +131,7 @@ class Object
 	/**
 	 *
 	 * @param mixed $obj
-	 * @param \ReflectionProperty $prop
+	 * @param mixed $prop
 	 * @param string $propName
 	 * @return null
 	 */

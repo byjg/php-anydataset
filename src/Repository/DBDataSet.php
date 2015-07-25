@@ -111,15 +111,14 @@ class DBDataSet
 
 	/**
 	 *@access public
-	 *@param Iterator $it
+	 *@param IIterator $it
 	 *@param string $fieldPK
 	 *@param string $fieldName
 	 *@return Resource
 	 */
-	public function getArrayField($it, $fieldPK, $fieldName)
+	public function getArrayField(IIterator $it, $fieldPK, $fieldName)
 	{
 		$result = array ();
-		//$it = $this->getIterator($sql);
 		while ( $it->hasNext () )
 		{
 			$registro = $it->MoveNext ();

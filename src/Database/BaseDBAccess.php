@@ -247,7 +247,7 @@ abstract class BaseDBAccess
 	 * @param string $value
 	 * @return array()
 	 */
-	public static function getArrayFromIterator($it, $key, $value, $firstElement = "-- Selecione --")
+	public static function getArrayFromIterator(IIterator $it, $key, $value, $firstElement = "-- Selecione --")
 	{
 		$retArray = array();
 		if ($firstElement != "")
@@ -267,11 +267,11 @@ abstract class BaseDBAccess
 	 * @param IIterator $it
 	 * @param string $name
 	 * @param array fields
-	 * @param bool $saveToBrowser
+	 * @param bool $echoToBrowser
 	 */
-	public static function saveToCSV($it, $name = "data.csv", $fields = null, $saveToBrowser = true)
+	public static function saveToCSV($it, $name = "data.csv", $fields = null, $echoToBrowser = true)
 	{
-		if ($saveToBrowser)
+		if ($echoToBrowser)
 		{
 			ob_clean();
 
@@ -302,18 +302,14 @@ abstract class BaseDBAccess
 			}
 			$line .= '"' . implode('","', array_values($raw)) . '"' . "\n";
 
-			if ($saveToBrowser)
+			if ($echoToBrowser)
 			{
 				echo $line;
 				$line = "";
 			}
 		}
 
-		if ($saveToBrowser)
-		{
-			die();
-		}
-		else
+		if (!$echoToBrowser)
 		{
 			return $line;
 		}

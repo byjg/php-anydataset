@@ -279,8 +279,8 @@ class IteratorFilter
 
 	/**
 	 *
-	 * @param $array
-	 * @return unknown_type
+	 * @param array $array
+	 * @return string
 	 */
 	private function evalString($array)
 	{
