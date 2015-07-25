@@ -71,15 +71,15 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testAppendRow()
 	{
-		$qtd = $this->object->getIterator()->Count();
+		$qtd = $this->object->getIterator()->count();
 		$this->assertEquals(0, $qtd);
 
 		$this->object->appendRow();
-		$qtd = $this->object->getIterator()->Count();
+		$qtd = $this->object->getIterator()->count();
 		$this->assertEquals(1, $qtd);
 
 		$this->object->appendRow();
-		$qtd = $this->object->getIterator()->Count();
+		$qtd = $this->object->getIterator()->count();
 		$this->assertEquals(2, $qtd);
 	}
 

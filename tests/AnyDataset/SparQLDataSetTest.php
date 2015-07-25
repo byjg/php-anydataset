@@ -59,7 +59,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 2");
 
 		$this->assertTrue($iterator->hasNext());
-		$this->assertEquals($iterator->Count(), 2);
+		$this->assertEquals($iterator->count(), 2);
 
 		$sr = $iterator->moveNext();
 

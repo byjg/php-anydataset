@@ -59,7 +59,7 @@ class SocketIterator extends GenericIterator
 		fclose($this->_handle);
 	}
 
-	public function Count()
+	public function count()
 	{
 		return sizeof($this->_rows);
 	}
@@ -70,7 +70,7 @@ class SocketIterator extends GenericIterator
 	*/
 	public function hasNext()
 	{
-		if ($this->_current < $this->Count())
+		if ($this->_current < $this->count())
 		{
 			return true;
 		}

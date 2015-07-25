@@ -107,7 +107,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, "wrong", $this->arrColumn);
 		$xmlIterator = $xmlDataset->getIterator();
 
-		$this->assertEquals($xmlIterator->Count(), 0);
+		$this->assertEquals($xmlIterator->count(), 0);
 	}
 
 	function test_wrongColumn()
@@ -115,7 +115,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, $this->rootNode, array("title"=>"aaaa"));
 		$xmlIterator = $xmlDataset->getIterator();
 
-		$this->assertEquals($xmlIterator->Count(), 3);
+		$this->assertEquals($xmlIterator->count(), 3);
 	}
 
 	function test_repeatedNodes()

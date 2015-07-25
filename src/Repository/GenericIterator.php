@@ -17,7 +17,7 @@ abstract class GenericIterator implements IteratorInterface, Iterator
 		throw new NotImplementedException("Implement this method");
 	}
 
-	public function Count()
+	public function count()
 	{
 		throw new NotImplementedException("Implement this method");
 	}

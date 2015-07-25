@@ -48,7 +48,7 @@ class TextFileIterator extends GenericIterator
 	*@access public
 	*@return int
 	*/
-	public function Count()
+	public function count()
 	{
 		return -1;
 	}

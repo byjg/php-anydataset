@@ -52,7 +52,7 @@ class XmlIterator extends GenericIterator
 		$this->_current = 0;
 	}
 
-	public function Count()
+	public function count()
 	{
 		return $this->_nodeList->length;
 	}
@@ -63,7 +63,7 @@ class XmlIterator extends GenericIterator
 	*/
 	public function hasNext()
 	{
-		if ($this->_current < $this->Count())
+		if ($this->_current < $this->count())
 		{
 			return true;
 		}

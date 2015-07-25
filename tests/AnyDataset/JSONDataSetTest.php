@@ -55,7 +55,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 			$this->assertSingleRow($jsonIterator->moveNext(), $count++);
 		}
 
-		$this->assertEquals($jsonIterator->Count(),  3); //, "Count() method must return 3");
+		$this->assertEquals($jsonIterator->count(),  3); //, "Count() method must return 3");
 	}
 
 	function test_navigateJSONIterator2()
@@ -69,7 +69,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 			$this->assertSingleRow($sr, $count++);
 		}
 
-		$this->assertEquals($jsonIterator->Count(),  3); //, "Count() method must return 3");
+		$this->assertEquals($jsonIterator->count(),  3); //, "Count() method must return 3");
 	}
 
 	/**
@@ -91,7 +91,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 			$this->assertSingleRow2($sr, $count++);
 		}
 
-		$this->assertEquals($jsonIterator->Count(),  2); //, "Count() method must return 3");
+		$this->assertEquals($jsonIterator->count(),  2); //, "Count() method must return 3");
 	}
 
 	function test_navigateJSONComplexIterator()
@@ -109,7 +109,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK2);
 		$jsonIterator = $jsonDataset->getIterator("/menu/wrong");
 
-		$this->assertEquals($jsonIterator->Count(), 0); //, "Without throw error");
+		$this->assertEquals($jsonIterator->count(), 0); //, "Without throw error");
 	}
 
 	/**

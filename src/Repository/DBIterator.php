@@ -31,7 +31,7 @@ class DBIterator extends GenericIterator
 	/**
 	* @return int
 	*/
-	public function Count()
+	public function count()
 	{
 		return $this->_rs->rowCount();
 	}

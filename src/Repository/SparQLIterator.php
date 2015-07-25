@@ -26,7 +26,7 @@ class SparQLIterator extends GenericIterator
 		$this->_current = 0;
 	}
 
-	public function Count()
+	public function count()
 	{
 		return ($this->_sparqlQuery->numRows());
 	}
@@ -37,7 +37,7 @@ class SparQLIterator extends GenericIterator
 	*/
 	public function hasNext()
 	{
-		if ($this->_current < $this->Count())
+		if ($this->_current < $this->count())
 		{
 			return true;
 		}

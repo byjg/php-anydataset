@@ -19,7 +19,7 @@ abstract class BaseModelCollection extends GenericIterator
 
 	public function hasNext()
 	{
-		return ($this->_curRow < $this->Count());
+		return ($this->_curRow < $this->count());
 	}
 
 	public function moveNext()
@@ -35,7 +35,7 @@ abstract class BaseModelCollection extends GenericIterator
 		}
 	}
 
-	public function Count()
+	public function count()
 	{
 		return count($this->_items);
 	}

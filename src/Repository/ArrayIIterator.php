@@ -44,7 +44,7 @@ class ArrayIIterator extends GenericIterator
 	/**
 	* @return int
 	*/
-	public function Count()
+	public function count()
 	{
 		return count($this->_rows);
 	}
@@ -54,7 +54,7 @@ class ArrayIIterator extends GenericIterator
 	*/
 	public function hasNext()
 	{
-		return ($this->_currentRow < $this->Count());
+		return ($this->_currentRow < $this->count());
 	}
 
 	/**

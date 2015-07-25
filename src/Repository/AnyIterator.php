@@ -39,7 +39,7 @@ class AnyIterator extends GenericIterator
 	* How many elements have
 	* @return int
 	*/
-	public function Count()
+	public function count()
 	{
 		return sizeof($this->_list);
 	}
@@ -50,7 +50,7 @@ class AnyIterator extends GenericIterator
 	*/
 	public function hasNext()
 	{
-		return ($this->_curRow < $this->Count());
+		return ($this->_curRow < $this->count());
 	}
 
 	/**

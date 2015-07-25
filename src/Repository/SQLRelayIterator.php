@@ -27,17 +27,15 @@ class SQLRelayIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return int
+	* @return int
 	*/
-	public function Count()
+	public function count()
 	{
 		return sqlrcur_rowCount($this->_cursor);
 	}
 
 	/**
-	*@access public
-	*@return bool
+	* @return bool
 	*/
 	public function hasNext()
 	{
@@ -49,7 +47,7 @@ class SQLRelayIterator extends GenericIterator
 		{
 			return (count($this->_rowBuffer) > 0);
 		}
-		else if ($this->_currentRow < $this->Count())
+		else if ($this->_currentRow < $this->count())
 		{
 			$sr = new SingleRow();
 
@@ -105,8 +103,7 @@ class SQLRelayIterator extends GenericIterator
 	}
 
 	/**
-	*@access public
-	*@return SingleRow
+	* @return SingleRow
 	*/
 	public function moveNext()
 	{
