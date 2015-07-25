@@ -9,5 +9,5 @@ install:
 
 script: 
   - cd tests
-  - phpunit -v --bootstrap bootstrap.php src/WebRequestTest.php 
+  - phpunit -v --bootstrap bootstrap.php .
 
