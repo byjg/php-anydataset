@@ -44,7 +44,7 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 	* @param string $name
 	* @param string $value
 	*/
-	public function AddField($name, $value)
+	public function addField($name, $value)
 	{
 		if (!array_key_exists($name, $this->_row))
 		{
@@ -129,7 +129,7 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 	{
 		if (!array_key_exists($name, $this->_row))
 		{
-			$this->AddField($name, $value);
+			$this->addField($name, $value);
 		}
 		else
 		{
@@ -168,7 +168,8 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 		}
 		else
 		{
-			for($i=0;$i<count($result);$i++)
+			$qty = count($result);
+			for($i=0; $i < $qty; $i++)
 			{
 				if ($result[$i] == $value)
 				{

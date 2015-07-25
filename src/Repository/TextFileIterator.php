@@ -103,7 +103,7 @@ class TextFileIterator extends GenericIterator
 					$column = preg_replace("/(\r?\n?)$/", "", $column);
 				}
 
-				$sr->AddField(strtolower($this->_fields[$i]), $column);
+				$sr->addField(strtolower($this->_fields[$i]), $column);
 			}
 
 			$this->readNextLine();

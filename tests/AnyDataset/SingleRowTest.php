@@ -24,10 +24,10 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 
 	protected function fill()
 	{
-		$this->object->AddField('field1', '10');
-		$this->object->AddField('field1', '20');
-		$this->object->AddField('field1', '30');
-		$this->object->AddField('field2', '40');
+		$this->object->addField('field1', '10');
+		$this->object->addField('field1', '20');
+		$this->object->addField('field1', '30');
+		$this->object->addField('field2', '40');
 		$this->object->acceptChanges();
 	}
 
@@ -46,32 +46,32 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testAddField()
 	{
-		$this->object->AddField('field1', '10');
+		$this->object->addField('field1', '10');
 		$this->assertEquals(
 			array(
 				'field1'=>10
 			), $this->object->toArray());
 
-		$this->object->AddField('field1', '20');
+		$this->object->addField('field1', '20');
 		$this->assertEquals(
 			array(
 				'field1'=> array(10, 20)
 			), $this->object->toArray());
 
-		$this->object->AddField('field1', '30');
+		$this->object->addField('field1', '30');
 		$this->assertEquals(
 			array(
 				'field1'=> array(10, 20, 30)
 			), $this->object->toArray());
 
-		$this->object->AddField('field2', '40');
+		$this->object->addField('field2', '40');
 		$this->assertEquals(
 			array(
 				'field1'=> array(10, 20, 30),
 				'field2'=> 40
 			), $this->object->toArray());
 
-		$this->object->AddField('field1', '20');
+		$this->object->addField('field1', '20');
 		$this->assertEquals(
 			array(
 				'field1'=> array(10, 20, 30, 20),
@@ -105,7 +105,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1'));
 		$this->assertEquals(array(40), $this->object->getFieldArray('field2'));
 
-		$this->object->AddField('field3', '');
+		$this->object->addField('field3', '');
 		$this->object->acceptChanges();
 
 		$this->assertEquals(array(), $this->object->getFieldArray('field3'));

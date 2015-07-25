@@ -53,23 +53,24 @@ class SQLRelayIterator extends GenericIterator
 		{
 			$sr = new SingleRow();
 
-      		for ($col=0; $col<sqlrcur_colCount($this->_cursor); $col++)
+			$colCount = sqlrcur_colCount($this->_cursor);
+      		for ($col=0; $col< $colCount; $col++)
       		{
       			$fieldName = strtolower(sqlrcur_getColumnName($this->_cursor, $col) );
       			$value = sqlrcur_getField($this->_cursor, $this->_currentRow, $col);
 
       			if (is_null($value))
       			{
-      				$sr->AddField($fieldName, "");
+      				$sr->addField($fieldName, "");
       			}
       			elseif (is_object($value))
       			{
-      				$sr->AddField($fieldName, "[OBJECT]");
+      				$sr->addField($fieldName, "[OBJECT]");
       			}
 				else
 				{
 					$value = AnyDataset::fixUTF8($value);
-					$sr->AddField($fieldName, $value);
+					$sr->addField($fieldName, $value);
 				}
 			}
 

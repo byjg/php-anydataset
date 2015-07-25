@@ -41,10 +41,9 @@ class SocketDataSet
 	}
 
 	/**
-	*@access public
-	*@param string $sql
-	*@param array $array
-	*@return DBIterator
+	* @param string $sql
+	* @param array $array
+	* @return DBIterator
 	*/
 	public function getIterator()
 	{
@@ -65,8 +64,6 @@ class SocketDataSet
 
 			$it = new SocketIterator($handle, $this->_fields, $this->_rowsep, $this->_colsep);
 			return $it;
-
-			fclose($fp);
 		}
 	}
 

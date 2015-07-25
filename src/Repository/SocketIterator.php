@@ -90,9 +90,10 @@ class SocketIterator extends GenericIterator
 		$this->_current++;
 
 		$sr = new SingleRow();
-		for($i=0;$i<sizeof($this->_fields); $i++)
+		$cntFields = count($this->_fields);
+		for($i=0; $i < $cntFields; $i++)
 		{
-			$sr->AddField(strtolower($this->_fields[$i]), $cols[$i]);
+			$sr->addField(strtolower($this->_fields[$i]), $cols[$i]);
 		}
 		return 	$sr;
 	}

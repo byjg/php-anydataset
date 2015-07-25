@@ -288,7 +288,7 @@ class AnyDataset
 		{
 			$this->appendRow();
 		}
-		$this->_collection[$this->_currentRow]->AddField( $name, $value );
+		$this->_collection[$this->_currentRow]->addField( $name, $value );
 	}
 
 	/**
@@ -351,7 +351,8 @@ class AnyDataset
 		$k = $seq [0];
 		$x = $y = array ();
 
-		for($i = 1; $i < count ( $seq ); $i ++)
+		$cntSeq = count ( $seq );
+		for($i = 1; $i < $cntSeq; $i ++)
 		{
 			if ($seq[$i]->getField($field) <= $k->getField($field))
 			{

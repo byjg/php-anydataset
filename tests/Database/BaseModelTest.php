@@ -66,8 +66,8 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	public function testBindSingleRow()
 	{
 		$sr = new \ByJG\AnyDataset\Repository\SingleRow();
-		$sr->AddField("id", 10);
-		$sr->AddField("name", "Testing");
+		$sr->addField("id", 10);
+		$sr->addField("name", "Testing");
 
 		$object = new \Tests\Sample\SampleModel($sr);
 
@@ -83,8 +83,8 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 		$anydata = new \ByJG\AnyDataset\Repository\AnyDataset();
 
 		$sr = new \ByJG\AnyDataset\Repository\SingleRow();
-		$sr->AddField("id", 10);
-		$sr->AddField("name", "Testing");
+		$sr->addField("id", 10);
+		$sr->addField("name", "Testing");
 		$anydata->appendRow($sr);
 
 		$object = new \Tests\Sample\SampleModel($anydata->getIterator());

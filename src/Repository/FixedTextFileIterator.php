@@ -83,11 +83,11 @@ class FixedTextFileIterator extends GenericIterator
 			}
 
 			$sr = new SingleRow();
-			$sr->AddField("_definition", $this->_curDefinition);
+			$sr->addField("_definition", $this->_curDefinition);
 
 			foreach($fields as $key=>$value)
 			{
-				$sr->AddField(strtolower($key), $value);
+				$sr->addField(strtolower($key), $value);
 			}
 
 			$this->_current++;
@@ -105,7 +105,8 @@ class FixedTextFileIterator extends GenericIterator
 
 	protected function processBuffer($buffer, $definition, &$fields)
 	{
-		for($i=0;$i< count($definition); $i++)
+		$cntDef = count($definition);
+		for($i=0;$i< $cntDef; $i++)
 		{
 			$fieldDef = $definition[$i];
 

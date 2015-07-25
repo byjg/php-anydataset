@@ -113,7 +113,8 @@ class DBSQLRelayDriver implements IDBDriver
 		}
 
 		$fields = [];
-		for ($col=0; $col<sqlrcur_colCount($cur); $col++)
+		$colCount = sqlrcur_colCount($cur);
+		for ($col=0; $col<$colCount; $col++)
 		{
 			$fields[] = strtolower(sqlrcur_getColumnName($cur, $col));
 		}
