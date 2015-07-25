@@ -4,10 +4,10 @@ namespace ByJG\AnyDataset\Repository;
 
 use InvalidArgumentException;
 use ByJG\AnyDataset\Database\ConnectionManagement;
-use ByJG\AnyDataset\Database\INoSQLDriver;
+use ByJG\AnyDataset\Database\NoSQLDriverInterface;
 use ByJG\AnyDataset\Database\MongoDBDriver;
 
-class NoSQLDataSet implements INoSQLDriver
+class NoSQLDataSet implements NoSQLDriverInterface
 {
 	/**
 	 * Enter description here...
@@ -18,7 +18,7 @@ class NoSQLDataSet implements INoSQLDriver
 
 	/**
 	 *
-	 * @var INoSQLDriver
+	 * @var NoSQLDriverInterface
 	 */
 	protected $_dbDriver = null;
 
@@ -67,7 +67,7 @@ class NoSQLDataSet implements INoSQLDriver
 	/**
 	 *
 	 * @param mixed $filter
-	 * @return IIterator $filter
+	 * @return IteratorInterface $filter
 	 */
 	public function getIterator($filter = null, $fields = null)
 	{

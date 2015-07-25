@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-interface IIterator
+interface IteratorInterface
 {
 	/**
 	*@desc Check if exists more records.

@@ -6,8 +6,8 @@ use ByJG\AnyDataset\Database\ConnectionManagement;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
 use ByJG\AnyDataset\Database\DBSQLRelayDriver;
-use ByJG\AnyDataset\Database\IDBDriver;
-use ByJG\AnyDataset\Database\IDbFunctions;
+use ByJG\AnyDataset\Database\DBDriverInterface;
+use ByJG\AnyDataset\Database\DBFunctionsInterface;
 
 class DBDataSet
 {
@@ -20,7 +20,7 @@ class DBDataSet
 
 	/**
 	 *
-	 * @var IDBDriver
+	 * @var DBDriverInterface
 	 */
 	protected $_dbDriver = null;
 
@@ -59,7 +59,7 @@ class DBDataSet
 	 * @access public
 	 * @param string $sql
 	 * @param array $array
-	 * @return IIterator
+	 * @return IteratorInterface
 	 */
 	public function getIterator($sql, $array = null)
 	{
@@ -109,12 +109,12 @@ class DBDataSet
 
 	/**
 	 * @access public
-	 * @param IIterator $it
+	 * @param IteratorInterface $it
 	 * @param string $fieldPK
 	 * @param string $fieldName
 	 * @return Resource
 	 */
-	public function getArrayField(IIterator $it, $fieldPK, $fieldName)
+	public function getArrayField(IteratorInterface $it, $fieldPK, $fieldName)
 	{
 		$result = array ();
 		while ( $it->hasNext () )
@@ -136,13 +136,13 @@ class DBDataSet
 
 	/**
 	 *
-	 * @var IDbFunctions
+	 * @var DBFunctionsInterface
 	 */
 	protected $_dbFunction = null;
 
 	/**
 	 * Get a IDbFunctions class to execute Database specific operations.
-	 * @return IDbFunctions
+	 * @return DBFunctionsInterface
 	 */
 	public function getDbFunctions()
 	{

@@ -208,9 +208,9 @@ class AnyDataset
 	/**
 	 * Enter description here...
 	 *
-	 * @param IIterator $it
+	 * @param IteratorInterface $it
 	 */
-	public function import(IIterator $it)
+	public function import(IteratorInterface $it)
 	{
 		while ($it->hasNext())
 		{
@@ -294,7 +294,7 @@ class AnyDataset
 	/**
 	 * Get an Iterator filtered by an IteratorFilter
 	 * @param IteratorFilter $itf
-	 * @return IIterator
+	 * @return IteratorInterface
 	 */
 	public function getIterator(IteratorFilter $itf = null)
 	{

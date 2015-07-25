@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Model;
 
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 use ReflectionClass;
 use ReflectionProperty;
@@ -48,7 +48,7 @@ class Object
 		{
 			$this->bindArray($source->toArray(), $target);
 		}
-		else if ($source instanceof IIterator)
+		else if ($source instanceof IteratorInterface)
 		{
 			if ($source->hasNext())
 			{

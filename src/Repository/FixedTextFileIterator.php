@@ -16,7 +16,7 @@ class FixedTextFileIterator extends GenericIterator
 
 	/**
 	*@access public
-	*@return IIterator
+	*@return IteratorInterface
 	*/
 	public function __construct($handle, $fields)
 	{

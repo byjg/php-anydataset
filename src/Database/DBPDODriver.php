@@ -6,7 +6,7 @@ use ByJG\AnyDataset\Repository\DBIterator;
 use PDO;
 use PDOStatement;
 
-class DBPDODriver implements IDBDriver
+class DBPDODriver implements DBDriverInterface
 {	
 	/**
 	 * @var PDO

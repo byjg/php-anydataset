@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use UnexpectedValueException;
 use ByJG\AnyDataset\Repository\ArrayDataSet;
 use ByJG\AnyDataset\Repository\ArrayIIterator;
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 
 class ArrayDataSet
 {
@@ -66,7 +66,7 @@ class ArrayDataSet
 	/**
 	 * Return a IIterator
 	 *
-	 * @return IIterator
+	 * @return IteratorInterface
 	 */
 	public function getIterator()
 	{

@@ -1,6 +1,6 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\JSONDataSet;
 use ByJG\AnyDataset\Repository\SingleRow;
 
@@ -39,7 +39,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK);
 		$jsonIterator = $jsonDataset->getIterator();
 
-		$this->assertTrue($jsonIterator instanceof IIterator); //, "Resultant object must be an interator");
+		$this->assertTrue($jsonIterator instanceof IteratorInterface); //, "Resultant object must be an interator");
 		$this->assertTrue($jsonIterator->hasNext()); // "hasNext() method must be true");
 		$this->assertEquals($jsonIterator->Count(),  3); //, "Count() method must return 3");
 	}

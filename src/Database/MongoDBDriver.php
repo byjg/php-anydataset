@@ -10,7 +10,7 @@ use MongoDate;
 use MongoDB;
 use stdClass;
 
-class MongoDBDriver implements INoSQLDriver
+class MongoDBDriver implements NoSQLDriverInterface
 {
 	/**
 	 * @var MongoDB

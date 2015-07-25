@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Model;
 
 use ByJG\AnyDataset\Exception\IteratorException;
 use ByJG\AnyDataset\Repository\GenericIterator;
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 use InvalidArgumentException;
 
@@ -51,7 +51,7 @@ abstract class BaseModelCollection extends GenericIterator
 	{
 		if (!is_null($it))
 		{
-			if (!($it instanceof IIterator))
+			if (!($it instanceof IteratorInterface))
 			{
 				throw new InvalidArgumentException("You have to pass an IIterator class");
 			}

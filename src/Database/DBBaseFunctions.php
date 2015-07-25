@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\Repository\DBDataSet;
 use DateTime;
 
-abstract class DBBaseFunctions implements IDBFunctions
+abstract class DBBaseFunctions implements DBFunctionsInterface
 {
 
     const DMY = "d-m-Y";

@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\Repository\Oci8Iterator;
 use ByJG\AnyDataset\Exception\DatabaseException;
 
-class DBOci8Driver implements IDBDriver
+class DBOci8Driver implements DBDriverInterface
 {
 	/**
 	 * Enter description here...

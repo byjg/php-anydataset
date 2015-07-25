@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Model;
 
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\Util\XmlUtil;
 use DOMNode;
 use Exception;
@@ -115,7 +115,7 @@ class ObjectHandler
 	 */
 	public function CreateObjectFromModel()
 	{
-		if ($this->_model instanceof IIterator)
+		if ($this->_model instanceof IteratorInterface)
 		{
 			foreach ($this->_model as $singleRow)
 			{

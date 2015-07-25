@@ -204,13 +204,13 @@ class IteratorFilter
 
 	/**
 	 *
-	 * @param $name
-	 * @param $relation
-	 * @param $value
-	 * @param $param
-	 * @return unknown_type
+	 * @param string $name
+	 * @param Relation $relation
+	 * @param string $value
+	 * @param string[] $param
+	 * @return string
 	 */
-	private function getStrSqlRelation($name, $relation, $value, &$param)
+	private function getStrSqlRelation($name, Relation $relation, $value, &$param)
 	{
 		$value = trim($value);
 		$paramName = $name;
@@ -277,7 +277,7 @@ class IteratorFilter
 
 	/**
 	 *
-	 * @param array $array
+	 * @param string[] $array
 	 * @return string
 	 */
 	private function evalString($array)

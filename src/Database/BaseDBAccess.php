@@ -7,7 +7,7 @@ use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\CachedDBDataset;
 use ByJG\AnyDataset\Repository\DBDataSet;
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\Cache\ICacheEngine;
 
 abstract class BaseDBAccess
@@ -134,7 +134,7 @@ abstract class BaseDBAccess
 	 *
 	 * @param string $sql
 	 * @param array $param
-	 * @return IIterator
+	 * @return IteratorInterface
 	 */
 	protected function getIterator($sql, $param = null, $ttl = -1)
 	{
@@ -229,7 +229,7 @@ abstract class BaseDBAccess
 	 * @param string $tablename
 	 * @param string $key
 	 * @param string $value
-	 * @return IIterator
+	 * @return IteratorInterface
 	 */
 	protected function getIteratorbyId($tablename, $key, $value)
 	{
@@ -242,12 +242,12 @@ abstract class BaseDBAccess
 	/**
 	 * Get an Array from an existing Iterator
 	 *
-	 * @param IIterator $it
+	 * @param IteratorInterface $it
 	 * @param string $key
 	 * @param string $value
 	 * @return array()
 	 */
-	public static function getArrayFromIterator(IIterator $it, $key, $value, $firstElement = "-- Selecione --")
+	public static function getArrayFromIterator(IteratorInterface $it, $key, $value, $firstElement = "-- Selecione --")
 	{
 		$retArray = array();
 		if ($firstElement != "")
@@ -264,7 +264,7 @@ abstract class BaseDBAccess
 
 	/**
 	 *
-	 * @param IIterator $it
+	 * @param IteratorInterface $it
 	 * @param string $name
 	 * @param array fields
 	 * @param bool $echoToBrowser
@@ -317,7 +317,7 @@ abstract class BaseDBAccess
 
 	/**
 	 * Get a IDbFunctions class containing specific database operations
-	 * @return IDBFunctions
+	 * @return DBFunctionsInterface
 	 */
 	public function getDbFunctions()
 	{

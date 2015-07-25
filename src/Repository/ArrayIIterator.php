@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Repository\AnyDataset;
 use ByJG\AnyDataset\Repository\GenericIterator;
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 use InvalidArgumentException;
 
@@ -28,7 +28,7 @@ class ArrayIIterator extends GenericIterator
 	protected $_currentRow;
 
 	/**
-	* @return IIterator
+	* @return IteratorInterface
 	*/
 	public function __construct($rows)
 	{

@@ -1,6 +1,6 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SparQLDataSet;
 
 /**
@@ -26,7 +26,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 		$dataset = new SparQLDataSet(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
-		$this->assertTrue($iterator instanceof IIterator);
+		$this->assertTrue($iterator instanceof IteratorInterface);
 		$this->assertTrue($iterator->hasNext());
 		$this->assertEquals($iterator->Count(), 5);
 	}
@@ -39,7 +39,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 		$dataset = new SparQLDataSet("http://localhost/", SparQLDatasetTest::$SPARQL_NS);
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
-		$this->assertTrue($iterator instanceof IIterator);
+		$this->assertTrue($iterator instanceof IteratorInterface);
 		$this->assertTrue($iterator->hasNext());
 		$this->assertEquals($iterator->Count(), 0);
 	}

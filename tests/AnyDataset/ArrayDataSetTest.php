@@ -1,7 +1,7 @@
 <?php
 
 use ByJG\AnyDataset\Repository\ArrayDataSet;
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 /**
  * NOTE: The class name must end with "Test" suffix.
@@ -41,7 +41,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 		$arrayIterator = $arrayDataset->getIterator();
 
 
-		$this->assertTrue($arrayIterator instanceof IIterator); //, "Resultant object must be an interator");
+		$this->assertTrue($arrayIterator instanceof IteratorInterface); //, "Resultant object must be an interator");
 		$this->assertTrue($arrayIterator->hasNext()); //, "hasNext() method must be true");
 		$this->assertEquals($arrayIterator->Count(), 3) ; //, "Count() method must return 3");
 	}
@@ -51,7 +51,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 		$arrayDataset = new ArrayDataSet($this->SAMPLE2);
 		$arrayIterator = $arrayDataset->getIterator();
 
-		$this->assertTrue($arrayIterator instanceof IIterator); // "Resultant object must be an interator");
+		$this->assertTrue($arrayIterator instanceof IteratorInterface); // "Resultant object must be an interator");
 		$this->assertTrue($arrayIterator->hasNext()); // "hasNext() method must be true");
 		$this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
 	}
@@ -61,7 +61,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 		$arrayDataset = new ArrayDataSet($this->SAMPLE3);
 		$arrayIterator = $arrayDataset->getIterator();
 
-		$this->assertTrue($arrayIterator instanceof IIterator); // "Resultant object must be an interator");
+		$this->assertTrue($arrayIterator instanceof IteratorInterface); // "Resultant object must be an interator");
 		$this->assertTrue($arrayIterator->hasNext()); // "hasNext() method must be true");
 		$this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
 	}
@@ -187,7 +187,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 		$arrayIterator = $arrayDataset->getIterator();
 
 
-		$this->assertTrue($arrayIterator instanceof IIterator); //, "Resultant object must be an interator");
+		$this->assertTrue($arrayIterator instanceof IteratorInterface); //, "Resultant object must be an interator");
 		$this->assertTrue($arrayIterator->hasNext()); //, "hasNext() method must be true");
 		$this->assertEquals($arrayIterator->Count(), 3) ; //, "Count() method must return 3");
 	}
@@ -251,7 +251,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 		$arrayIterator = $arrayDataset->getIterator();
 
 
-		$this->assertTrue($arrayIterator instanceof IIterator); //, "Resultant object must be an interator");
+		$this->assertTrue($arrayIterator instanceof IteratorInterface); //, "Resultant object must be an interator");
 		$this->assertTrue($arrayIterator->hasNext()); //, "hasNext() method must be true");
 		$this->assertEquals($arrayIterator->Count(), 3) ; //, "Count() method must return 3");
 	}

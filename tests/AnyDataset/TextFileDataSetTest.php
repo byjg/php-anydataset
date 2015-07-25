@@ -1,6 +1,6 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 use ByJG\AnyDataset\Repository\TextFileDataSet;
 /**
@@ -85,7 +85,7 @@ class TextFileDataSetTest extends PHPUnit_Framework_TestCase
 		$txtFile = new TextFileDataSet(self::$fileName_Unix, self::$fieldNames, TextFileDataSet::CSVFILE);
 		$txtIterator = $txtFile->getIterator();
 
-		$this->assertTrue($txtIterator instanceof IIterator, "Resultant object must be an interator");
+		$this->assertTrue($txtIterator instanceof IteratorInterface, "Resultant object must be an interator");
 		$this->assertTrue($txtIterator->hasNext(), "hasNext() method must be true");
 		$this->assertTrue($txtIterator->Count() == -1, "Count() does not return anything by default.");
 		$this->assertRowCount($txtIterator, 2000);
@@ -97,7 +97,7 @@ class TextFileDataSetTest extends PHPUnit_Framework_TestCase
 		$txtFile = new TextFileDataSet(self::$fileName_Windows, self::$fieldNames, TextFileDataSet::CSVFILE);
 		$txtIterator = $txtFile->getIterator();
 
-		$this->assertTrue($txtIterator instanceof IIterator);
+		$this->assertTrue($txtIterator instanceof IteratorInterface);
 		$this->assertTrue($txtIterator->hasNext());
 		$this->assertEquals($txtIterator->Count(), -1);
 		$this->assertRowCount($txtIterator, 2000);
@@ -109,7 +109,7 @@ class TextFileDataSetTest extends PHPUnit_Framework_TestCase
 		$txtFile = new TextFileDataSet(self::$fileName_MacClassic, self::$fieldNames, TextFileDataSet::CSVFILE);
 		$txtIterator = $txtFile->getIterator();
 
-		$this->assertTrue($txtIterator instanceof IIterator);
+		$this->assertTrue($txtIterator instanceof IteratorInterface);
 		$this->assertTrue($txtIterator->hasNext());
 		$this->assertEquals($txtIterator->Count(), -1);
 		$this->assertRowCount($txtIterator, 2000);
@@ -121,7 +121,7 @@ class TextFileDataSetTest extends PHPUnit_Framework_TestCase
 		$txtFile = new TextFileDataSet(self::$fileName_BlankLine, self::$fieldNames, TextFileDataSet::CSVFILE);
 		$txtIterator = $txtFile->getIterator();
 
-		$this->assertTrue($txtIterator instanceof IIterator);
+		$this->assertTrue($txtIterator instanceof IteratorInterface);
 		$this->assertTrue($txtIterator->hasNext());
 		$this->assertEquals($txtIterator->Count(), -1);
 		$this->assertRowCount($txtIterator, 2000);

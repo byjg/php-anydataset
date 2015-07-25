@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Repository\DBDataSet;
 
-interface IDBFunctions
+interface DBFunctionsInterface
 {
 
 	/**

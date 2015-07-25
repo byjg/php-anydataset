@@ -4,7 +4,7 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Database\ConnectionManagement;
-use ByJG\AnyDataset\Database\IDBDriver;
+use ByJG\AnyDataset\Database\DBDriverInterface;
 use ByJG\AnyDataset\Database\SQLHelper;
 use ByJG\AnyDataset\Database\SQLBind;
 use ByJG\AnyDataset\Exception\DatabaseException;
@@ -12,7 +12,7 @@ use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Repository\SQLRelayIterator;
 
-class DBSQLRelayDriver implements IDBDriver
+class DBSQLRelayDriver implements DBDriverInterface
 {
 	/**
 	 * Enter description here...

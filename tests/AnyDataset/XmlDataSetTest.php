@@ -1,6 +1,6 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IIterator;
+use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 use ByJG\AnyDataset\Repository\XmlDataSet;
 
@@ -61,7 +61,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
 		$xmlIterator = $xmlDataset->getIterator();
 
-		$this->assertTrue($xmlIterator instanceof IIterator);
+		$this->assertTrue($xmlIterator instanceof IteratorInterface);
 		$this->assertTrue($xmlIterator->hasNext());
 		$this->assertEquals($xmlIterator->Count(), 3);
 	}
@@ -133,7 +133,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		$xmlDataset = new XmlDataSet($xml, $this->rootNode, array("author"=>"author"));
 		$xmlIterator = $xmlDataset->getIterator();
 
-		$this->assertTrue($xmlIterator instanceof IIterator);
+		$this->assertTrue($xmlIterator instanceof IteratorInterface);
 		$this->assertTrue($xmlIterator->hasNext());
 		$this->assertEquals(1, $xmlIterator->Count());
 
@@ -199,7 +199,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		$xmlDataset = new XmlDataSet($xml, $rootNode, $colNode, $namespace);
 		$xmlIterator = $xmlDataset->getIterator();
 
-		$this->assertTrue($xmlIterator instanceof IIterator);
+		$this->assertTrue($xmlIterator instanceof IteratorInterface);
 		$this->assertTrue($xmlIterator->hasNext());
 		$this->assertEquals(2, $xmlIterator->Count());
 
