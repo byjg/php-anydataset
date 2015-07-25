@@ -191,4 +191,4 @@ class DBMySQLFunctions extends DBBaseFunctions
 
 }
 
-?>
+

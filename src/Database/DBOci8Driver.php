@@ -83,8 +83,6 @@ class DBOci8Driver implements IDBDriver
 	{
 		list($query, $array) = SQLBind::parseSQL ( $this->_connectionManagement, $sql, $array );
 
-		//$query = ForceUTF8\Encoding::toWin1252($query);
-
 		// Prepare the statement
 		$stid = oci_parse($this->_conn, $query);
 		if (!$stid) {

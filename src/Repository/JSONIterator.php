@@ -102,4 +102,4 @@ class JSONIterator extends GenericIterator
  	}
 
 }
-?>
+

@@ -98,11 +98,12 @@ class TextFileIterator extends GenericIterator
 			{
 				$column = $cols[$i];
 
-				if (($i>=sizeof($this->_fields)-1) || ($i>=sizeof($cols)-1))
+				if (($i >= sizeof($this->_fields) - 1) || ($i >= sizeof($cols) - 1))
+				{
 					$column = preg_replace("/(\r?\n?)$/", "", $column);
+				}
 
 				$sr->AddField(strtolower($this->_fields[$i]), $column);
-				//Debug::PrintValue(strtolower($this->_fields[$i]), $cols[$i]);
 			}
 
 			$this->readNextLine();
@@ -124,4 +125,4 @@ class TextFileIterator extends GenericIterator
  	}
 
 }
-?>
+

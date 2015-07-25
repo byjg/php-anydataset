@@ -70,7 +70,7 @@ class AnyDataset
 		$this->_currentRow = -1;
 
 		$this->_path = null;
-		if ($file != null)
+		if (!is_null($file))
 		{
 			if (!is_string($file))
 			{
@@ -106,10 +106,14 @@ class AnyDataset
 				foreach ($fields as $field)
 				{
 					$attr = $field->attributes->getNamedItem("name");
-					if ($attr != null)
+					if (!is_null($attr))
+					{
 						$sr->addField($attr->nodeValue, $field->nodeValue);
+					}
 					else
+					{
 						throw new \InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
+					}
 				}
 				$sr->acceptChanges();
 				$this->_collection[] = $sr;
@@ -182,7 +186,7 @@ class AnyDataset
 	 */
 	public function appendRow($sr = null)
 	{
-		if ($sr != null)
+		if (!is_null($sr))
 		{
 			if ($sr instanceof SingleRow )
 			{
@@ -226,7 +230,7 @@ class AnyDataset
 	 *@param SingleRow row
 	 *@desc Insert one row before specified position.
 	 */
-	public function insertRowBefore($rowNumber, $row = null)
+	public function insertRowBefore($rowNumber, SingleRow $row = null)
 	{
 		if ($row >= sizeof($this->_collection))
 		{
@@ -234,7 +238,7 @@ class AnyDataset
 		}
 		else
 		{
-			if ($row == null)
+			if (is_null($row))
 			{
 				$row = new SingleRow();
 			}
@@ -243,10 +247,9 @@ class AnyDataset
 	}
 
 	/**
-	 *@access public
-	 *@param int $row - Row number (sequential)
-	 *@return
-	 *@desc Remove specified row position.
+	 *
+	 * @param mixed $row
+	 * @return null
 	 */
 	public function removeRow($row = null)
 	{
@@ -303,9 +306,8 @@ class AnyDataset
 	 */
 	public function getIterator(IteratorFilter $itf = null)
 	{
-		if ($itf == null)
+		if (is_null($itf))
 		{
-			//return new AnyIterator(XmlUtil::selectNodes($this->_nodeRoot, ""));
 			return new AnyIterator ( $this->_collection );
 		}
 		else

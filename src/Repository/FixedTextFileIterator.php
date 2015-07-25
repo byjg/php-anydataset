@@ -70,13 +70,17 @@ class FixedTextFileIterator extends GenericIterator
 			$buffer = fgets($this->_handle, 4096);
 
 			if ($buffer == "")
+			{
 				return new SingleRow();
+			}
 
 			$fields = array();
 			$this->processBuffer($buffer, $this->_fields[$this->_curDefinition], $fields);
 
-			if ($fields == null)
+			if (is_null($fields))
+			{
 				throw new IteratorException("Text file definition is empty.");
+			}
 
 			$sr = new SingleRow();
 			$sr->AddField("_definition", $this->_curDefinition);
@@ -84,7 +88,6 @@ class FixedTextFileIterator extends GenericIterator
 			foreach($fields as $key=>$value)
 			{
 				$sr->AddField(strtolower($key), $value);
-				//Debug::PrintValue(strtolower($this->_fields[$i]), $cols[$i]);
 			}
 
 			$this->_current++;
@@ -116,14 +119,18 @@ class FixedTextFileIterator extends GenericIterator
 			{
 				$key = $fields[$fieldDef->fieldName];
 				if (is_array($fieldDef->subTypes[$key]))
+				{
 					$this->processBuffer($buffer, $fieldDef->subTypes[$key], $fields);
+				}
 			}
 		}
 
-		if ($fields == null)
+		if (is_null($fields))
 		{
-			if ($this->_curDefinition+1 <= count($this->_fields))
+			if ($this->_curDefinition + 1 <= count($this->_fields))
+			{
 				$this->processBuffer($buffer, $this->_fields[++$this->_curDefinition], $fields);
+			}
 		}
 	}
 
@@ -133,4 +140,4 @@ class FixedTextFileIterator extends GenericIterator
  	}
 
 }
-?>
+

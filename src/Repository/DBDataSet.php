@@ -148,7 +148,7 @@ class DBDataSet
 	 */
 	public function getDbFunctions()
 	{
-		if ($this->_dbFunction == null)
+		if (is_null($this->_dbFunction))
 		{
 			$dbFunc = "\\ByJG\\AnyDataset\\Database\\DB" . ucfirst($this->_connectionManagement->getDriver()) . "Functions";
 			$this->_dbFunction = new $dbFunc();

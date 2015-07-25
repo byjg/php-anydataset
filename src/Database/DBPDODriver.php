@@ -25,7 +25,7 @@ class DBPDODriver implements IDBDriver
 	{	
 		$this->_connectionManagement = $connMngt;
 
-		if ($strcnn == null)
+		if (is_null($strcnn))
 		{
 			if ($this->_connectionManagement->getFilePath() != "")
 				$strcnn = $this->_connectionManagement->getDriver () . ":" . $this->_connectionManagement->getFilePath ();

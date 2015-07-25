@@ -93,7 +93,7 @@ class Object
 			$sourceValue = $this->getPropValue($source, $prop, $propName);
 
 			// Set the Value
-			if ($sourceValue != null)
+			if (!is_null($sourceValue))
 			{
 				$this->setPropValue($target, $propName, $sourceValue);
 			}
@@ -140,15 +140,17 @@ class Object
 		if (method_exists($obj, "getPropertyPattern"))
 		{
 			$propertyPattern = $obj->getPropertyPattern();
-			if ($propertyPattern != null)
+			if (!is_null($propertyPattern))
+			{
 				$propName = preg_replace($propertyPattern[0], $propertyPattern[1], $propName);
+			}
 		}
 
 		if (method_exists($obj, 'get' . $propName))
 		{
 			return $obj->{'get' . $propName}();
 		}
-		else if ($prop == null)
+		else if (is_null($prop))
 		{
 			return $obj->{$propName};
 		}
@@ -173,8 +175,10 @@ class Object
 		if (method_exists($obj, "getPropertyPattern"))
 		{
 			$propertyPattern = $obj->getPropertyPattern();
-			if ($propertyPattern != null)
+			if (!is_null($propertyPattern))
+			{
 				$propName = preg_replace($propertyPattern[0], $propertyPattern[1], $propName);
+			}
 		}
 
         if ($obj instanceof SingleRow)
@@ -191,7 +195,7 @@ class Object
 		}
 		else
 		{
-			if ($this->_propNameLower == null)
+			if (is_null($this->_propNameLower))
 			{
 				$this->_propNameLower = array();
 

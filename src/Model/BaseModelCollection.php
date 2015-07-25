@@ -49,7 +49,7 @@ abstract class BaseModelCollection extends GenericIterator
 
 	public function __construct($it = null, $type = 'BaseModel')
 	{
-		if ($it != null)
+		if (!is_null($it))
 		{
 			if (!($it instanceof IIterator))
 			{

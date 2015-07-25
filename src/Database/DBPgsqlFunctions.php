@@ -176,4 +176,4 @@ class DBPGSqlFunctions extends DBBaseFunctions
 	}
 }
 
-?>
+

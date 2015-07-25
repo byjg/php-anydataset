@@ -77,4 +77,4 @@ class SparQLIterator extends GenericIterator
  	}
 
 }
-?>
+

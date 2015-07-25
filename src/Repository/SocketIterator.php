@@ -27,29 +27,23 @@ class SocketIterator extends GenericIterator
 		$this->_handle = $handle;
 
 		$header = true;
-		//Debug::PrintValue("Entrou Header");
 		while (!feof($this->_handle) && $header)
 		{
 			$x = fgets($this->_handle);
-			//Debug::PrintValue($x);
 			$header = (trim($x) != "");
 		}
-		//Debug::PrintValue("Saiu Header");
 
 		$linha = "";
-		//Debug::PrintValue("INicio Leitura");
 		$rowseptemp = str_replace("\\", "", $this->_rowsep);
 		while (!feof($this->_handle))
 		{
 			$x = fgets($this->_handle, 4096);
 			if ((trim($x) != "") && (strpos($x, $this->_colsep)>0) )
 			{
-				//Debug::PrintValue($x);
 				$linha .= $x;
 			}
 			$header = (trim($x) != "");
 		}
-		//Debug::PrintValue("Fim Leitura");
 
 		$this->_rows = array();
 		$rowsaux = preg_split("/" . $this->_rowsep . "/", $linha);
@@ -100,7 +94,6 @@ class SocketIterator extends GenericIterator
 		for($i=0;$i<sizeof($this->_fields); $i++)
 		{
 			$sr->AddField(strtolower($this->_fields[$i]), $cols[$i]);
-			//Debug::PrintValue(strtolower($this->_fields[$i]), $cols[$i]);
 		}
 		return 	$sr;
 	}
@@ -110,4 +103,4 @@ class SocketIterator extends GenericIterator
  		return $this->_current;
  	}
 }
-?>
+

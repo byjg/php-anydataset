@@ -107,7 +107,6 @@ class SQLHelper
 			$valores = array(SQLFieldType::Text, $valores);
 		}
 
-		//$valores[1]= str_replace("'", "''", $valores[1]);
 		if ($valores[0]== SQLFieldType::Boolean)
 		{
 			if ($valores[1]=="1")

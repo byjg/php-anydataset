@@ -94,7 +94,7 @@ abstract class BaseDBAccess
 			$log = LogHandler::getInstance();
 			$log->debug("Class name: " . get_class($this));
 			$log->debug("SQL: " . $sql);
-			if ($param != null)
+			if (!is_null($param))
 			{
 				$s = "";
 				foreach ($param as $key => $value)
@@ -147,7 +147,7 @@ abstract class BaseDBAccess
 			$log = LogHandler::getInstance();
 			$log->debug("Class name: " . get_class($this));
 			$log->debug("SQL: " . $sql);
-			if ($param != null)
+			if (!is_null($param))
 			{
 				$s = "";
 				foreach ($param as $key => $value)
@@ -182,7 +182,7 @@ abstract class BaseDBAccess
 			$log = LogHandler::getInstance();
 			$log->debug("Class name: " . get_class($this));
 			$log->debug("SQL: " . $sql);
-			if ($param != null)
+			if (!is_null($param))
 			{
 				$s = "";
 				foreach ($param as $key => $value)
@@ -287,7 +287,7 @@ abstract class BaseDBAccess
 			{
 				$first = false;
 
-				if ($fields == null)
+				if (is_null($fields))
 				{
 					$fields = $sr->getFieldNames();
 				}
@@ -355,4 +355,4 @@ abstract class BaseDBAccess
 
 }
 
-?>
+

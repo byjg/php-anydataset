@@ -54,8 +54,6 @@ class FixedTextFileDataSet
 	*/
 	public function getIterator()
 	{
-		//'/(http|ftp|https):\\/\\/((\\w|\\.)+)/i';
-
 		$errno = null;
 		$errstr = null;
 		if ($this->_sourceType == "HTTP")

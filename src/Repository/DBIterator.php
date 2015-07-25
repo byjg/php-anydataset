@@ -87,11 +87,6 @@ class DBIterator extends GenericIterator
 			$this->_rs->closeCursor();
             $this->_rs = null;
 
-            //if (this._db != null)
-            //{
-            //    this._db.Close();
-            //    this._db = null;
-            //}
 			return (count($this->_rowBuffer) > 0);
 		}
 	}

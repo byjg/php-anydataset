@@ -41,7 +41,7 @@ abstract class BaseModel extends Object
 	 */
 	public function setPropertyPattern($pattern, $replace)
 	{
-		if ($pattern == null) {
+		if (is_null($pattern)) {
             $this->_propertyPattern = null;
         } else {
             $this->_propertyPattern = array(($pattern[0] != "/" ? "/" : "") . $pattern . ($pattern[strlen($pattern) - 1] != "/" ? "/" : ""), $replace);

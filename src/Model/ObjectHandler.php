@@ -389,7 +389,7 @@ class ObjectHandler
 						}
 						else if ($lazyCreate)
 						{
-							if ($used == null && is_object($valAr)) // If the child is an object there is no need to create every time the node.
+							if (Is_null($used) && is_object($valAr)) // If the child is an object there is no need to create every time the node.
 							{
 								$lazyCreate = false;
 							}
@@ -457,7 +457,7 @@ class ObjectHandler
 				}
 
 				# Save Reference for "isAttributeOf" attribute.
-				if ($used != null)
+				if (!is_null($used))
 				{
 					$classMeta[ObjectHandler::NodeRefs][$propMeta[ObjectHandler::PropName]] = $used;
 				}
@@ -528,8 +528,6 @@ class ObjectHandler
 
 	protected static function mapArray(&$value, $key)
 	{
-		//echo "Key: " . $key . "\n";
-
 		if ($value instanceof SimpleXMLElement)
 		{
 			$x = array();
@@ -550,31 +548,19 @@ class ObjectHandler
 
 
 			$value = $x;
-			//$value = (array)$value;
 		}
-
-
-		/*
-		if (($key == "select") && is_array($value) && array_key_exists("option", $value) && is_array($value["option"]))
-		{
-			$arr = array();
-			foreach ($value["option"] as $k => $item)
-			{
-					$id = array_key_exists("@attributes", $item) ? $item["@attributes"]["value"] : "";
-					$value = $item[0];
-					$arr[] = array("id"=>$id, "value"=>$value);
-			}
-			$value = $arr;
-		}
-		*/
 
 		// Fix empty arrays or with one element only.
 		if (is_array($value))
 		{
 			if (count($value) == 0)
+			{
 				$value = "";
+			}
 			elseif (count($value) == 1 && array_key_exists(0, $value))
+			{
 				$value = $value[0];
+			}
 		}
 
 		// If still as array, process it
@@ -609,7 +595,9 @@ class ObjectHandler
 
 			// If still an array, walk.
 			if (is_array($value))
+			{
 				array_walk($value, "ByJG\AnyDataset\Model\ObjectHandler::mapArray");
+			}
 		}
 	}
 

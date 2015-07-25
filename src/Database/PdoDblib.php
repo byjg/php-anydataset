@@ -17,7 +17,5 @@ class PdoDblib extends DBPDODriver
 		$this->_db->exec('SET ANSI_PADDING ON');
 		$this->_db->exec('SET ANSI_NULLS ON');
 		$this->_db->exec('SET CONCAT_NULL_YIELDS_NULL ON');
-		//$this->execSql('SET NUMERIC_ROUNDABORT OFF');
-		//$this->execSql('set dateformat ymd');
 	}
 }

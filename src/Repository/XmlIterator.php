@@ -119,4 +119,4 @@ class XmlIterator extends GenericIterator
  	}
 
 }
-?>
+

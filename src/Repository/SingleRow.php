@@ -68,7 +68,9 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 	public function getField($name)
 	{
 		if (!array_key_exists($name, $this->_row))
+		{
 			return NULL;
+		}
 
 		$result = $this->_row[$name];
 		if (is_array($result))
@@ -90,10 +92,12 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 	public function getFieldArray($name)
 	{
 		if (!array_key_exists($name, $this->_row))
+		{
 			return array();
+		}
 
 		$result = $this->_row[$name];
-		if (($result == null) || ($result == ""))
+		if (empty($result))
 		{
 			return array();
 		}
@@ -213,7 +217,7 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object
 	*/
 	public function getDomObject()
 	{
-		if ($this->_node == null)
+		if (is_null($this->_node))
 		{
 			$this->_node = XmlUtil::CreateXmlDocumentFromStr("<row />");
 			$root = $this->_node->getElementsByTagName( "row" )->item ( 0 );

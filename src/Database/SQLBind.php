@@ -40,7 +40,7 @@ class SQLBind
 	 */
 	public static function parseSQL(ConnectionManagement $connData, $sql, $params = null)
 	{
-		if ($params == null) {
+		if (is_null($params)) {
             return $sql;
         }
 

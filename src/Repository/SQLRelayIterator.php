@@ -90,11 +90,6 @@ class SQLRelayIterator extends GenericIterator
 			sqlrcur_free($this->_cursor);
 			$this->_cursor = null;
 
-            //if (this._db != null)
-            //{
-            //    this._db.Close();
-            //    this._db = null;
-            //}
 			return (count($this->_rowBuffer) > 0);
 		}
 	}
@@ -131,4 +126,4 @@ class SQLRelayIterator extends GenericIterator
  		return $this->_moveNextRow;
  	}
 }
-?>
+

@@ -31,7 +31,6 @@ class IteratorFilter
 	public function getXPath()
 	{
 		$xpathFilter = $this->getFilter(IteratorFilter::XPATH, $param);
-		//Debug::PrintValue($xpathFilter);
 
 		if ($xpathFilter == "")
 		{
@@ -109,7 +108,7 @@ class IteratorFilter
 		{
 			if ($value[0] == "(")
 			{
-				if ($previousValue != null)
+				if (!is_null($previousValue))
 				{
 					$filter .= " or ( ";
 				}
@@ -124,7 +123,7 @@ class IteratorFilter
 			}
 			else
 			{
-				if ( ($previousValue != null) && ($previousValue[0] != "(") )
+				if ( (!is_null($previousValue)) && ($previousValue[0] != "(") )
 				{
 					$filter .= $value[0];
 				}
@@ -213,7 +212,6 @@ class IteratorFilter
 	 */
 	private function getStrSqlRelation($name, $relation, $value, &$param)
 	{
-		//$str = is_numeric($value)?"":"'";
 		$value = trim($value);
 		$paramName = $name;
 		$i = 0;
@@ -401,4 +399,4 @@ class IteratorFilter
 		$this->_filters[] = array(")", "", "", "");
 	}
 }
-?>
+
