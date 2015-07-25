@@ -11,7 +11,7 @@
 
 ## Install
 
-Just type: `composer require "byjg/anydataset=1.0.0"`
+Just type: `composer require "byjg/anydataset=~1.0"`
 
 ## Running Tests
 

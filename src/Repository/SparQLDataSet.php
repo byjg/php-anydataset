@@ -21,11 +21,6 @@ class SparQLDataSet
 	{
 		$this->_db = new Connection( $url );
 
-		if( !$this->_db )
-		{
-			throw new DatasetException($this->_db->errno() . ": " . $this->_db->error());
-		}
-
 		if (is_array($namespaces))
 		{
 			foreach ($namespaces as $key => $value)
@@ -55,20 +50,13 @@ class SparQLDataSet
 	}
 
 	/**
-	*@access public
-	*@param string $sql
-	*@param array $array
-	*@return DBIterator
+	* @param string $sql
+	* @param array $array
+	* @return DBIterator
 	*/
 	public function getIterator($sparql)
 	{
 		$result = $this->_db->query( $sparql );
-
-		if( !$result )
-		{
-			throw new DatasetException($this->_db->errno() . ": " . $this->_db->error());
-		}
-
 		return new SparQLIterator($result);
 	}
 

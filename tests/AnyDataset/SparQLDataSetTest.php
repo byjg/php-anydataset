@@ -32,7 +32,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \ByJG\AnyDataset\Exception\DatasetException
+	 * @expectedException \SparQL\Exception
 	 */
 	function test_wrongSparQLDataSet()
 	{
@@ -45,7 +45,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException \ByJG\AnyDataset\Exception\DatasetException
+	 * @expectedException \SparQL\Exception
 	 */
 	function test_wrongSparQLDataSet2()
 	{
