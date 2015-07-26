@@ -16,7 +16,7 @@ abstract class BaseModel extends Object
 	 */
 	public function __construct($object=null)
 	{
-		if (is_object($object) || is_array($object))
+		if (!is_null($object))
 		{
 			$this->bind($object);
 		}

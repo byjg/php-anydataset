@@ -36,6 +36,17 @@ class Object
 	 */
 	public function bindObject($source, $target)
 	{
+		// Prepare the source object type
+		if ($source instanceof IteratorInterface)
+		{
+			$source = $source->moveNext()->toArray();
+		}
+		else if ($source instanceof DumpToArrayInterface)
+		{
+			$source = $source->toArray();
+		}
+
+		// Execute the action
 		if ($source instanceof stdClass)
 		{
 			$this->bindStdClass($source, $target);
@@ -43,17 +54,6 @@ class Object
 		else if (is_array($source))
 		{
 			$this->bindArray($source, $target);
-		}
-		else if ($source instanceof SingleRow)
-		{
-			$this->bindArray($source->toArray(), $target);
-		}
-		else if ($source instanceof IteratorInterface)
-		{
-			if ($source->hasNext())
-			{
-				$this->bindArray($source->moveNext()->toArray(), $target);
-			}
 		}
 		else
 		{

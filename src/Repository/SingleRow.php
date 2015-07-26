@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use DOMNode;
 use ByJG\Util\XmlUtil;
 
-class SingleRow extends \ByJG\AnyDataset\Model\Object
+class SingleRow extends \ByJG\AnyDataset\Model\Object implements \ByJG\AnyDataset\Model\DumpToArrayInterface
 {
 	/**
 	 * \DOMNode represents a SingleRow

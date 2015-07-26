@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use Iterator;
 
-abstract class GenericIterator implements IteratorInterface, Iterator
+abstract class GenericIterator implements IteratorInterface, Iterator, \ByJG\AnyDataset\Model\DumpToArrayInterface
 {
 	public function hasNext()
 	{
