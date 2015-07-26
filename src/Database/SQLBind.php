@@ -56,7 +56,7 @@ class SQLBind
             }
         }
 
-		$SQL = preg_replace("/\[\[(.*?)\]\]/", "null", $SQL);
+		$sql = preg_replace("/\[\[(.*?)\]\]/", "null", $sql);
 
 		return array($sql, $params);
 	}

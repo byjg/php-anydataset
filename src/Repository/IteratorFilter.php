@@ -143,10 +143,10 @@ class IteratorFilter
 	}
 
 	/**
-	*@param string $name - Field name
-	*@param Relation $relation - Relation enum
-	*@param string $value - Field string value
-	*@return string - Xpath String
+	*@param string $name Field name
+	*@param int $relation Relation enum
+	*@param string $value Field string value
+	*@return string Xpath String
 	*@desc Private method to get a Xpath string to a single string comparison
 	*/
 	private function getStrXpathRelation($name, $relation, $value)
@@ -205,12 +205,12 @@ class IteratorFilter
 	/**
 	 *
 	 * @param string $name
-	 * @param Relation $relation
+	 * @param int $relation
 	 * @param string $value
 	 * @param string[] $param
 	 * @return string
 	 */
-	private function getStrSqlRelation($name, Relation $relation, $value, &$param)
+	private function getStrSqlRelation($name, $relation, $value, &$param)
 	{
 		$value = trim($value);
 		$paramName = $name;
@@ -358,9 +358,9 @@ class IteratorFilter
 	}
 
 	/**
-	*@param string $name - Field name
-	*@param Relation $relation - Relation enum
-	*@param string $value - Field string value
+	*@param string $name Field name
+	*@param int $relation Relation enum
+	*@param string $value Field string value
 	*@return void
 	*@desc Add a single string comparison to filter.
 	*/
@@ -370,9 +370,9 @@ class IteratorFilter
 	}
 
 	/**
-	*@param string $name - Field name
-	*@param Relation $relation - Relation enum
-	*@param string $value - Field string value
+	*@param string $name Field name
+	*@param int $relation Relation enum
+	*@param string $value Field string value
 	*@return void
 	*@desc Add a single string comparison to filter. This comparison use the OR operator.
 	*/
