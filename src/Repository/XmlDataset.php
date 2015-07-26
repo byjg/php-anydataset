@@ -7,7 +7,7 @@ use ByJG\Util\XmlUtil;
 use DOMDocument;
 use InvalidArgumentException;
 
-class XmlDataSet
+class XmlDataset
 {
 	/**
 	 * String
@@ -46,7 +46,7 @@ class XmlDataSet
 	{
 		if (!is_array($colNode))
 		{
-			throw new DatasetException("XmlDataSet constructor: Column nodes must be an array.");
+			throw new DatasetException("XmlDataset constructor: Column nodes must be an array.");
 		}
 
 		if ($xml instanceof DOMDocument)

@@ -35,6 +35,11 @@ class AnyDatasetContext
 
     public function getConnectionString($name)
     {
-        return $this->config->getAnydatasetconfig("connections.$name");
+        $config = $this->config->getAnydatasetconfig("connections.$name");
+		if (empty($config) || !isset($config['url']))
+		{
+			throw new DatasetException("Invalid configurarion 'connections.$name'");
+		}
+		return $config;
     }
 }

@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use InvalidArgumentException;
 use ByJG\Cache\ICacheEngine;
 
-class CachedDBDataset extends DBDataSet
+class CachedDBDataset extends DBDataset
 {
 
 	/**
@@ -68,7 +68,7 @@ class CachedDBDataset extends DBDataSet
 			$this->_cacheEngine->set($key, $cache, $ttl);
 		}
 
-		$arrayDS = new ArrayDataSet($cache);
+		$arrayDS = new ArrayDataset($cache);
 		return $arrayDS->getIterator();
 	}
 

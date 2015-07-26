@@ -7,7 +7,7 @@ use ByJG\AnyDataset\Exception\NotFoundException;
 use Exception;
 use InvalidArgumentException;
 
-class TextFileDataSet
+class TextFileDataset
 {
 	const CSVFILE = '/[|,;](?=(?:[^"]*"[^"]*")*(?![^"]*"))/';
 	const CSVFILE_SEMICOLON = '/[;](?=(?:[^"]*"[^"]*")*(?![^"]*"))/';
@@ -28,12 +28,12 @@ class TextFileDataSet
 	 * @param string $source
 	 * @param array $fields
 	 * @param string $fieldexpression
-	 * @return TextFileDataSet
+	 * @return TextFileDataset
 	 */
 	public function __construct($source, $fields, $fieldexpression = null)
 	{
 		if (is_null($fieldexpression)) {
-            $fieldexpression = TextFileDataSet::CSVFILE;
+            $fieldexpression = TextFileDataset::CSVFILE;
         }
 
         if (!is_array($fields))
@@ -62,7 +62,7 @@ class TextFileDataSet
 
 		if ($fieldexpression == 'CSVFILE')
 		{
-			$this->_fieldexpression = TextFileDataSet::CSVFILE;
+			$this->_fieldexpression = TextFileDataset::CSVFILE;
 		}
 		else
 		{
@@ -83,7 +83,7 @@ class TextFileDataSet
 		ini_set('auto_detect_line_endings', $old);
 		if (!$handle)
 		{
-			throw new DatasetException("TextFileDataSet failed to open resource");
+			throw new DatasetException("TextFileDataset failed to open resource");
 		}
 		else
 		{

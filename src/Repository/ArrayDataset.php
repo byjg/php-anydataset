@@ -3,11 +3,11 @@
 namespace ByJG\AnyDataset\Repository;
 
 use UnexpectedValueException;
-use ByJG\AnyDataset\Repository\ArrayDataSet;
-use ByJG\AnyDataset\Repository\ArrayIIterator;
+use ByJG\AnyDataset\Repository\ArrayDataset;
+use ByJG\AnyDataset\Repository\ArrayDatasetIterator;
 use ByJG\AnyDataset\Repository\IteratorInterface;
 
-class ArrayDataSet
+class ArrayDataset
 {
 	/**
 	 * @var Array
@@ -18,7 +18,7 @@ class ArrayDataSet
 	 * Constructor Method
 	 *
 	 * @param Array $array
-	 * @return ArrayDataSet
+	 * @return ArrayDataset
 	 */
 	public function __construct($array, $fieldName="value")
 	{
@@ -64,13 +64,13 @@ class ArrayDataSet
 	}
 
 	/**
-	 * Return a IIterator
+	 * Return a IteratorInterface
 	 *
 	 * @return IteratorInterface
 	 */
 	public function getIterator()
 	{
-		return new ArrayIIterator($this->_array);
+		return new ArrayDatasetIterator($this->_array);
 	}
 	
 }

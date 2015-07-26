@@ -8,7 +8,7 @@ use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 use InvalidArgumentException;
 
-class ArrayIIterator extends GenericIterator
+class ArrayDatasetIterator extends GenericIterator
 {
 	/**
 	* @var array
@@ -34,7 +34,7 @@ class ArrayIIterator extends GenericIterator
 	{
 		if (!is_array($rows))
 		{
-			throw new InvalidArgumentException("ArrayIIterator must receive an array");
+			throw new InvalidArgumentException("ArrayDatasetIterator must receive an array");
 		}
 		$this->_currentRow = 0;
 		$this->_rows = $rows;

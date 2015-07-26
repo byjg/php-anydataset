@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Repository\DBDataSet;
+use ByJG\AnyDataset\Repository\DBDataset;
 
 interface DBFunctionsInterface
 {
@@ -76,7 +76,7 @@ interface DBFunctionsInterface
 
 	/**
 	 *
-	 * @param DBDataSet $dbdataset
+	 * @param DBDataset $dbdataset
 	 * @param string $sql
 	 * @param array $param
 	 * @return int

@@ -1,12 +1,12 @@
 <?php
 
-use ByJG\AnyDataset\Repository\ArrayDataSet;
+use ByJG\AnyDataset\Repository\ArrayDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
 /**
  * NOTE: The class name must end with "Test" suffix.
  */
-class ArrayDataSetTest extends PHPUnit_Framework_TestCase
+class ArrayDatasetTest extends PHPUnit_Framework_TestCase
 {
 	protected $fieldNames;
 
@@ -32,12 +32,12 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 	 */
 	function test_InvalidConstructor()
 	{
-		$arrayDataset = new ArrayDataSet('aaa');
+		$arrayDataset = new ArrayDataset('aaa');
 	}
 
 	function test_createArrayIteratorSample1()
 	{
-		$arrayDataset = new ArrayDataSet($this->SAMPLE1);
+		$arrayDataset = new ArrayDataset($this->SAMPLE1);
 		$arrayIterator = $arrayDataset->getIterator();
 
 
@@ -48,7 +48,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_createArrayIteratorSample2()
 	{
-		$arrayDataset = new ArrayDataSet($this->SAMPLE2);
+		$arrayDataset = new ArrayDataset($this->SAMPLE2);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$this->assertTrue($arrayIterator instanceof IteratorInterface); // "Resultant object must be an interator");
@@ -58,7 +58,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_createArrayIteratorSample3()
 	{
-		$arrayDataset = new ArrayDataSet($this->SAMPLE3);
+		$arrayDataset = new ArrayDataset($this->SAMPLE3);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$this->assertTrue($arrayIterator instanceof IteratorInterface); // "Resultant object must be an interator");
@@ -69,7 +69,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_navigateArrayIteratorSample1()
 	{
-		$arrayDataset = new ArrayDataSet($this->SAMPLE1);
+		$arrayDataset = new ArrayDataset($this->SAMPLE1);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$count = 0;
@@ -104,7 +104,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_navigateArrayIteratorSample2()
 	{
-		$arrayDataset = new ArrayDataSet($this->SAMPLE2);
+		$arrayDataset = new ArrayDataset($this->SAMPLE2);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$count = 0;
@@ -139,7 +139,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_navigateArrayIteratorSample3()
 	{
-		$arrayDataset = new ArrayDataSet($this->SAMPLE3);
+		$arrayDataset = new ArrayDataset($this->SAMPLE3);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$count = 0;
@@ -183,7 +183,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 			new Tests\Sample\ModelPublic(3, 'ProdC')
 		);
 
-		$arrayDataset = new ArrayDataSet($model);
+		$arrayDataset = new ArrayDataset($model);
 		$arrayIterator = $arrayDataset->getIterator();
 
 
@@ -200,7 +200,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 			new Tests\Sample\ModelPublic(3, 'ProdC')
 		);
 
-		$arrayDataset = new ArrayDataSet($model);
+		$arrayDataset = new ArrayDataset($model);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$count = 0;
@@ -247,7 +247,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 			new Tests\Sample\ModelGetter(3, 'ProdC')
 		);
 
-		$arrayDataset = new ArrayDataSet($model);
+		$arrayDataset = new ArrayDataset($model);
 		$arrayIterator = $arrayDataset->getIterator();
 
 
@@ -264,7 +264,7 @@ class ArrayDataSetTest extends PHPUnit_Framework_TestCase
 			new Tests\Sample\ModelGetter(3, 'ProdC')
 		);
 
-		$arrayDataset = new ArrayDataSet($model);
+		$arrayDataset = new ArrayDataset($model);
 		$arrayIterator = $arrayDataset->getIterator();
 
 		$count = 0;

@@ -10,7 +10,7 @@ abstract class BaseModel extends Object
 	protected $_propertyPattern = array('/([^A-Za-z0-9])/', '');
 
 	/**
-	 * Construct a model and optionally can set (bind) your properties base and the attribute matching from SingleRow, IIterator
+	 * Construct a model and optionally can set (bind) your properties base and the attribute matching from SingleRow, IteratorInterface
 	 * @param Object $object
 	 * @return void
 	 */

@@ -2,7 +2,7 @@
 
 require "vendor/autoload.php";
 
-$db = new \ByJG\AnyDataset\Repository\DBDataSet('mysql://root:aaaaaaa@10.10.10.101/development');
+$db = new \ByJG\AnyDataset\Repository\DBDataset('mysql://root:aaaaaaa@10.10.10.101/development');
 
 $iterator = $db->getIterator('select * from airports where idairports = [[idairports]]', ['idairports' => 898]);
 

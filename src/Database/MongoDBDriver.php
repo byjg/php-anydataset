@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Repository\ArrayIIterator;
+use ByJG\AnyDataset\Repository\ArrayDatasetIterator;
 use InvalidArgumentException;
 use MongoClient;
 use MongoCollection;
@@ -43,7 +43,7 @@ class MongoDBDriver implements NoSQLDriverInterface
 	protected $_collectionName;
 
 	/**
-	 * Creates a new MongoDB connection. This class is managed from NoSQLDataSet
+	 * Creates a new MongoDB connection. This class is managed from NoSqlDataset
 	 *
 	 * @param ConnectionManagement $connMngt
 	 * @param string $collection
@@ -100,11 +100,11 @@ class MongoDBDriver implements NoSQLDriverInterface
 	}
 
 	/**
-	 * Return a IIterator
+	 * Return a IteratorInterface
      *
 	 * @param array $filter
 	 * @param array $fields
-	 * @return ArrayIIterator
+	 * @return ArrayDatasetIterator
 	 */
 	public function getIterator($filter = null, $fields = null)
 	{
@@ -119,7 +119,7 @@ class MongoDBDriver implements NoSQLDriverInterface
 		$cursor = $this->_collection->find($filter, $fields);
 		$arrIt = iterator_to_array($cursor);
 
-		return new ArrayIIterator($arrIt);
+		return new ArrayDatasetIterator($arrIt);
 	}
 
 	/**

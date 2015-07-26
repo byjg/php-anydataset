@@ -9,7 +9,7 @@ use ByJG\AnyDataset\Database\DBSQLRelayDriver;
 use ByJG\AnyDataset\Database\DBDriverInterface;
 use ByJG\AnyDataset\Database\DBFunctionsInterface;
 
-class DBDataSet
+class DBDataset
 {
 	/**
 	 * Enter description here...

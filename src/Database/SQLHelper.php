@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\Enum\Relation;
 use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
-use ByJG\AnyDataset\Repository\DBDataSet;
+use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\SingleRow;
 use DateTime;
 use Exception;
@@ -13,7 +13,7 @@ use Exception;
 class SQLHelper
 {
 	/**
-	 * @var DBDataSet
+	 * @var DBDataset
 	 */
 	protected $_db;
 
@@ -22,9 +22,9 @@ class SQLHelper
 
 	/**
 	 *
-	 * @param DBDataSet $db
+	 * @param DBDataset $db
 	 */
-	public function __construct(DBDataSet $db)
+	public function __construct(DBDataset $db)
 	{
 		$this->_db = $db;
 	}
@@ -32,7 +32,7 @@ class SQLHelper
 	/**
 	 * Generate and Execute UPDATE and INSERTS
 	 *
-	 * @param DBDataSet $db
+	 * @param DBDataset $db
 	 * @param string $table
 	 * @param array $fields
 	 * @param SQLType $type

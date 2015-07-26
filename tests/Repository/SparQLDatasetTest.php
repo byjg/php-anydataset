@@ -1,12 +1,12 @@
 <?php
 
 use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\AnyDataset\Repository\SparQLDataSet;
+use ByJG\AnyDataset\Repository\SparQLDataset;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
  */
-class SparQLDataSetTest extends PHPUnit_Framework_TestCase
+class SparQLDatasetTest extends PHPUnit_Framework_TestCase
 {
 	const SPARQL_URL = 'http://rdf.ecs.soton.ac.uk/sparql/';
 	protected static $SPARQL_NS = array("foaf" => "http://xmlns.com/foaf/0.1/");
@@ -21,9 +21,9 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	{
 	}
 
-	function test_connectSparQLDataSet()
+	function test_connectSparQLDataset()
 	{
-		$dataset = new SparQLDataSet(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
+		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
 		$this->assertTrue($iterator instanceof IteratorInterface);
@@ -34,9 +34,9 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException \SparQL\Exception
 	 */
-	function test_wrongSparQLDataSet()
+	function test_wrongSparQLDataset()
 	{
-		$dataset = new SparQLDataSet("http://localhost/", SparQLDatasetTest::$SPARQL_NS);
+		$dataset = new SparQLDataset("http://localhost/", SparQLDatasetTest::$SPARQL_NS);
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
 		$this->assertTrue($iterator instanceof IteratorInterface);
@@ -47,15 +47,15 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException \SparQL\Exception
 	 */
-	function test_wrongSparQLDataSet2()
+	function test_wrongSparQLDataset2()
 	{
-		$dataset = new SparQLDataSet(SparQLDatasetTest::SPARQL_URL);
+		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 	}
 
-	function test_navigateSparQLDataSet()
+	function test_navigateSparQLDataset()
 	{
-		$dataset = new SparQLDataSet(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
+		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
 		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 2");
 
 		$this->assertTrue($iterator->hasNext());
@@ -84,7 +84,7 @@ class SparQLDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_capabilities()
 	{
-		$dataset = new SparQLDataSet(SparQLDatasetTest::SPARQL_URL);
+		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
 
 		$caps = $dataset->getCapabilities();
 

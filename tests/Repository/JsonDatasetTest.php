@@ -1,13 +1,13 @@
 <?php
 
 use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\AnyDataset\Repository\JSONDataSet;
+use ByJG\AnyDataset\Repository\JsonDataset;
 use ByJG\AnyDataset\Repository\SingleRow;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
  */
-class JSONDataSetTest extends PHPUnit_Framework_TestCase
+class JsonDatasetTest extends PHPUnit_Framework_TestCase
 {
 	const JSON_OK = '[{"name":"Joao","surname":"Magalhaes","age":"38"},{"name":"John","surname":"Doe","age":"20"},{"name":"Jane","surname":"Smith","age":"18"}]';
 	const JSON_NOTOK = '"name":"Joao","surname":"Magalhaes","age":"38"}]';
@@ -34,9 +34,9 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 	{
 	}
 
-	function test_createJSONIterator()
+	function test_createJsonIterator()
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK);
 		$jsonIterator = $jsonDataset->getIterator();
 
 		$this->assertTrue($jsonIterator instanceof IteratorInterface); //, "Resultant object must be an interator");
@@ -44,9 +44,9 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($jsonIterator->Count(),  3); //, "Count() method must return 3");
 	}
 
-	function test_navigateJSONIterator()
+	function test_navigateJsonIterator()
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK);
 		$jsonIterator = $jsonDataset->getIterator();
 
 		$count = 0;
@@ -58,9 +58,9 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($jsonIterator->count(),  3); //, "Count() method must return 3");
 	}
 
-	function test_navigateJSONIterator2()
+	function test_navigateJsonIterator2()
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK);
 		$jsonIterator = $jsonDataset->getIterator();
 
 		$count = 0;
@@ -77,12 +77,12 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 	 */
 	function test_jsonNotWellFormatted()
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_NOTOK);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_NOTOK);
 	}
 
 	function navigateJSONComplex($path)
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK2);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK2);
 		$jsonIterator = $jsonDataset->getIterator($path);
 
 		$count = 0;
@@ -106,7 +106,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_navigateJSONComplexIteratorWrongPath()
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK2);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK2);
 		$jsonIterator = $jsonDataset->getIterator("/menu/wrong");
 
 		$this->assertEquals($jsonIterator->count(), 0); //, "Without throw error");
@@ -117,7 +117,7 @@ class JSONDataSetTest extends PHPUnit_Framework_TestCase
 	 */
 	function test_navigateJSONComplexIteratorWrongPath2()
 	{
-		$jsonDataset = new JSONDataSet(JSONDatasetTest::JSON_OK2);
+		$jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK2);
 		$jsonIterator = $jsonDataset->getIterator("/menu/wrong", true);
 	}
 

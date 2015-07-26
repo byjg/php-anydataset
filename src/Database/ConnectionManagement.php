@@ -127,7 +127,7 @@ class ConnectionManagement
         ];
 		if (!preg_match('~^(\w+)://~', $dbname))
 		{
-            $config = AnyDatasetContext::getInstance()->getConnectionString();
+            $config = AnyDatasetContext::getInstance()->getConnectionString($dbname);
 		}
 
 		$this->setDbType ( 'dsn' );

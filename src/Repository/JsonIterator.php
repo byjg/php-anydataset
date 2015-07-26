@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use InvalidArgumentException;
 use ByJG\AnyDataset\Exception\IteratorException;
 
-class JSONIterator extends GenericIterator
+class JsonIterator extends GenericIterator
 {
 	/**
 	 * @var object

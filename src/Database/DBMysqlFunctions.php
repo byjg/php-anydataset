@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Repository\DBDataSet;
+use ByJG\AnyDataset\Repository\DBDataset;
 
 class DBMySQLFunctions extends DBBaseFunctions
 {
@@ -171,7 +171,7 @@ class DBMySQLFunctions extends DBBaseFunctions
 
 	/**
 	 *
-	 * @param DBDataSet $dbdataset
+	 * @param DBDataset $dbdataset
 	 * @param string $sql
 	 * @param array $param
 	 * @return int

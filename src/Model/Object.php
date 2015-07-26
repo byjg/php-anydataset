@@ -148,7 +148,10 @@ class Object
 
 		if (method_exists($obj, 'get' . $propName))
 		{
-			return $obj->{'get' . $propName}();
+			if (is_callable([$obj, 'get' . $propName]))
+			{
+				return $obj->{'get' . $propName}();
+			}
 		}
 		else if (is_null($prop))
 		{

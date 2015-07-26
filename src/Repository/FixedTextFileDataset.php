@@ -7,7 +7,7 @@ use ByJG\AnyDataset\Exception\NotFoundException;
 use Exception;
 use InvalidArgumentException;
 
-class FixedTextFileDataSet
+class FixedTextFileDataset
 {
 	protected $_source;
 
@@ -21,7 +21,7 @@ class FixedTextFileDataSet
 	 *
 	 * @param string $source
 	 * @param array $fieldDefinition
-	 * @return TextFileDataSet
+	 * @return TextFileDataset
 	 */
 	public function __construct($source, $fieldDefinition)
 	{
@@ -76,7 +76,7 @@ class FixedTextFileDataSet
         $handle = fsockopen($urlParts[2], 80, $errno, $errstr, 30);
         if (!$handle)
         {
-            throw new DatasetException("TextFileDataSet Socket error: $errstr ($errno)");
+            throw new DatasetException("TextFileDataset Socket error: $errstr ($errno)");
         }
         else
         {
@@ -103,7 +103,7 @@ class FixedTextFileDataSet
         $handle = fopen($this->_source, "r");
         if (!$handle)
         {
-            throw new DatasetException("TextFileDataSet File open error");
+            throw new DatasetException("TextFileDataset File open error");
         }
         else
         {

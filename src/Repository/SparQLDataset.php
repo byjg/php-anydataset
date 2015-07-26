@@ -2,11 +2,9 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Exception\DatasetException;
 use SparQL\Connection;
 
-
-class SparQLDataSet
+class SparQLDataset
 {
 	/**
 	 * @var object

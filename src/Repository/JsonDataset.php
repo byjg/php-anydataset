@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Exception\DatasetException;
 
-class JSONDataSet
+class JsonDataset
 {
 	/**
 	 * @var object
@@ -60,7 +60,7 @@ class JSONDataSet
 	*/
 	public function getIterator($path = "", $throwErr = false)
 	{
-		$it = new JSONIterator($this->_jsonObject, $path, $throwErr);
+		$it = new JsonIterator($this->_jsonObject, $path, $throwErr);
 		return $it;
 	}
 

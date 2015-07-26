@@ -6,7 +6,7 @@ use ByJG\AnyDataset\AnyDatasetContext;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\CachedDBDataset;
-use ByJG\AnyDataset\Repository\DBDataSet;
+use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\Cache\ICacheEngine;
 
@@ -14,7 +14,7 @@ abstract class BaseDBAccess
 {
 
 	/**
-	 * @var DBDataSet
+	 * @var DBDataset
 	 */
 	protected $_db = null;
 
@@ -37,7 +37,7 @@ abstract class BaseDBAccess
 	}
 
 	/**
-	 * This method must be overrided and the return must be a valid DBDataSet name.
+	 * This method must be overrided and the return must be a valid DBDataset name.
 	 *
 	 * @return string
 	 */
@@ -52,16 +52,16 @@ abstract class BaseDBAccess
 	}
 
 	/**
-	 * Create a instance of DBDataSet to connect database
-	 * @return DBDataSet
+	 * Create a instance of DBDataset to connect database
+	 * @return DBDataset
 	 */
-	protected function getDBDataSet($cache = false)
+	protected function getDBDataset($cache = false)
 	{
 		if (!$cache)
 		{
 			if (is_null($this->_db))
 			{
-				$this->_db = new DBDataSet($this->getDataBaseName());
+				$this->_db = new DBDataset($this->getDataBaseName());
 			}
 
 			return $this->_db;
@@ -112,12 +112,12 @@ abstract class BaseDBAccess
 
 		if ($getId)
 		{
-			$id = $dbfunction->executeAndGetInsertedId($this->getDBDataSet(), $sql, $param);
+			$id = $dbfunction->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
 		}
 		else
 		{
 			$id = null;
-			$this->getDBDataSet()->execSQL($sql, $param);
+			$this->getDBDataset()->execSQL($sql, $param);
 		}
 
 		if ($debug)
@@ -138,7 +138,7 @@ abstract class BaseDBAccess
 	 */
 	protected function getIterator($sql, $param = null, $ttl = -1)
 	{
-		$db = $this->getDBDataSet($ttl > 0);
+		$db = $this->getDBDataset($ttl > 0);
 
 		$debug = AnyDatasetContext::getInstance()->getDebug();
 		$start = 0;
@@ -173,7 +173,7 @@ abstract class BaseDBAccess
 
 	protected function getScalar($sql, $param = null)
 	{
-		$this->getDBDataSet();
+		$this->getDBDataset();
 
 		$debug = AnyDatasetContext::getInstance()->getDebug();
 		$start = 0;
@@ -213,7 +213,7 @@ abstract class BaseDBAccess
 	 */
 	public function getSQLHelper()
 	{
-		$this->getDBDataSet();
+		$this->getDBDataset();
 
 		if (is_null($this->_sqlhelper))
 		{
@@ -321,22 +321,22 @@ abstract class BaseDBAccess
 	 */
 	public function getDbFunctions()
 	{
-		return $this->getDBDataSet()->getDbFunctions();
+		return $this->getDBDataset()->getDbFunctions();
 	}
 
 	public function beginTransaction()
 	{
-		$this->getDBDataSet()->beginTransaction();
+		$this->getDBDataset()->beginTransaction();
 	}
 
 	public function commitTransaction()
 	{
-		$this->getDBDataSet()->commitTransaction();
+		$this->getDBDataset()->commitTransaction();
 	}
 
 	public function rollbackTransaction()
 	{
-		$this->getDBDataSet()->rollbackTransaction();
+		$this->getDBDataset()->rollbackTransaction();
 	}
 
 	public function getObjectDbDataSet()

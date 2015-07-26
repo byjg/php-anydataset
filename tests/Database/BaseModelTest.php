@@ -26,7 +26,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::setPropertyPattern
+	 * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
 	 */
 	public function testSetPropertyPattern()
 	{
@@ -40,7 +40,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::setPropertyPattern
+	 * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
 	 */
 	public function testSetPropertyPatternNull()
 	{
@@ -51,7 +51,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::bindObject
+	 * @covers ByJG\AnyDataset\Model\BaseModel::bindObject
 	 */
 	public function testGetPropertyPattern()
 	{
@@ -61,7 +61,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::bindArray
+	 * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
 	 */
 	public function testBindSingleRow()
 	{
@@ -76,7 +76,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::bindArray
+	 * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
 	 */
 	public function testBindIterator()
 	{
@@ -94,7 +94,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::bindGeneralObject
+	 * @covers ByJG\AnyDataset\Model\BaseModel::bindGeneralObject
 	 */
 	public function testBindFromObject()
 	{
@@ -107,7 +107,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::bindStdClass
+	 * @covers ByJG\AnyDataset\Model\BaseModel::bindStdClass
 	 */
 	public function testBindFromStdClass()
 	{
@@ -134,7 +134,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers ByJG\AnyDataset\Database\BaseModel::bindArray
+	 * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
 	 */
 	public function testBindFromArray()
 	{

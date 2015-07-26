@@ -7,7 +7,7 @@ use ByJG\AnyDataset\Database\ConnectionManagement;
 use ByJG\AnyDataset\Database\NoSQLDriverInterface;
 use ByJG\AnyDataset\Database\MongoDBDriver;
 
-class NoSQLDataSet implements NoSQLDriverInterface
+class NoSqlDataset implements NoSQLDriverInterface
 {
 	/**
 	 * Enter description here...
@@ -33,9 +33,13 @@ class NoSQLDataSet implements NoSQLDriverInterface
 		$this->_connectionManagement = new ConnectionManagement ( $dbname );
 
 		if ($this->_connectionManagement->getDriver() == "mongodb")
+		{
 			$this->_dbDriver = new MongoDBDriver($this->_connectionManagement, $collection);
+		}
 		else
+		{
 			throw new InvalidArgumentException("There is no '{$this->_connectionManagement->getDriver()}' NoSQL database");
+		}
 	}
 
 	public function getDbType()

@@ -15,7 +15,7 @@ abstract class BaseModelCollection extends GenericIterator
 	private $_curRow = 0; //int
 	protected $_type = null;
 
-	// <editor-fold desc="Implementation of IIterator interface based on GenericIterator">
+	// <editor-fold desc="Implementation of IteratorInterface interface based on GenericIterator">
 
 	public function hasNext()
 	{
@@ -53,7 +53,7 @@ abstract class BaseModelCollection extends GenericIterator
 		{
 			if (!($it instanceof IteratorInterface))
 			{
-				throw new InvalidArgumentException("You have to pass an IIterator class");
+				throw new InvalidArgumentException("You have to pass an IteratorInterface class");
 			}
 
 			// Check if the object is an instance of BaseModel

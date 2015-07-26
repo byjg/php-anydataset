@@ -3,7 +3,7 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Exception\NotAvailableException;
-use ByJG\AnyDataset\Repository\DBDataSet;
+use ByJG\AnyDataset\Repository\DBDataset;
 
 
 class DBDblibFunctions extends DBBaseFunctions
@@ -151,7 +151,7 @@ class DBDblibFunctions extends DBBaseFunctions
 
 	/**
 	 *
-	 * @param DBDataSet $dbdataset
+	 * @param DBDataset $dbdataset
 	 * @param string $sql
 	 * @param array $param
 	 * @return int

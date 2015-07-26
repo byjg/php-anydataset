@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Repository\DBDataSet;
+use ByJG\AnyDataset\Repository\DBDataset;
 use DateTime;
 
 abstract class DBBaseFunctions implements DBFunctionsInterface
@@ -110,7 +110,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
 
 	/**
 	 *
-	 * @param DBDataSet $dbdataset
+	 * @param DBDataset $dbdataset
 	 * @param string $sql
 	 * @param array $param
 	 * @return int

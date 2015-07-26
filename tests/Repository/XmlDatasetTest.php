@@ -2,12 +2,12 @@
 
 use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\AnyDataset\Repository\SingleRow;
-use ByJG\AnyDataset\Repository\XmlDataSet;
+use ByJG\AnyDataset\Repository\XmlDataset;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
  */
-class XmlDataSetTest extends PHPUnit_Framework_TestCase
+class XmlDatasetTest extends PHPUnit_Framework_TestCase
 {
 	const XML_OK = '<?xml version="1.0" encoding="UTF-8"?>
 		<bookstore>
@@ -58,7 +58,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_createXMLDataset()
 	{
-		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
+		$xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$this->assertTrue($xmlIterator instanceof IteratorInterface);
@@ -68,7 +68,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_navigateXMLIterator()
 	{
-		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
+		$xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$count = 0;
@@ -82,7 +82,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_navigateXMLIterator2()
 	{
-		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
+		$xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$count = 0;
@@ -99,12 +99,12 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 	 */
 	function test_xmlNotWellFormatted()
 	{
-		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_NOTOK, $this->rootNode, $this->arrColumn);
+		$xmlDataset = new XmlDataset(XmlDatasetTest::XML_NOTOK, $this->rootNode, $this->arrColumn);
 	}
 
 	function test_wrongNodeRoot()
 	{
-		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, "wrong", $this->arrColumn);
+		$xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, "wrong", $this->arrColumn);
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$this->assertEquals($xmlIterator->count(), 0);
@@ -112,7 +112,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 
 	function test_wrongColumn()
 	{
-		$xmlDataset = new XmlDataSet(XMLDatasetTest::XML_OK, $this->rootNode, array("title"=>"aaaa"));
+		$xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, array("title"=>"aaaa"));
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$this->assertEquals($xmlIterator->count(), 3);
@@ -130,7 +130,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		  <price>30.00</price>
 		</book></bookstore>';
 
-		$xmlDataset = new XmlDataSet($xml, $this->rootNode, array("author"=>"author"));
+		$xmlDataset = new XmlDataset($xml, $this->rootNode, array("author"=>"author"));
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$this->assertTrue($xmlIterator instanceof IteratorInterface);
@@ -196,7 +196,7 @@ class XmlDataSetTest extends PHPUnit_Framework_TestCase
 		);
 		$rootNode = 'fake:entry';
 		$colNode = array("id"=>"fake:id", "updated"=>"fake:updated", "name"=>"fake:title", "email"=>"gd:email/@address");
-		$xmlDataset = new XmlDataSet($xml, $rootNode, $colNode, $namespace);
+		$xmlDataset = new XmlDataset($xml, $rootNode, $colNode, $namespace);
 		$xmlIterator = $xmlDataset->getIterator();
 
 		$this->assertTrue($xmlIterator instanceof IteratorInterface);
