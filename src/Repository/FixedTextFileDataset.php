@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Repository;
 
+use ByJG\AnyDataset\Enum\FixedTextDefinition;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotFoundException;
 use Exception;
@@ -11,6 +12,10 @@ class FixedTextFileDataset
 {
 	protected $_source;
 
+    /**
+     * \ByJG\AnyDataset\Enum\FixedTextDefinition[]
+     * @var type
+     */
 	protected $_fieldDefinition;
 
 	protected $_sourceType;
@@ -20,7 +25,7 @@ class FixedTextFileDataset
 	 * Text File Data Set
 	 *
 	 * @param string $source
-	 * @param array $fieldDefinition
+	 * @param FixedTextDefinition[] $fieldDefinition
 	 * @return TextFileDataset
 	 */
 	public function __construct($source, $fieldDefinition)
@@ -33,7 +38,7 @@ class FixedTextFileDataset
 		$this->_source = $source;
 		$this->_sourceType = "HTTP";
 
-		if (strpos($source, "http://")===false)
+		if (!preg_match("~^https?://~", $source))
 		{
             if (!file_exists($this->_source))
 			{

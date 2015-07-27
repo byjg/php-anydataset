@@ -2,27 +2,30 @@
 
 namespace ByJG\AnyDataset\Repository;
 
+use ByJG\AnyDataset\Enum\FixedTextDefinition;
 use ByJG\AnyDataset\Exception\IteratorException;
 
 class FixedTextFileIterator extends GenericIterator
 {
+    /**
+     *
+     * @var FixedTextDefinition[]
+     */
 	protected $_fields;
 
 	protected $_handle;
 
 	protected $_current = 0;
 
-	protected $_curDefinition = 0;
-
-	/**
-	*@access public
-	*@return IteratorInterface
-	*/
+    /**
+     *
+     * @param int $handle
+     * @param FixedTextDefinition[] $fields
+     */
 	public function __construct($handle, $fields)
 	{
 		$this->_fields = $fields;
 		$this->_handle = $handle;
-		$this->_curDefinition = 0;
 		$this->_current = 0;
 	}
 
@@ -74,24 +77,15 @@ class FixedTextFileIterator extends GenericIterator
 				return new SingleRow();
 			}
 
-			$fields = array();
-			$this->processBuffer($buffer, $this->_fields[$this->_curDefinition], $fields);
+			$fields = $this->processBuffer($buffer, $this->_fields);
 
 			if (is_null($fields))
 			{
-				throw new IteratorException("Text file definition is empty.");
-			}
-
-			$sr = new SingleRow();
-			$sr->addField("_definition", $this->_curDefinition);
-
-			foreach($fields as $key=>$value)
-			{
-				$sr->addField(strtolower($key), $value);
+				throw new IteratorException("Definition does not match");
 			}
 
 			$this->_current++;
-			return 	$sr;
+			return 	new SingleRow($fields);
 		}
 		else
 		{
@@ -103,36 +97,26 @@ class FixedTextFileIterator extends GenericIterator
 		}
 	}
 
-	protected function processBuffer($buffer, $definition, &$fields)
+	protected function processBuffer($buffer, $fieldDefinition)
 	{
-		$cntDef = count($definition);
-		for($i=0;$i< $cntDef; $i++)
+		$cntDef = count($fieldDefinition);
+        $fields = [];
+		for($i=0; $i<$cntDef; $i++)
 		{
-			$fieldDef = $definition[$i];
+			$fieldDef = $fieldDefinition[$i];
 
-			$fields[$fieldDef->fieldName] = substr($buffer, $fieldDef->startPos - 1, $fieldDef->endPos - $fieldDef->startPos + 1);
-			if (($fieldDef->requiredValue != "") && (!preg_match("/" . $fieldDef->requiredValue . "/", $fields[$fieldDef->fieldName])))
+			$fields[$fieldDef->fieldName] = substr($buffer, $fieldDef->startPos, $fieldDef->length);
+			if (!empty($fieldDef->requiredValue) && (!preg_match("/^[" . $fieldDef->requiredValue . "]$/", $fields[$fieldDef->fieldName])))
 			{
-				$fields = null;
-				break;
+				throw new IteratorException("Expected the value '" . $fieldDef->requiredValue . "' and I got '" . $fields[$fieldDef->fieldName] . "'");
 			}
 			elseif (is_array($fieldDef->subTypes))
 			{
-				$key = $fields[$fieldDef->fieldName];
-				if (is_array($fieldDef->subTypes[$key]))
-				{
-					$this->processBuffer($buffer, $fieldDef->subTypes[$key], $fields);
-				}
+				$fields[$fieldDef->fieldName] = $this->processBuffer($fields[$fieldDef->fieldName], $fieldDef->subTypes);
 			}
 		}
 
-		if (is_null($fields))
-		{
-			if ($this->_curDefinition + 1 <= count($this->_fields))
-			{
-				$this->processBuffer($buffer, $this->_fields[++$this->_curDefinition], $fields);
-			}
-		}
+        return $fields;
 	}
 
  	function key()
