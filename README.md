@@ -8,7 +8,7 @@ A data abstraction layer in PHP to manipulate any set of data with a standardize
 
 ## Features
 
-### Read an write* with a standardized interface the follow data sources:
+### Read an write* with a number of data sources accessed by a standardized interface ([see more here](tree/master/docs/Connecting-to-Data-Sources.md)):
 * Array
 * Relational Databases (based on PDO)
 * DBLib (SQL Server php native - windows only)
@@ -17,7 +17,7 @@ A data abstraction layer in PHP to manipulate any set of data with a standardize
 * Json documents
 * Xml documents
 * Sockets
-* MongoDB
+* [MongoDB](tree/master/docs/Connecting-to-MongoDB.md)
 * SparQL
 
 ## Examples
