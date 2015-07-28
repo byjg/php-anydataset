@@ -11,7 +11,7 @@ In this example, the `conn_name` is the alias for the connection defined in the 
 return [
     'connections' => [
         'conn_name' => [
-            'name' => 'pdodriver://root@localhost/dbname',
+            'url' => 'pdodriver://root@localhost/dbname',
             'type' => 'dsn'
         ]
     ]

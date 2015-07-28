@@ -30,19 +30,19 @@ $repository = new DBDataset($_ENV['APPLICATION_ENV']);
 return [
     'connections' => [
         'development' => [
-            'name' => 'pdodriver://root@localhost/dbname',
+            'url' => 'pdodriver://root@localhost/dbname',
             'type' => 'dsn'
         ],
         'staging' => [
-            'name' => 'pdodriver://root@192.168.1.100/dbname',
+            'url' => 'pdodriver://root@192.168.1.100/dbname',
             'type' => 'dsn'
         ],
         'test' => [
-            'name' => 'pdodriver://root@192.168.1.200/dbname',
+            'url' => 'pdodriver://root@192.168.1.200/dbname',
             'type' => 'dsn'
         ],
         'live' => [
-            'name' => '-- DO NOT COMMIT --',
+            'url' => '-- DO NOT COMMIT --',
             'type' => 'dsn'
         ]
     ]

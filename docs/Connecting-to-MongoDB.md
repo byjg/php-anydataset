@@ -11,7 +11,7 @@ You can store your connections string in the file `config/anydatasetconfig.php` 
 return [
     'connections' => [
         'conn_name' => [
-            'name' => 'mongodb://root@localhost/dbname',
+            'url' => 'mongodb://root@localhost/dbname',
             'type' => 'dsn'
         ]
     ]

@@ -57,11 +57,11 @@ You can store your connections string in the file `config/anydatasetconfig.php` 
 return [
     'connections' => [
         'development' => [
-            'name' => 'mysql://root:somepass@localhost/schema',
+            'url' => 'mysql://root:somepass@localhost/schema',
             'type' => 'dsn'
         ],
         'staging' => [
-            'name' => 'mysql://root:otherpass@192.168.1.205:3307/schema',
+            'url' => 'mysql://root:otherpass@192.168.1.205:3307/schema',
             'type' => 'dsn'
         ]
     ]
