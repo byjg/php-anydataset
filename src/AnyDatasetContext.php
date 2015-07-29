@@ -8,6 +8,9 @@
 
 namespace ByJG\AnyDataset;
 
+use ByJG\AnyDataset\Exception\DatasetException;
+use Iconfig\Config;
+
 /**
  * Description of CacheContext
  *
@@ -19,13 +22,13 @@ class AnyDatasetContext
 
     /**
      *
-     * @var \Iconfig\Config
+     * @var Config
      */
     private $config;
 
     protected function __construct()
     {
-        $this->config = new \Iconfig\Config('config');
+        $this->config = new Config('config');
     }
 
     public function getDebug()
