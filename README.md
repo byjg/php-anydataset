@@ -126,3 +126,7 @@ Just type: `composer require "byjg/anydataset=~1.0"`
 cd tests
 phpunit --bootstrap bootstrap.php .
 ```
+
+
+----
+[Open source ByJG](http://opensource.byjg.com)
