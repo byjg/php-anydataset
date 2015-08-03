@@ -30,6 +30,7 @@ class IteratorFilter
 	*/
 	public function getXPath()
 	{
+        $param = "";
 		$xpathFilter = $this->getFilter(IteratorFilter::XPATH, $param);
 
 		if ($xpathFilter == "")
@@ -55,17 +56,17 @@ class IteratorFilter
 	{
 		$params = array();
 
-		$sql = "select :returnFields from :tableName ";
+		$sql = "select @@returnFields from @@tableName ";
 		$sqlFilter = $this->getFilter(IteratorFilter::SQL, $params);
 		if ($sqlFilter != "")
 		{
-			$sql .= " where :sqlFilter ";
+			$sql .= " where @@sqlFilter ";
 		}
 
 		$sql = SQLHelper::createSafeSQL($sql, array(
-			":returnFields" => $returnFields,
-			":tableName" => $tableName,
-			":sqlFilter" => $sqlFilter
+			"@@returnFields" => $returnFields,
+			"@@tableName" => $tableName,
+			"@@sqlFilter" => $sqlFilter
 		));
 
 		return $sql;
@@ -127,11 +128,11 @@ class IteratorFilter
 				{
 					$filter .= $value[0];
 				}
-				if ($type == 1)
+				if ($type == self::XPATH)
 				{
 					$filter .= $this->getStrXpathRelation($value[1], $value[2], $value[3]);
 				}
-				elseif ($type == 2)
+				elseif ($type == self::SQL)
 				{
 					$filter .= $this->getStrSqlRelation($value[1], $value[2], $value[3], $param);
 				}
