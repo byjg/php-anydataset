@@ -2,27 +2,27 @@
 
 namespace ByJG\AnyDataset\Repository;
 
+use ByJG\Cache\CacheEngineInterface;
 use InvalidArgumentException;
-use ByJG\Cache\ICacheEngine;
 
 class CachedDBDataset extends DBDataset
 {
 
 	/**
 	 *
-	 * @var ICacheEngine
+	 * @var CacheEngineInterface
 	 */
 	protected $_cacheEngine = null;
 
 	/**
 	 *
 	 * @param string $dbname
-	 * @param ICacheEngine $cacheEngine
+	 * @param CacheEngineInterface $cacheEngine
 	 * @throws InvalidArgumentException
 	 */
 	public function __construct($dbname, $cacheEngine)
 	{
-		if (!($cacheEngine instanceof ICacheEngine))
+		if (!($cacheEngine instanceof CacheEngineInterface))
 		{
 			throw new InvalidArgumentException("I expected ICacheEngine object");
 		}
@@ -49,10 +49,14 @@ class CachedDBDataset extends DBDataset
 
 		// Define the query key
 		if (is_array($arKey2) && count($arKey2) > 0)
-			$key2 = ":" . md5(json_encode ($arKey2));
-		else
-			$key2 = "";
-		$key = "qry:" . $key1 . $key2;
+        {
+            $key2 = ":" . md5(json_encode($arKey2));
+        }
+        else
+        {
+            $key2 = "";
+        }
+        $key = "qry:" . $key1 . $key2;
 
 		// Get the CACHE
 		$cache = $this->_cacheEngine->get($key, $ttl);

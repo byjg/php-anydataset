@@ -8,7 +8,7 @@ use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\CachedDBDataset;
 use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\Cache\ICacheEngine;
+use ByJG\Cache\CacheEngineInterface;
 
 abstract class BaseDBAccess
 {
@@ -44,7 +44,7 @@ abstract class BaseDBAccess
 	public abstract function getDataBaseName();
 
 	/**
-	 * @return ICacheEngine
+	 * @return CacheEngineInterface
 	 */
 	public function getCacheEngine()
 	{
