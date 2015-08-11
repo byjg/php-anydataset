@@ -5,6 +5,7 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
+use PDO;
 
 class PdoOci extends DBPDODriver
 {
