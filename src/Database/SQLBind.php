@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\ConnectionManagement;
+
 /**
  * Class to create and manipulate Several Data Types
  *

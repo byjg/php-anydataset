@@ -3,10 +3,10 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Database\ConnectionManagement;
+use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\DBDriverInterface;
-use ByJG\AnyDataset\Database\SQLHelper;
 use ByJG\AnyDataset\Database\SQLBind;
+use ByJG\AnyDataset\Database\SQLHelper;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;

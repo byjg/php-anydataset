@@ -1,8 +1,7 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset;
 
-use ByJG\AnyDataset\AnyDatasetContext;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use InvalidArgumentException;
 
@@ -153,24 +152,24 @@ class ConnectionManagement
         */
 
         $patDriver = "(?P<driver>[\w\.]+)\:\/\/";
-        $patCredentials = "(?P<username>[\w\.$!%&\-_]+)(?::(?P<password>[\w\.$!%&#\*\+=\[\]\(\)\-_]+))?@";
+        $patCredentials = "(?:((?P<username>\S+):(?P<password>\S+)|(?P<username2>\S+))@)?";
         $patHost = "(?P<host>[\w\-\.,_]+)(?::(?P<port>\d+))?";
-        $patDatabase = "\/(?P<database>[\w\-\.]+)";
+        $patDatabase = "(\/(?P<database>[\w\-\.]+))?";
         $patExtra = "(?:\?(?P<extraparam>(?:[\w\-\.]+=[\w\-%\.\/]+&?)*))?";
         $patFile = "(?P<path>(?:\w\:)?\/(?:[\w\-\.]+\/?)+)?";
 
         // Try to parse the connection string.
         $pat = "/$patDriver($patCredentials$patHost$patDatabase|$patFile)$patExtra/i";
         $parts = array();
-        if (!preg_match($pat, $this->_dbconnectionstring, $parts)) {
-            throw new InvalidArgumentException("Connection string " . $this->_dbconnectionstring . " is invalid! Please fix it.");
+        if (!preg_match($pat, $this->getDbConnectionString(), $parts)) {
+            throw new InvalidArgumentException("Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it.");
         }
 
         // Set the Driver
         $this->setDriver ( $parts ['driver'] );
 
         if (!isset($parts['path']) && !isset($parts['host'])) {
-            throw new InvalidArgumentException("Connection string " . $this->_dbconnectionstring . " is invalid! Please fix it.");
+            throw new InvalidArgumentException("Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it.");
         }
 
 
@@ -178,11 +177,11 @@ class ConnectionManagement
         if (array_key_exists('path', $parts) && (!empty($parts['path']))) {
             $this->setFilePath($parts['path']);
         } else {
-            $this->setUsername($parts ['username']);
-            $this->setPassword($parts ['password']);
+            $this->setUsername(empty($parts ['username']) ? $parts ['username2'] : $parts ['username']);
+            $this->setPassword(isset($parts ['password']) ? $parts ['password'] : '');
             $this->setServer($parts ['host']);
-            $this->setPort($parts ['port']);
-            $this->setDatabase($parts ['database']);
+            $this->setPort(isset($parts ['port']) ? $parts ['port'] : '');
+            $this->setDatabase(isset($parts ['database']) ? $parts ['database'] : '');
         }
 
         // If extra param is defined, set it.

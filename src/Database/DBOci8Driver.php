@@ -2,8 +2,9 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Repository\Oci8Iterator;
+use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Exception\DatabaseException;
+use ByJG\AnyDataset\Repository\Oci8Iterator;
 
 class DBOci8Driver implements DBDriverInterface
 {

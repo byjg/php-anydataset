@@ -2,12 +2,13 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Database\ConnectionManagement;
+use ByJG\AnyDataset\ConnectionManagement;
+use ByJG\AnyDataset\Database\DBDriverInterface;
+use ByJG\AnyDataset\Database\DBFunctionsInterface;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
 use ByJG\AnyDataset\Database\DBSQLRelayDriver;
-use ByJG\AnyDataset\Database\DBDriverInterface;
-use ByJG\AnyDataset\Database\DBFunctionsInterface;
+use PDO;
 
 class DBDataset
 {
@@ -127,7 +128,7 @@ class DBDataset
 
 	/**
 	 * @access public
-	 * @return \PDO
+	 * @return PDO
 	 */
 	public function getDBConnection()
 	{

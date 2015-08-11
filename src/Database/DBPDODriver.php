@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Repository\DBIterator;
 use PDO;
 use PDOStatement;

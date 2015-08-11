@@ -2,10 +2,10 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use InvalidArgumentException;
-use ByJG\AnyDataset\Database\ConnectionManagement;
-use ByJG\AnyDataset\Database\NoSQLDriverInterface;
+use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\MongoDBDriver;
+use ByJG\AnyDataset\Database\NoSQLDriverInterface;
+use InvalidArgumentException;
 
 class NoSqlDataset implements NoSQLDriverInterface
 {
