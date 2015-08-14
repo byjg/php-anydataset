@@ -21,26 +21,23 @@ class DBPDODriver implements DBDriverInterface
 
 	public function __construct(ConnectionManagement $connMngt, $strcnn, $preOptions, $postOptions)
 	{	
-		$this->_connectionManagement = $connMngt;
+        $this->_connectionManagement = $connMngt;
 
 		if (is_null($strcnn))
 		{
-			if ($this->_connectionManagement->getFilePath() != "")
-			{
-				$strcnn = $this->_connectionManagement->getDriver() . ":" . $this->_connectionManagement->getFilePath();
-			}
-			else
-			{
-				$strcnn = $this->_connectionManagement->getDriver() . ":dbname=" . $this->_connectionManagement->getDatabase();
-				if ($this->_connectionManagement->getExtraParam("unixsocket") != "")
-					$strcnn .= ";unix_socket=" . $this->_connectionManagement->getExtraParam("unixsocket");
-				else
-				{
-					$strcnn .= ";host=" . $this->_connectionManagement->getServer();
-					if ($this->_connectionManagement->getPort() != "")
-						$strcnn .= ";port=" . $this->_connectionManagement->getPort();
-				}
-			}
+            if ($this->_connectionManagement->getFilePath() != "") {
+                $strcnn = $this->_connectionManagement->getDriver() . ":" . $this->_connectionManagement->getFilePath();
+            } else {
+                $strcnn = $this->_connectionManagement->getDriver() . ":dbname=" . $this->_connectionManagement->getDatabase();
+                if ($this->_connectionManagement->getExtraParam("unixsocket") != "") {
+                    $strcnn .= ";unix_socket=".$this->_connectionManagement->getExtraParam("unixsocket");
+                } else {
+                    $strcnn .= ";host=".$this->_connectionManagement->getServer();
+                    if ($this->_connectionManagement->getPort() != "") {
+                        $strcnn .= ";port=".$this->_connectionManagement->getPort();
+                    }
+                }
+            }
 		}
 
 		// Create Connection
@@ -59,6 +56,14 @@ class DBPDODriver implements DBDriverInterface
 
 	public static function factory(ConnectionManagement $connMngt)
 	{
+        if (!defined('PDO::ATTR_DRIVER_NAME')) {
+            throw new \ByJG\AnyDataset\Exception\NotAvailableException("Extension 'PDO' is not loaded");
+        }
+
+        if (!extension_loaded('pdo_' . strtolower($connMngt->getDriver()))) {
+            throw new \ByJG\AnyDataset\Exception\NotAvailableException("Extension 'pdo_" . strtolower($connMngt->getDriver()) . "' is not loaded");
+        }
+
 		$class = '\ByJG\AnyDataset\Database\Pdo' . ucfirst($connMngt->getDriver());
 
 		if (!class_exists($class, true))
