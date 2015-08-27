@@ -8,74 +8,117 @@ use ReflectionClass;
 use ReflectionProperty;
 use stdClass;
 
-class Object
+class Object implements DumpToArrayInterface
 {
 
 	/**
-	 *
+	 * Bind the properties from an object to the properties matching to the current instance
+     *
 	 * @param mixed $source
 	 */
 	public function bind($source)
 	{
-		$this->bindObject($source, $this);
+		self::bindObject($source, $this);
 	}
 
 	/**
+	 * Bind the properties from the current instance to the properties matching to an object
 	 *
 	 * @param mixed $target
 	 */
 	public function bindTo($target)
 	{
-		$this->bindObject($this, $target);
+		self::bindObject($this, $target);
 	}
 
+    /**
+     * Get all properties from the current instance as an associative array
+     *
+     * @return array The object properties as array
+     */
+    public function toArray()
+    {
+        return self::toArrayFrom($this);
+    }
+
 	/**
-	 *
+	 * Bind the properties from a source object to the properties matching to a target object
+     *
 	 * @param mixed $source
 	 * @param mixed $target
 	 */
-	public function bindObject($source, $target)
+	public static function bindObject($source, $target)
 	{
 		// Prepare the source object type
-		if ($source instanceof IteratorInterface)
-		{
+		if ($source instanceof IteratorInterface) {
 			$source = $source->moveNext()->toArray();
-		}
-		else if ($source instanceof DumpToArrayInterface)
-		{
+		} else if ($source instanceof DumpToArrayInterface) {
 			$source = $source->toArray();
-		}
+		} else {
+            $source = self::toArrayFrom($source);
+        }
 
-		// Execute the action
-		if ($source instanceof stdClass)
-		{
-			$this->bindStdClass($source, $target);
-		}
-		else if (is_array($source))
-		{
-			$this->bindArray($source, $target);
-		}
-		else
-		{
-			$this->bindGeneralObject($source, $target);
-		}
+        foreach ($source as $propName=>$value) {
+            self::setPropValue($target, $propName, $value);
+        }
 	}
 
+    /**
+     * Get all properties from a source object as an associative array
+     *
+     * @param mixed $source
+     * @return array
+     */
+    public static function toArrayFrom($source)
+    {
+		if (is_array($source)) {
+            return $source;
+        }
 
-	/**
-	 *
-	 * @param mixed $source
-	 * @param mixed $target
-	 */
-	protected function bindGeneralObject($source, $target)
-	{
+		if ($source instanceof stdClass) {
+            return self::toArrayFromStdClass($source);
+        }
+
+        return self::toArrayFromGeneralObject($source);
+    }
+
+    /**
+     * Get all properties from a stdClass instance as an associative array
+     *
+     * @param mixed $source
+     * @return array
+     */
+    protected static function toArrayFromStdClass($source)
+    {
+        $result = [];
+
+		$properties = get_object_vars($source);
+
+		foreach ($properties as $propName => $sourceValue) {
+			$result[$propName] = $sourceValue;
+		}
+
+        return $result;
+    }
+
+    /**
+     * Get all properties from an object instance as an associative array
+     *
+     * @param mixed $source
+     * @return array
+     */
+    protected static function toArrayFromGeneralObject($source)
+    {
+        $result = [];
+
 		$class = new ReflectionClass(get_class($source));
 		$properties = $class->getProperties( ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE | ReflectionProperty::IS_PUBLIC );
 
-		if (is_null($properties))
-			return;
+		if (is_null($properties)) {
+            return $result;
+        }
 
-		foreach ($properties as $prop)
+        foreach ($properties as $prop)
 		{
 			$propName = $prop->getName();
 
@@ -90,52 +133,25 @@ class Object
 			}
 
 			// Try to get the SOURCE Value
-			$sourceValue = $this->getPropValue($source, $prop, $propName);
+			$sourceValue = self::getPropValue($source, $prop, $propName);
 
-			// Set the Value
-			if (!is_null($sourceValue))
-			{
-				$this->setPropValue($target, $propName, $sourceValue);
-			}
+            if (!is_null($sourceValue)) {
+                $result[$propName] = $sourceValue;
+            }
 		}
-	}
+
+        return $result;
+    }
 
 	/**
-	 *
-	 * @param stdClass $source
-	 * @param mixed $target
-	 */
-	protected function bindStdClass($source, $target)
-	{
-		$properties = get_object_vars($source);
-
-		foreach ($properties as $propName => $sourceValue)
-		{
-			$this->setPropValue($target, $propName, $sourceValue);
-		}
-	}
-
-	/**
-	 *
-	 * @param SingleRow $source
-	 * @param mixed $target
-	 */
-	protected function bindArray($source, $target)
-	{
-		foreach ($source as $propName=>$value)
-		{
-			$this->setPropValue($target, $propName, $value);
-		}
-	}
-
-	/**
-	 *
+	 * Get the property value
+     *
 	 * @param mixed $obj
 	 * @param mixed $prop
 	 * @param string $propName
-	 * @return null
+	 * @return mixed
 	 */
-	protected function getPropValue($obj, $prop, $propName)
+	protected static function getPropValue($obj, $prop, $propName)
 	{
 		if (method_exists($obj, "getPropertyPattern"))
 		{
@@ -165,15 +181,16 @@ class Object
 		return null;
 	}
 
-	private $_propNameLower = null;
+	private static $propNameLower = [];
 
 	/**
-	 *
+	 * Set the property value
+     *
 	 * @param mixed $obj
 	 * @param string $propName
 	 * @param string $value
 	 */
-	protected function setPropValue($obj, $propName, $value)
+	protected static function setPropValue($obj, $propName, $value)
 	{
 		if (method_exists($obj, "getPropertyPattern"))
 		{
@@ -192,27 +209,27 @@ class Object
 		{
 			$obj->{'set' . $propName}($value);
 		}
-		else if (property_exists($obj, $propName))
+		elseif (isset($obj->{$propName}))
 		{
 			$obj->{$propName} = $value;
 		}
 		else
 		{
-			if (is_null($this->_propNameLower))
-			{
-				$this->_propNameLower = array();
+            // Check if source property have property case name different from target
+            $className = get_class($obj);
+			if (!isset(self::$propNameLower[$className])) {
+				self::$propNameLower[$className] = [];
 
-				$classVars = get_class_vars(get_class($obj));
-				foreach ($classVars as $varKey=>$varValue)
-				{
-					$this->_propNameLower[strtolower($varKey)] = $varKey;
-				}
+				$classVars = get_class_vars($className);
+				foreach ($classVars as $varKey=>$varValue) {
+					self::$propNameLower[$className][strtolower($varKey)] = $varKey;
+                }
 			}
 
-			if (isset($this->_propNameLower[strtolower($propName)]))
-			{
-				$obj->{$this->_propNameLower[strtolower($propName)]} = $value;
-			}
+            $propLower = strtolower($propName);
+			if (isset(self::$propNameLower[$className][$propLower])) {
+				$obj->{self::$propNameLower[$className][$propLower]} = $value;
+            }
 		}
 	}
 

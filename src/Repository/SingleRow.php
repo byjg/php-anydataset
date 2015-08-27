@@ -2,10 +2,13 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use DOMNode;
+use ByJG\AnyDataset\Model\DumpToArrayInterface;
+use ByJG\AnyDataset\Model\Object;
 use ByJG\Util\XmlUtil;
+use DOMNode;
+use UnexpectedValueException;
 
-class SingleRow extends \ByJG\AnyDataset\Model\Object implements \ByJG\AnyDataset\Model\DumpToArrayInterface
+class SingleRow extends Object implements DumpToArrayInterface
 {
 	/**
 	 * \DOMNode represents a SingleRow
@@ -259,7 +262,7 @@ class SingleRow extends \ByJG\AnyDataset\Model\Object implements \ByJG\AnyDatase
 		}
 		else
 		{
-			throw new \UnexpectedValueException('I expected that getRawFormat is array() but ' . gettype($this->_row) . ' was given');
+			throw new UnexpectedValueException('I expected that getRawFormat is array() but ' . gettype($this->_row) . ' was given');
 		}
 	}
 	/**
