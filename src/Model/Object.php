@@ -11,25 +11,25 @@ use stdClass;
 class Object implements DumpToArrayInterface
 {
 
-	/**
-	 * Bind the properties from an object to the properties matching to the current instance
+    /**
+     * Bind the properties from an object to the properties matching to the current instance
      *
-	 * @param mixed $source
-	 */
-	public function bind($source)
-	{
-		self::bindObject($source, $this);
-	}
+     * @param mixed $source
+     */
+    public function bind($source)
+    {
+        self::bindObject($source, $this);
+    }
 
-	/**
-	 * Bind the properties from the current instance to the properties matching to an object
-	 *
-	 * @param mixed $target
-	 */
-	public function bindTo($target)
-	{
-		self::bindObject($this, $target);
-	}
+    /**
+     * Bind the properties from the current instance to the properties matching to an object
+     *
+     * @param mixed $target
+     */
+    public function bindTo($target)
+    {
+        self::bindObject($this, $target);
+    }
 
     /**
      * Get all properties from the current instance as an associative array
@@ -41,27 +41,27 @@ class Object implements DumpToArrayInterface
         return self::toArrayFrom($this);
     }
 
-	/**
-	 * Bind the properties from a source object to the properties matching to a target object
+    /**
+     * Bind the properties from a source object to the properties matching to a target object
      *
-	 * @param mixed $source
-	 * @param mixed $target
-	 */
-	public static function bindObject($source, $target)
-	{
-		// Prepare the source object type
-		if ($source instanceof IteratorInterface) {
-			$source = $source->moveNext()->toArray();
-		} else if ($source instanceof DumpToArrayInterface) {
-			$source = $source->toArray();
-		} else {
+     * @param mixed $source
+     * @param mixed $target
+     */
+    public static function bindObject($source, $target)
+    {
+        // Prepare the source object type
+        if ($source instanceof IteratorInterface) {
+            $source = $source->moveNext()->toArray();
+        } else if ($source instanceof DumpToArrayInterface) {
+            $source = $source->toArray();
+        } else {
             $source = self::toArrayFrom($source);
         }
 
-        foreach ($source as $propName=>$value) {
+        foreach ($source as $propName => $value) {
             self::setPropValue($target, $propName, $value);
         }
-	}
+    }
 
     /**
      * Get all properties from a source object as an associative array
@@ -71,11 +71,11 @@ class Object implements DumpToArrayInterface
      */
     public static function toArrayFrom($source)
     {
-		if (is_array($source)) {
+        if (is_array($source)) {
             return $source;
         }
 
-		if ($source instanceof stdClass) {
+        if ($source instanceof stdClass) {
             return self::toArrayFromStdClass($source);
         }
 
@@ -92,11 +92,11 @@ class Object implements DumpToArrayInterface
     {
         $result = [];
 
-		$properties = get_object_vars($source);
+        $properties = get_object_vars($source);
 
-		foreach ($properties as $propName => $sourceValue) {
-			$result[$propName] = $sourceValue;
-		}
+        foreach ($properties as $propName => $sourceValue) {
+            $result[$propName] = $sourceValue;
+        }
 
         return $result;
     }
@@ -111,126 +111,107 @@ class Object implements DumpToArrayInterface
     {
         $result = [];
 
-		$class = new ReflectionClass(get_class($source));
-		$properties = $class->getProperties( ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE | ReflectionProperty::IS_PUBLIC );
+        $class = new ReflectionClass(get_class($source));
+        $properties = $class->getProperties(ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE | ReflectionProperty::IS_PUBLIC);
 
-		if (is_null($properties)) {
+        if (is_null($properties)) {
             return $result;
         }
 
-        foreach ($properties as $prop)
-		{
-			$propName = $prop->getName();
+        foreach ($properties as $prop) {
+            $propName = $prop->getName();
 
-			// Ignore property from BaseModel
-			if ($propName == "_propertyPattern")
-				continue;
+            // Ignore property from BaseModel
+            if ($propName == "_propertyPattern") {
+                continue;
+            }
 
-			// Remove Prefix "_" from Property Name to find a value
-			if ($propName[0] == "_")
-			{
-				$propName = substr($propName, 1);
-			}
+            // Remove Prefix "_" from Property Name to find a value
+            if ($propName[0] == "_") {
+                $propName = substr($propName, 1);
+            }
 
-			// Try to get the SOURCE Value
-			$sourceValue = self::getPropValue($source, $prop, $propName);
+            // Try to get the SOURCE Value
+            $sourceValue = self::getPropValue($source, $prop, $propName);
 
             if (!is_null($sourceValue)) {
                 $result[$propName] = $sourceValue;
             }
-		}
+        }
 
         return $result;
     }
 
-	/**
-	 * Get the property value
+    /**
+     * Get the property value
      *
-	 * @param mixed $obj
-	 * @param mixed $prop
-	 * @param string $propName
-	 * @return mixed
-	 */
-	protected static function getPropValue($obj, $prop, $propName)
-	{
-		if (method_exists($obj, "getPropertyPattern"))
-		{
-			$propertyPattern = $obj->getPropertyPattern();
-			if (!is_null($propertyPattern))
-			{
-				$propName = preg_replace($propertyPattern[0], $propertyPattern[1], $propName);
-			}
-		}
+     * @param mixed $obj
+     * @param mixed $prop
+     * @param string $propName
+     * @return mixed
+     */
+    protected static function getPropValue($obj, $prop, $propName)
+    {
+        if (method_exists($obj, "getPropertyPattern")) {
+            $propertyPattern = $obj->getPropertyPattern();
+            if (!is_null($propertyPattern)) {
+                $propName = preg_replace($propertyPattern[0], $propertyPattern[1], $propName);
+            }
+        }
 
-		if (method_exists($obj, 'get' . $propName))
-		{
-			if (is_callable([$obj, 'get' . $propName]))
-			{
-				return $obj->{'get' . $propName}();
-			}
-		}
-		else if (is_null($prop))
-		{
-			return $obj->{$propName};
-		}
-		else if ($prop->isPublic())
-		{
-			return $prop->getValue($obj);
-		}
+        if (method_exists($obj, 'get'.$propName)) {
+            if (is_callable([$obj, 'get'.$propName])) {
+                return $obj->{'get'.$propName}();
+            }
+        } else if (is_null($prop)) {
+            return $obj->{$propName};
+        } else if ($prop->isPublic()) {
+            return $prop->getValue($obj);
+        }
 
-		return null;
-	}
+        return null;
+    }
+    
+    private static $propNameLower = [];
 
-	private static $propNameLower = [];
-
-	/**
-	 * Set the property value
+    /**
+     * Set the property value
      *
-	 * @param mixed $obj
-	 * @param string $propName
-	 * @param string $value
-	 */
-	protected static function setPropValue($obj, $propName, $value)
-	{
-		if (method_exists($obj, "getPropertyPattern"))
-		{
-			$propertyPattern = $obj->getPropertyPattern();
-			if (!is_null($propertyPattern))
-			{
-				$propName = preg_replace($propertyPattern[0], $propertyPattern[1], $propName);
-			}
-		}
+     * @param mixed $obj
+     * @param string $propName
+     * @param string $value
+     */
+    protected static function setPropValue($obj, $propName, $value)
+    {
+        if (method_exists($obj, "getPropertyPattern")) {
+            $propertyPattern = $obj->getPropertyPattern();
+            if (!is_null($propertyPattern)) {
+                $propName = preg_replace($propertyPattern[0], $propertyPattern[1], $propName);
+            }
+        }
 
-        if ($obj instanceof SingleRow)
-		{
-			$obj->setField($propName, $value);
-		}
-		else if (method_exists($obj, 'set' . $propName))
-		{
-			$obj->{'set' . $propName}($value);
-		}
-		elseif (isset($obj->{$propName}))
-		{
-			$obj->{$propName} = $value;
-		}
-		else
-		{
+        if ($obj instanceof SingleRow) {
+            $obj->setField($propName, $value);
+        } else if (method_exists($obj, 'set'.$propName)) {
+            $obj->{'set'.$propName}($value);
+        } elseif (isset($obj->{$propName})) {
+            $obj->{$propName} = $value;
+        } else {
             // Check if source property have property case name different from target
             $className = get_class($obj);
-			if (!isset(self::$propNameLower[$className])) {
-				self::$propNameLower[$className] = [];
+            if (!isset(self::$propNameLower[$className])) {
+                self::$propNameLower[$className] = [];
 
-				$classVars = get_class_vars($className);
-				foreach ($classVars as $varKey=>$varValue) {
-					self::$propNameLower[$className][strtolower($varKey)] = $varKey;
+                $classVars = get_class_vars($className);
+                foreach ($classVars as $varKey => $varValue) {
+                    self::$propNameLower[$className][strtolower($varKey)] = $varKey;
                 }
-			}
+            }
 
             $propLower = strtolower($propName);
-			if (isset(self::$propNameLower[$className][$propLower])) {
-				$obj->{self::$propNameLower[$className][$propLower]} = $value;
+            if (isset(self::$propNameLower[$className][$propLower])) {
+                $obj->{self::$propNameLower[$className][$propLower]} = $value;
             }
-		}
-	}
-
+        }
+    }
 }
