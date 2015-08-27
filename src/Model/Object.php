@@ -51,14 +51,14 @@ class Object implements DumpToArrayInterface
     {
         // Prepare the source object type
         if ($source instanceof IteratorInterface) {
-            $source = $source->moveNext()->toArray();
+            $sourceArray = $source->moveNext()->toArray();
         } else if ($source instanceof DumpToArrayInterface) {
-            $source = $source->toArray();
+            $sourceArray = $source->toArray();
         } else {
-            $source = self::toArrayFrom($source);
+            $sourceArray = self::toArrayFrom($source);
         }
 
-        foreach ($source as $propName => $value) {
+        foreach ($sourceArray as $propName => $value) {
             self::setPropValue($target, $propName, $value);
         }
     }
