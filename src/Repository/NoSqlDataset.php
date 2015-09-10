@@ -9,18 +9,19 @@ use InvalidArgumentException;
 
 class NoSqlDataset implements NoSQLDriverInterface
 {
-	/**
-	 * Enter description here...
-	 *
-	 * @var ConnectionManagement
-	 */
-	protected $_connectionManagement;
 
-	/**
-	 *
-	 * @var NoSQLDriverInterface
-	 */
-	protected $_dbDriver = null;
+    /**
+     * Enter description here...
+     *
+     * @var ConnectionManagement
+     */
+    protected $_connectionManagement;
+
+    /**
+     *
+     * @var NoSQLDriverInterface
+     */
+    protected $_dbDriver = null;
 
     /**
      *
@@ -28,110 +29,99 @@ class NoSqlDataset implements NoSQLDriverInterface
      * @param type $collection
      * @throws InvalidArgumentException
      */
-	public function __construct($dbname, $collection)
-	{
-		$this->_connectionManagement = new ConnectionManagement ( $dbname );
+    public function __construct($dbname, $collection)
+    {
+        $this->_connectionManagement = new ConnectionManagement($dbname);
 
-		if ($this->_connectionManagement->getDriver() == "mongodb")
-		{
-			$this->_dbDriver = new MongoDBDriver($this->_connectionManagement, $collection);
-		}
-		else
-		{
-			throw new InvalidArgumentException("There is no '{$this->_connectionManagement->getDriver()}' NoSQL database");
-		}
-	}
+        if ($this->_connectionManagement->getDriver() == "mongodb") {
+            $this->_dbDriver = new MongoDBDriver($this->_connectionManagement, $collection);
+        } else {
+            throw new InvalidArgumentException("There is no '{$this->_connectionManagement->getDriver()}' NoSQL database");
+        }
+    }
 
-	public function getDbType()
-	{
-		return $this->_connectionManagement->getDbType();
-	}
+    public function getDbType()
+    {
+        return $this->_connectionManagement->getDbType();
+    }
 
-	public function getDbConnectionString()
-	{
-		return $this->_connectionManagement->getDbConnectionString ();
-	}
+    public function getDbConnectionString()
+    {
+        return $this->_connectionManagement->getDbConnectionString();
+    }
 
-	public function testConnection()
-	{
-		return true;
-	}
+    public function testConnection()
+    {
+        return true;
+    }
 
+    /**
+     *
+     * @return mixed
+     */
+    public function getCollection()
+    {
+        return $this->_dbDriver->getCollection();
+    }
 
+    /**
+     *
+     * @param mixed $filter
+     * @return IteratorInterface $filter
+     */
+    public function getIterator($filter = null, $fields = null)
+    {
+        return $this->_dbDriver->getIterator($filter, $fields);
+    }
 
-	/**
-	 *
-	 * @return mixed
-	 */
-	public function getCollection()
-	{
-		return $this->_dbDriver->getCollection();
-	}
+    /**
+     *
+     * @param void $document
+     */
+    public function insert($document)
+    {
+        $this->_dbDriver->insert($document);
+    }
 
-	/**
-	 *
-	 * @param mixed $filter
-	 * @return IteratorInterface $filter
-	 */
-	public function getIterator($filter = null, $fields = null)
-	{
-		return $this->_dbDriver->getIterator($filter, $fields);
-	}
+    /**
+     *
+     * @param mixed $collection
+     * @return bool
+     */
+    public function setCollection($collection)
+    {
+        return $this->_dbDriver->setCollection($collection);
+    }
 
-	/**
-	 *
-	 * @param void $document
-	 */
-	public function insert($document)
-	{
-		$this->_dbDriver->insert($document);
-	}
+    /**
+     *
+     * @param mixed $document
+     * @param mixed $filter
+     * @return bool
+     */
+    public function update($document, $filter = null, $options = null)
+    {
+        return $this->_dbDriver->update($document, $filter, $options);
+    }
 
-	/**
-	 *
-	 * @param mixed $collection
-	 * @return bool
-	 */
-	public function setCollection($collection)
-	{
-		return $this->_dbDriver->setCollection($collection);
-	}
+    /**
+     * @access public
+     * @return string
+     */
+    public function getDBConnection()
+    {
+        return $this->_dbDriver->getDbConnection();
+    }
+    /*
+      public function setDriverAttribute($name, $value)
+      {
+      return $this->_dbDriver->setAttribute($name, $value);
+      }
 
-	/**
-	 *
-	 * @param mixed $document
-	 * @param mixed $filter
-	 * @return bool
-	 */
-	public function update($document, $filter = null, $options = null)
-	{
-		return $this->_dbDriver->update($document, $filter, $options);
-	}
-
-
-	/**
-	 *@access public
-	 *@return string
-	 */
-	public function getDBConnection()
-	{
-		return $this->_dbDriver->getDbConnection();
-	}
-
-
-	/*
-	public function setDriverAttribute($name, $value)
-	{
-		return $this->_dbDriver->setAttribute($name, $value);
-	}
-
-	public function getDriverAttribute($name)
-	{
-		return $this->_dbDriver->getAttribute($name);
-	}
-	 *
-	 */
-
+      public function getDriverAttribute($name)
+      {
+      return $this->_dbDriver->getAttribute($name);
+      }
+     *
+     */
 }
-
-

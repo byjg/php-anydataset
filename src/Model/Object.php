@@ -159,9 +159,9 @@ class Object implements DumpToArrayInterface
             }
         }
 
-        if (method_exists($obj, 'get'.$propName)) {
-            if (is_callable([$obj, 'get'.$propName])) {
-                return $obj->{'get'.$propName}();
+        if (method_exists($obj, 'get' . $propName)) {
+            if (is_callable([$obj, 'get' . $propName])) {
+                return $obj->{'get' . $propName}();
             }
         } else if (is_null($prop)) {
             return $obj->{$propName};
@@ -171,7 +171,7 @@ class Object implements DumpToArrayInterface
 
         return null;
     }
-    
+
     private static $propNameLower = [];
 
     /**
@@ -192,8 +192,8 @@ class Object implements DumpToArrayInterface
 
         if ($obj instanceof SingleRow) {
             $obj->setField($propName, $value);
-        } else if (method_exists($obj, 'set'.$propName)) {
-            $obj->{'set'.$propName}($value);
+        } else if (method_exists($obj, 'set' . $propName)) {
+            $obj->{'set' . $propName}($value);
         } elseif (isset($obj->{$propName})) {
             $obj->{$propName} = $value;
         } else {

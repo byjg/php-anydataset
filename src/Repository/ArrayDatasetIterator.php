@@ -10,85 +10,81 @@ use InvalidArgumentException;
 
 class ArrayDatasetIterator extends GenericIterator
 {
-	/**
-	* @var array
-	*/
-	protected $_rows;
 
-	/**
-	 * Enter description here...
-	 *
-	 * @var array
-	 */
-	protected $_keys;
+    /**
+     * @var array
+     */
+    protected $_rows;
 
-	/**
-	/* @var int
-	*/
-	protected $_currentRow;
+    /**
+     * Enter description here...
+     *
+     * @var array
+     */
+    protected $_keys;
 
-	/**
-	* @return IteratorInterface
-	*/
-	public function __construct($rows)
-	{
-		if (!is_array($rows))
-		{
-			throw new InvalidArgumentException("ArrayDatasetIterator must receive an array");
-		}
-		$this->_currentRow = 0;
-		$this->_rows = $rows;
-		$this->_keys = array_keys($rows);
-	}
+    /**
+      /* @var int
+     */
+    protected $_currentRow;
 
-	/**
-	* @return int
-	*/
-	public function count()
-	{
-		return count($this->_rows);
-	}
+    /**
+     * @return IteratorInterface
+     */
+    public function __construct($rows)
+    {
+        if (!is_array($rows)) {
+            throw new InvalidArgumentException("ArrayDatasetIterator must receive an array");
+        }
+        $this->_currentRow = 0;
+        $this->_rows = $rows;
+        $this->_keys = array_keys($rows);
+    }
 
-	/**
-	* @return bool
-	*/
-	public function hasNext()
-	{
-		return ($this->_currentRow < $this->count());
-	}
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->_rows);
+    }
 
-	/**
-	* @return SingleRow
-	*/
-	public function moveNext()
-	{
-		if ($this->hasNext())
-		{
-			$cols = array();
-			$key = $this->_keys[$this->_currentRow];
-			$cols = $this->_rows[$key];
+    /**
+     * @return bool
+     */
+    public function hasNext()
+    {
+        return ($this->_currentRow < $this->count());
+    }
 
-			$any = new AnyDataset();
-			$any->appendRow();
-			$any->addField("__id", $this->_currentRow);
-			$any->addField("__key", $key);
-			foreach ($cols as $key=>$value)
-			{
-				$any->addField(strtolower($key), $value);
-			}
-			$it = $any->getIterator(null);
-			$sr = $it->moveNext();
-			$this->_currentRow++;
-			return $sr;
-		}
-		else
-		{
-			return null;
-		}
-	}
+    /**
+     * @return SingleRow
+     */
+    public function moveNext()
+    {
+        if ($this->hasNext()) {
+            $cols = array();
+            $key = $this->_keys[$this->_currentRow];
+            $cols = $this->_rows[$key];
 
- 	function key()
- 	{
- 		return $this->_currentRow;
- 	}
+            $any = new AnyDataset();
+            $any->appendRow();
+            $any->addField("__id", $this->_currentRow);
+            $any->addField("__key", $key);
+            foreach ($cols as $key => $value) {
+                $any->addField(strtolower($key), $value);
+            }
+            $it = $any->getIterator(null);
+            $sr = $it->moveNext();
+            $this->_currentRow++;
+            return $sr;
+        } else {
+            return null;
+        }
+    }
+
+    function key()
+    {
+        return $this->_currentRow;
+    }
 }

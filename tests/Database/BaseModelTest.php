@@ -8,187 +8,185 @@ namespace ByJG\AnyDataset\Database;
 class BaseModelTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    protected function setUp()
+    {
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
+    }
 
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
+        
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
-	 */
-	public function testSetPropertyPattern()
-	{
-		$object = new \Tests\Sample\SampleModel();
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
+     */
+    public function testSetPropertyPattern()
+    {
+        $object = new \Tests\Sample\SampleModel();
 
-		$object->setPropertyPattern('/(.*)/', '$1');
-		$this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
+        $object->setPropertyPattern('/(.*)/', '$1');
+        $this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
 
-		$object->setPropertyPattern('(.*)', '$1');
-		$this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
-	}
+        $object->setPropertyPattern('(.*)', '$1');
+        $this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
-	 */
-	public function testSetPropertyPatternNull()
-	{
-		$object = new \Tests\Sample\SampleModel();
-		$object->setPropertyPattern(null, null);
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
+     */
+    public function testSetPropertyPatternNull()
+    {
+        $object = new \Tests\Sample\SampleModel();
+        $object->setPropertyPattern(null, null);
 
-		$this->assertEquals(null, $object->getPropertyPattern());
-	}
+        $this->assertEquals(null, $object->getPropertyPattern());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::bindObject
-	 */
-	public function testGetPropertyPattern()
-	{
-		$object = new \Tests\Sample\SampleModel();
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::bindObject
+     */
+    public function testGetPropertyPattern()
+    {
+        $object = new \Tests\Sample\SampleModel();
 
-		$this->assertEquals(array('/([^A-Za-z0-9])/', ''), $object->getPropertyPattern());
-	}
+        $this->assertEquals(array('/([^A-Za-z0-9])/', ''), $object->getPropertyPattern());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
-	 */
-	public function testBindSingleRow()
-	{
-		$sr = new \ByJG\AnyDataset\Repository\SingleRow();
-		$sr->addField("id", 10);
-		$sr->addField("name", "Testing");
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
+     */
+    public function testBindSingleRow()
+    {
+        $sr = new \ByJG\AnyDataset\Repository\SingleRow();
+        $sr->addField("id", 10);
+        $sr->addField("name", "Testing");
 
-		$object = new \Tests\Sample\SampleModel($sr);
+        $object = new \Tests\Sample\SampleModel($sr);
 
-		$this->assertEquals(10, $object->Id);
-		$this->assertEquals("Testing", $object->getName());
-	}
+        $this->assertEquals(10, $object->Id);
+        $this->assertEquals("Testing", $object->getName());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
-	 */
-	public function testBindIterator()
-	{
-		$anydata = new \ByJG\AnyDataset\Repository\AnyDataset();
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
+     */
+    public function testBindIterator()
+    {
+        $anydata = new \ByJG\AnyDataset\Repository\AnyDataset();
 
-		$sr = new \ByJG\AnyDataset\Repository\SingleRow();
-		$sr->addField("id", 10);
-		$sr->addField("name", "Testing");
-		$anydata->appendRow($sr);
+        $sr = new \ByJG\AnyDataset\Repository\SingleRow();
+        $sr->addField("id", 10);
+        $sr->addField("name", "Testing");
+        $anydata->appendRow($sr);
 
-		$object = new \Tests\Sample\SampleModel($anydata->getIterator());
+        $object = new \Tests\Sample\SampleModel($anydata->getIterator());
 
-		$this->assertEquals(10, $object->Id);
-		$this->assertEquals("Testing", $object->getName());
-	}
+        $this->assertEquals(10, $object->Id);
+        $this->assertEquals("Testing", $object->getName());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::bindGeneralObject
-	 */
-	public function testBindFromObject()
-	{
-		$model = new \Tests\Sample\ModelGetter(10, 'Testing');
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::bindGeneralObject
+     */
+    public function testBindFromObject()
+    {
+        $model = new \Tests\Sample\ModelGetter(10, 'Testing');
 
-		$object = new \Tests\Sample\SampleModel($model);
+        $object = new \Tests\Sample\SampleModel($model);
 
-		$this->assertEquals(10, $object->Id);
-		$this->assertEquals("Testing", $object->getName());
-	}
+        $this->assertEquals(10, $object->Id);
+        $this->assertEquals("Testing", $object->getName());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::bindStdClass
-	 */
-	public function testBindFromStdClass()
-	{
-		// Matching exact property names
-		$model = new \stdClass();
-		$model->Id = 10;
-		$model->Name = "Testing";
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::bindStdClass
+     */
+    public function testBindFromStdClass()
+    {
+        // Matching exact property names
+        $model = new \stdClass();
+        $model->Id = 10;
+        $model->Name = "Testing";
 
-		$object = new \Tests\Sample\SampleModel($model);
+        $object = new \Tests\Sample\SampleModel($model);
 
-		$this->assertEquals(10, $object->Id);
-		$this->assertEquals("Testing", $object->getName());
+        $this->assertEquals(10, $object->Id);
+        $this->assertEquals("Testing", $object->getName());
 
-		// Matching with different case letters
-		$model2 = new \stdClass();
-		$model2->id = 10;
-		$model2->name = "Testing";
+        // Matching with different case letters
+        $model2 = new \stdClass();
+        $model2->id = 10;
+        $model2->name = "Testing";
 
-		$object = new \Tests\Sample\SampleModel($model2);
+        $object = new \Tests\Sample\SampleModel($model2);
 
-		$this->assertEquals(10, $object->Id);
-		$this->assertEquals("Testing", $object->getName());
+        $this->assertEquals(10, $object->Id);
+        $this->assertEquals("Testing", $object->getName());
+    }
 
-	}
+    /**
+     * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
+     */
+    public function testBindFromArray()
+    {
+        $array = array(
+            "Id" => 10,
+            "Name" => "Testing"
+        );
 
-	/**
-	 * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
-	 */
-	public function testBindFromArray()
-	{
-		$array = array(
-			"Id" => 10,
-			"Name" => "Testing"
-		);
+        $object = new \Tests\Sample\SampleModel($array);
 
-		$object = new \Tests\Sample\SampleModel($array);
+        $this->assertEquals(10, $object->Id);
+        $this->assertEquals("Testing", $object->getName());
+    }
 
-		$this->assertEquals(10, $object->Id);
-		$this->assertEquals("Testing", $object->getName());
-	}
+    public function testPropertyPatternBind()
+    {
+        $obj = new \stdClass();
+        $obj->Id_Model = 10;
+        $obj->Client_Name = 'Testing';
 
-	public function testPropertyPatternBind()
-	{
-		$obj = new \stdClass();
-		$obj->Id_Model = 10;
-		$obj->Client_Name = 'Testing';
+        // Testing Without Property Bind
+        $object = new \Tests\Sample\ModelPropertyPattern();
+        $object->setPropertyPattern(null, null);
+        $object->bind($obj);
 
-		// Testing Without Property Bind
-		$object = new \Tests\Sample\ModelPropertyPattern();
-		$object->setPropertyPattern(null, null);
-		$object->bind($obj);
+        $this->assertEquals('', $object->getIdModel());
+        $this->assertEquals('', $object->getClientName());
 
-		$this->assertEquals('', $object->getIdModel());
-		$this->assertEquals('', $object->getClientName());
+        // Testing with Bind
+        $object = new \Tests\Sample\ModelPropertyPattern();
+        $object->bind($obj);
 
-		// Testing with Bind
-		$object = new \Tests\Sample\ModelPropertyPattern();
-		$object->bind($obj);
+        $this->assertEquals(10, $object->getIdModel());
+        $this->assertEquals("Testing", $object->getClientName());
 
-		$this->assertEquals(10, $object->getIdModel());
-		$this->assertEquals("Testing", $object->getClientName());
+        // Testing Constructor
+        $object = new \Tests\Sample\ModelPropertyPattern($obj);
 
-		// Testing Constructor
-		$object = new \Tests\Sample\ModelPropertyPattern($obj);
+        $this->assertEquals(10, $object->getIdModel());
+        $this->assertEquals("Testing", $object->getClientName());
+    }
 
-		$this->assertEquals(10, $object->getIdModel());
-		$this->assertEquals("Testing", $object->getClientName());
-	}
+    public function testPropertyPatternBind_2()
+    {
+        // Other Testing
+        $obj = new \stdClass();
+        $obj->IdModel = 10;
+        $obj->ClientName = 'Testing';
 
+        $object = new \Tests\Sample\ModelPropertyPattern($obj);
 
-	public function testPropertyPatternBind_2()
-	{
-		// Other Testing
-		$obj = new \stdClass();
-		$obj->IdModel = 10;
-		$obj->ClientName = 'Testing';
-
-		$object = new \Tests\Sample\ModelPropertyPattern($obj);
-
-		$this->assertEquals(10, $object->getIdModel());
-		$this->assertEquals("Testing", $object->getClientName());
-	}
-
+        $this->assertEquals(10, $object->getIdModel());
+        $this->assertEquals("Testing", $object->getClientName());
+    }
 }

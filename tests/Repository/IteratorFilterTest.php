@@ -38,12 +38,13 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
     public function testGetXPath()
     {
         $this->assertEquals('/anydataset/row', $this->object->getXPath());
-        
+
         $this->object->addRelation('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'test');
         $this->assertEquals("/anydataset/row[field[@name='field'] = 'test' ]", $this->object->getXPath());
 
         $this->object->addRelation('field2', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'test2');
-        $this->assertEquals("/anydataset/row[field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ]", $this->object->getXPath());
+        $this->assertEquals("/anydataset/row[field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ]",
+            $this->object->getXPath());
     }
 
     /**
@@ -79,30 +80,28 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         $collection = [
             $row1 = new SingleRow(
             [
-                'field' => 'value1',
-                'field2' => 'value2'
+            'field' => 'value1',
+            'field2' => 'value2'
             ]),
-
             $row2 = new SingleRow(
             [
-                'field' => 'other1',
-                'field2' => 'other2'
+            'field' => 'other1',
+            'field2' => 'other2'
             ]),
-
             $row3 = new SingleRow(
             [
-                'field' => 'last1',
-                'field2' => 'last2'
+            'field' => 'last1',
+            'field2' => 'last2'
             ])
         ];
-        
+
         $this->assertEquals($collection, $this->object->match($collection));
 
         $this->object->addRelation('field2', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'other2');
-        $this->assertEquals([ $row2 ], $this->object->match($collection));
+        $this->assertEquals([ $row2], $this->object->match($collection));
 
         $this->object->addRelationOr('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'last1');
-        $this->assertEquals([ $row2, $row3 ], $this->object->match($collection));
+        $this->assertEquals([ $row2, $row3], $this->object->match($collection));
 
 
         //------------------------
@@ -110,8 +109,7 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         $this->object = new IteratorFilter();
         $this->object->addRelation('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'last1');
         $this->object->addRelation('field2', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'last2');
-        $this->assertEquals([ $row3 ], $this->object->match($collection));
-
+        $this->assertEquals([ $row3], $this->object->match($collection));
     }
 
     /**
@@ -132,14 +130,14 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addRelation('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'test');
         $this->object->addRelationOr('field2', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'test2');
-        $this->assertEquals("/anydataset/row[field[@name='field'] = 'test'  or field[@name='field2'] = 'test2' ]", $this->object->getXPath());
+        $this->assertEquals("/anydataset/row[field[@name='field'] = 'test'  or field[@name='field2'] = 'test2' ]",
+            $this->object->getXPath());
 
         $params = null;
         $returnFields = '*';
         $sql = $this->object->getSql('tablename', $params, $returnFields);
         $this->assertEquals(['field' => 'test', 'field2' => 'test2'], $params);
         $this->assertEquals('select * from tablename  where  field = [[field]]  or  field2 = [[field2]]  ', $sql);
-
     }
 
     /**
@@ -154,16 +152,15 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         $this->object->endGroup();
         $this->object->addRelationOr('field3', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'test3');
         $this->assertEquals(
-                "/anydataset/row[ ( field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ) or field[@name='field3'] = 'test3' ]",
-                $this->object->getXPath()
+            "/anydataset/row[ ( field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ) or field[@name='field3'] = 'test3' ]",
+            $this->object->getXPath()
         );
 
         $params = null;
         $returnFields = '*';
         $sql = $this->object->getSql('tablename', $params, $returnFields);
         $this->assertEquals(['field' => 'test', 'field2' => 'test2', 'field3' => 'test3'], $params);
-        $this->assertEquals('select * from tablename  where  (  field = [[field]]  and  field2 = [[field2]] ) or  field3 = [[field3]]  ', $sql);
+        $this->assertEquals('select * from tablename  where  (  field = [[field]]  and  field2 = [[field2]] ) or  field3 = [[field3]]  ',
+            $sql);
     }
-
-
 }

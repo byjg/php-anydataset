@@ -7,99 +7,83 @@ use ByJG\AnyDataset\Exception\IteratorException;
 
 class JsonIterator extends GenericIterator
 {
-	/**
-	 * @var object
-	 */
-	private $_jsonObject;
 
-	/**
-	 * Enter description here...
-	 *
-	 * @var int
-	 */
-	private $_current = 0;
+    /**
+     * @var object
+     */
+    private $_jsonObject;
 
-	public function __construct($jsonObject, $path = "", $throwErr = false)
-	{
-		if (!is_array($jsonObject))
-		{
-			throw new InvalidArgumentException("Invalid JSON object");
-		}
+    /**
+     * Enter description here...
+     *
+     * @var int
+     */
+    private $_current = 0;
 
-		if ($path != "")
-		{
-			if ($path[0] == "/")
-				$path = substr ($path, 1);
+    public function __construct($jsonObject, $path = "", $throwErr = false)
+    {
+        if (!is_array($jsonObject)) {
+            throw new InvalidArgumentException("Invalid JSON object");
+        }
 
-			$pathAr = explode("/", $path);
+        if ($path != "") {
+            if ($path[0] == "/") $path = substr($path, 1);
 
-			$newjsonObject = $jsonObject;
+            $pathAr = explode("/", $path);
 
-			foreach($pathAr as $key)
-			{
-				if (array_key_exists($key, $newjsonObject))
-				{
-					$newjsonObject = $newjsonObject[$key];
-				}
-				elseif ($throwErr)
-				{
-					throw new IteratorException("Invalid path '$path' in JSON Object");
-				}
-				else
-				{
-					$newjsonObject = array();
-					break;
-				}
-			}
-			$this->_jsonObject = $newjsonObject;
-		}
-		else
-			$this->_jsonObject = $jsonObject;
+            $newjsonObject = $jsonObject;
 
-		$this->_current = 0;
-	}
+            foreach ($pathAr as $key) {
+                if (array_key_exists($key, $newjsonObject)) {
+                    $newjsonObject = $newjsonObject[$key];
+                } elseif ($throwErr) {
+                    throw new IteratorException("Invalid path '$path' in JSON Object");
+                } else {
+                    $newjsonObject = array();
+                    break;
+                }
+            }
+            $this->_jsonObject = $newjsonObject;
+        } else $this->_jsonObject = $jsonObject;
 
-	public function count()
-	{
-		return (count($this->_jsonObject));
-	}
+        $this->_current = 0;
+    }
 
-	/**
-	*@access public
-	*@return bool
-	*/
-	public function hasNext()
-	{
-		if ($this->_current < $this->count())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    public function count()
+    {
+        return (count($this->_jsonObject));
+    }
 
-	/**
-	*@access public
-	*@return SingleRow
-	*/
-	public function moveNext()
-	{
-		if (!$this->hasNext())
-		{
-			throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
-		}
+    /**
+     * @access public
+     * @return bool
+     */
+    public function hasNext()
+    {
+        if ($this->_current < $this->count()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		$sr = new SingleRow($this->_jsonObject[$this->_current++]);
+    /**
+     * @access public
+     * @return SingleRow
+     */
+    public function moveNext()
+    {
+        if (!$this->hasNext()) {
+            throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
+        }
 
-		return 	$sr;
-	}
+        $sr = new SingleRow($this->_jsonObject[$this->_current++]);
 
- 	function key()
- 	{
- 		return $this->_current;
- 	}
+        return $sr;
+    }
 
+    function key()
+    {
+        return $this->_current;
+    }
 }
-

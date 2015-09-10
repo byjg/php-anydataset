@@ -10,107 +10,93 @@ use ByJG\Util\XmlUtil;
 class XmlIterator extends GenericIterator
 {
 
-	/**
-	 * Enter description here...
-	 *
-	 * @var DOMNodeList
-	 */
-	private $_nodeList = null;
+    /**
+     * Enter description here...
+     *
+     * @var DOMNodeList
+     */
+    private $_nodeList = null;
 
-	/**
-	 * Enter description here...
-	 *
-	 * @var string[]
-	 */
-	private $_colNodes = null;
+    /**
+     * Enter description here...
+     *
+     * @var string[]
+     */
+    private $_colNodes = null;
 
-	/**
-	 * Enter description here...
-	 *
-	 * @var int
-	 */
-	private $_current = 0;
+    /**
+     * Enter description here...
+     *
+     * @var int
+     */
+    private $_current = 0;
+    protected $_registerNS;
 
-	protected $_registerNS;
-
-	public function __construct($nodeList, $colNodes, $registerNS)
-	{
-		if (!($nodeList instanceof DOMNodeList))
-		{
-			throw new InvalidArgumentException("XmlIterator: Wrong node list type");
-		}
-		if (!is_array($colNodes))
-		{
-			throw new InvalidArgumentException("XmlIterator: Wrong column node type");
-		}
+    public function __construct($nodeList, $colNodes, $registerNS)
+    {
+        if (!($nodeList instanceof DOMNodeList)) {
+            throw new InvalidArgumentException("XmlIterator: Wrong node list type");
+        }
+        if (!is_array($colNodes)) {
+            throw new InvalidArgumentException("XmlIterator: Wrong column node type");
+        }
 
 
-		$this->_registerNS = $registerNS;
-		$this->_nodeList = $nodeList;
-		$this->_colNodes = $colNodes;
+        $this->_registerNS = $registerNS;
+        $this->_nodeList = $nodeList;
+        $this->_colNodes = $colNodes;
 
-		$this->_current = 0;
-	}
+        $this->_current = 0;
+    }
 
-	public function count()
-	{
-		return $this->_nodeList->length;
-	}
+    public function count()
+    {
+        return $this->_nodeList->length;
+    }
 
-	/**
-	*@access public
-	*@return bool
-	*/
-	public function hasNext()
-	{
-		if ($this->_current < $this->count())
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    /**
+     * @access public
+     * @return bool
+     */
+    public function hasNext()
+    {
+        if ($this->_current < $this->count()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	*@access public
-	*@return SingleRow
-	*/
-	public function moveNext()
-	{
-		if (!$this->hasNext())
-		{
-			throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
-		}
+    /**
+     * @access public
+     * @return SingleRow
+     */
+    public function moveNext()
+    {
+        if (!$this->hasNext()) {
+            throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
+        }
 
-		$node = $this->_nodeList->item($this->_current++);
+        $node = $this->_nodeList->item($this->_current++);
 
-		$sr = new SingleRow();
+        $sr = new SingleRow();
 
-		foreach ($this->_colNodes as $key=>$colxpath)
-		{
-			$nodecol = XmlUtil::selectNodes($node, $colxpath, $this->_registerNS);
-			if (is_null($nodecol))
-			{
-				$sr->addField(strtolower($key), "");
-			}
-			else
-			{
-				foreach ($nodecol as $col)
-				{
-					$sr->addField(strtolower($key), $col->nodeValue);
-				}
-			}
-		}
+        foreach ($this->_colNodes as $key => $colxpath) {
+            $nodecol = XmlUtil::selectNodes($node, $colxpath, $this->_registerNS);
+            if (is_null($nodecol)) {
+                $sr->addField(strtolower($key), "");
+            } else {
+                foreach ($nodecol as $col) {
+                    $sr->addField(strtolower($key), $col->nodeValue);
+                }
+            }
+        }
 
-		return 	$sr;
-	}
+        return $sr;
+    }
 
- 	function key()
- 	{
- 		return $this->_current;
- 	}
-
+    function key()
+    {
+        return $this->_current;
+    }
 }
-

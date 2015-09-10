@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
  */
 class LogHandler implements LoggerInterface
 {
+
     use \ByJG\DesignPattern\Singleton;
 
     /**
@@ -28,8 +29,7 @@ class LogHandler implements LoggerInterface
 
     public function pushLogHandler(HandlerInterface $handler)
     {
-        if (!isset($this->logger))
-        {
+        if (!isset($this->logger)) {
             $this->logger = new Logger('byjg-anydataset');
         }
         $this->logger->pushHandler($handler);

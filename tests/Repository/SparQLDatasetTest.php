@@ -8,87 +8,90 @@ use ByJG\AnyDataset\Repository\SparQLDataset;
  */
 class SparQLDatasetTest extends PHPUnit_Framework_TestCase
 {
-	const SPARQL_URL = 'http://rdf.ecs.soton.ac.uk/sparql/';
-	protected static $SPARQL_NS = array("foaf" => "http://xmlns.com/foaf/0.1/");
 
-	// Run before each test case
-	function setUp()
-	{
-	}
+    const SPARQL_URL = 'http://rdf.ecs.soton.ac.uk/sparql/';
 
-	// Run end each test case
-	function teardown()
-	{
-	}
+    protected static $SPARQL_NS = array("foaf" => "http://xmlns.com/foaf/0.1/");
 
-	function test_connectSparQLDataset()
-	{
-		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
-		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
+    // Run before each test case
+    function setUp()
+    {
+        
+    }
 
-		$this->assertTrue($iterator instanceof IteratorInterface);
-		$this->assertTrue($iterator->hasNext());
-		$this->assertEquals($iterator->Count(), 5);
-	}
+    // Run end each test case
+    function teardown()
+    {
+        
+    }
 
-	/**
-	 * @expectedException \SparQL\Exception
-	 */
-	function test_wrongSparQLDataset()
-	{
-		$dataset = new SparQLDataset("http://localhost/", SparQLDatasetTest::$SPARQL_NS);
-		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
+    function test_connectSparQLDataset()
+    {
+        $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
+        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
-		$this->assertTrue($iterator instanceof IteratorInterface);
-		$this->assertTrue($iterator->hasNext());
-		$this->assertEquals($iterator->Count(), 0);
-	}
+        $this->assertTrue($iterator instanceof IteratorInterface);
+        $this->assertTrue($iterator->hasNext());
+        $this->assertEquals($iterator->Count(), 5);
+    }
 
-	/**
-	 * @expectedException \SparQL\Exception
-	 */
-	function test_wrongSparQLDataset2()
-	{
-		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
-		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
-	}
+    /**
+     * @expectedException \SparQL\Exception
+     */
+    function test_wrongSparQLDataset()
+    {
+        $dataset = new SparQLDataset("http://localhost/", SparQLDatasetTest::$SPARQL_NS);
+        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
-	function test_navigateSparQLDataset()
-	{
-		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
-		$iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 2");
+        $this->assertTrue($iterator instanceof IteratorInterface);
+        $this->assertTrue($iterator->hasNext());
+        $this->assertEquals($iterator->Count(), 0);
+    }
 
-		$this->assertTrue($iterator->hasNext());
-		$this->assertEquals($iterator->count(), 2);
+    /**
+     * @expectedException \SparQL\Exception
+     */
+    function test_wrongSparQLDataset2()
+    {
+        $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
+        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
+    }
 
-		$sr = $iterator->moveNext();
+    function test_navigateSparQLDataset()
+    {
+        $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
+        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 2");
 
-		//$this->assertEquals($sr->getField("person"), "b4ee30d00000000");
-		$this->assertEquals($sr->getField("person.type"), "bnode");
-		//$this->assertEquals($sr->getField("name"), "zm");
-		$this->assertEquals($sr->getField("name.type"), "literal");
-		$this->assertEquals($sr->getField("name.datatype"), "http://www.w3.org/2001/XMLSchema#string");
+        $this->assertTrue($iterator->hasNext());
+        $this->assertEquals($iterator->count(), 2);
 
-		$this->assertTrue($iterator->hasNext());
-		$sr = $iterator->moveNext();
+        $sr = $iterator->moveNext();
 
-		//$this->assertEquals($sr->getField("person"), "bf1120a00000002");
-		$this->assertEquals($sr->getField("person.type"), "bnode");
-		//$this->assertEquals($sr->getField("name"), "trp");
-		$this->assertEquals($sr->getField("name.type"), "literal");
-		$this->assertEquals($sr->getField("name.datatype"), "http://www.w3.org/2001/XMLSchema#string");
+        //$this->assertEquals($sr->getField("person"), "b4ee30d00000000");
+        $this->assertEquals($sr->getField("person.type"), "bnode");
+        //$this->assertEquals($sr->getField("name"), "zm");
+        $this->assertEquals($sr->getField("name.type"), "literal");
+        $this->assertEquals($sr->getField("name.datatype"), "http://www.w3.org/2001/XMLSchema#string");
 
-		$this->assertTrue(!$iterator->hasNext());
+        $this->assertTrue($iterator->hasNext());
+        $sr = $iterator->moveNext();
 
-	}
+        //$this->assertEquals($sr->getField("person"), "bf1120a00000002");
+        $this->assertEquals($sr->getField("person.type"), "bnode");
+        //$this->assertEquals($sr->getField("name"), "trp");
+        $this->assertEquals($sr->getField("name.type"), "literal");
+        $this->assertEquals($sr->getField("name.datatype"), "http://www.w3.org/2001/XMLSchema#string");
 
-	function test_capabilities()
-	{
-		$dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
+        $this->assertTrue(!$iterator->hasNext());
+    }
 
-		$caps = $dataset->getCapabilities();
+    function test_capabilities()
+    {
+        $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
 
-		if (count($caps) == 0) {        // If does not installed the capability on PHP system, skip test;
+        $caps = $dataset->getCapabilities();
+
+        if (count($caps) == 0) {        // If does not installed the capability on PHP system, skip test;
             $this->assertTrue(true);
         } else {
             $this->assertTrue($caps["select"][0] == 1);
@@ -99,6 +102,4 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
             $this->assertTrue(!$caps["load"][0] == 1);
         }
     }
-
-
 }

@@ -4,125 +4,102 @@ namespace ByJG\AnyDataset\Repository;
 
 class TextFileIterator extends GenericIterator
 {
-	protected $_fields;
 
-	protected $_fieldexpression;
+    protected $_fields;
+    protected $_fieldexpression;
+    protected $_handle;
+    protected $_current = 0;
+    protected $_currentBuffer = "";
 
-	protected $_handle;
+    /**
+     * @access public
+     * @return IteratorInterface
+     */
+    public function __construct($handle, $fields, $fieldexpression)
+    {
+        $this->_fields = $fields;
+        $this->_fieldexpression = $fieldexpression;
+        $this->_handle = $handle;
 
-	protected $_current = 0;
+        $this->readNextLine();
+    }
 
-	protected $_currentBuffer = "";
+    protected function readNextLine()
+    {
+        if ($this->hasNext()) {
+            $buffer = fgets($this->_handle, 4096);
+            $this->_currentBuffer = false;
 
-	/**
-	*@access public
-	*@return IteratorInterface
-	*/
-	public function __construct($handle, $fields, $fieldexpression)
-	{
-		$this->_fields = $fields;
-		$this->_fieldexpression = $fieldexpression;
-		$this->_handle = $handle;
+            if (($buffer !== false) && (trim($buffer) != "")) {
+                $this->_current++;
+                $this->_currentBuffer = $buffer;
+            } else $this->readNextLine();
+        }
+    }
 
-		$this->readNextLine();
-	}
+    /**
+     * @access public
+     * @return int
+     */
+    public function count()
+    {
+        return -1;
+    }
 
-	protected function readNextLine()
-	{
-		if ($this->hasNext())
-		{
-			$buffer = fgets($this->_handle, 4096);
-			$this->_currentBuffer = false;
+    /**
+     * @access public
+     * @return bool
+     */
+    public function hasNext()
+    {
+        if ($this->_currentBuffer !== false) {
+            return true;
+        } elseif (!$this->_handle) {
+            return false;
+        } else {
+            if (feof($this->_handle)) {
+                fclose($this->_handle);
+                $this->_handle = null;
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
-			if (($buffer !== false) && (trim($buffer) != ""))
-			{
-				$this->_current++;
-				$this->_currentBuffer = $buffer;
-			}
-			else
-				$this->readNextLine();
-		}
-	}
+    /**
+     * @access public
+     * @return SingleRow
+     */
+    public function moveNext()
+    {
+        if ($this->hasNext()) {
+            $cols = preg_split($this->_fieldexpression, $this->_currentBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-	/**
-	*@access public
-	*@return int
-	*/
-	public function count()
-	{
-		return -1;
-	}
+            $sr = new SingleRow();
 
-	/**
-	*@access public
-	*@return bool
-	*/
-	public function hasNext()
-	{
-		if ($this->_currentBuffer !== false)
-		{
-			return true;
-		}
-		elseif (!$this->_handle)
-		{
-			return false;
-		}
-		else
-		{
-			if (feof($this->_handle))
-			{
-				fclose($this->_handle);
-				$this->_handle = null;
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-	}
+            for ($i = 0; ($i < sizeof($this->_fields)) && ($i < sizeof($cols)); $i++) {
+                $column = $cols[$i];
 
-	/**
-	*@access public
-	*@return SingleRow
-	*/
-	public function moveNext()
-	{
-		if ($this->hasNext())
-		{
-			$cols = preg_split($this->_fieldexpression, $this->_currentBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+                if (($i >= sizeof($this->_fields) - 1) || ($i >= sizeof($cols) - 1)) {
+                    $column = preg_replace("/(\r?\n?)$/", "", $column);
+                }
 
-			$sr = new SingleRow();
+                $sr->addField(strtolower($this->_fields[$i]), $column);
+            }
 
-			for($i=0;($i<sizeof($this->_fields)) && ($i<sizeof($cols)); $i++)
-			{
-				$column = $cols[$i];
+            $this->readNextLine();
+            return $sr;
+        } else {
+            if ($this->_handle) {
+                fclose($this->_handle);
+            }
+            return null;
+        }
+    }
 
-				if (($i >= sizeof($this->_fields) - 1) || ($i >= sizeof($cols) - 1))
-				{
-					$column = preg_replace("/(\r?\n?)$/", "", $column);
-				}
-
-				$sr->addField(strtolower($this->_fields[$i]), $column);
-			}
-
-			$this->readNextLine();
-			return 	$sr;
-		}
-		else
-		{
-			if ($this->_handle)
-			{
-				fclose($this->_handle);
-			}
-			return null;
-		}
-	}
-
- 	function key()
- 	{
- 		return $this->_current;
- 	}
-
+    function key()
+    {
+        return $this->_current;
+    }
 }
-

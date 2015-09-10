@@ -9,35 +9,33 @@ use ByJG\AnyDataset\Model\BaseModel;
  */
 class ModelGetter extends BaseModel
 {
-	protected $_Id = "";
-	protected $_Name = "";
 
-	function __construct($Id, $Name)
-	{
-		$this->_Id = $Id;
-		$this->_Name = $Name;
-	}
+    protected $_Id = "";
+    protected $_Name = "";
 
-	public function getId()
-	{
-		return $this->_Id;
-	}
+    function __construct($Id, $Name)
+    {
+        $this->_Id = $Id;
+        $this->_Name = $Name;
+    }
 
-	public function getName()
-	{
-		return $this->_Name;
-	}
+    public function getId()
+    {
+        return $this->_Id;
+    }
 
-	public function setId($Id)
-	{
-		$this->_Id = $Id;
-	}
+    public function getName()
+    {
+        return $this->_Name;
+    }
 
-	public function setName($Name)
-	{
-		$this->_Name = $Name;
-	}
+    public function setId($Id)
+    {
+        $this->_Id = $Id;
+    }
 
-
-
+    public function setName($Name)
+    {
+        $this->_Name = $Name;
+    }
 }

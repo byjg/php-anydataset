@@ -10,64 +10,57 @@ use InvalidArgumentException;
 
 class FixedTextFileDataset
 {
-	protected $_source;
+
+    protected $_source;
 
     /**
      * \ByJG\AnyDataset\Enum\FixedTextDefinition[]
      * @var type
      */
-	protected $_fieldDefinition;
+    protected $_fieldDefinition;
+    protected $_sourceType;
 
-	protected $_sourceType;
+    /**
+     * Text File Data Set
+     *
+     * @param string $source
+     * @param FixedTextDefinition[] $fieldDefinition
+     * @return TextFileDataset
+     */
+    public function __construct($source, $fieldDefinition)
+    {
+        if (!is_array($fieldDefinition)) {
+            throw new InvalidArgumentException("You must define an array of field definition.");
+        }
 
+        $this->_source = $source;
+        $this->_sourceType = "HTTP";
 
-	/**
-	 * Text File Data Set
-	 *
-	 * @param string $source
-	 * @param FixedTextDefinition[] $fieldDefinition
-	 * @return TextFileDataset
-	 */
-	public function __construct($source, $fieldDefinition)
-	{
-		if (!is_array($fieldDefinition))
-		{
-			throw new InvalidArgumentException("You must define an array of field definition.");
-		}
+        if (!preg_match("~^https?://~", $source)) {
+            if (!file_exists($this->_source)) {
+                throw new NotFoundException("The specified file " . $this->_source . " does not exists");
+            }
 
-		$this->_source = $source;
-		$this->_sourceType = "HTTP";
+            $this->_sourceType = "FILE";
+        }
 
-		if (!preg_match("~^https?://~", $source))
-		{
-            if (!file_exists($this->_source))
-			{
-				throw new NotFoundException("The specified file " . $this->_source . " does not exists")	;
-			}
+        $this->_fieldDefinition = $fieldDefinition;
+    }
 
-			$this->_sourceType = "FILE";
-		}
-
-		$this->_fieldDefinition = $fieldDefinition;
-	}
-
-	/**
-	*@access public
-	*@param string $sql
-	*@param array $array
-	*@return DBIterator
-	*/
-	public function getIterator()
-	{
-		if ($this->_sourceType == "HTTP")
-		{
+    /**
+     * @access public
+     * @param string $sql
+     * @param array $array
+     * @return DBIterator
+     */
+    public function getIterator()
+    {
+        if ($this->_sourceType == "HTTP") {
             return $this->getIteratorHttp();
-		}
-		else
-		{
+        } else {
             return $this->getIteratorFile();
-		}
-	}
+        }
+    }
 
     protected function getIteratorHttp()
     {
@@ -76,28 +69,22 @@ class FixedTextFileDataset
         // [2]: Server name
         // [3]: Full Path
         $pat = "/(http|ftp|https):\/\/([\w+|\.]+)/i";
-        $urlParts = preg_split($pat, $this->_source, -1,PREG_SPLIT_DELIM_CAPTURE);
+        $urlParts = preg_split($pat, $this->_source, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         $handle = fsockopen($urlParts[2], 80, $errno, $errstr, 30);
-        if (!$handle)
-        {
+        if (!$handle) {
             throw new DatasetException("TextFileDataset Socket error: $errstr ($errno)");
-        }
-        else
-        {
+        } else {
             $out = "GET " . $urlParts[4] . " HTTP/1.1\r\n";
             $out .= "Host: " . $urlParts[2] . "\r\n";
             $out .= "Connection: Close\r\n\r\n";
 
             fwrite($handle, $out);
 
-            try
-            {
+            try {
                 $it = new FixedTextFileIterator($handle, $this->_fieldDefinition);
                 return $it;
-            }
-            catch (Exception $ex)
-            {
+            } catch (Exception $ex) {
                 fclose($handle);
             }
         }
@@ -106,19 +93,13 @@ class FixedTextFileDataset
     protected function getIteratorFile()
     {
         $handle = fopen($this->_source, "r");
-        if (!$handle)
-        {
+        if (!$handle) {
             throw new DatasetException("TextFileDataset File open error");
-        }
-        else
-        {
-            try
-            {
+        } else {
+            try {
                 $it = new FixedTextFileIterator($handle, $this->_fieldDefinition);
                 return $it;
-            }
-            catch (Exception $ex)
-            {
+            } catch (Exception $ex) {
                 fclose($handle);
             }
         }

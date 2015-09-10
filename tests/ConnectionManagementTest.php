@@ -14,6 +14,7 @@ class ConnectionManagementTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+
     }
 
     /**
@@ -164,5 +165,4 @@ class ConnectionManagementTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('10', $conn->getExtraParam('extraparam'));
         $this->assertEquals('20', $conn->getExtraParam('other'));
     }
-
 }

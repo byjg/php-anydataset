@@ -8,338 +8,335 @@ namespace ByJG\AnyDataset\Repository;
 class SingleRowTest extends \PHPUnit_Framework_TestCase
 {
 
-	/**
-	 * @var SingleRow
-	 */
-	protected $object;
+    /**
+     * @var SingleRow
+     */
+    protected $object;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
-	protected function setUp()
-	{
-		$this->object = new SingleRow;
-	}
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    protected function setUp()
+    {
+        $this->object = new SingleRow;
+    }
 
-	protected function fill()
-	{
-		$this->object->addField('field1', '10');
-		$this->object->addField('field1', '20');
-		$this->object->addField('field1', '30');
-		$this->object->addField('field2', '40');
-		$this->object->acceptChanges();
-	}
+    protected function fill()
+    {
+        $this->object->addField('field1', '10');
+        $this->object->addField('field1', '20');
+        $this->object->addField('field1', '30');
+        $this->object->addField('field2', '40');
+        $this->object->acceptChanges();
+    }
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		
-	}
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
+        
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::AddField
-	 * @todo   Implement testAddField().
-	 */
-	public function testAddField()
-	{
-		$this->object->addField('field1', '10');
-		$this->assertEquals(
-			array(
-				'field1'=>10
-			), $this->object->toArray());
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::AddField
+     * @todo   Implement testAddField().
+     */
+    public function testAddField()
+    {
+        $this->object->addField('field1', '10');
+        $this->assertEquals(
+            array(
+            'field1' => 10
+            ), $this->object->toArray());
 
-		$this->object->addField('field1', '20');
-		$this->assertEquals(
-			array(
-				'field1'=> array(10, 20)
-			), $this->object->toArray());
+        $this->object->addField('field1', '20');
+        $this->assertEquals(
+            array(
+            'field1' => array(10, 20)
+            ), $this->object->toArray());
 
-		$this->object->addField('field1', '30');
-		$this->assertEquals(
-			array(
-				'field1'=> array(10, 20, 30)
-			), $this->object->toArray());
+        $this->object->addField('field1', '30');
+        $this->assertEquals(
+            array(
+            'field1' => array(10, 20, 30)
+            ), $this->object->toArray());
 
-		$this->object->addField('field2', '40');
-		$this->assertEquals(
-			array(
-				'field1'=> array(10, 20, 30),
-				'field2'=> 40
-			), $this->object->toArray());
+        $this->object->addField('field2', '40');
+        $this->assertEquals(
+            array(
+            'field1' => array(10, 20, 30),
+            'field2' => 40
+            ), $this->object->toArray());
 
-		$this->object->addField('field1', '20');
-		$this->assertEquals(
-			array(
-				'field1'=> array(10, 20, 30, 20),
-				'field2'=> 40
-			), $this->object->toArray());
+        $this->object->addField('field1', '20');
+        $this->assertEquals(
+            array(
+            'field1' => array(10, 20, 30, 20),
+            'field2' => 40
+            ), $this->object->toArray());
+    }
 
-	}
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::getField
+     * @todo   Implement testGetField().
+     */
+    public function testGetField()
+    {
+        $this->fill();
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::getField
-	 * @todo   Implement testGetField().
-	 */
-	public function testGetField()
-	{
-		$this->fill();
+        $this->assertEquals(10, $this->object->getField('field1'));
+        $this->assertEquals(10, $this->object->getField('field1'));  // Test it again, because is an array
+        $this->assertEquals(40, $this->object->getField('field2'));
+        $this->assertEquals(null, $this->object->getField('not-exists'));
+    }
 
-		$this->assertEquals(10, $this->object->getField('field1'));
-		$this->assertEquals(10, $this->object->getField('field1'));  // Test it again, because is an array
-		$this->assertEquals(40, $this->object->getField('field2'));
-		$this->assertEquals(null, $this->object->getField('not-exists'));
-	}
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::getFieldArray
+     * @todo   Implement testGetFieldArray().
+     */
+    public function testGetFieldArray()
+    {
+        $this->fill();
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::getFieldArray
-	 * @todo   Implement testGetFieldArray().
-	 */
-	public function testGetFieldArray()
-	{
-		$this->fill();
+        $this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1'));
+        $this->assertEquals(array(40), $this->object->getFieldArray('field2'));
 
-		$this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1'));
-		$this->assertEquals(array(40), $this->object->getFieldArray('field2'));
+        $this->object->addField('field3', '');
+        $this->object->acceptChanges();
 
-		$this->object->addField('field3', '');
-		$this->object->acceptChanges();
+        $this->assertEquals(array(), $this->object->getFieldArray('field3'));
+    }
 
-		$this->assertEquals(array(), $this->object->getFieldArray('field3'));
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::getFieldNames
+     * @todo   Implement testGetFieldNames().
+     */
+    public function testGetFieldNames()
+    {
+        $this->fill();
 
-	}
+        $this->assertEquals(array('field1', 'field2'), $this->object->getFieldNames());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::getFieldNames
-	 * @todo   Implement testGetFieldNames().
-	 */
-	public function testGetFieldNames()
-	{
-		$this->fill();
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::setField
+     * @todo   Implement testSetField().
+     */
+    public function testSetField()
+    {
+        $this->fill();
 
-		$this->assertEquals(array('field1', 'field2'), $this->object->getFieldNames());
-	}
+        $this->object->setField('field1', 70);
+        $this->assertEquals(70, $this->object->getField('field1'));
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::setField
-	 * @todo   Implement testSetField().
-	 */
-	public function testSetField()
-	{
-		$this->fill();
+        $this->object->setField('field2', 60);
+        $this->assertEquals(60, $this->object->getField('field2'));
 
-		$this->object->setField('field1', 70);
-		$this->assertEquals(70, $this->object->getField('field1'));
+        $this->object->setField('field3', 50);
+        $this->assertEquals(50, $this->object->getField('field3'));
+    }
 
-		$this->object->setField('field2', 60);
-		$this->assertEquals(60, $this->object->getField('field2'));
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::removeFieldName
+     * @todo   Implement testRemoveFieldName().
+     */
+    public function testRemoveFieldName()
+    {
+        $this->fill();
 
-		$this->object->setField('field3', 50);
-		$this->assertEquals(50, $this->object->getField('field3'));
-	}
+        $this->object->removeFieldName('field1');
+        $this->assertEquals(null, $this->object->getField('field1'));
+        $this->assertEquals(40, $this->object->getField('field2'));
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::removeFieldName
-	 * @todo   Implement testRemoveFieldName().
-	 */
-	public function testRemoveFieldName()
-	{
-		$this->fill();
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::removeFieldName
+     * @todo   Implement testRemoveFieldName().
+     */
+    public function testRemoveFieldName2()
+    {
+        $this->fill();
 
-		$this->object->removeFieldName('field1');
-		$this->assertEquals(null, $this->object->getField('field1'));
-		$this->assertEquals(40, $this->object->getField('field2'));
-	}
+        $this->object->removeFieldName('field2');
+        $this->assertEquals(10, $this->object->getField('field1'));
+        $this->assertEquals(null, $this->object->getField('field2'));
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::removeFieldName
-	 * @todo   Implement testRemoveFieldName().
-	 */
-	public function testRemoveFieldName2()
-	{
-		$this->fill();
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::removeFieldNameValue
+     * @todo   Implement testRemoveFieldNameValue().
+     */
+    public function testRemoveFieldNameValue()
+    {
+        $this->fill();
 
-		$this->object->removeFieldName('field2');
-		$this->assertEquals(10, $this->object->getField('field1'));
-		$this->assertEquals(null, $this->object->getField('field2'));
-	}
+        $this->object->removeFieldNameValue('field1', 20);
+        $this->assertEquals(array(10, 30), $this->object->getFieldArray('field1'));
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::removeFieldNameValue
-	 * @todo   Implement testRemoveFieldNameValue().
-	 */
-	public function testRemoveFieldNameValue()
-	{
-		$this->fill();
+        $this->object->removeFieldNameValue('field2', 100);
+        $this->assertEquals(40, $this->object->getField('field2')); // Element was not removed
 
-		$this->object->removeFieldNameValue('field1', 20);
-		$this->assertEquals(array(10, 30), $this->object->getFieldArray('field1'));
+        $this->object->removeFieldNameValue('field2', 40);
+        $this->assertEquals(null, $this->object->getField('field2'));
+    }
 
-		$this->object->removeFieldNameValue('field2', 100);
-		$this->assertEquals(40, $this->object->getField('field2')); // Element was not removed
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::setFieldValue
+     * @todo   Implement testSetFieldValue().
+     */
+    public function testSetFieldValue()
+    {
+        $this->fill();
 
-		$this->object->removeFieldNameValue('field2', 40);
-		$this->assertEquals(null, $this->object->getField('field2'));
-	}
+        $this->object->setFieldValue('field2', 100, 200);
+        $this->assertEquals(40, $this->object->getField('field2')); // Element was not changed
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::setFieldValue
-	 * @todo   Implement testSetFieldValue().
-	 */
-	public function testSetFieldValue()
-	{
-		$this->fill();
+        $this->object->setFieldValue('field2', 40, 200);
+        $this->assertEquals(200, $this->object->getField('field2'));
 
-		$this->object->setFieldValue('field2', 100, 200);
-		$this->assertEquals(40, $this->object->getField('field2')); // Element was not changed
+        $this->object->setFieldValue('field1', 500, 190);
+        $this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1')); // Element was not changed
 
-		$this->object->setFieldValue('field2', 40, 200);
-		$this->assertEquals(200, $this->object->getField('field2'));
+        $this->object->setFieldValue('field1', 20, 190);
+        $this->assertEquals(array(10, 190, 30), $this->object->getFieldArray('field1'));
+    }
 
-		$this->object->setFieldValue('field1', 500, 190);
-		$this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1')); // Element was not changed
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::getDomObject
+     * @todo   Implement testGetDomObject().
+     */
+    public function testGetDomObject()
+    {
+        $this->fill();
 
-		$this->object->setFieldValue('field1', 20, 190);
-		$this->assertEquals(array(10, 190, 30), $this->object->getFieldArray('field1'));
-	}
+        $dom = \ByJG\Util\XmlUtil::CreateXmlDocumentFromStr(
+                "<row>"
+                . "<field name='field1'>10</field>"
+                . "<field name='field1'>20</field>"
+                . "<field name='field1'>30</field>"
+                . "<field name='field2'>40</field>"
+                . "</row>"
+        );
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::getDomObject
-	 * @todo   Implement testGetDomObject().
-	 */
-	public function testGetDomObject()
-	{
-		$this->fill();
+        $this->assertEquals($dom, $this->object->getDomObject());
+    }
 
-		$dom = \ByJG\Util\XmlUtil::CreateXmlDocumentFromStr(
-			"<row>"
-				. "<field name='field1'>10</field>"
-				. "<field name='field1'>20</field>"
-				. "<field name='field1'>30</field>"
-				. "<field name='field2'>40</field>"
-			. "</row>"
-		);
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::getOriginalRawFormat
+     * @todo   Implement testGetOriginalRawFormat().
+     */
+    public function testGetOriginalRawFormat()
+    {
+        $this->fill();
 
-		$this->assertEquals($dom, $this->object->getDomObject());
-	}
+        $this->object->setField('field2', 150);
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->getOriginalRawFormat());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::getOriginalRawFormat
-	 * @todo   Implement testGetOriginalRawFormat().
-	 */
-	public function testGetOriginalRawFormat()
-	{
-		$this->fill();
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::hasChanges
+     * @todo   Implement testHasChanges().
+     */
+    public function testHasChanges()
+    {
+        $this->fill();
 
-		$this->object->setField('field2', 150);
-		$this->assertEquals(array('field1'=>array(10,20,30), 'field2'=>40), $this->object->getOriginalRawFormat());
-	}
+        $this->assertFalse($this->object->hasChanges());
+        $this->object->setField('field2', 150);
+        $this->assertTrue($this->object->hasChanges());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::hasChanges
-	 * @todo   Implement testHasChanges().
-	 */
-	public function testHasChanges()
-	{
-		$this->fill();
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::acceptChanges
+     * @todo   Implement testAcceptChanges().
+     */
+    public function testAcceptChanges()
+    {
+        $this->fill();
 
-		$this->assertFalse($this->object->hasChanges());
-		$this->object->setField('field2', 150);
-		$this->assertTrue($this->object->hasChanges());
-	}
+        $this->object->setField('field2', 150);
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->getOriginalRawFormat());
+        $this->object->acceptChanges();
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->getOriginalRawFormat());
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::acceptChanges
-	 * @todo   Implement testAcceptChanges().
-	 */
-	public function testAcceptChanges()
-	{
-		$this->fill();
+    /**
+     * @covers ByJG\AnyDataset\Repository\SingleRow::rejectChanges
+     * @todo   Implement testRejectChanges().
+     */
+    public function testRejectChanges()
+    {
+        $this->fill();
 
-		$this->object->setField('field2', 150);
-		$this->assertEquals(array('field1'=>array(10,20,30), 'field2'=>40), $this->object->getOriginalRawFormat());
-		$this->object->acceptChanges();
-		$this->assertEquals(array('field1'=>array(10,20,30), 'field2'=>150), $this->object->getOriginalRawFormat());
-	}
+        $this->object->setField('field2', 150);
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->toArray());
+        $this->assertEquals(150, $this->object->getField('field2'));
+        $this->object->rejectChanges();
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->toArray());
+        $this->assertEquals(40, $this->object->getField('field2'));
+    }
 
-	/**
-	 * @covers ByJG\AnyDataset\Repository\SingleRow::rejectChanges
-	 * @todo   Implement testRejectChanges().
-	 */
-	public function testRejectChanges()
-	{
-		$this->fill();
+    public function testConstructor_ModelPublic()
+    {
+        $model = new \Tests\Sample\ModelPublic(10, 'Testing');
 
-		$this->object->setField('field2', 150);
-		$this->assertEquals(array('field1'=>array(10,20,30), 'field2'=>150), $this->object->toArray());
-		$this->assertEquals(150, $this->object->getField('field2'));
-		$this->object->rejectChanges();
-		$this->assertEquals(array('field1'=>array(10,20,30), 'field2'=>40), $this->object->toArray());
-		$this->assertEquals(40, $this->object->getField('field2'));
-	}
+        $sr = new SingleRow($model);
 
-	public function testConstructor_ModelPublic()
-	{
-		$model = new \Tests\Sample\ModelPublic(10, 'Testing');
+        $this->assertEquals(10, $sr->getField("Id"));
+        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
+    }
 
-		$sr = new SingleRow($model);
-		
-		$this->assertEquals(10, $sr->getField("Id"));
-		$this->assertEquals("Testing", $sr->getField("Name"));
-		$this->assertEquals(['Id'=>10, 'Name'=>'Testing'], $sr->toArray());
-	}
+    public function testConstructor_ModelGetter()
+    {
+        $model = new \Tests\Sample\ModelGetter(10, 'Testing');
 
-	public function testConstructor_ModelGetter()
-	{
-		$model = new \Tests\Sample\ModelGetter(10, 'Testing');
+        $sr = new SingleRow($model);
 
-		$sr = new SingleRow($model);
+        $this->assertEquals(10, $sr->getField("Id"));
+        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
+    }
 
-		$this->assertEquals(10, $sr->getField("Id"));
-		$this->assertEquals("Testing", $sr->getField("Name"));
-		$this->assertEquals(['Id'=>10, 'Name'=>'Testing'], $sr->toArray());
-	}
+    public function testConstructor_stdClass()
+    {
+        $model = new \stdClass();
+        $model->Id = 10;
+        $model->Name = "Testing";
 
-	public function testConstructor_stdClass()
-	{
-		$model = new \stdClass();
-		$model->Id = 10;
-		$model->Name = "Testing";
+        $sr = new SingleRow($model);
 
-		$sr = new SingleRow($model);
+        $this->assertEquals(10, $sr->getField("Id"));
+        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
+    }
 
-		$this->assertEquals(10, $sr->getField("Id"));
-		$this->assertEquals("Testing", $sr->getField("Name"));
-		$this->assertEquals(['Id'=>10, 'Name'=>'Testing'], $sr->toArray());
-	}
+    public function testConstructor_Array()
+    {
+        $array = array("Id" => 10, "Name" => "Testing");
 
-	public function testConstructor_Array()
-	{
-		$array = array("Id" => 10, "Name" => "Testing");
+        $sr = new SingleRow($array);
 
-		$sr = new SingleRow($array);
+        $this->assertEquals(10, $sr->getField("Id"));
+        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals($array, $sr->toArray());
+    }
 
-		$this->assertEquals(10, $sr->getField("Id"));
-		$this->assertEquals("Testing", $sr->getField("Name"));
-		$this->assertEquals($array, $sr->toArray());
-	}
+    public function testConstructor_PropertyPattern()
+    {
+        $model = new \Tests\Sample\ModelPropertyPattern();
+        $model->setIdModel(10);
+        $model->setClientName("Testing");
 
-	public function testConstructor_PropertyPattern()
-	{
-		$model = new \Tests\Sample\ModelPropertyPattern();
-		$model->setIdModel(10);
-		$model->setClientName("Testing");
+        $sr = new SingleRow($model);
 
-		$sr = new SingleRow($model);
-
-		// Important to note:
-		// The property is _Id_Model, but is changed to "set/get IdModel" throught PropertyName
-		// Because this, the field is Id_Model instead IdModel
-		$this->assertEquals(10, $sr->getField("Id_Model"));
-		$this->assertEquals("Testing", $sr->getField("Client_Name"));
-	}
-
+        // Important to note:
+        // The property is _Id_Model, but is changed to "set/get IdModel" throught PropertyName
+        // Because this, the field is Id_Model instead IdModel
+        $this->assertEquals(10, $sr->getField("Id_Model"));
+        $this->assertEquals("Testing", $sr->getField("Client_Name"));
+    }
 }

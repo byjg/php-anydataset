@@ -6,56 +6,53 @@ use SparQL\Connection;
 
 class SparQLDataset
 {
-	/**
-	 * @var object
-	 */
-	private $_db;
 
-	/**
-	 *
-	 * @param string $json
-	 */
-	public function __construct($url, $namespaces = null)
-	{
-		$this->_db = new Connection( $url );
+    /**
+     * @var object
+     */
+    private $_db;
 
-		if (is_array($namespaces))
-		{
-			foreach ($namespaces as $key => $value)
-			{
-				$this->_db->ns( $key, $value );
-			}
-		}
+    /**
+     *
+     * @param string $json
+     */
+    public function __construct($url, $namespaces = null)
+    {
+        $this->_db = new Connection($url);
 
-		if (function_exists('dba_open')) {
-			$cache = sys_get_temp_dir() . "/caps.db";
-			$this->_db->capabilityCache( $cache );
-		}
-	}
+        if (is_array($namespaces)) {
+            foreach ($namespaces as $key => $value) {
+                $this->_db->ns($key, $value);
+            }
+        }
 
-	public function getCapabilities()
-	{
-		$return = array();
+        if (function_exists('dba_open')) {
+            $cache = sys_get_temp_dir() . "/caps.db";
+            $this->_db->capabilityCache($cache);
+        }
+    }
 
-		if (function_exists('dba_open')) {
-			foreach( $this->_db->capabilityCodes() as $code )
-			{
-				$return[$code] = array($this->_db->supports( $code ), $this->_db->capabilityDescription($code));
-			}
-		}
+    public function getCapabilities()
+    {
+        $return = array();
 
-		return $return;
-	}
+        if (function_exists('dba_open')) {
+            foreach ($this->_db->capabilityCodes() as $code) {
+                $return[$code] = array($this->_db->supports($code), $this->_db->capabilityDescription($code));
+            }
+        }
 
-	/**
-	* @param string $sql
-	* @param array $array
-	* @return DBIterator
-	*/
-	public function getIterator($sparql)
-	{
-		$result = $this->_db->query( $sparql );
-		return new SparQLIterator($result);
-	}
+        return $return;
+    }
 
+    /**
+     * @param string $sql
+     * @param array $array
+     * @return DBIterator
+     */
+    public function getIterator($sparql)
+    {
+        $result = $this->_db->query($sparql);
+        return new SparQLIterator($result);
+    }
 }

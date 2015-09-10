@@ -9,5 +9,6 @@ namespace ByJG\AnyDataset\Model;
  */
 interface DumpToArrayInterface
 {
-	function toArray();
+
+    function toArray();
 }

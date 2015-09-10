@@ -47,18 +47,18 @@ class FixedTextFileDatasetTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals([
             0 => [
-                    'id' => '001',
-                    'name' => 'JOAO   ',
-                    'enable' => 'S',
-                    'code' => '1520'
-                ],
+                'id' => '001',
+                'name' => 'JOAO   ',
+                'enable' => 'S',
+                'code' => '1520'
+            ],
             1 => [
-                    'id' => '002',
-                    'name' => 'GILBERT',
-                    'enable' => 'S',
-                    'code' => '1621'
-                ]
-        ], $repository->getIterator()->toArray());
+                'id' => '002',
+                'name' => 'GILBERT',
+                'enable' => 'S',
+                'code' => '1621'
+            ]
+            ], $repository->getIterator()->toArray());
     }
 
     /**
@@ -70,33 +70,34 @@ class FixedTextFileDatasetTest extends \PHPUnit_Framework_TestCase
             new \ByJG\AnyDataset\Enum\FixedTextDefinition('id', 0, 3),
             new \ByJG\AnyDataset\Enum\FixedTextDefinition('name', 3, 7),
             new \ByJG\AnyDataset\Enum\FixedTextDefinition('enable', 10, 1, null, 'S|N'),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('code', 11, 4, null, [
+            new \ByJG\AnyDataset\Enum\FixedTextDefinition('code', 11, 4, null,
+                [
                 new \ByJG\AnyDataset\Enum\FixedTextDefinition('first', 0, 1),
                 new \ByJG\AnyDataset\Enum\FixedTextDefinition('second', 1, 3),
-            ]),
+                ]),
         ];
 
         $repository = new FixedTextFileDataset(__DIR__ . '/sample-fixed.txt', $fieldDefinition);
 
         $this->assertEquals([
             0 => [
-                    'id' => '001',
-                    'name' => 'JOAO   ',
-                    'enable' => 'S',
-                    'code' => [
-                        'first' => '1',
-                        'second' => '520'
-                    ]
-                ],
-            1 => [
-                    'id' => '002',
-                    'name' => 'GILBERT',
-                    'enable' => 'S',
-                    'code' => [
-                        'first' => '1',
-                        'second' => '621'
-                    ]
+                'id' => '001',
+                'name' => 'JOAO   ',
+                'enable' => 'S',
+                'code' => [
+                    'first' => '1',
+                    'second' => '520'
                 ]
-        ], $repository->getIterator()->toArray());
+            ],
+            1 => [
+                'id' => '002',
+                'name' => 'GILBERT',
+                'enable' => 'S',
+                'code' => [
+                    'first' => '1',
+                    'second' => '621'
+                ]
+            ]
+            ], $repository->getIterator()->toArray());
     }
 }

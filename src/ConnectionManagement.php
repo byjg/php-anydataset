@@ -7,149 +7,168 @@ use InvalidArgumentException;
 
 class ConnectionManagement
 {
-	protected $_dbtype;
-	public function setDbType($value)
-	{
-	    $this->_dbtype = $value;
-	}
 
-	public function getDbType()
-	{
-	    return $this->_dbtype;
-	}
+    protected $_dbtype;
 
-	protected $_dbconnectionstring;
-	public function setDbConnectionString($value)
-	{
-		$this->_dbconnectionstring = $value;
-	}
-	public function getDbConnectionString()
-	{
-		return $this->_dbconnectionstring;
-	}
+    public function setDbType($value)
+    {
+        $this->_dbtype = $value;
+    }
 
-	protected $_driver;
-	public function setDriver($value)
-	{
-		$this->_driver = $value;
-	}
-	public function getDriver()
-	{
-		return $this->_driver;
-	}
+    public function getDbType()
+    {
+        return $this->_dbtype;
+    }
 
-	protected $_username;
-	public function setUsername($value)
-	{
-		$this->_username = $value;
-	}
-	public function getUsername()
-	{
-		return $this->_username;
-	}
+    protected $_dbconnectionstring;
 
-	protected $_password;
-	public function setPassword($value)
-	{
-		$this->_password = $value;
-	}
-	public function getPassword()
-	{
-		return $this->_password;
-	}
+    public function setDbConnectionString($value)
+    {
+        $this->_dbconnectionstring = $value;
+    }
 
-	protected $_server;
-	public function setServer($value)
-	{
-		$this->_server = $value;
-	}
-	public function getServer()
-	{
-		return $this->_server;
-	}
+    public function getDbConnectionString()
+    {
+        return $this->_dbconnectionstring;
+    }
 
-	protected $_port = "";
-	public function setPort($value)
-	{
-		$this->_port = $value;
-	}
-	public function getPort()
-	{
-		return $this->_port;
-	}
+    protected $_driver;
 
-	protected $_database;
-	public function setDatabase($value)
-	{
-		$this->_database = $value;
-	}
-	public function getDatabase()
-	{
-		return $this->_database;
-	}
+    public function setDriver($value)
+    {
+        $this->_driver = $value;
+    }
 
-	protected $_extraParam = array();
-	public function addExtraParam($key, $value)
-	{
-		$this->_extraParam[$key] = $value;
-	}
-	public function getExtraParam($key)
-	{
-		if (array_key_exists($key, $this->_extraParam)) {
+    public function getDriver()
+    {
+        return $this->_driver;
+    }
+
+    protected $_username;
+
+    public function setUsername($value)
+    {
+        $this->_username = $value;
+    }
+
+    public function getUsername()
+    {
+        return $this->_username;
+    }
+
+    protected $_password;
+
+    public function setPassword($value)
+    {
+        $this->_password = $value;
+    }
+
+    public function getPassword()
+    {
+        return $this->_password;
+    }
+
+    protected $_server;
+
+    public function setServer($value)
+    {
+        $this->_server = $value;
+    }
+
+    public function getServer()
+    {
+        return $this->_server;
+    }
+
+    protected $_port = "";
+
+    public function setPort($value)
+    {
+        $this->_port = $value;
+    }
+
+    public function getPort()
+    {
+        return $this->_port;
+    }
+
+    protected $_database;
+
+    public function setDatabase($value)
+    {
+        $this->_database = $value;
+    }
+
+    public function getDatabase()
+    {
+        return $this->_database;
+    }
+
+    protected $_extraParam = array();
+
+    public function addExtraParam($key, $value)
+    {
+        $this->_extraParam[$key] = $value;
+    }
+
+    public function getExtraParam($key)
+    {
+        if (array_key_exists($key, $this->_extraParam)) {
             return $this->_extraParam[$key];
         } else {
             return "";
         }
     }
 
-	protected $_file;
-	public function setFilePath($value)
-	{
-		$this->_file = $value;
-	}
-	public function getFilePath()
-	{
-		return $this->_file;
-	}
+    protected $_file;
 
-	/**
-	 *
-	 * @param string $dbname
-	 * @throws DatabaseException
-	 * @throws InvalidArgumentException
-	 */
-	public function __construct($dbname)
-	{
+    public function setFilePath($value)
+    {
+        $this->_file = $value;
+    }
+
+    public function getFilePath()
+    {
+        return $this->_file;
+    }
+
+    /**
+     *
+     * @param string $dbname
+     * @throws DatabaseException
+     * @throws InvalidArgumentException
+     */
+    public function __construct($dbname)
+    {
 
         $config = [
             'url' => $dbname
         ];
-		if (!preg_match('~^(\w+)://~', $dbname))
-		{
+        if (!preg_match('~^(\w+)://~', $dbname)) {
             $config = AnyDatasetContext::getInstance()->getConnectionString($dbname);
-		}
+        }
 
-		$this->setDbType ( 'dsn' );
-		$this->setDbConnectionString ( $config['url'] );
+        $this->setDbType('dsn');
+        $this->setDbConnectionString($config['url']);
 
         /*
-        DSN=DRIVER://USERNAME[:PASSWORD]@SERVER[:PORT]/DATABASE[?KEY1=VALUE1&KEY2=VALUE2&...]
+          DSN=DRIVER://USERNAME[:PASSWORD]@SERVER[:PORT]/DATABASE[?KEY1=VALUE1&KEY2=VALUE2&...]
 
-        or
+          or
 
-        DSN=DRIVER:///path[?PARAMETERS]
+          DSN=DRIVER:///path[?PARAMETERS]
 
-        or
+          or
 
-        DSN=DRIVER://C:/PATH[?PARAMETERS]
+          DSN=DRIVER://C:/PATH[?PARAMETERS]
 
-        ------------------
-        PARAMETERS ARE Working:
-            unixsocket - for SQLRelayDriver
-            parammodel - ALL
-            protocol - OCI8Driver
-            codepage - OCI8Driver
-        */
+          ------------------
+          PARAMETERS ARE Working:
+          unixsocket - for SQLRelayDriver
+          parammodel - ALL
+          protocol - OCI8Driver
+          codepage - OCI8Driver
+         */
 
         $patDriver = "(?P<driver>[\w\.]+)\:\/\/";
         $patCredentials = "(?:((?P<username>\S+):(?P<password>\S+)|(?P<username2>\S+))@)?";
@@ -166,7 +185,7 @@ class ConnectionManagement
         }
 
         // Set the Driver
-        $this->setDriver ( $parts ['driver'] );
+        $this->setDriver($parts ['driver']);
 
         if (!isset($parts['path']) && !isset($parts['host'])) {
             throw new InvalidArgumentException("Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it.");
@@ -185,16 +204,12 @@ class ConnectionManagement
         }
 
         // If extra param is defined, set it.
-        if (array_key_exists('extraparam', $parts) && (!empty($parts['extraparam'])))
-        {
+        if (array_key_exists('extraparam', $parts) && (!empty($parts['extraparam']))) {
             $arrAux = explode('&', $parts['extraparam']);
-            foreach($arrAux as $item)
-            {
+            foreach ($arrAux as $item) {
                 $aux = explode("=", $item);
                 $this->addExtraParam($aux[0], $aux[1]);
             }
         }
-	}
-
+    }
 }
-

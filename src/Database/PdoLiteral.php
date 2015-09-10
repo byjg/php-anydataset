@@ -7,14 +7,15 @@ use PDO;
 
 class PdoLiteral extends DBPDODriver
 {
-	public function __construct(ConnectionManagement $connMngt)
-	{
-		$strcnn = $connMngt->getDbConnectionString();
 
-		$postOptions = [
-			PDO::ATTR_EMULATE_PREPARES => true
-		];
+    public function __construct(ConnectionManagement $connMngt)
+    {
+        $strcnn = $connMngt->getDbConnectionString();
 
-		parent::__construct($connMngt, $strcnn, [], $postOptions);
-	}
+        $postOptions = [
+            PDO::ATTR_EMULATE_PREPARES => true
+        ];
+
+        parent::__construct($connMngt, $strcnn, [], $postOptions);
+    }
 }

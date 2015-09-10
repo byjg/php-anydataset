@@ -6,4 +6,3 @@ class DatasetException extends \Exception
 {
 
 }
-
