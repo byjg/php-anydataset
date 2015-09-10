@@ -51,7 +51,10 @@ class Object implements DumpToArrayInterface
     {
         // Prepare the source object type
         if ($source instanceof IteratorInterface) {
-            $sourceArray = $source->moveNext()->toArray();
+            $sourceArray = [];
+            if ($source->hasNext()) {
+                $sourceArray = $source->moveNext()->toArray();
+            }
         } else if ($source instanceof DumpToArrayInterface) {
             $sourceArray = $source->toArray();
         } else {
@@ -194,7 +197,7 @@ class Object implements DumpToArrayInterface
             $obj->setField($propName, $value);
         } else if (method_exists($obj, 'set' . $propName)) {
             $obj->{'set' . $propName}($value);
-        } elseif (isset($obj->{$propName})) {
+        } elseif (isset($obj->{$propName}) || $obj instanceof stdClass) {
             $obj->{$propName} = $value;
         } else {
             // Check if source property have property case name different from target
