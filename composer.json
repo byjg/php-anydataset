@@ -25,12 +25,6 @@
         "sheikhheera/iconfig": "1.0.*",
         "byjg/cache-engine": "1.0.*"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/neitanod/forceutf8"
-        }
-    ],
     "suggest": {
         "ext-curl": "*",
         "ext-pdo_mysql": "*"
