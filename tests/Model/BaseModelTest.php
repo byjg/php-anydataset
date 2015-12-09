@@ -189,4 +189,54 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(10, $object->getIdModel());
         $this->assertEquals("Testing", $object->getClientName());
     }
+
+    /**
+     * The current property pattern try do remove the underscore.
+     */
+    public function testPropertyPatternBind_3()
+    {
+        // Other Testing
+        $obj = [
+            "birth_date" => "1974-01-26"
+        ];
+
+        $object = new \Tests\Sample\ModelPropertyPattern();
+        $object->setPropertyPattern(null, null);
+        $object->bind($obj);
+
+        $this->assertEquals("1974-01-26", $object->getBirth_date());
+    }
+
+    /**
+     * The current property pattern try do remove the underscore.
+     * The setPropertyPattern is done on constructor
+     */
+    public function testPropertyPatternBind_4()
+    {
+        // Other Testing
+        $obj = [
+            "birth_date" => "1974-01-26"
+        ];
+
+        $object = new \Tests\Sample\ModelPropertyPatternConstruct();
+        $object->bind($obj);
+
+        $this->assertEquals("1974-01-26", $object->getBirth_date());
+    }
+
+//    /**
+//     * The current property pattern try do remove the underscore.
+//     */
+//    public function testPropertyPatternBind_5()
+//    {
+//        // Other Testing
+//        $obj = [
+//            "birth_date" => "1974-01-26"
+//        ];
+//
+//        $object = new \Tests\Sample\ModelPropertyPatternAnnotation($obj);
+//
+//        $this->assertEquals("1974-01-26", $object->getBirth_date());
+//    }
+//
 }
