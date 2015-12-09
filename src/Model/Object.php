@@ -186,6 +186,12 @@ class Object implements DumpToArrayInterface
      */
     protected static function setPropValue($obj, $propName, $value)
     {
+        $class = new ReflectionClass($this);
+        preg_match_all('/@(?P<param>\S+)\s*(?P<value>\S+)?\r?\n/', $class->getDocComment(), $aux);
+
+        $propertyPattern = isset($classAttributes[":propertypattern"]) ? explode(',',  $classAttributes["$this->_config:propertypattern"]) : array('/([^a-zA-Z0-9])/', '');
+
+
         if (method_exists($obj, "getPropertyPattern")) {
             $propertyPattern = $obj->getPropertyPattern();
             if (!is_null($propertyPattern)) {

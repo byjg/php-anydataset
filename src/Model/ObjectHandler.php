@@ -49,6 +49,8 @@ class ObjectHandler
     protected $_parentArray = false;
     protected $_currentArray = false;
 
+    protected $objectInfo = null;
+
     /**
      *
      * @param DOMNode $current Current Dom Node
@@ -87,6 +89,8 @@ class ObjectHandler
         } else {
             throw new InvalidArgumentException('The model is not an object or an array');
         }
+
+        $this->objectInfo = new ObjectInfo($this->_model, $config, $forcePropName);
     }
 
     /**
@@ -102,15 +106,12 @@ class ObjectHandler
             return $this->_current;
         }
 
-        $classMeta = $this->getClassInfo();
-
-        if ($classMeta[ObjectHandler::CLASS_IGNORE_ALL_CLASS]) {
+        if ($this->objectInfo->getClassIgnoreAllClass()) {
             return $this->_current;
         }
 
-
         # Get the node names of this Class
-        $node = $this->createClassNode($classMeta);
+        $node = $this->createClassNode();
 
 
         #------------
@@ -118,8 +119,11 @@ class ObjectHandler
         if ($this->_model instanceof stdClass) {
             $properties = get_object_vars($this->_model);
         } else {
-            $properties = $classMeta[ObjectHandler::CLASS_REFL]->getProperties(ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE
-                | ReflectionProperty::IS_PUBLIC);
+            $properties = $this->objectInfo->getClassRefl()->getProperties(
+                ReflectionProperty::IS_PROTECTED |
+                ReflectionProperty::IS_PRIVATE   |
+                ReflectionProperty::IS_PUBLIC
+            );
         }
 
         $this->createPropertyNodes($node, $properties, $classMeta);
@@ -253,34 +257,31 @@ class ObjectHandler
         return $propMeta;
     }
 
-    protected function createClassNode($classMeta)
+    protected function createClassNode()
     {
         #-----------
         # Setup NameSpaces
-        if (is_array($classMeta[ObjectHandler::CLASS_NAMESPACE])) {
-            foreach ($classMeta[ObjectHandler::CLASS_NAMESPACE] as $value) {
-                $prefix = strtok($value, "!");
-                $uri = str_replace($prefix . "!", "", $value);
-                XmlUtil::AddNamespaceToDocument($this->_current, $prefix,
-                    $this->replaceVars($classMeta[ObjectHandler::CLASS_NAME], $uri));
-            }
+        foreach ($this->objectInfo->getClassNamespace() as $value) {
+            $prefix = strtok($value, "!");
+            $uri = str_replace($prefix . "!", "", $value);
+            XmlUtil::AddNamespaceToDocument($this->_current, $prefix, $this->replaceVars($this->objectInfo->getClassName(), $uri));
         }
 
         #------------
         # Create Class Node
         if ($this->_model instanceof stdClass && $this->_parentArray) {
             $node = XmlUtil::CreateChild($this->_current, ObjectHandler::OBJECT_ARRAY);
-        } else if ($classMeta[ObjectHandler::CLASS_DONT_CREATE_NODE_CLASS] || $this->_model instanceof stdClass) {
+        } else if ($this->objectInfo->getClassDontCreateClassNode() || $this->_model instanceof stdClass) {
             $node = $this->_current;
         } else {
-            if (!$classMeta[ObjectHandler::CLASS_IS_RDF]) {
-                $node = XmlUtil::CreateChild($this->_current, $classMeta[ObjectHandler::CLASS_NAME]);
+            if (!$this->objectInfo->getClassIsRDF()) {
+                $node = XmlUtil::CreateChild($this->_current, $this->objectInfo->getClassName());
             } else {
                 XmlUtil::AddNamespaceToDocument($this->_current, "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
                 $node = XmlUtil::CreateChild($this->_current, "rdf:Description");
-                XmlUtil::AddAttribute($node, "rdf:about", $classMeta[ObjectHandler::CLASS_RDF_ABOUT]);
+                XmlUtil::AddAttribute($node, "rdf:about", $this->objectInfo->getClassRdfAbout());
                 $nodeType = XmlUtil::CreateChild($node, "rdf:type");
-                XmlUtil::AddAttribute($nodeType, "rdf:resource", $classMeta[ObjectHandler::CLASS_RDF_TYPE]);
+                XmlUtil::AddAttribute($nodeType, "rdf:resource", $this->objectInfo->getClassRdfType());
             }
         }
 
@@ -438,27 +439,6 @@ class ObjectHandler
         }
 
         return $text;
-    }
-
-    protected function adjustParams($arr)
-    {
-        $count = count($arr[0]);
-        $result = array();
-
-        for ($i = 0; $i < $count; $i++) {
-            $key = strtolower($arr["param"][$i]);
-            $value = $arr["value"][$i];
-
-            if (!array_key_exists($key, $result)) {
-                $result[$key] = $value;
-            } elseif (is_array($result[$key])) {
-                $result[$key][] = $value;
-            } else {
-                $result[$key] = array($result[$key], $value);
-            }
-        }
-
-        return $result;
     }
 
     protected static function mapArray(&$value, $key = null)
