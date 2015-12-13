@@ -5,10 +5,7 @@ namespace ByJG\AnyDataset\Model;
 use ByJG\AnyDataset\Repository\IteratorInterface;
 use ByJG\Util\XmlUtil;
 use DOMNode;
-use Exception;
 use InvalidArgumentException;
-use ReflectionClass;
-use ReflectionProperty;
 use SimpleXMLElement;
 use stdClass;
 
@@ -28,7 +25,6 @@ class ObjectHandler
     const CLASS_IGNORE_ALL_CLASS = "ClassIgnoreAllClass";
     const CLASS_NAMESPACE = "ClassNamespace";
     const CLASS_DONT_CREATE_NODE_CLASS = "ClassDontCreateClassNode";
-    const NODE_REFS = "NodeRefs";
     const PROP_IGNORE = "PropIgnore";
     const PROP_NAME = "PropName";
     const PROP_ATTRIBUTE_OF = "PropAttributeOf";
@@ -50,6 +46,8 @@ class ObjectHandler
     protected $_currentArray = false;
 
     protected $objectInfo = null;
+
+    protected $nodeRefs = [];
 
     /**
      *
@@ -90,7 +88,7 @@ class ObjectHandler
             throw new InvalidArgumentException('The model is not an object or an array');
         }
 
-        $this->objectInfo = new ObjectInfo($this->_model, $config, $forcePropName);
+        $this->objectInfo = new ClassAnnotations($this->_model, $config, $forcePropName);
     }
 
     /**
@@ -113,158 +111,19 @@ class ObjectHandler
         # Get the node names of this Class
         $node = $this->createClassNode();
 
-
-        #------------
-        # Get all properties
-        if ($this->_model instanceof stdClass) {
-            $properties = get_object_vars($this->_model);
-        } else {
-            $properties = $this->objectInfo->getClassRefl()->getProperties(
-                ReflectionProperty::IS_PROTECTED |
-                ReflectionProperty::IS_PRIVATE   |
-                ReflectionProperty::IS_PUBLIC
-            );
-        }
-
-        $this->createPropertyNodes($node, $properties, $classMeta);
+        # Get property node names of this class.
+        $this->createPropertyNodes($node);
 
         return $node;
     }
 
-    /**
-     * Get the info of comment instance
-     * @return array
-     */
-    protected function getClassInfo()
-    {
-        $classMeta = array();
-
-        if (!$this->_model instanceof stdClass) {
-            $class = new ReflectionClass($this->_model);
-            preg_match_all('/@(?P<param>\S+)\s*(?P<value>\S+)?\r?\n/', $class->getDocComment(), $aux);
-            $classAttributes = $this->adjustParams($aux);
-
-            $classMeta[ObjectHandler::CLASS_REFL] = $class;
-        } else {
-            $classMeta[ObjectHandler::CLASS_REFL] = null;
-            $classAttributes = array();
-        }
-
-        #------------
-        # Define Class Attributes
-        $classMeta[ObjectHandler::CLASS_NAME] = ($this->_forcePropName != "" ? $this->_forcePropName : (isset($classAttributes["$this->_config:nodename"])
-                        ? $classAttributes["$this->_config:nodename"] : get_class($this->_model)));
-        $classMeta[ObjectHandler::CLASS_GETTER] = isset($classAttributes["$this->_config:getter"]) ? $classAttributes["$this->_config:getter"]
-                : "get";
-        $classMeta[ObjectHandler::CLASS_PROPERTY_PATTERN] = isset($classAttributes["$this->_config:propertypattern"]) ? explode(',',
-                $classAttributes["$this->_config:propertypattern"]) : array('/([^a-zA-Z0-9])/', '');
-        $classMeta[ObjectHandler::CLASS_WRITE_EMPTY] = (isset($classAttributes["$this->_config:writeempty"]) ? $classAttributes["$this->_config:writeempty"]
-                    : "false") == "true";
-        $classMeta[ObjectHandler::CLASS_DOC_TYPE] = isset($classAttributes["$this->_config:doctype"]) ? strtolower($classAttributes["$this->_config:doctype"])
-                : "xml";
-        $classMeta[ObjectHandler::CLASS_RDF_TYPE] = $this->replaceVars($classMeta[ObjectHandler::CLASS_NAME],
-            isset($classAttributes["$this->_config:rdftype"]) ? $classAttributes["$this->_config:rdftype"] : "{HOST}/rdf/class/{CLASS}");
-        $classMeta[ObjectHandler::CLASS_RDF_ABOUT] = $this->replaceVars($classMeta[ObjectHandler::CLASS_NAME],
-            isset($classAttributes["$this->_config:rdfabout"]) ? $classAttributes["$this->_config:rdfabout"] : "{HOST}/rdf/instance/{CLASS}/{GetID()}");
-        $classMeta[ObjectHandler::CLASS_DEFAULT_PREFIX] = isset($classAttributes["$this->_config:defaultprefix"]) ? $classAttributes["$this->_config:defaultprefix"] . ":"
-                : "";
-        $classMeta[ObjectHandler::CLASS_IS_RDF] = ($classMeta[ObjectHandler::CLASS_DOC_TYPE] == "rdf");
-        $classMeta[ObjectHandler::CLASS_IGNORE_ALL_CLASS] = array_key_exists("$this->_config:ignore", $classAttributes);
-        $classMeta[ObjectHandler::CLASS_NAMESPACE] = isset($classAttributes["$this->_config:namespace"]) ? $classAttributes["$this->_config:namespace"]
-                : "";
-        $classMeta[ObjectHandler::CLASS_DONT_CREATE_NODE_CLASS] = array_key_exists("$this->_config:dontcreatenode",
-            $classAttributes);
-        if (!is_array($classMeta[ObjectHandler::CLASS_NAMESPACE]) && !empty($classMeta[ObjectHandler::CLASS_NAMESPACE]))
-                $classMeta[ObjectHandler::CLASS_NAMESPACE] = array($classMeta[ObjectHandler::CLASS_NAMESPACE]);
-
-        #----------
-        # Node References
-        $classMeta[ObjectHandler::NODE_REFS] = array();
-
-        return $classMeta;
-    }
-
-    /**
-     *
-     * @param type $classMeta
-     * @param type $prop
-     * @param type $keyProp
-     * @param type $this->_config
-     * @return null
-     */
-    protected function getPropInfo($classMeta, $prop, $keyProp)
-    {
-        $propMeta = array();
-
-        $propName = ($prop instanceof ReflectionProperty ? $prop->getName() : $keyProp);
-        $propAttributes = array();
-
-        # Does nothing here
-        if ($propName == "_propertyPattern") {
-            return null;
-        }
-
-        # Determine where it located the Property Value --> Getter or inside the property
-        if (!($prop instanceof ReflectionProperty) || $prop->isPublic()) {
-            preg_match_all('/@(?<param>\S+)\s*(?<value>\S+)?\n/',
-                ($prop instanceof ReflectionProperty ? $prop->getDocComment() : ""), $aux);
-            $propAttributes = $this->adjustParams($aux);
-            $propMeta[ObjectHandler::PROP_VALUE] = ($prop instanceof ReflectionProperty ? $prop->getValue($this->_model)
-                        : $prop);
-        } else {
-            // Remove Prefix "_" from Property Name to find a value
-            if ($propName[0] == "_") {
-                $propName = substr($propName, 1);
-            }
-
-            $methodName = $classMeta[ObjectHandler::CLASS_GETTER] . ucfirst(preg_replace($classMeta[ObjectHandler::CLASS_PROPERTY_PATTERN][0],
-                        $classMeta[ObjectHandler::CLASS_PROPERTY_PATTERN][1], $propName));
-            if ($classMeta[ObjectHandler::CLASS_REFL]->hasMethod($methodName)) {
-                $method = $classMeta[ObjectHandler::CLASS_REFL]->getMethod($methodName);
-                preg_match_all('/@(?<param>\S+)\s*(?<value>\S+)?\r?\n/', $method->getDocComment(), $aux);
-                $propAttributes = $this->adjustParams($aux);
-                $propMeta[ObjectHandler::PROP_VALUE] = $method->invoke($this->_model, "");
-            } else {
-                return null;
-            }
-        }
-
-
-        $propMeta[ObjectHandler::PROP_IGNORE] = array_key_exists("$this->_config:ignore", $propAttributes);
-        $propMeta[ObjectHandler::PROP_NAME] = isset($propAttributes["$this->_config:nodename"]) ? $propAttributes["$this->_config:nodename"]
-                : $propName;
-        $propMeta[ObjectHandler::PROP_DONT_CREATE_NODE] = array_key_exists("$this->_config:dontcreatenode",
-            $propAttributes);
-        $propMeta[ObjectHandler::PROP_FORCE_NAME] = isset($propAttributes["$this->_config:dontcreatenode"]) ? $propAttributes["$this->_config:dontcreatenode"]
-                : "";
-        if (strpos($propMeta[ObjectHandler::PROP_NAME], ":") === false) {
-            $propMeta[ObjectHandler::PROP_NAME] = $classMeta[ObjectHandler::CLASS_DEFAULT_PREFIX] . $propMeta[ObjectHandler::PROP_NAME];
-        }
-        if ($propMeta[ObjectHandler::PROP_NAME] == ObjectHandler::OBJECT_ARRAY_IGNORE_NODE) {
-            $propMeta[ObjectHandler::PROP_DONT_CREATE_NODE] = true;
-        }
-        $propMeta[ObjectHandler::PROP_ATTRIBUTE_OF] = $classMeta[ObjectHandler::CLASS_IS_RDF] ? "" : (isset($propAttributes["$this->_config:isattributeof"])
-                    ? $propAttributes["$this->_config:isattributeof"] : "");
-        $propMeta[ObjectHandler::PROP_IS_BLANK_NODE] = $classMeta[ObjectHandler::CLASS_IS_RDF] ? (isset($propAttributes["$this->_config:isblanknode"])
-                    ? $propAttributes["$this->_config:isblanknode"] : "") : "";
-        $propMeta[ObjectHandler::PROP_IS_RESOURCE_URI] = $classMeta[ObjectHandler::CLASS_IS_RDF] && array_key_exists("$this->_config:isresourceuri",
-                $propAttributes); // Valid Only Inside BlankNode
-        $propMeta[ObjectHandler::PROP_IS_CLASS_ATTR] = $classMeta[ObjectHandler::CLASS_IS_RDF] ? false : array_key_exists("$this->_config:isclassattribute",
-                $propAttributes);
-
-
-
-        return $propMeta;
-    }
 
     protected function createClassNode()
     {
         #-----------
         # Setup NameSpaces
         foreach ($this->objectInfo->getClassNamespace() as $value) {
-            $prefix = strtok($value, "!");
-            $uri = str_replace($prefix . "!", "", $value);
-            XmlUtil::AddNamespaceToDocument($this->_current, $prefix, $this->replaceVars($this->objectInfo->getClassName(), $uri));
+            XmlUtil::AddNamespaceToDocument($this->_current, $value['prefix'], $value['uri']);
         }
 
         #------------
@@ -288,157 +147,134 @@ class ObjectHandler
         return $node;
     }
 
-    protected function createPropertyNodes($node, $properties, $classMeta)
+    protected function createPropertyNodes($node)
     {
-        if (!is_null($properties)) {
-            foreach ($properties as $keyProp => $prop) {
-                # Define Properties
-                $propMeta = $this->getPropInfo($classMeta, $prop, $keyProp);
+        $properties = $this->objectInfo->getPropertyList();
 
-                if ($propMeta[ObjectHandler::PROP_IGNORE]) {
-                    continue;
+        if (empty($properties)) {
+            return;
+        }
+        
+        foreach ($properties as $keyProp => $prop) {
+            # Define Properties
+            $propMeta = $this->objectInfo->getPropertyAnnotation($prop, $keyProp);
+
+            if ($propMeta->getPropIgnore()) {
+                continue;
+            }
+
+            # Process the Property Value
+            $used = null;
+
+            # ------------------------------------------------
+            # Value is a OBJECT?
+            if (is_object($propMeta->getPropValue())) {
+                if ($propMeta->getPropDontCreateNode()) {
+                    $nodeUsed = $node;
+                } else {
+                    $nodeUsed = XmlUtil::CreateChild($node, $propMeta->getPropName());
                 }
 
-                # Process the Property Value
-                $used = null;
+                $objHandler = new ObjectHandler($nodeUsed, $propMeta->getPropValue(), $this->_config,
+                    $propMeta->getPropForceName());
+                $used = $objHandler->createObjectFromModel();
+            }
 
-                # ------------------------------------------------
-                # Value is a OBJECT?
-                if (is_object($propMeta[ObjectHandler::PROP_VALUE])) {
-                    if ($propMeta[ObjectHandler::PROP_DONT_CREATE_NODE]) {
-                        $nodeUsed = $node;
-                    } else {
-                        $nodeUsed = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_NAME]);
-                    }
+            # ------------------------------------------------
+            # Value is an ARRAY?
+            elseif (is_array($propMeta->getPropValue())) {
+                // Check if the array is associative or dont.
+                $isAssoc = (bool) count(array_filter(array_keys($propMeta->getPropValue()), 'is_string'));
+                $hasScalar = (bool) count(array_filter(array_values($propMeta->getPropValue()),
+                            function($val) {
+                            return !(is_object($val) || is_array($val));
+                        }));
 
-                    $objHandler = new ObjectHandler($nodeUsed, $propMeta[ObjectHandler::PROP_VALUE], $this->_config,
-                        $propMeta[ObjectHandler::PROP_FORCE_NAME]);
-                    $used = $objHandler->createObjectFromModel();
+                $lazyCreate = false;
+
+                if ($propMeta->getPropDontCreateNode() || (!$isAssoc && $hasScalar)) {
+                    $nodeUsed = $node;
+                } else if ((!$isAssoc && !$hasScalar)) {
+                    $lazyCreate = true;    // Have to create the node every iteration
+                } else {
+                    $nodeUsed = $used = XmlUtil::CreateChild($node, $propMeta->getPropName());
                 }
 
-                # ------------------------------------------------
-                # Value is an ARRAY?
-                elseif (is_array($propMeta[ObjectHandler::PROP_VALUE])) {
-                    // Check if the array is associative or dont.
-                    $isAssoc = (bool) count(array_filter(array_keys($propMeta[ObjectHandler::PROP_VALUE]), 'is_string'));
-                    $hasScalar = (bool) count(array_filter(array_values($propMeta[ObjectHandler::PROP_VALUE]),
-                                function($val) {
-                                return !(is_object($val) || is_array($val));
-                            }));
 
-                    $lazyCreate = false;
-
-                    if ($propMeta[ObjectHandler::PROP_DONT_CREATE_NODE] || (!$isAssoc && $hasScalar)) {
-                        $nodeUsed = $node;
-                    } else if ((!$isAssoc && !$hasScalar)) {
-                        $lazyCreate = true;    // Have to create the node every iteration
-                    } else {
-                        $nodeUsed = $used = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_NAME]);
-                    }
-
-
-                    foreach ($propMeta[ObjectHandler::PROP_VALUE] as $keyAr => $valAr) {
-                        if (
-                            (!$isAssoc && $hasScalar)   # Is not an associative array and have scalar numbers in it.
-                            || !(is_object($valAr) || is_array($valAr))    # The value is not an object and not is array
-                            || (is_string($keyAr) && (is_object($valAr) || is_array($valAr))) # The key is string (associative array) and
-                        # the valluris a object or array
-                        ) {
-                            $obj = new \stdClass;
-                            $obj->{(is_string($keyAr) ? $keyAr : $propMeta[ObjectHandler::PROP_NAME])} = $valAr;
-                            $this->_currentArray = false;
-                        } else if ($lazyCreate) {
-                            if (Is_null($used) && is_object($valAr)) { // If the child is an object there is no need to create every time the node.
-                                $lazyCreate = false;
-                            }
-                            $nodeUsed = $used = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_NAME]);
-                            $obj = $valAr;
-                        } else {
-                            $obj = $valAr;
+                foreach ($propMeta->getPropValue() as $keyAr => $valAr) {
+                    if (
+                        (!$isAssoc && $hasScalar)   # Is not an associative array and have scalar numbers in it.
+                        || !(is_object($valAr) || is_array($valAr))    # The value is not an object and not is array
+                        || (is_string($keyAr) && (is_object($valAr) || is_array($valAr))) # The key is string (associative array) and
+                    # the valluris a object or array
+                    ) {
+                        $obj = new \stdClass;
+                        $obj->{(is_string($keyAr) ? $keyAr : $propMeta->getPropName())} = $valAr;
+                        $this->_currentArray = false;
+                    } else if ($lazyCreate) {
+                        if (Is_null($used) && is_object($valAr)) { // If the child is an object there is no need to create every time the node.
+                            $lazyCreate = false;
                         }
-
-                        $objHandler = new ObjectHandler($nodeUsed, $obj, $this->_config,
-                            $propMeta[ObjectHandler::PROP_FORCE_NAME], $this->_currentArray);
-                        $objHandler->createObjectFromModel();
-                    }
-                }
-
-                # ------------------------------------------------
-                # Value is a Single Value?
-                else if (!empty($propMeta[ObjectHandler::PROP_VALUE])    // Some values are empty for PHP but need to be considered
-                    || ($propMeta[ObjectHandler::PROP_VALUE] === 0) || ($propMeta[ObjectHandler::PROP_VALUE] === false) || ($propMeta[ObjectHandler::PROP_VALUE]
-                    === '0') || ($classMeta[ObjectHandler::CLASS_WRITE_EMPTY])
-                ) {
-                    if ($propMeta[ObjectHandler::PROP_IS_CLASS_ATTR]) {
-                        XmlUtil::AddAttribute($node, $propMeta[ObjectHandler::PROP_NAME],
-                            $propMeta[ObjectHandler::PROP_VALUE]);
-                    } elseif ($propMeta[ObjectHandler::PROP_IS_BLANK_NODE] != "") {
-                        if (!array_key_exists($propMeta[ObjectHandler::PROP_IS_BLANK_NODE],
-                                $classMeta[ObjectHandler::NODE_REFS])) {
-                            $classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]] = XmlUtil::CreateChild($node,
-                                    $propMeta[ObjectHandler::PROP_IS_BLANK_NODE]);
-                            XmlUtil::AddAttribute($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]],
-                                "rdf:parseType", "Resource");
-                        }
-
-                        if ($propMeta[ObjectHandler::PROP_IS_RESOURCE_URI]) {
-                            $blankNodeType = XmlUtil::CreateChild($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]],
-                                    "rdf:type");
-                            XmlUtil::AddAttribute($blankNodeType, "rdf:resource", $propMeta[ObjectHandler::PROP_VALUE]);
-                        } else {
-                            XmlUtil::CreateChild($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_IS_BLANK_NODE]],
-                                $propMeta[ObjectHandler::PROP_NAME], $propMeta[ObjectHandler::PROP_VALUE]);
-                        }
-                    } elseif (($propMeta[ObjectHandler::PROP_ATTRIBUTE_OF] != "") && (array_key_exists($propMeta[ObjectHandler::PROP_ATTRIBUTE_OF],
-                            $classMeta[ObjectHandler::NODE_REFS]))) {
-                        XmlUtil::AddAttribute($classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_ATTRIBUTE_OF]],
-                            $propMeta[ObjectHandler::PROP_NAME], $propMeta[ObjectHandler::PROP_VALUE]);
-                    } elseif ((preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i',
-                            $propMeta[ObjectHandler::PROP_VALUE])) && $classMeta[ObjectHandler::CLASS_IS_RDF]) {
-                        $used = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_NAME]);
-                        XmlUtil::AddAttribute($used, "rdf:resource", $propMeta[ObjectHandler::PROP_VALUE]);
-                    } elseif (is_bool($propMeta[ObjectHandler::PROP_VALUE])) {
-                        $used = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_NAME],
-                                $propMeta[ObjectHandler::PROP_VALUE] ? 'true' : 'false');
+                        $nodeUsed = $used = XmlUtil::CreateChild($node, $propMeta->getPropName());
+                        $obj = $valAr;
                     } else {
-                        $used = XmlUtil::CreateChild($node, $propMeta[ObjectHandler::PROP_NAME],
-                                $propMeta[ObjectHandler::PROP_VALUE]);
+                        $obj = $valAr;
                     }
-                }
 
-                # Save Reference for "isAttributeOf" attribute.
-                if (!is_null($used)) {
-                    $classMeta[ObjectHandler::NODE_REFS][$propMeta[ObjectHandler::PROP_NAME]] = $used;
+                    $objHandler = new ObjectHandler($nodeUsed, $obj, $this->_config,
+                        $propMeta->getPropForceName(), $this->_currentArray);
+                    $objHandler->createObjectFromModel();
                 }
             }
-        }
-    }
 
-    protected function replaceVars($name, $text)
-    {
-        # Host
-        $port = isset($_SERVER["SERVER_PORT"]) ? $_SERVER["SERVER_PORT"] : 80;
-        $httpHost = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : 'localhost';
-        $host = ($port == 443 ? "https://" : "http://") . $httpHost;
+            # ------------------------------------------------
+            # Value is a Single Value?
+            else if (!empty($propMeta->getPropValue())    // Some values are empty for PHP but need to be considered
+                || ($propMeta->getPropValue() === 0) || ($propMeta->getPropValue() === false) || ($propMeta->getPropValue()
+                === '0') || ($this->objectInfo->getClassWriteEmpty())
+            ) {
+                if ($propMeta->getPropIsClassAttr()) {
+                    XmlUtil::AddAttribute($node, $propMeta->getPropName(),
+                        $propMeta->getPropValue());
+                } elseif ($propMeta->getPropIsBlankNode() != "") {
+                    if (!array_key_exists($propMeta->getPropIsBlankNode(),
+                            $this->nodeRefs)) {
+                        $this->nodeRefs[$propMeta->getPropIsBlankNode()] = XmlUtil::CreateChild($node,
+                                $propMeta->getPropIsBlankNode());
+                        XmlUtil::AddAttribute($this->nodeRefs[$propMeta->getPropIsBlankNode()],
+                            "rdf:parseType", "Resource");
+                    }
 
-        # Replace Part One
-        $text = preg_replace(array("/\{[hH][oO][sS][tT]\}/", "/\{[cC][lL][aA][sS][sS]\}/"), array($host, $name), $text);
-
-        if (preg_match('/(\{(\S+)\})/', $text, $matches)) {
-            $class = new ReflectionClass(get_class($this->_model));
-            $method = str_replace("()", "", $matches[2]);
-            $value = spl_object_hash($this->_model);
-            if ($class->hasMethod($method)) {
-                try {
-                    $value = $this->_model->$method();
-                } catch (Exception $ex) {
-                    $value = "***$value***";
+                    if ($propMeta->getPropIsResourceUri()) {
+                        $blankNodeType = XmlUtil::CreateChild($this->nodeRefs[$propMeta->getPropIsBlankNode()],
+                                "rdf:type");
+                        XmlUtil::AddAttribute($blankNodeType, "rdf:resource", $propMeta->getPropValue());
+                    } else {
+                        XmlUtil::CreateChild($this->nodeRefs[$propMeta->getPropIsBlankNode()],
+                            $propMeta->getPropName(), $propMeta->getPropValue());
+                    }
+                } elseif (($propMeta->getPropAttributeOf() != "") && (array_key_exists($propMeta->getPropAttributeOf(),
+                        $this->nodeRefs))) {
+                    XmlUtil::AddAttribute($this->nodeRefs[$propMeta->getPropAttributeOf()],
+                        $propMeta->getPropName(), $propMeta->getPropValue());
+                } elseif ((preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i',
+                        $propMeta->getPropValue())) && $this->objectInfo->getClassIsRDF()) {
+                    $used = XmlUtil::CreateChild($node, $propMeta->getPropName());
+                    XmlUtil::AddAttribute($used, "rdf:resource", $propMeta->getPropValue());
+                } elseif (is_bool($propMeta->getPropValue())) {
+                    $used = XmlUtil::CreateChild($node, $propMeta->getPropName(),
+                            $propMeta->getPropValue() ? 'true' : 'false');
+                } else {
+                    $used = XmlUtil::CreateChild($node, $propMeta->getPropName(),
+                            $propMeta->getPropValue());
                 }
             }
-            $text = preg_replace('/(\{(\S+)\})/', $value, $text);
-        }
 
-        return $text;
+            # Save Reference for "isAttributeOf" attribute.
+            if (!is_null($used)) {
+                $this->nodeRefs[$propMeta->getPropName()] = $used;
+            }
+        }
     }
 
     protected static function mapArray(&$value, $key = null)
