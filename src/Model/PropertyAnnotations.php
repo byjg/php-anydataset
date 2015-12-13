@@ -43,7 +43,7 @@ class PropertyAnnotations extends Annotations
         # Determine where it located the Property Value --> Getter or inside the property
         if ($property instanceof ReflectionProperty && $property->isPublic()) {
             preg_match_all('/@(?<param>\S+)\s*(?<value>\S+)?\n/', $property->getDocComment(), $aux);
-            $this->propValue = $property->getValue($this->_model);
+            $this->propValue = $property->getValue($this->classAnnotation->getClassInstance());
         } else {
             // Remove Prefix "_" from Property Name to find a value
             if ($this->propName[0] == "_") {

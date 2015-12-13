@@ -34,7 +34,7 @@ class ClassAnnotations extends Annotations
         $this->config = $config;
         $this->forcePropName = $forcePropName;
 
-        $this->setClassRefl(null);
+        $this->setClassRefl(new \ReflectionClass(new \stdClass));
         $this->annotations = [];
 
         if (!$this->model instanceof stdClass) {
@@ -50,10 +50,11 @@ class ClassAnnotations extends Annotations
     public function getPropertyList()
     {
         if (!$this->propertyList) {
+            $this->propertyList = [];
             if ($this->model instanceof stdClass) {
-                $properties = get_object_vars($this->model);
+                $this->propertyList = get_object_vars($this->model);
             } else {
-                $properties = $this->getClassRefl()->getProperties(
+                $this->propertyList = $this->getClassRefl()->getProperties(
                     ReflectionProperty::IS_PROTECTED |
                     ReflectionProperty::IS_PRIVATE   |
                     ReflectionProperty::IS_PUBLIC
@@ -71,7 +72,7 @@ class ClassAnnotations extends Annotations
      */
     public function getPropertyAnnotation($property, $keyProp = null)
     {
-        $propName = ($property instanceof \ReflectionProperty) ? $property->getName() : $property;
+        $propName = ($property instanceof \ReflectionProperty) ? $property->getName() : sha1(serialize($property));
         if (!isset($this->propertyAnnotations[$propName])) {
             $this->propertyAnnotations[$propName] = new PropertyAnnotations($this, $this->config, $property, $keyProp);
         }
