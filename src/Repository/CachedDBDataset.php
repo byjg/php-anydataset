@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use ByJG\Cache\CacheEngineInterface;
 use InvalidArgumentException;
 
-class CachedDBDataset extends DBDataset
+class CachedDBDataset
 {
 
     /**
@@ -16,17 +16,20 @@ class CachedDBDataset extends DBDataset
 
     /**
      *
-     * @param string $dbname
+     * @var DBDataset
+     */
+    protected $_dbdataset = null;
+
+    /**
+     *
+     * @param DBDataset $dbdataset
      * @param CacheEngineInterface $cacheEngine
      * @throws InvalidArgumentException
      */
-    public function __construct($dbname, $cacheEngine)
+    public function __construct(DBDataset $dbdataset, CacheEngineInterface $cacheEngine)
     {
-        if (!($cacheEngine instanceof CacheEngineInterface)) {
-            throw new InvalidArgumentException("I expected ICacheEngine object");
-        }
         $this->_cacheEngine = $cacheEngine;
-        parent::__construct($dbname);
+        $this->_dbdataset = $dbdataset;
     }
 
     public function getIterator($sql, $array = null, $ttl = 600)
@@ -55,7 +58,7 @@ class CachedDBDataset extends DBDataset
         $cache = $this->_cacheEngine->get($key, $ttl);
         if ($cache === false) {
             $cache = array();
-            $it = parent::getIterator($sql, $array);
+            $it = $this->_dbdataset->getIterator($sql, $array);
             foreach ($it as $value) {
                 $cache[] = $value->toArray();
             }

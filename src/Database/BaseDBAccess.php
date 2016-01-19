@@ -56,19 +56,20 @@ abstract class BaseDBAccess
      */
     protected function getDBDataset($cache = false)
     {
-        if (!$cache) {
-            if (is_null($this->_db)) {
-                $this->_db = new DBDataset($this->getDataBaseName());
-            }
+        if (is_null($this->_db)) {
+            $this->_db = new DBDataset($this->getDataBaseName());
+        }
 
-            return $this->_db;
-        } else {
+        if ($cache === true) {
+
             if (is_null($this->_cachedDb)) {
-                $this->_cachedDb = new CachedDBDataset($this->getDataBaseName(), $this->getCacheEngine());
+                $this->_cachedDb = new CachedDBDataset($this->_db, $this->getCacheEngine());
             }
 
             return $this->_cachedDb;
         }
+
+        return $this->_db;
     }
 
     /**
