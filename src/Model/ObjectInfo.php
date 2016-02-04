@@ -2,6 +2,10 @@
 
 namespace ByJG\AnyDataset\Model;
 
+use Exception;
+use ReflectionClass;
+use stdClass;
+
 class ObjectInfo
 {
     protected $classRefl;
