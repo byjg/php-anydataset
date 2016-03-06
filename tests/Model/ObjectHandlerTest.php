@@ -434,6 +434,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $model = new stdClass;
 
+        $model->Title = 'testing';
         $model->List = [
             [
                 'Id' => 10,
@@ -453,6 +454,7 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             XmlUtil::CreateXmlDocumentFromStr(
                 '<root>'
+                . '<Title>testing</Title>'
                 . '<List>'
                 . '<Id>10</Id>'
                 . '<Name>Joao</Name>'
@@ -464,6 +466,8 @@ class ObjectHandlerTest extends \PHPUnit_Framework_TestCase
                 . '<Group>test</Group>'
                 . '</root>'), $this->document
         );
+
+         $this->assertEquals('{"Title":"testing","List":[{"Id":"10","Name":"Joao"},{"Id":"11","Name":"Gilberto"}],"Group":"test"}', $this->object->xml2json($this->document));
     }
 
     /**
