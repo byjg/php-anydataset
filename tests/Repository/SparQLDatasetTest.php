@@ -36,7 +36,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException ByJG\Util\CurlException
+     * @expectedException \SparQL\Exception
      */
     function test_wrongSparQLDataset()
     {
