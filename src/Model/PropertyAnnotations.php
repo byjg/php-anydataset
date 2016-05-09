@@ -20,7 +20,7 @@ class PropertyAnnotations extends Annotations
     protected $property;  // Reflection objet
     protected $classAnnotation;
 
-    public function __construct(ClassAnnotations $classAnnotation, $config, $property, $keyProp)
+    public function __construct(ClassAnnotations $classAnnotation, $config, $property, $propertyName)
     {
         $this->config = $config;
         $this->property = $property;
@@ -28,7 +28,7 @@ class PropertyAnnotations extends Annotations
 
         $propMeta = array();
 
-        $this->propName = ($property instanceof ReflectionProperty ? $property->getName() : $keyProp);
+        $this->propName = ($property instanceof ReflectionProperty ? $property->getName() : $propertyName);
         $this->annotations = [];
 
         # Does nothing here
