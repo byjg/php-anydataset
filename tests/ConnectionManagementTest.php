@@ -26,33 +26,9 @@ class ConnectionManagementTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @covers ByJG\AnyDataset\ConnectionManagement::setDbType
-     * @todo   Implement testSetDbType().
-     */
-    public function testSetDbType()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers ByJG\AnyDataset\ConnectionManagement::getDbType
-     * @todo   Implement testGetDbType().
-     */
-    public function testGetDbType()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
 
     /**
      * @covers ByJG\AnyDataset\ConnectionManagement::setDbConnectionString
-     * @todo   Implement testSetDbConnectionString().
      */
     public function testSuccess()
     {

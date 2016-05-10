@@ -21,7 +21,7 @@ interface IteratorInterface
      * @desc Get the record count. Some implementations may have return -1.
      *
      */
-    function Count();
+    function count();
 
     /**
      * Get an array of the iterator

@@ -27,41 +27,6 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
-     */
-    public function testSetPropertyPattern()
-    {
-        $object = new \Tests\Sample\SampleModel();
-
-        $object->setPropertyPattern('/(.*)/', '$1');
-        $this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
-
-        $object->setPropertyPattern('(.*)', '$1');
-        $this->assertEquals(array('/(.*)/', '$1'), $object->getPropertyPattern());
-    }
-
-    /**
-     * @covers ByJG\AnyDataset\Model\BaseModel::setPropertyPattern
-     */
-    public function testSetPropertyPatternNull()
-    {
-        $object = new \Tests\Sample\SampleModel();
-        $object->setPropertyPattern(null, null);
-
-        $this->assertEquals(null, $object->getPropertyPattern());
-    }
-
-    /**
-     * @covers ByJG\AnyDataset\Model\BaseModel::bindObject
-     */
-    public function testGetPropertyPattern()
-    {
-        $object = new \Tests\Sample\SampleModel();
-
-        $this->assertEquals(array('/([^A-Za-z0-9])/', ''), $object->getPropertyPattern());
-    }
-
-    /**
      * @covers ByJG\AnyDataset\Model\BaseModel::bindArray
      */
     public function testBindSingleRow()
@@ -70,7 +35,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
 
-        $object = new \Tests\Sample\SampleModel($sr);
+        $object = new \Tests\Sample\SampleModel($sr->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -88,7 +53,7 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
         $sr->addField("name", "Testing");
         $anydata->appendRow($sr);
 
-        $object = new \Tests\Sample\SampleModel($anydata->getIterator());
+        $object = new \Tests\Sample\SampleModel($anydata->getIterator()->moveNext()->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -149,80 +114,80 @@ class BaseModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Testing", $object->getName());
     }
 
-    public function testPropertyPatternBind()
-    {
-        $obj = new \stdClass();
-        $obj->Id_Model = 10;
-        $obj->Client_Name = 'Testing';
-
-        // Testing Without Property Bind
-        $object = new \Tests\Sample\ModelPropertyPattern();
-        $object->setPropertyPattern(null, null);
-        $object->bind($obj);
-
-        $this->assertEquals('', $object->getIdModel());
-        $this->assertEquals('', $object->getClientName());
-
-        // Testing with Bind
-        $object = new \Tests\Sample\ModelPropertyPattern();
-        $object->bind($obj);
-
-        $this->assertEquals(10, $object->getIdModel());
-        $this->assertEquals("Testing", $object->getClientName());
-
-        // Testing Constructor
-        $object = new \Tests\Sample\ModelPropertyPattern($obj);
-
-        $this->assertEquals(10, $object->getIdModel());
-        $this->assertEquals("Testing", $object->getClientName());
-    }
-
-    public function testPropertyPatternBind_2()
-    {
-        // Other Testing
-        $obj = new \stdClass();
-        $obj->IdModel = 10;
-        $obj->ClientName = 'Testing';
-
-        $object = new \Tests\Sample\ModelPropertyPattern($obj);
-
-        $this->assertEquals(10, $object->getIdModel());
-        $this->assertEquals("Testing", $object->getClientName());
-    }
-
-    /**
-     * The current property pattern try do remove the underscore.
-     */
-    public function testPropertyPatternBind_3()
-    {
-        // Other Testing
-        $obj = [
-            "birth_date" => "1974-01-26"
-        ];
-
-        $object = new \Tests\Sample\ModelPropertyPattern();
-        $object->setPropertyPattern(null, null);
-        $object->bind($obj);
-
-        $this->assertEquals("1974-01-26", $object->getBirth_date());
-    }
-
-    /**
-     * The current property pattern try do remove the underscore.
-     * The setPropertyPattern is done on constructor
-     */
-    public function testPropertyPatternBind_4()
-    {
-        // Other Testing
-        $obj = [
-            "birth_date" => "1974-01-26"
-        ];
-
-        $object = new \Tests\Sample\ModelPropertyPatternConstruct();
-        $object->bind($obj);
-
-        $this->assertEquals("1974-01-26", $object->getBirth_date());
-    }
+//    public function testPropertyPatternBind()
+//    {
+//        $obj = new \stdClass();
+//        $obj->Id_Model = 10;
+//        $obj->Client_Name = 'Testing';
+//
+//        // Testing Without Property Bind
+//        $object = new \Tests\Sample\ModelPropertyPattern();
+//        $object->setPropertyPattern(null, null);
+//        $object->bind($obj);
+//
+//        $this->assertEquals('', $object->getIdModel());
+//        $this->assertEquals('', $object->getClientName());
+//
+//        // Testing with Bind
+//        $object = new \Tests\Sample\ModelPropertyPattern();
+//        $object->bind($obj);
+//
+//        $this->assertEquals(10, $object->getIdModel());
+//        $this->assertEquals("Testing", $object->getClientName());
+//
+//        // Testing Constructor
+//        $object = new \Tests\Sample\ModelPropertyPattern($obj);
+//
+//        $this->assertEquals(10, $object->getIdModel());
+//        $this->assertEquals("Testing", $object->getClientName());
+//    }
+//
+//    public function testPropertyPatternBind_2()
+//    {
+//        // Other Testing
+//        $obj = new \stdClass();
+//        $obj->IdModel = 10;
+//        $obj->ClientName = 'Testing';
+//
+//        $object = new \Tests\Sample\ModelPropertyPattern($obj);
+//
+//        $this->assertEquals(10, $object->getIdModel());
+//        $this->assertEquals("Testing", $object->getClientName());
+//    }
+//
+//    /**
+//     * The current property pattern try do remove the underscore.
+//     */
+//    public function testPropertyPatternBind_3()
+//    {
+//        // Other Testing
+//        $obj = [
+//            "birth_date" => "1974-01-26"
+//        ];
+//
+//        $object = new \Tests\Sample\ModelPropertyPattern();
+//        $object->setPropertyPattern(null, null);
+//        $object->bind($obj);
+//
+//        $this->assertEquals("1974-01-26", $object->getBirth_date());
+//    }
+//
+//    /**
+//     * The current property pattern try do remove the underscore.
+//     * The setPropertyPattern is done on constructor
+//     */
+//    public function testPropertyPatternBind_4()
+//    {
+//        // Other Testing
+//        $obj = [
+//            "birth_date" => "1974-01-26"
+//        ];
+//
+//        $object = new \Tests\Sample\ModelPropertyPatternConstruct();
+//        $object->bind($obj);
+//
+//        $this->assertEquals("1974-01-26", $object->getBirth_date());
+//    }
 
 //    /**
 //     * The current property pattern try do remove the underscore.

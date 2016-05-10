@@ -2,13 +2,13 @@
 
 namespace ByJG\AnyDataset\Repository;
 
+use ByJG\AnyDataset\Model\BinderObject;
 use ByJG\AnyDataset\Model\DumpToArrayInterface;
-use ByJG\AnyDataset\Model\Object;
 use ByJG\Util\XmlUtil;
 use DOMNode;
 use UnexpectedValueException;
 
-class SingleRow extends Object implements DumpToArrayInterface
+class SingleRow extends BinderObject implements DumpToArrayInterface
 {
 
     /**

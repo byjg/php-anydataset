@@ -133,7 +133,7 @@ class PropertyAnnotations extends Annotations
     {
         if (!$this->propDontCreateNode) {
             $this->getPropDontCreateNode = $this->getAnnotations("dontcreatenode", false);
-            if ($this->getPropName() == ObjectHandler::OBJECT_ARRAY_IGNORE_NODE) {
+            if ($this->getPropName() == SerializerObject::OBJECT_ARRAY_IGNORE_NODE) {
                 $this->getPropDontCreateNode = true;
             }
         }
