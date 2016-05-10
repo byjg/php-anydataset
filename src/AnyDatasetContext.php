@@ -8,6 +8,7 @@
 namespace ByJG\AnyDataset;
 
 use ByJG\AnyDataset\Exception\DatasetException;
+use ByJG\DesignPattern\Singleton;
 use Iconfig\Config;
 
 /**
@@ -18,7 +19,7 @@ use Iconfig\Config;
 class AnyDatasetContext
 {
 
-    use \ByJG\DesignPattern\Singleton;
+    use Singleton;
 
     /**
      *

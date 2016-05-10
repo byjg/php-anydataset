@@ -23,13 +23,13 @@ class SocketDataSet
     private $_path = null;
 
     /**
-     *
-     * @param type $server
-     * @param type $path
-     * @param type $rowsep
-     * @param type $colsep
-     * @param type $fieldnames
-     * @param type $port
+     * SocketDataSet constructor.
+     * @param string $server
+     * @param string $path
+     * @param string $rowsep
+     * @param string $colsep
+     * @param string $fieldnames
+     * @param int $port
      */
     public function __construct($server, $path, $rowsep, $colsep, $fieldnames, $port = 80)
     {
@@ -42,9 +42,8 @@ class SocketDataSet
     }
 
     /**
-     * @param string $sql
-     * @param array $array
-     * @return DBIterator
+     * @return SocketIterator
+     * @throws DatasetException
      */
     public function getIterator()
     {

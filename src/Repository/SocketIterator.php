@@ -14,10 +14,10 @@ class SocketIterator extends GenericIterator
 
     /**
      *
-     * @param type $handle
-     * @param type $fieldnames
-     * @param type $rowsep
-     * @param type $colsep
+     * @param resource $handle
+     * @param array $fieldnames
+     * @param string $rowsep
+     * @param string $colsep
      */
     public function __construct($handle, $fieldnames, $rowsep, $colsep)
     {
@@ -38,7 +38,6 @@ class SocketIterator extends GenericIterator
             if ((trim($x) != "") && (strpos($x, $this->_colsep) > 0)) {
                 $linha .= $x;
             }
-            $header = (trim($x) != "");
         }
 
         $this->_rows = array();

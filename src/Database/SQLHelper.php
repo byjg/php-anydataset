@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Enum\Relation;
 use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
 use ByJG\AnyDataset\Repository\DBDataset;
@@ -32,12 +31,15 @@ class SQLHelper
     /**
      * Generate and Execute UPDATE and INSERTS
      *
-     * @param DBDataset $db
      * @param string $table
      * @param array $fields
-     * @param SQLType $type
+     * @param $param
+     * @param SQLType|int $type
      * @param string $filter
+     * @param string $decimalpoint
      * @return string
+     * @throws Exception
+     * @internal param DBDataset $db
      */
     public function generateSQL($table, $fields, &$param, $type = SQLType::SQL_INSERT, $filter = "", $decimalpoint = ".")
     {
@@ -60,7 +62,6 @@ class SQLHelper
             }
             $sql = "update $table set $sql where $filter ";
         } elseif ($type == SQLType::SQL_INSERT) {
-            $sql = "";
             $campos = "";
             $valores = "";
             foreach ($fields as $fieldname => $fieldvalue) {
@@ -84,8 +85,11 @@ class SQLHelper
     /**
      * Generic Function
      *
-     * @param unknown_type $valores
-     * @return unknown
+     * @param string $name
+     * @param string $valores
+     * @param array $param
+     * @param string $decimalpoint
+     * @return string
      */
     protected function getValue($name, $valores, &$param, $decimalpoint)
     {
@@ -129,7 +133,7 @@ class SQLHelper
      * Used to create a FILTER in a SQL string.
      *
      * @param string $fieldName
-     * @param Relation $relation
+     * @param string $relation
      * @param array() $value
      * @param &string $sql (Full SQL)
      * @param &string $param
@@ -139,7 +143,7 @@ class SQLHelper
         if (strlen($sql) > 4) {
             $sql .= ' and ';
         }
-        $sql = " $fieldName " . $relation . " " . $this->getValue($fieldName, $value, $param, $decimalpoint);
+        $sql = " $fieldName " . $relation . " " . $this->getValue($fieldName, $value, $param, '.');
     }
 
     public function setFieldDelimeters($left, $right)

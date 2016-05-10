@@ -47,7 +47,6 @@ class IteratorFilter
      * @param string $tableName
      * @param array &$params
      * @param string $returnFields
-     * @param string $paramSubstName If ended with "_" the program subst by argname;
      * @return string
      */
     public function getSql($tableName, &$params, $returnFields = "*")
@@ -73,7 +72,7 @@ class IteratorFilter
     /**
      *
      * @param $array
-     * @return unknown_type
+     * @return SingleRow[]
      */
     public function match($array)
     {
@@ -91,9 +90,9 @@ class IteratorFilter
     /**
      * Return a filter in SQL or XPATH
      *
-     * @param $type use XPATH or SQL
-     * @param $param
-     * @return unknown_type
+     * @param string $type use XPATH or SQL
+     * @param array $param
+     * @return string
      */
     public function getFilter($type, &$param)
     {

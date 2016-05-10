@@ -3,9 +3,6 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\ConnectionManagement;
-use ByJG\AnyDataset\Database\DBDriverInterface;
-use ByJG\AnyDataset\Database\SQLBind;
-use ByJG\AnyDataset\Database\SQLHelper;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;
@@ -48,7 +45,6 @@ class DBSQLRelayDriver implements DBDriverInterface
     protected function getSQLRelayCursor($sql, $array = null)
     {
         $cur = sqlrcur_alloc($this->_conn);
-        $success = true;
 
         if ($array) {
             list($sql, $array) = SQLBind::parseSQL($this->_connectionManagement, $sql, $array);
@@ -95,7 +91,7 @@ class DBSQLRelayDriver implements DBDriverInterface
 
         $success = sqlrcur_sendQuery($cur,
             SQLHelper::createSafeSQL("select * from :table", array(":table" => $tablename)));
-        sqlrcon_endSession($con);
+        sqlrcon_endSession($cur);
 
         if (!$success) {
             throw new DatasetException(sqlrcur_errorMessage($cur));
@@ -125,9 +121,9 @@ class DBSQLRelayDriver implements DBDriverInterface
 
             $ret = sqlrcon_commit($this->_conn);
             if ($ret === 0) {
-                throw new DataBaseException('Commit failed');
+                throw new DatabaseException('Commit failed');
             } else if ($ret === -1) {
-                throw new DataBaseException('An error occurred. Commit failed');
+                throw new DatabaseException('An error occurred. Commit failed');
             }
 
             sqlrcon_autoCommitOn($this->_conn);
@@ -159,7 +155,7 @@ class DBSQLRelayDriver implements DBDriverInterface
 
     /**
      *
-     * @return handle
+     * @return bool
      */
     public function getDbConnection()
     {

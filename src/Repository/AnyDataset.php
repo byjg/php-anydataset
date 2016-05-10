@@ -61,7 +61,7 @@ class AnyDataset
 
     /**
      *
-     * @param type $file
+     * @param string $file
      * @throws InvalidArgumentException
      */
     public function __construct($file = null)
@@ -92,7 +92,7 @@ class AnyDataset
     private function createFrom($filepath)
     {
         if (file_exists($filepath)) {
-            $anyDataSet = XmlUtil::CreateXmlDocumentFromFile($filepath);
+            $anyDataSet = XmlUtil::createXmlDocumentFromFile($filepath);
             $this->_collection = array();
 
             $rows = $anyDataSet->getElementsByTagName("row");
@@ -129,13 +129,13 @@ class AnyDataset
      */
     public function getDomObject()
     {
-        $anyDataSet = XmlUtil::CreateXmlDocumentFromStr("<anydataset/>");
+        $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset/>");
         $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
         foreach ($this->_collection as $sr) {
             $row = $sr->getDomObject();
             $nodeRow = $row->getElementsByTagName("row")->item(0);
-            $newRow = XmlUtil::CreateChild($nodeRoot, "row");
-            XmlUtil::AddNodeFromNode($newRow, $nodeRow);
+            $newRow = XmlUtil::createChild($nodeRoot, "row");
+            XmlUtil::addNodeFromNode($newRow, $nodeRow);
         }
 
         return $anyDataSet;
@@ -143,7 +143,7 @@ class AnyDataset
 
     /**
      *
-     * @param type $file
+     * @param string $file
      * @throws DatabaseException
      */
     public function save($file = null)
@@ -160,7 +160,7 @@ class AnyDataset
             throw new DatabaseException("No such file path to save anydataset");
         }
 
-        XmlUtil::SaveXmlDocument($this->getDomObject(), $this->_path);
+        XmlUtil::saveXmlDocument($this->getDomObject(), $this->_path);
     }
 
     /**
@@ -202,7 +202,7 @@ class AnyDataset
     /**
      * Insert one row before specified position.
      * @param int $rowNumber
-     * @param mixed row
+     * @param mixed $row
      */
     public function insertRowBefore($rowNumber, $row = null)
     {
@@ -327,8 +327,12 @@ class AnyDataset
         return array_merge($this->quickSortExec($x, $field), array($k), $this->quickSortExec($y, $field));
     }
 
+    /**
+     * @param $document
+     * @return array|string
+     */
     public static function fixUTF8($document)
     {
-        Encoding::fixUTF8(Encoding::removeBOM($document), Encoding::ICONV_TRANSLIT);
+        return Encoding::fixUTF8(Encoding::removeBOM($document), Encoding::ICONV_TRANSLIT);
     }
 }

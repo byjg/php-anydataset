@@ -2,10 +2,10 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use DOMNodeList;
-use InvalidArgumentException;
 use ByJG\AnyDataset\Exception\IteratorException;
 use ByJG\Util\XmlUtil;
+use DOMNodeList;
+use InvalidArgumentException;
 
 class XmlIterator extends GenericIterator
 {
@@ -70,6 +70,7 @@ class XmlIterator extends GenericIterator
     /**
      * @access public
      * @return SingleRow
+     * @throws IteratorException
      */
     public function moveNext()
     {

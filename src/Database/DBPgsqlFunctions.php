@@ -7,6 +7,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
 
     function concat($s1, $s2 = null)
     {
+        $sql = "";
         for ($i = 0, $numArgs = func_num_args(); $i < $numArgs; $i++) {
             $var = func_get_arg($i);
             $sql .= ($i == 0 ? "" : " || ") . $var;
@@ -25,7 +26,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
     function limit($sql, $start, $qty)
     {
         if (strpos($sql, ' LIMIT ') === false) {
-            return $sql .= " LIMIT $qty OFFSET $start ";
+            return $sql . " LIMIT $qty OFFSET $start ";
         } else {
             return $sql;
         }
@@ -44,7 +45,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
 
     /**
      * Return if the database provider have a top or similar function
-     * @return unknown_type
+     * @return bool
      */
     function hasTop()
     {
@@ -63,7 +64,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
     /**
      * Format date column in sql string given an input format that understands Y M D
      * @param string $fmt
-     * @param string $col
+     * @param string|bool $col
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */

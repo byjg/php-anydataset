@@ -13,7 +13,9 @@ class TextFileIterator extends GenericIterator
 
     /**
      * @access public
-     * @return IteratorInterface
+     * @param resource $handle
+     * @param array $fields
+     * @param string $fieldexpression
      */
     public function __construct($handle, $fields, $fieldexpression)
     {

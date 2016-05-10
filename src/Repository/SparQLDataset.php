@@ -14,7 +14,8 @@ class SparQLDataset
 
     /**
      *
-     * @param string $json
+     * @param string $url
+     * @param string $namespaces
      */
     public function __construct($url, $namespaces = null)
     {
@@ -46,8 +47,7 @@ class SparQLDataset
     }
 
     /**
-     * @param string $sql
-     * @param array $array
+     * @param string $sparql
      * @return DBIterator
      */
     public function getIterator($sparql)

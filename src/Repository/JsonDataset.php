@@ -13,15 +13,15 @@ class JsonDataset
     private $_jsonObject;
 
     /**
-     *
-     * @param string $json
+     * JsonDataset constructor.
+     * @param $json
+     * @throws DatasetException
      */
     public function __construct($json)
     {
         $this->_jsonObject = json_decode($json, true);
 
         $lastError = json_last_error();
-        $lastErrorDesc = "";
         switch ($lastError) {
             case JSON_ERROR_NONE:
                 $lastErrorDesc = 'No errors';
@@ -53,8 +53,8 @@ class JsonDataset
 
     /**
      * @access public
-     * @param string $sql
-     * @param array $array
+     * @param string $path
+     * @param bool $throwErr
      * @return DBIterator
      */
     public function getIterator($path = "", $throwErr = false)

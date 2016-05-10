@@ -13,7 +13,15 @@ class FixedTextFileIterator extends GenericIterator
      * @var FixedTextDefinition[]
      */
     protected $_fields;
+
+    /**
+     * @var resource
+     */
     protected $_handle;
+
+    /**
+     * @var int
+     */
     protected $_current = 0;
 
     /**
@@ -55,9 +63,10 @@ class FixedTextFileIterator extends GenericIterator
         }
     }
 
+
     /**
-     * @access public
-     * @return SingleRow
+     * @return SingleRow|null
+     * @throws IteratorException
      */
     public function moveNext()
     {

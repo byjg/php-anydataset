@@ -78,6 +78,7 @@ class ClassAnnotations extends Annotations
     /**
      *
      * @param ReflectionProperty $property
+     * @param string $keyProp
      * @return PropertyAnnotations
      */
     public function getPropertyAnnotation($property, $keyProp = null)

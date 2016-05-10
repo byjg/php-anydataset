@@ -33,7 +33,7 @@ class SQLBind
      *
      * @param ConnectionManagement $connData
      * @param string $sql
-     * @param array $param
+     * @param array $params
      * @return array An array with the adjusted SQL and PARAMs
      */
     public static function parseSQL(ConnectionManagement $connData, $sql, $params = null)

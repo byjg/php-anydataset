@@ -2,10 +2,6 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Repository\AnyDataset;
-use ByJG\AnyDataset\Repository\GenericIterator;
-use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\AnyDataset\Repository\SingleRow;
 use InvalidArgumentException;
 
 class ArrayDatasetIterator extends GenericIterator
@@ -29,7 +25,7 @@ class ArrayDatasetIterator extends GenericIterator
     protected $_currentRow;
 
     /**
-     * @return IteratorInterface
+     * @param $rows
      */
     public function __construct($rows)
     {
@@ -63,7 +59,6 @@ class ArrayDatasetIterator extends GenericIterator
     public function moveNext()
     {
         if ($this->hasNext()) {
-            $cols = array();
             $key = $this->_keys[$this->_currentRow];
             $cols = $this->_rows[$key];
 

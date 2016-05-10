@@ -120,7 +120,7 @@ class DBDataset
     {
         $result = array();
         while ($it->hasNext()) {
-            $registro = $it->MoveNext();
+            $registro = $it->moveNext();
             $result [$registro->getField($fieldPK)] = $registro->getField($fieldName);
         }
         return $result;

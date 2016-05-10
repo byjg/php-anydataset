@@ -5,6 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use ByJG\AnyDataset\Exception\IteratorException;
 use ForceUTF8\Encoding;
 use PDO;
+use PDOStatement;
 
 class DBIterator extends GenericIterator
 {
@@ -15,13 +16,12 @@ class DBIterator extends GenericIterator
     private $_currentRow = 0;
 
     /**
-     * @var \PDOStatement
+     * @var PDOStatement
      */
     private $_rs;
 
     /**
      * @param PDOStatement $recordset
-     * @return void
      */
     public function __construct($recordset)
     {
@@ -76,6 +76,7 @@ class DBIterator extends GenericIterator
 
     /**
      * @return SingleRow
+     * @throws IteratorException
      */
     public function moveNext()
     {
