@@ -40,7 +40,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
      */
     function test_wrongSparQLDataset()
     {
-        $dataset = new SparQLDataset("http://localhost/", SparQLDatasetTest::$SPARQL_NS);
+        $dataset = new SparQLDataset("http://invaliddomain/", SparQLDatasetTest::$SPARQL_NS);
         $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
 
         $this->assertTrue($iterator instanceof IteratorInterface);
