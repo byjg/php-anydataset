@@ -3,23 +3,20 @@
 namespace ByJG\AnyDataset\Repository;
 
 use UnexpectedValueException;
-use ByJG\AnyDataset\Repository\ArrayDataset;
-use ByJG\AnyDataset\Repository\ArrayDatasetIterator;
-use ByJG\AnyDataset\Repository\IteratorInterface;
 
 class ArrayDataset
 {
 
     /**
-     * @var Array
+     * @var array
      */
     protected $_array;
 
     /**
      * Constructor Method
      *
-     * @param Array $array
-     * @return ArrayDataset
+     * @param array $array
+     * @param string $fieldName
      */
     public function __construct($array, $fieldName = "value")
     {

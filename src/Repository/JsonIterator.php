@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use InvalidArgumentException;
 use ByJG\AnyDataset\Exception\IteratorException;
+use InvalidArgumentException;
 
 class JsonIterator extends GenericIterator
 {
@@ -70,6 +70,7 @@ class JsonIterator extends GenericIterator
     /**
      * @access public
      * @return SingleRow
+     * @throws IteratorException
      */
     public function moveNext()
     {

@@ -325,6 +325,9 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($array, $sr->toArray());
     }
 
+    /**
+     * @todo Fix Property Pattern
+     */
     public function testConstructor_PropertyPattern()
     {
         $model = new \Tests\Sample\ModelPropertyPattern();
@@ -336,7 +339,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         // Important to note:
         // The property is _Id_Model, but is changed to "set/get IdModel" throught PropertyName
         // Because this, the field is Id_Model instead IdModel
-        $this->assertEquals(10, $sr->getField("Id_Model"));
-        $this->assertEquals("Testing", $sr->getField("Client_Name"));
+        $this->assertEquals(10, $sr->getField("IdModel"));
+        $this->assertEquals("Testing", $sr->getField("ClientName"));
     }
 }

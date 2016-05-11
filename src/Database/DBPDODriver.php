@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\ConnectionManagement;
+use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Repository\DBIterator;
 use PDO;
 use PDOStatement;
@@ -57,11 +58,11 @@ class DBPDODriver implements DBDriverInterface
     public static function factory(ConnectionManagement $connMngt)
     {
         if (!defined('PDO::ATTR_DRIVER_NAME')) {
-            throw new \ByJG\AnyDataset\Exception\NotAvailableException("Extension 'PDO' is not loaded");
+            throw new NotAvailableException("Extension 'PDO' is not loaded");
         }
 
         if (!extension_loaded('pdo_' . strtolower($connMngt->getDriver()))) {
-            throw new \ByJG\AnyDataset\Exception\NotAvailableException("Extension 'pdo_" . strtolower($connMngt->getDriver()) . "' is not loaded");
+            throw new NotAvailableException("Extension 'pdo_" . strtolower($connMngt->getDriver()) . "' is not loaded");
         }
 
         $class = '\ByJG\AnyDataset\Database\Pdo' . ucfirst($connMngt->getDriver());

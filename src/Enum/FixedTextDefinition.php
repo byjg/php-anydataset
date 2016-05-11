@@ -19,8 +19,8 @@ class FixedTextDefinition
      * @param string $fieldName
      * @param int $startPos
      * @param int $length
-     * @param bool $requiredValue
-     * @param array_of_FixedTextDefinition $subTypes
+     * @param bool|string $requiredValue
+     * @param FixedTextDefinition[] $subTypes
      */
     public function __construct($fieldName, $startPos, $length, $requiredValue = "", $subTypes = null)
     {

@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset;
 
+use ByJG\DesignPattern\Singleton;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -14,7 +15,7 @@ use Psr\Log\LoggerInterface;
 class LogHandler implements LoggerInterface
 {
 
-    use \ByJG\DesignPattern\Singleton;
+    use Singleton;
 
     /**
      *

@@ -72,7 +72,7 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
         $this->object->appendRow();
         $this->object->addField('field', 'value');
 
-        $xmlDom = \ByJG\Util\XmlUtil::CreateXmlDocumentFromStr(
+        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
                 '<?xml version="1.0" encoding="utf-8"?>'
                 . '<anydataset>'
                 . '<row>'
@@ -80,7 +80,7 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
                 . '</row>'
                 . '</anydataset>'
         );
-        $xmlDomValidate = \ByJG\Util\XmlUtil::CreateXmlDocumentFromStr($this->object->xml());
+        $xmlDomValidate = \ByJG\Util\XmlUtil::createXmlDocumentFromStr($this->object->xml());
 
         $this->assertEquals($xmlDom, $xmlDomValidate);
     }
@@ -105,10 +105,13 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($proof->getIterator()->toArray()));
         $proof->appendRow();
         $proof->addField('field1', 'OK');
-        $anydata->save();
+        $proof->save();
 
         $proof2 = new AnyDataset($filename);
-        $this->assertEquals(3, count($proof->getIterator()->toArray()));
+        $this->assertEquals(
+            $proof->getIterator()->toArray(),
+            $proof2->getIterator()->toArray()
+        );
 
         unlink($filename);
     }
@@ -162,7 +165,6 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ByJG\AnyDataset\Repository\AnyDataset::insertRowBefore
-     * @todo   Implement testInsertRowBefore().
      */
     public function testInsertRowBefore()
     {
@@ -189,7 +191,6 @@ class AnyDatasetTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ByJG\AnyDataset\Repository\AnyDataset::removeRow
-     * @todo   Implement testRemoveRow().
      */
     public function testRemoveRow()
     {

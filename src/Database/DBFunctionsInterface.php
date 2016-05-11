@@ -37,7 +37,7 @@ interface DBFunctionsInterface
 
     /**
      * Return if the database provider have a top or similar function
-     * @return unknown_type
+     * @return bool
      */
     function hasTop();
 
@@ -50,7 +50,7 @@ interface DBFunctionsInterface
     /**
      * Format date column in sql string given an input format that understands Y M D
      * @param string $fmt
-     * @param string $col
+     * @param bool|string $col
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */

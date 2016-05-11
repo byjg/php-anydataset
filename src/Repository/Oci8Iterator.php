@@ -14,13 +14,13 @@ class Oci8Iterator extends GenericIterator
     protected $_moveNextRow = 0;
 
     /**
-     * @var Oci8 Cursor
+     * @var resource Cursor
      */
     private $_cursor;
 
     /**
      *
-     * @param type $cursor
+     * @param resource $cursor
      */
     public function __construct($cursor)
     {
@@ -79,8 +79,8 @@ class Oci8Iterator extends GenericIterator
     }
 
     /**
-     * @access public
-     * @return SingleRow
+     * @return mixed
+     * @throws IteratorException
      */
     public function moveNext()
     {

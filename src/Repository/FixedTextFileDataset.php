@@ -14,8 +14,7 @@ class FixedTextFileDataset
     protected $_source;
 
     /**
-     * \ByJG\AnyDataset\Enum\FixedTextDefinition[]
-     * @var type
+     * @var FixedTextDefinition[]
      */
     protected $_fieldDefinition;
     protected $_sourceType;
@@ -25,7 +24,7 @@ class FixedTextFileDataset
      *
      * @param string $source
      * @param FixedTextDefinition[] $fieldDefinition
-     * @return TextFileDataset
+     * @throws NotFoundException
      */
     public function __construct($source, $fieldDefinition)
     {
@@ -49,9 +48,9 @@ class FixedTextFileDataset
 
     /**
      * @access public
-     * @param string $sql
-     * @param array $array
      * @return DBIterator
+     * @throws DatasetException
+     * @throws Exception
      */
     public function getIterator()
     {
@@ -86,6 +85,7 @@ class FixedTextFileDataset
                 return $it;
             } catch (Exception $ex) {
                 fclose($handle);
+                throw $ex;
             }
         }
     }
@@ -101,6 +101,7 @@ class FixedTextFileDataset
                 return $it;
             } catch (Exception $ex) {
                 fclose($handle);
+                throw $ex;
             }
         }
     }

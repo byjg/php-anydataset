@@ -23,9 +23,10 @@ class DBOci8Driver implements DBDriverInterface
     /**
      * Ex.
      *
-     * 	oci8://username:password@host:1521/servicename?protocol=TCP&codepage=WE8MSWIN1252
+     *    oci8://username:password@host:1521/servicename?protocol=TCP&codepage=WE8MSWIN1252
      *
      * @param ConnectionManagement $connMngt
+     * @throws DatabaseException
      */
     public function __construct($connMngt)
     {
@@ -153,7 +154,7 @@ class DBOci8Driver implements DBDriverInterface
     public function commitTransaction()
     {
         if ($this->_transaction == OCI_COMMIT_ON_SUCCESS) {
-            throw new DataBaseException('No transaction for commit');
+            throw new DatabaseException('No transaction for commit');
         }
 
         $this->_transaction = OCI_COMMIT_ON_SUCCESS;
@@ -161,14 +162,14 @@ class DBOci8Driver implements DBDriverInterface
         $result = oci_commit($this->_conn);
         if (!$result) {
             $error = oci_error($this->conn);
-            throw new DataBaseException($error['message']);
+            throw new DatabaseException($error['message']);
         }
     }
 
     public function rollbackTransaction()
     {
         if ($this->_transaction == OCI_COMMIT_ON_SUCCESS) {
-            throw new DataBaseException('No transaction for rollback');
+            throw new DatabaseException('No transaction for rollback');
         }
 
         $this->_transaction = OCI_COMMIT_ON_SUCCESS;
@@ -185,7 +186,7 @@ class DBOci8Driver implements DBDriverInterface
 
     /**
      *
-     * @return handle
+     * @return resource
      */
     public function getDbConnection()
     {

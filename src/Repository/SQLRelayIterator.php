@@ -14,13 +14,13 @@ class SQLRelayIterator extends GenericIterator
     protected $_moveNextRow = 0;
 
     /**
-     * @var SQLRelay Cursos
+     * @var resource 
      */
     private $_cursor;
 
     /**
      *
-     * @param type $cursor
+     * @param resource $cursor
      */
     public function __construct($cursor)
     {
@@ -91,6 +91,7 @@ class SQLRelayIterator extends GenericIterator
 
     /**
      * @return SingleRow
+     * @throws IteratorException
      */
     public function moveNext()
     {

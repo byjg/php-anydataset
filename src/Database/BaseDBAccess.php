@@ -44,6 +44,7 @@ abstract class BaseDBAccess
 
     /**
      * @return CacheEngineInterface
+     * @throws NotImplementedException
      */
     public function getCacheEngine()
     {
@@ -52,7 +53,9 @@ abstract class BaseDBAccess
 
     /**
      * Create a instance of DBDataset to connect database
+     * @param bool $cache
      * @return DBDataset
+     * @throws NotImplementedException
      */
     protected function getDBDataset($cache = false)
     {
@@ -76,7 +79,8 @@ abstract class BaseDBAccess
      * Execute a SQL and dont wait for a response.
      * @param string $sql
      * @param string $param
-     * @param bool getId
+     * @param bool $getId
+     * @return int|null
      */
     protected function executeSQL($sql, $param = null, $getId = false)
     {
@@ -121,6 +125,7 @@ abstract class BaseDBAccess
      *
      * @param string $sql
      * @param array $param
+     * @param int $ttl
      * @return IteratorInterface
      */
     protected function getIterator($sql, $param = null, $ttl = -1)
@@ -221,7 +226,8 @@ abstract class BaseDBAccess
      * @param IteratorInterface $it
      * @param string $key
      * @param string $value
-     * @return array()
+     * @param string $firstElement
+     * @return array
      */
     public static function getArrayFromIterator(IteratorInterface $it, $key, $value, $firstElement = "-- Selecione --")
     {
@@ -240,8 +246,9 @@ abstract class BaseDBAccess
      *
      * @param IteratorInterface $it
      * @param string $name
-     * @param array fields
+     * @param array $fields
      * @param bool $echoToBrowser
+     * @return string
      */
     public static function saveToCSV($it, $name = "data.csv", $fields = null, $echoToBrowser = true)
     {

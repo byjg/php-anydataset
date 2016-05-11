@@ -54,7 +54,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
 
     /**
      * Return if the database provider have a top or similar function
-     * @return unknown_type
+     * @return bool
      */
     function hasTop()
     {
@@ -73,7 +73,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
     /**
      * Format date column in sql string given an input format that understands Y M D
      * @param string $fmt
-     * @param string $col
+     * @param bool|string $col
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
@@ -113,6 +113,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @param DBDataset $dbdataset
      * @param string $sql
      * @param array $param
+     * @param string $sequence
      * @return int
      */
     function executeAndGetInsertedId($dbdataset, $sql, $param, $sequence = null)

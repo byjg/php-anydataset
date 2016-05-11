@@ -25,7 +25,7 @@ class TextFileDataset
      * @param string $source
      * @param array $fields
      * @param string $fieldexpression
-     * @return TextFileDataset
+     * @throws NotFoundException
      */
     public function __construct($source, $fields, $fieldexpression = null)
     {
@@ -61,9 +61,9 @@ class TextFileDataset
 
     /**
      * @access public
-     * @param string $sql
-     * @param array $array
      * @return DBIterator
+     * @throws DatasetException
+     * @throws Exception
      */
     public function getIterator()
     {
@@ -78,6 +78,7 @@ class TextFileDataset
                 return $it;
             } catch (Exception $ex) {
                 fclose($handle);
+                throw $ex;
             }
         }
     }

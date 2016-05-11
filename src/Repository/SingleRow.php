@@ -2,13 +2,13 @@
 
 namespace ByJG\AnyDataset\Repository;
 
+use ByJG\AnyDataset\Model\BinderObject;
 use ByJG\AnyDataset\Model\DumpToArrayInterface;
-use ByJG\AnyDataset\Model\Object;
 use ByJG\Util\XmlUtil;
 use DOMNode;
 use UnexpectedValueException;
 
-class SingleRow extends Object implements DumpToArrayInterface
+class SingleRow extends BinderObject implements DumpToArrayInterface
 {
 
     /**
@@ -134,6 +134,7 @@ class SingleRow extends Object implements DumpToArrayInterface
     /**
      * Remove specified field name with specified value name from row.
      * @param string $name
+     * @param $value
      */
     public function removeFieldNameValue($name, $value)
     {
@@ -187,16 +188,16 @@ class SingleRow extends Object implements DumpToArrayInterface
     public function getDomObject()
     {
         if (is_null($this->_node)) {
-            $this->_node = XmlUtil::CreateXmlDocumentFromStr("<row />");
+            $this->_node = XmlUtil::createXmlDocumentFromStr("<row />");
             $root = $this->_node->getElementsByTagName("row")->item(0);
             foreach ($this->_row as $key => $value) {
                 if (!is_array($value)) {
-                    $field = XmlUtil::CreateChild($root, "field", $value);
-                    XmlUtil::AddAttribute($field, "name", $key);
+                    $field = XmlUtil::createChild($root, "field", $value);
+                    XmlUtil::addAttribute($field, "name", $key);
                 } else {
                     foreach ($value as $valueItem) {
-                        $field = XmlUtil::CreateChild($root, "field", $valueItem);
-                        XmlUtil::AddAttribute($field, "name", $key);
+                        $field = XmlUtil::createChild($root, "field", $valueItem);
+                        XmlUtil::addAttribute($field, "name", $key);
                     }
                 }
             }

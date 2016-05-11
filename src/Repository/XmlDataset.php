@@ -31,7 +31,7 @@ class XmlDataset
 
     /**
      *
-     * @var type
+     * @var string
      */
     protected $_registerNS;
 
@@ -53,7 +53,7 @@ class XmlDataset
         if ($xml instanceof DOMDocument) {
             $this->_domDocument = $xml;
         } else {
-            $this->_domDocument = XmlUtil::CreateXmlDocumentFromStr($xml);
+            $this->_domDocument = XmlUtil::createXmlDocumentFromStr($xml);
         }
 
         if (is_null($registerNS)) {
@@ -71,8 +71,6 @@ class XmlDataset
 
     /**
      * @access public
-     * @param string $sql
-     * @param array $array
      * @return DBIterator
      */
     public function getIterator()

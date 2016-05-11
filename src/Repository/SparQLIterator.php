@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use SparQL\Result;
 use ByJG\AnyDataset\Exception\IteratorException;
+use SparQL\Result;
 
 class SparQLIterator extends GenericIterator
 {
@@ -48,6 +48,7 @@ class SparQLIterator extends GenericIterator
     /**
      * @access public
      * @return SingleRow
+     * @throws IteratorException
      */
     public function moveNext()
     {

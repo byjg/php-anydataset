@@ -2,10 +2,6 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Repository\GenericIterator;
-use ByJG\AnyDataset\Repository\SingleRow;
-use DOMNodeList;
-
 /**
  * Iterator class is a structure used to navigate forward in a AnyDataset structure.
  */
@@ -26,8 +22,7 @@ class AnyIterator extends GenericIterator
 
     /**
      * Iterator constructor
-     * @param DOMNodeList $list \DOMNodeList
-     * @return void
+     * @param SingleRow[] $list 
      */
 
     public function __construct($list)

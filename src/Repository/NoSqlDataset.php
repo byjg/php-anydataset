@@ -25,8 +25,8 @@ class NoSqlDataset implements NoSQLDriverInterface
 
     /**
      *
-     * @param type $dbname
-     * @param type $collection
+     * @param string $dbname
+     * @param string $collection
      * @throws InvalidArgumentException
      */
     public function __construct($dbname, $collection)
@@ -67,6 +67,7 @@ class NoSqlDataset implements NoSQLDriverInterface
     /**
      *
      * @param mixed $filter
+     * @param null $fields
      * @return IteratorInterface $filter
      */
     public function getIterator($filter = null, $fields = null)
@@ -97,6 +98,7 @@ class NoSqlDataset implements NoSQLDriverInterface
      *
      * @param mixed $document
      * @param mixed $filter
+     * @param mixed $options
      * @return bool
      */
     public function update($document, $filter = null, $options = null)

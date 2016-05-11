@@ -10,6 +10,7 @@ class DBDblibFunctions extends DBBaseFunctions
 
     function concat($s1, $s2 = null)
     {
+        $sql = "";
         for ($i = 0, $numArgs = func_num_args(); $i < $numArgs; $i++) {
             $var = func_get_arg($i);
             $sql .= ($i == 0 ? "" : "+") . $var;
@@ -24,6 +25,7 @@ class DBDblibFunctions extends DBBaseFunctions
      * @param int $start
      * @param int $qty
      * @return string
+     * @throws NotAvailableException
      */
     function limit($sql, $start, $qty)
     {
@@ -43,7 +45,7 @@ class DBDblibFunctions extends DBBaseFunctions
 
     /**
      * Return if the database provider have a top or similar function
-     * @return unknown_type
+     * @return bool
      */
     function hasTop()
     {
@@ -62,7 +64,7 @@ class DBDblibFunctions extends DBBaseFunctions
     /**
      * Format date column in sql string given an input format that understands Y M D
      * @param string $fmt
-     * @param string $col
+     * @param bool|string $col
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
