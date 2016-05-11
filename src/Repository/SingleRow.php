@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Model\BinderObject;
-use ByJG\AnyDataset\Model\DumpToArrayInterface;
+use ByJG\Serialize\BinderObject;
+use ByJG\Serialize\DumpToArrayInterface;
 use ByJG\Util\XmlUtil;
 use DOMNode;
 use UnexpectedValueException;
@@ -262,4 +262,18 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
     {
         $this->_node = null;
     }
+
+    /**
+     * Override Specific implementation of setPropValue to SingleRow
+     *
+     * @param SingleRow $obj
+     * @param string $propName
+     * @param string $value
+     */
+    protected function setPropValue($obj, $propName, $value)
+    {
+        $obj->setField($propName, $value);
+    }
+
+
 }

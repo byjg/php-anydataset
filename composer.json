@@ -10,7 +10,7 @@
     "autoload": {
         "psr-4": {
             "ByJG\\AnyDataset\\": "src/",
-            "Tests\\": "tests/"
+            "AnyDataSet\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
@@ -23,7 +23,8 @@
         "neitanod/forceutf8": "v2.0",
         "monolog/monolog": "1.*",
         "sheikhheera/iconfig": "1.0.*",
-        "byjg/cache-engine": "1.0.*"
+        "byjg/cache-engine": "1.0.*",
+        "byjg/serialize": "dev-master"
     },
     "suggest": {
         "ext-curl": "*",

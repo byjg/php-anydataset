@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Sample;
+namespace AnyDataSet\Tests\Sample;
 
 /**
  * @Xmlnuke:NodeName ModelPropertyPattern
  */
-class ModelPropertyPattern extends \ByJG\AnyDataset\Model\BaseModel
+class ModelPropertyPattern extends \ByJG\Serialize\BaseModel
 {
 
     protected $_Id_Model = "";

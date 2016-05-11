@@ -3,7 +3,7 @@
 namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Exception\NotImplementedException;
-use ByJG\AnyDataset\Model\DumpToArrayInterface;
+use ByJG\Serialize\DumpToArrayInterface;
 use Iterator;
 
 abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArrayInterface

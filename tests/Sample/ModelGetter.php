@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Sample;
+namespace AnyDataSet\Tests\Sample;
 
-use ByJG\AnyDataset\Model\BaseModel;
+use ByJG\Serialize\BaseModel;
 
 /**
  * @Xmlnuke:NodeName ModelGetter
