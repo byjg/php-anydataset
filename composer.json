@@ -24,7 +24,7 @@
         "monolog/monolog": "1.*",
         "sheikhheera/iconfig": "1.0.*",
         "byjg/cache-engine": "1.0.*",
-        "byjg/serialize": "dev-master"
+        "byjg/serialize": "1.0.*"
     },
     "suggest": {
         "ext-curl": "*",
