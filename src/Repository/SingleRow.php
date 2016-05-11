@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\Serialize\BinderObject;
-use ByJG\Serialize\DumpToArrayInterface;
+use ByJG\Serializer\BinderObject;
+use ByJG\Serializer\DumpToArrayInterface;
 use ByJG\Util\XmlUtil;
 use DOMNode;
 use UnexpectedValueException;

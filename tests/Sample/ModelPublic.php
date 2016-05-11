@@ -2,7 +2,7 @@
 
 namespace AnyDataSet\Tests\Sample;
 
-use ByJG\Serialize\BaseModel;
+use ByJG\Serializer\BaseModel;
 
 class ModelPublic extends BaseModel
 {

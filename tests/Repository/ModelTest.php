@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\Serialize\SerializerObject;
+use ByJG\Serializer\SerializerObject;
 
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +34,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ByJG\Serialize\BinderObject::bind
+     * @covers ByJG\Serializer\BinderObject::bind
      */
     public function testBind_Iterator2()
     {

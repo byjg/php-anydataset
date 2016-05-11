@@ -119,7 +119,7 @@ And more...
 
 ## Install
 
-Just type: `composer require "byjg/anydataset=~1.0"`
+Just type: `composer require "byjg/anydataset=2.0.*"`
 
 ## Running Tests
 

@@ -2,7 +2,7 @@
 
 namespace AnyDataSet\Tests\Sample;
 
-use ByJG\Serialize\BaseModel;
+use ByJG\Serializer\BaseModel;
 
 /**
  * @Xmlnuke:NodeName ModelGetter

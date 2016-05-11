@@ -5,7 +5,7 @@ namespace AnyDataSet\Tests\Sample;
 /**
  * @Xmlnuke:NodeName ModelPropertyPattern
  */
-class ModelPropertyPattern extends \ByJG\Serialize\BaseModel
+class ModelPropertyPattern extends \ByJG\Serializer\BaseModel
 {
 
     protected $_Id_Model = "";
