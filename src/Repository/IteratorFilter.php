@@ -240,10 +240,10 @@ class IteratorFilter
 
     /**
      *
-     * @param string[] $array
+     * @param SingleRow $singleRow
      * @return string
      */
-    private function evalString($array)
+    private function evalString(SingleRow $singleRow)
     {
         $result = array();
         $finalResult = false;
@@ -261,7 +261,7 @@ class IteratorFilter
             $relation = $filter[2];
             $value = $filter[3];
 
-            $field = $array->getField($name);
+            $field = $singleRow->getField($name);
 
             if (!is_array($field)) $field = array($field);
 
