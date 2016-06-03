@@ -287,6 +287,8 @@ abstract class BaseDBAccess
         if (!$echoToBrowser) {
             return $line;
         }
+        
+        return null;
     }
 
     /**

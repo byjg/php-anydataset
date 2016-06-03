@@ -182,8 +182,8 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
     }
 
     /**
-     * Get the \DOMNode row objet
-     * @return DOMNode
+     * Get the \DOMElement row objet
+     * @return \DOMElement
      */
     public function getDomObject()
     {

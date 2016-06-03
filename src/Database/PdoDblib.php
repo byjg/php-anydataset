@@ -7,7 +7,7 @@ class PdoDblib extends DBPDODriver
 
     public function __construct($connMngt)
     {
-        parent::__construct($connMngt, $strcnn, $preOptions, $postOptions);
+        parent::__construct($connMngt, null, null, null);
 
         // Solve the error:
         // SQLSTATE[HY000]: General error: 1934 General SQL Server error: Check messages from the SQL Server [1934] (severity 16) [(null)]

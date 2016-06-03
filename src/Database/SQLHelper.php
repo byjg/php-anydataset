@@ -51,8 +51,8 @@ class SQLHelper
             $param = array();
         }
 
+        $sql = "";
         if ($type == SQLType::SQL_UPDATE) {
-            $sql = "";
             foreach ($fields as $fieldname => $fieldvalue) {
                 if ($sql != "") {
                     $sql .= ", ";

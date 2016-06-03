@@ -161,7 +161,7 @@ class DBOci8Driver implements DBDriverInterface
 
         $result = oci_commit($this->_conn);
         if (!$result) {
-            $error = oci_error($this->conn);
+            $error = oci_error($this->_conn);
             throw new DatabaseException($error['message']);
         }
     }
