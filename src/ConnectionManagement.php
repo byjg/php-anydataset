@@ -8,18 +8,6 @@ use InvalidArgumentException;
 class ConnectionManagement
 {
 
-    protected $_dbtype;
-
-    public function setDbType($value)
-    {
-        $this->_dbtype = $value;
-    }
-
-    public function getDbType()
-    {
-        return $this->_dbtype;
-    }
-
     protected $_dbconnectionstring;
 
     public function setDbConnectionString($value)
@@ -133,7 +121,8 @@ class ConnectionManagement
     }
 
     /**
-     *
+     * The connection string must be defined in the config file 'config/anydataset.php'
+     * 
      * @param string $dbname
      * @throws DatabaseException
      * @throws InvalidArgumentException
@@ -148,27 +137,7 @@ class ConnectionManagement
             $config = AnyDatasetContext::getInstance()->getConnectionString($dbname);
         }
 
-        $this->setDbType('dsn');
         $this->setDbConnectionString($config['url']);
-
-        /*
-          DSN=DRIVER://USERNAME[:PASSWORD]@SERVER[:PORT]/DATABASE[?KEY1=VALUE1&KEY2=VALUE2&...]
-
-          or
-
-          DSN=DRIVER:///path[?PARAMETERS]
-
-          or
-
-          DSN=DRIVER://C:/PATH[?PARAMETERS]
-
-          ------------------
-          PARAMETERS ARE Working:
-          unixsocket - for SQLRelayDriver
-          parammodel - ALL
-          protocol - OCI8Driver
-          codepage - OCI8Driver
-         */
 
         $patDriver = "(?P<driver>[\w\.]+)\:\/\/";
         $patCredentials = "(?:((?P<username>\S+):(?P<password>\S+)|(?P<username2>\S+))@)?";

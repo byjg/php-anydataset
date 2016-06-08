@@ -2,20 +2,18 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Repository\DBDataset;
 
-class DBMySQLFunctions extends DBBaseFunctions
+class DBSqliteFunctions extends DBBaseFunctions
 {
 
     function concat($s1, $s2 = null)
     {
-        $sql = "concat(";
-        for ($i = 0, $numArgs = func_num_args(); $i < $numArgs; $i++) {
-            $var = func_get_arg($i);
-            $sql .= ($i == 0 ? "" : ",") . $var;
+        $sql = $s1;
+        for ($i = 1; $i < func_num_args(); $i++) {
+            $sql .= ' || ' . func_get_arg($i) . ' ';
         }
-        $sql .= ")";
-
         return $sql;
     }
 
@@ -30,9 +28,8 @@ class DBMySQLFunctions extends DBBaseFunctions
     {
         if (strpos($sql, ' LIMIT ') === false) {
             return $sql . " LIMIT $start, $qty ";
-        } else {
-            return $sql;
-        }
+
+        return $sql;
     }
 
     /**
@@ -73,71 +70,8 @@ class DBMySQLFunctions extends DBBaseFunctions
      */
     function sqlDate($fmt, $col = false)
     {
-        if (!$col) $col = 'now()';
-        $s = 'DATE_FORMAT(' . $col . ",'";
-        $concat = false;
-        $len = strlen($fmt);
-        for ($i = 0; $i < $len; $i++) {
-            $ch = $fmt[$i];
-            switch ($ch) {
-                case 'Y':
-                case 'y':
-                    $s .= '%Y';
-                    break;
-                case 'Q':
-                case 'q':
-                    $s .= "'),Quarter($col)";
-
-                    if ($len > $i + 1) $s .= ",DATE_FORMAT($col,'";
-                    else $s .= ",('";
-                    $concat = true;
-                    break;
-                case 'M':
-                    $s .= '%b';
-                    break;
-
-                case 'm':
-                    $s .= '%m';
-                    break;
-                case 'D':
-                case 'd':
-                    $s .= '%d';
-                    break;
-
-                case 'H':
-                    $s .= '%H';
-                    break;
-
-                case 'h':
-                    $s .= '%I';
-                    break;
-
-                case 'i':
-                    $s .= '%i';
-                    break;
-
-                case 's':
-                    $s .= '%s';
-                    break;
-
-                case 'a':
-                case 'A':
-                    $s .= '%p';
-                    break;
-
-                default:
-
-                    if ($ch == '\\') {
-                        $i++;
-                        $ch = substr($fmt, $i, 1);
-                    }
-                    $s .= $ch;
-                    break;
-            }
-        }
-        $s.="')";
-        if ($concat) $s = "CONCAT($s)";
-        return $s;
+        throw new NotImplementedException('Not implemented');
+    }
     }
 
     /**
@@ -174,7 +108,7 @@ class DBMySQLFunctions extends DBBaseFunctions
     function executeAndGetInsertedId($dbdataset, $sql, $param)
     {
         $id = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
-        $it = $dbdataset->getIterator("select LAST_INSERT_ID() id");
+        $it = $dbdataset->getIterator("SELECT last_insert_rowid() id");
         if ($it->hasNext()) {
             $sr = $it->moveNext();
             $id = $sr->getField("id");

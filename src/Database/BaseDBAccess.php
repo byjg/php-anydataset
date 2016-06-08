@@ -3,21 +3,17 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\AnyDatasetContext;
-use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\LogHandler;
-use ByJG\AnyDataset\Repository\CachedDBDataset;
 use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\Cache\CacheEngineInterface;
 
-abstract class BaseDBAccess
+class BaseDBAccess
 {
 
     /**
      * @var DBDataset
      */
-    protected $_db = null;
-    protected $_cachedDb = null;
+    private $_db = null;
 
     /**
      * Wrapper for SQLHelper
@@ -28,50 +24,19 @@ abstract class BaseDBAccess
 
     /**
      * Base Class Constructor. Don't must be override.
-     *
+     * @param DBDataset $db
      */
-    public function __construct()
+    public function __construct(DBDataset $db)
     {
-        // Nothing Here
-    }
-
-    /**
-     * This method must be overrided and the return must be a valid DBDataset name.
-     *
-     * @return string
-     */
-    public abstract function getDataBaseName();
-
-    /**
-     * @return CacheEngineInterface
-     * @throws NotImplementedException
-     */
-    public function getCacheEngine()
-    {
-        throw new NotImplementedException('You have to implement the cache engine in order to use the Cache');
+        $this->_db = $db;
     }
 
     /**
      * Create a instance of DBDataset to connect database
-     * @param bool $cache
      * @return DBDataset
-     * @throws NotImplementedException
      */
-    protected function getDBDataset($cache = false)
+    protected function getDBDataset()
     {
-        if (is_null($this->_db)) {
-            $this->_db = new DBDataset($this->getDataBaseName());
-        }
-
-        if ($cache === true) {
-
-            if (is_null($this->_cachedDb)) {
-                $this->_cachedDb = new CachedDBDataset($this->_db, $this->getCacheEngine());
-            }
-
-            return $this->_cachedDb;
-        }
-
         return $this->_db;
     }
 
@@ -86,7 +51,7 @@ abstract class BaseDBAccess
     {
         $dbfunction = $this->getDbFunctions();
 
-        $debug = AnyDatasetContext::getInstance()->getDebug();
+        $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
             $log = LogHandler::getInstance();
@@ -128,11 +93,9 @@ abstract class BaseDBAccess
      * @param int $ttl
      * @return IteratorInterface
      */
-    protected function getIterator($sql, $param = null, $ttl = -1)
+    protected function getIterator($sql, $param = null, $ttl = null)
     {
-        $db = $this->getDBDataset($ttl > 0);
-
-        $debug = AnyDatasetContext::getInstance()->getDebug();
+        $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
             $log = LogHandler::getInstance();
@@ -150,7 +113,7 @@ abstract class BaseDBAccess
             }
             $start = microtime(true);
         }
-        $it = $db->getIterator($sql, $param, $ttl);
+        $it = $this->getDBDataset()->getIterator($sql, $param, $ttl);
         if ($debug) {
             $end = microtime(true);
             $log->debug("Execution Time: " . ($end - $start) . " segundos ");
@@ -160,9 +123,7 @@ abstract class BaseDBAccess
 
     protected function getScalar($sql, $param = null)
     {
-        $this->getDBDataset();
-
-        $debug = AnyDatasetContext::getInstance()->getDebug();
+        $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
             $log = LogHandler::getInstance();
@@ -180,7 +141,7 @@ abstract class BaseDBAccess
             }
             $start = microtime(true);
         }
-        $scalar = $this->_db->getScalar($sql, $param);
+        $scalar = $this->getDBDataset()->getScalar($sql, $param);
         if ($debug) {
             $end = microtime(true);
             $log->debug("Execution Time: " . ($end - $start) . " segundos ");
@@ -195,10 +156,8 @@ abstract class BaseDBAccess
      */
     public function getSQLHelper()
     {
-        $this->getDBDataset();
-
         if (is_null($this->_sqlhelper)) {
-            $this->_sqlhelper = new SQLHelper($this->_db);
+            $this->_sqlhelper = new SQLHelper($this->getDBDataset());
         }
 
         return $this->_sqlhelper;
@@ -315,16 +274,11 @@ abstract class BaseDBAccess
         $this->getDBDataset()->rollbackTransaction();
     }
 
-    public function getObjectDbDataSet()
+    /**
+     * @return bool
+     */
+    public function getDebug()
     {
-        return $this->_db;
-    }
-
-    public function joinTransactionContext(BaseDBAccess $dal)
-    {
-        if (is_null($dal->getObjectDbDataSet())) {
-            throw new \Exception('Transaction not initialized');
-        }
-        $this->_db = $dal->getObjectDbDataSet();
+        return AnyDatasetContext::getInstance()->getDebug();
     }
 }

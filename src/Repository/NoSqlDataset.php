@@ -5,6 +5,7 @@ namespace ByJG\AnyDataset\Repository;
 use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\MongoDBDriver;
 use ByJG\AnyDataset\Database\NoSQLDriverInterface;
+use ByJG\AnyDataset\Exception\NotImplementedException;
 use InvalidArgumentException;
 
 class NoSqlDataset implements NoSQLDriverInterface
@@ -15,13 +16,13 @@ class NoSqlDataset implements NoSQLDriverInterface
      *
      * @var ConnectionManagement
      */
-    protected $_connectionManagement;
+    private $_connectionManagement;
 
     /**
      *
      * @var NoSQLDriverInterface
      */
-    protected $_dbDriver = null;
+    private $_dbDriver = null;
 
     /**
      *
@@ -40,14 +41,20 @@ class NoSqlDataset implements NoSQLDriverInterface
         }
     }
 
-    public function getDbType()
+    /**
+     * @return ConnectionManagement
+     */
+    public function getConnectionManagement()
     {
-        return $this->_connectionManagement->getDbType();
+        return $this->_connectionManagement;
     }
 
-    public function getDbConnectionString()
+    /**
+     * @return MongoDBDriver|NoSQLDriverInterface
+     */
+    public function getDbDriver()
     {
-        return $this->_connectionManagement->getDbConnectionString();
+        return $this->_dbDriver;
     }
 
     public function testConnection()
@@ -61,7 +68,7 @@ class NoSqlDataset implements NoSQLDriverInterface
      */
     public function getCollection()
     {
-        return $this->_dbDriver->getCollection();
+        return $this->getDbDriver()->getCollection();
     }
 
     /**
@@ -72,7 +79,7 @@ class NoSqlDataset implements NoSQLDriverInterface
      */
     public function getIterator($filter = null, $fields = null)
     {
-        return $this->_dbDriver->getIterator($filter, $fields);
+        return $this->getDbDriver()->getIterator($filter, $fields);
     }
 
     /**
@@ -81,7 +88,7 @@ class NoSqlDataset implements NoSQLDriverInterface
      */
     public function insert($document)
     {
-        $this->_dbDriver->insert($document);
+        $this->getDbDriver()->insert($document);
     }
 
     /**
@@ -91,7 +98,7 @@ class NoSqlDataset implements NoSQLDriverInterface
      */
     public function setCollection($collection)
     {
-        return $this->_dbDriver->setCollection($collection);
+        return $this->getDbDriver()->setCollection($collection);
     }
 
     /**
@@ -103,7 +110,7 @@ class NoSqlDataset implements NoSQLDriverInterface
      */
     public function update($document, $filter = null, $options = null)
     {
-        return $this->_dbDriver->update($document, $filter, $options);
+        return $this->getDbDriver()->update($document, $filter, $options);
     }
 
     /**
@@ -112,18 +119,25 @@ class NoSqlDataset implements NoSQLDriverInterface
      */
     public function getDBConnection()
     {
-        return $this->_dbDriver->getDbConnection();
+        return $this->getDbDriver()->getDbConnection();
     }
-    /*
-      public function setDriverAttribute($name, $value)
-      {
-      return $this->_dbDriver->setAttribute($name, $value);
-      }
 
-      public function getDriverAttribute($name)
-      {
-      return $this->_dbDriver->getAttribute($name);
-      }
-     *
+    /**
+     * @param $name
+     * @param $value
+     * @throws NotImplementedException
      */
+    public function setDriverAttribute($name, $value)
+    {
+        throw new NotImplementedException('Method not implemented');
+    }
+
+    /**
+     * @param $name
+     * @throws NotImplementedException
+     */
+    public function getDriverAttribute($name)
+    {
+        throw new NotImplementedException('Method not implemented');
+    }
 }

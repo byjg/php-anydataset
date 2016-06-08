@@ -8,6 +8,8 @@ use ByJG\AnyDataset\Database\DBFunctionsInterface;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
 use ByJG\AnyDataset\Database\DBSQLRelayDriver;
+use ByJG\AnyDataset\Exception\NotAvailableException;
+use ByJG\Cache\CacheEngineInterface;
 use PDO;
 
 class DBDataset
@@ -24,7 +26,13 @@ class DBDataset
      *
      * @var DBDriverInterface
      */
-    protected $_dbDriver = null;
+    private $_dbDriver = null;
+
+
+    /**
+     * @var CacheEngineInterface
+     */
+    protected $_cacheEngine;
 
     /**
      * @param string $dbname Name of file without '_db' and extention '.xml'.
@@ -42,14 +50,12 @@ class DBDataset
         }
     }
 
-    public function getDbType()
+    /**
+     * @return ConnectionManagement
+     */
+    public function getConnectionManagement() 
     {
-        return $this->_connectionManagement->getDbType();
-    }
-
-    public function getDbConnectionString()
-    {
-        return $this->_connectionManagement->getDbConnectionString();
+        return $this->_connectionManagement;
     }
 
     public function testConnection()
@@ -57,20 +63,94 @@ class DBDataset
         return true;
     }
 
+
+    public function setCacheEngine(CacheEngineInterface $cache)
+    {
+        $this->_cacheEngine = $cache;
+    }
+
+    /**
+     * @return CacheEngineInterface
+     * @throws NotAvailableException
+     */
+    public function getCacheEngine()
+    {
+        if (is_null($this->_cacheEngine)) {
+            throw new NotAvailableException('Cache Engine not available');
+        }
+        return $this->_cacheEngine;
+    }
+
+    /**
+     * Get the DBDriver
+     * @return DBDriverInterface
+     */
+    public function getDbDriver()
+    {
+        return $this->_dbDriver;
+    }
+
     /**
      * @access public
      * @param string $sql
-     * @param array $array
+     * @param array $params
+     * @param int $ttl
      * @return IteratorInterface
+     * @throws NotAvailableException
      */
-    public function getIterator($sql, $array = null)
+    public function getIterator($sql, $params = null, $ttl = null)
     {
-        return $this->_dbDriver->getIterator($sql, $array);
+        // If there is no TTL query, return the LIVE iterator
+        if (empty($ttl)) {
+            return $this->getDbDriver()->getIterator($sql, $params);
+        }
+
+        // Otherwise try to get from cache
+        $key = $this->getQueryKey($sql, $params);
+
+        // Get the CACHE
+        $cache = $this->getCacheEngine()->get($key, $ttl);
+        if ($cache === false) {
+            $cache = array();
+            $it = $this->getDbDriver()->getIterator($sql, $params);
+            foreach ($it as $value) {
+                $cache[] = $value->toArray();
+            }
+
+            $this->getCacheEngine()->set($key, $cache, $ttl);
+        }
+
+        $arrayDS = new ArrayDataset($cache);
+        return $arrayDS->getIterator();
+    }
+
+    protected function getQueryKey($sql, $array)
+    {
+        $key1 = md5($sql);
+
+        // Check which parameter exists in the SQL
+        $arKey2 = array();
+        if (is_array($array)) {
+            foreach ($array as $key => $value) {
+                if (preg_match("/\[\[$key\]\]/", $sql)) {
+                    $arKey2[$key] = $value;
+                }
+            }
+        }
+
+        // Define the query key
+        if (is_array($arKey2) && count($arKey2) > 0) {
+            $key2 = ":" . md5(json_encode($arKey2));
+        } else {
+            $key2 = "";
+        }
+
+        return  "qry:" . $key1 . $key2;
     }
 
     public function getScalar($sql, $array = null)
     {
-        return $this->_dbDriver->getScalar($sql, $array);
+        return $this->getDbDriver()->getScalar($sql, $array);
     }
 
     /**
@@ -80,7 +160,7 @@ class DBDataset
      */
     public function getAllFields($tablename)
     {
-        return $this->_dbDriver->getAllFields($tablename);
+        return $this->getDbDriver()->getAllFields($tablename);
     }
 
     /**
@@ -91,22 +171,22 @@ class DBDataset
      */
     public function execSQL($sql, $array = null)
     {
-        $this->_dbDriver->executeSql($sql, $array);
+        $this->getDbDriver()->executeSql($sql, $array);
     }
 
     public function beginTransaction()
     {
-        $this->_dbDriver->beginTransaction();
+        $this->getDbDriver()->beginTransaction();
     }
 
     public function commitTransaction()
     {
-        $this->_dbDriver->commitTransaction();
+        $this->getDbDriver()->commitTransaction();
     }
 
     public function rollbackTransaction()
     {
-        $this->_dbDriver->rollbackTransaction();
+        $this->getDbDriver()->rollbackTransaction();
     }
 
     /**
@@ -132,7 +212,7 @@ class DBDataset
      */
     public function getDBConnection()
     {
-        return $this->_dbDriver->getDbConnection();
+        return $this->getDbDriver()->getDbConnection();
     }
 
     /**
@@ -157,11 +237,11 @@ class DBDataset
 
     public function setDriverAttribute($name, $value)
     {
-        return $this->_dbDriver->setAttribute($name, $value);
+        return $this->getDbDriver()->setAttribute($name, $value);
     }
 
     public function getDriverAttribute($name)
     {
-        return $this->_dbDriver->getAttribute($name);
+        return $this->getDbDriver()->getAttribute($name);
     }
 }

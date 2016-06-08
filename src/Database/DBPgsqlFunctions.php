@@ -70,7 +70,7 @@ class DBPGSqlFunctions extends DBBaseFunctions
      */
     function sqlDate($fmt, $col = false)
     {
-        if (!$col) $col = time();
+        if (!$col) $col = 'current_timestamp';
         $s = 'TO_CHAR(' . $col . ",'";
 
         $len = strlen($fmt);

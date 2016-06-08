@@ -15,7 +15,7 @@ class SQLHelper
     /**
      * @var DBDataset
      */
-    protected $_db;
+    private $_db;
     protected $_fieldDeliLeft = " ";
     protected $_fieldDeliRight = " ";
 
@@ -39,7 +39,6 @@ class SQLHelper
      * @param string $decimalpoint
      * @return string
      * @throws Exception
-     * @internal param DBDataset $db
      */
     public function generateSQL($table, $fields, &$param, $type = SQLType::SQL_INSERT, $filter = "", $decimalpoint = ".")
     {
@@ -99,10 +98,9 @@ class SQLHelper
         }
 
         if ($valores[0] == SQLFieldType::BOOLEAN) {
+            $param[$name] = 'N';
             if ($valores[1] == "1") {
                 $param[$name] = 'S';
-            } else {
-                $param[$name] = 'N';
             }
             return $paramName;
         } elseif (strlen($valores[1]) == 0) { // Zero is Empty!?!?!?!?
@@ -113,20 +111,19 @@ class SQLHelper
         } elseif ($valores[0] == SQLFieldType::DATE) {
             $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DBBaseFunctions::YMDH) : $valores[1]);
             $param[$name] = $date;
-            if (($this->_db->getDbType() == 'oci8') || ( ($this->_db->getDbType() == 'dsn') && (strpos($this->_db->getDbConnectionString(),
-                    "oci8")))) {
+            if ($this->getDbDataset()->getConnectionManagement()->getDriver() == 'oci8') {
                 return "TO_DATE($paramName, 'YYYY-MM-DD')";
-            } else {
-                return $paramName;
             }
+            return $paramName;
+
         } elseif ($valores[0] == SQLFieldType::NUMBER) {
             $search = ($decimalpoint == ".") ? "," : ".";
             $valores[1] = trim(str_replace($search, $decimalpoint, $valores[1]));
             $param[$name] = $valores[1];
             return $paramName;
-        } else {
-            return $valores[1];
         }
+
+        return $valores[1];
     }
 
     /**
@@ -159,5 +156,13 @@ class SQLHelper
             $sql = str_replace($key, $value, $sql);
         }
         return $sql;
+    }
+
+    /**
+     * @return DBDataset
+     */
+    public function getDbDataset()
+    {
+        return $this->_db;
     }
 }
