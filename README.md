@@ -43,8 +43,9 @@ print_r($iterator->toArray());
 You can easily cache your results with the CachedDBDataset class;
 
 ```php
-$repository = new CachedDBDataset('connection', new \ByJG\Cache\MemcachedEngine());
-$iterator = $repository->getIterator('select field1, field2 from sometable', 120); // cache for 2 minutes
+$repository = new DBDataset('connection');
+$repository->setCacheEngine(new \ByJG\Cache\MemcachedEngine());
+$iterator = $repository->getIterator('select field1, field2 from sometable', [], 120); // cache for 2 minutes
 ```
 
 ### Relational database connections string based on URL
@@ -80,20 +81,6 @@ You only need change your connection string to:
 sqlrelay://root:somepass@server/schema
 ```
 
-### Object binding
-
-```php
-class MyModel extends \ByJG\AnyDataset\Model\BaseModel
-{
-    protected $prop1;
-    public getProp1(){ ... };
-    public setProp1($value) { ... };
-}
-
-// And then you can bind values from another object or array
-$myModel = new MyModel($_REQUEST); // suppose that $_REQUEST['prop1'] exists
-```
-
 ### Create DAL class easily
    
 ```php
@@ -119,13 +106,12 @@ And more...
 
 ## Install
 
-Just type: `composer require "byjg/anydataset=2.0.*"`
+Just type: `composer require "byjg/anydataset=2.1.*"`
 
 ## Running Tests
 
 ```php
-cd tests
-phpunit --bootstrap bootstrap.php .
+phpunit
 ```
 
 
