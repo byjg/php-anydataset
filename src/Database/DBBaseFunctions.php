@@ -18,7 +18,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
     /**
      * Given two or more string the system will return the string containing de proper SQL commands to concatenate these string;
      * use:
-     * 		for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
+     *     for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
      * to get all parameters received.
      * @param string $s1
      * @param string $s2

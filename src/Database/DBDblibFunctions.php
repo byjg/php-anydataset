@@ -10,13 +10,7 @@ class DBDblibFunctions extends DBBaseFunctions
 
     function concat($s1, $s2 = null)
     {
-        $sql = "";
-        for ($i = 0, $numArgs = func_num_args(); $i < $numArgs; $i++) {
-            $var = func_get_arg($i);
-            $sql .= ($i == 0 ? "" : "+") . $var;
-        }
-
-        return $sql;
+        return implode(func_get_args(), ' + ');
     }
 
     /**
@@ -40,7 +34,7 @@ class DBDblibFunctions extends DBBaseFunctions
      */
     function top($sql, $qty)
     {
-        return preg_replace("/^\s*(select) /i", "\\1 top $qty ", $sql);
+        return preg_replace("/^\\s*(select) /i", "\\1 top $qty ", $sql);
     }
 
     /**
@@ -120,7 +114,7 @@ class DBDblibFunctions extends DBBaseFunctions
                         $i++;
                         $ch = substr($fmt, $i, 1);
                     }
-                    $s .= $this->qstr($ch);
+                    $s .= $ch;
                     break;
             }
         }

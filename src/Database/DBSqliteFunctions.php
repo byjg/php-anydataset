@@ -10,11 +10,7 @@ class DBSqliteFunctions extends DBBaseFunctions
 
     function concat($s1, $s2 = null)
     {
-        $sql = $s1;
-        for ($i = 1; $i < func_num_args(); $i++) {
-            $sql .= ' || ' . func_get_arg($i) . ' ';
-        }
-        return $sql;
+        return implode(func_get_args(), ' || ');
     }
 
     /**
@@ -28,6 +24,7 @@ class DBSqliteFunctions extends DBBaseFunctions
     {
         if (strpos($sql, ' LIMIT ') === false) {
             return $sql . " LIMIT $start, $qty ";
+        }
 
         return $sql;
     }
@@ -66,12 +63,12 @@ class DBSqliteFunctions extends DBBaseFunctions
      * @param string $fmt
      * @param string|bool $col
      * @return string
+     * @throws NotImplementedException
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
     function sqlDate($fmt, $col = false)
     {
         throw new NotImplementedException('Not implemented');
-    }
     }
 
     /**

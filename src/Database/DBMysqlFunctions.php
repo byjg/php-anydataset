@@ -9,14 +9,7 @@ class DBMySQLFunctions extends DBBaseFunctions
 
     function concat($s1, $s2 = null)
     {
-        $sql = "concat(";
-        for ($i = 0, $numArgs = func_num_args(); $i < $numArgs; $i++) {
-            $var = func_get_arg($i);
-            $sql .= ($i == 0 ? "" : ",") . $var;
-        }
-        $sql .= ")";
-
-        return $sql;
+        return "concat(" . implode(func_get_args(), ', ') . ")";
     }
 
     /**
@@ -30,9 +23,9 @@ class DBMySQLFunctions extends DBBaseFunctions
     {
         if (strpos($sql, ' LIMIT ') === false) {
             return $sql . " LIMIT $start, $qty ";
-        } else {
-            return $sql;
         }
+
+        return $sql;
     }
 
     /**
