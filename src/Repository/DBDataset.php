@@ -35,12 +35,18 @@ class DBDataset
     protected $_cacheEngine;
 
     /**
-     * @param string $dbname Name of file without '_db' and extention '.xml'.
+     * @param ConnectionManagement|string $dbname Name of file without '_db' and extention '.xml'.
      */
     public function __construct($dbname)
     {
-        $this->_connectionManagement = new ConnectionManagement($dbname);
+        // Create the object ConnectionManagement
+        if (is_string($dbname)) {
+            $this->_connectionManagement = new ConnectionManagement($dbname);
+        } elseif ($dbname instanceof ConnectionManagement) {
+            $this->_connectionManagement = $dbname;
+        }
 
+        // Create the proper driver
         if ($this->_connectionManagement->getDriver() == "sqlrelay") {
             $this->_dbDriver = new DBSQLRelayDriver($this->_connectionManagement);
         } elseif ($this->_connectionManagement->getDriver() == "oci8") {
