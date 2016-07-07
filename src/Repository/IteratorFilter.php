@@ -59,14 +59,19 @@ class IteratorFilter
             $sql .= " where @@sqlFilter ";
         }
 
-        $sql = SQLHelper::createSafeSQL($sql,
-                array(
-                "@@returnFields" => $returnFields,
-                "@@tableName" => $tableName,
-                "@@sqlFilter" => $sqlFilter
-        ));
-
-        return $sql;
+        return str_replace(
+                [
+                    "@@returnFields",
+                    "@@tableName",
+                    "@@sqlFilter"
+                ],
+                [
+                    $returnFields,
+                    $tableName,
+                    $sqlFilter
+                ],
+                $sql
+        );
     }
 
     /**
