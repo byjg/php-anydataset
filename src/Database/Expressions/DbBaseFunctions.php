@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset\Database\Expressions;
 
 use ByJG\AnyDataset\Repository\DBDataset;
 use DateTime;

@@ -7,7 +7,7 @@
 
 namespace Database;
 
-use ByJG\AnyDataset\Database\DbPgsqlFunctions;
+use ByJG\AnyDataset\Database\Expressions\DbPgsqlFunctions;
 
 class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
 {

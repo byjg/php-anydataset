@@ -7,7 +7,7 @@
 
 namespace Database;
 
-use ByJG\AnyDataset\Database\DbDblibFunctions;
+use ByJG\AnyDataset\Database\Expressions\DbDblibFunctions;
 
 class DbDblibFunctionsTest extends \PHPUnit_Framework_TestCase
 {

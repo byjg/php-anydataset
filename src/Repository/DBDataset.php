@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\DBDriverInterface;
-use ByJG\AnyDataset\Database\DbFunctionsInterface;
+use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
 use ByJG\AnyDataset\Database\DBSQLRelayDriver;
@@ -20,19 +20,19 @@ class DBDataset
      *
      * @var ConnectionManagement
      */
-    protected $_connectionManagement;
+    protected $connectionManagement;
 
     /**
      *
      * @var DBDriverInterface
      */
-    private $_dbDriver = null;
+    private $dbDriver = null;
 
 
     /**
      * @var CacheEngineInterface
      */
-    protected $_cacheEngine;
+    protected $cacheEngine;
 
     /**
      * @param ConnectionManagement|string $dbname Name of file without '_db' and extention '.xml'.
@@ -41,27 +41,27 @@ class DBDataset
     {
         // Create the object ConnectionManagement
         if (is_string($dbname)) {
-            $this->_connectionManagement = new ConnectionManagement($dbname);
+            $this->connectionManagement = new ConnectionManagement($dbname);
         } elseif ($dbname instanceof ConnectionManagement) {
-            $this->_connectionManagement = $dbname;
+            $this->connectionManagement = $dbname;
         }
 
         // Create the proper driver
-        if ($this->_connectionManagement->getDriver() == "sqlrelay") {
-            $this->_dbDriver = new DBSQLRelayDriver($this->_connectionManagement);
-        } elseif ($this->_connectionManagement->getDriver() == "oci8") {
-            $this->_dbDriver = new DBOci8Driver($this->_connectionManagement);
+        if ($this->connectionManagement->getDriver() == "sqlrelay") {
+            $this->dbDriver = new DBSQLRelayDriver($this->connectionManagement);
+        } elseif ($this->connectionManagement->getDriver() == "oci8") {
+            $this->dbDriver = new DBOci8Driver($this->connectionManagement);
         } else {
-            $this->_dbDriver = DBPDODriver::factory($this->_connectionManagement);
+            $this->dbDriver = DBPDODriver::factory($this->connectionManagement);
         }
     }
 
     /**
      * @return ConnectionManagement
      */
-    public function getConnectionManagement() 
+    public function getConnectionManagement()
     {
-        return $this->_connectionManagement;
+        return $this->connectionManagement;
     }
 
     public function testConnection()
@@ -72,7 +72,7 @@ class DBDataset
 
     public function setCacheEngine(CacheEngineInterface $cache)
     {
-        $this->_cacheEngine = $cache;
+        $this->cacheEngine = $cache;
     }
 
     /**
@@ -81,10 +81,10 @@ class DBDataset
      */
     public function getCacheEngine()
     {
-        if (is_null($this->_cacheEngine)) {
+        if (is_null($this->cacheEngine)) {
             throw new NotAvailableException('Cache Engine not available');
         }
-        return $this->_cacheEngine;
+        return $this->cacheEngine;
     }
 
     /**
@@ -93,7 +93,7 @@ class DBDataset
      */
     public function getDbDriver()
     {
-        return $this->_dbDriver;
+        return $this->dbDriver;
     }
 
     /**
@@ -118,8 +118,8 @@ class DBDataset
         $cache = $this->getCacheEngine()->get($key, $ttl);
         if ($cache === false) {
             $cache = array();
-            $it = $this->getDbDriver()->getIterator($sql, $params);
-            foreach ($it as $value) {
+            $iterator = $this->getDbDriver()->getIterator($sql, $params);
+            foreach ($iterator as $value) {
                 $cache[] = $value->toArray();
             }
 
@@ -197,16 +197,16 @@ class DBDataset
 
     /**
      * @access public
-     * @param IteratorInterface $it
+     * @param IteratorInterface $iterator
      * @param string $fieldPK
      * @param string $fieldName
      * @return Resource
      */
-    public function getArrayField(IteratorInterface $it, $fieldPK, $fieldName)
+    public function getArrayField(IteratorInterface $iterator, $fieldPK, $fieldName)
     {
         $result = array();
-        while ($it->hasNext()) {
-            $registro = $it->moveNext();
+        while ($iterator->hasNext()) {
+            $registro = $iterator->moveNext();
             $result [$registro->getField($fieldPK)] = $registro->getField($fieldName);
         }
         return $result;
@@ -230,12 +230,12 @@ class DBDataset
     /**
      * Get a IDbFunctions class to execute Database specific operations.
      *
-*@return DbFunctionsInterface
+     * @return DbFunctionsInterface
      */
     public function getDbFunctions()
     {
         if (is_null($this->_dbFunction)) {
-            $dbFunc = "\\ByJG\\AnyDataset\\Database\\Db" . ucfirst($this->_connectionManagement->getDriver()) . "Functions";
+            $dbFunc = "\\ByJG\\AnyDataset\\Database\\Expressions\\Db" . ucfirst($this->connectionManagement->getDriver()) . "Functions";
             $this->_dbFunction = new $dbFunc();
         }
 

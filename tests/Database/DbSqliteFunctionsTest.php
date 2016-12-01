@@ -7,7 +7,7 @@
 
 namespace Database;
 
-use ByJG\AnyDataset\Database\DbSqliteFunctions;
+use ByJG\AnyDataset\Database\Expressions\DbSqliteFunctions;
 
 class DbSqliteFunctionsTest extends \PHPUnit_Framework_TestCase
 {

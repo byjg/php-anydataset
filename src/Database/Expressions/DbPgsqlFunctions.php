@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset\Database\Expressions;
 
 class DbPgsqlFunctions extends DbBaseFunctions
 {

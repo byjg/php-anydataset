@@ -1,16 +1,15 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset\Database\Expressions;
 
-use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Repository\DBDataset;
 
-class DbDblibFunctions extends DbBaseFunctions
+class DbMysqlFunctions extends DbBaseFunctions
 {
 
-    public function concat($s1, $s2 = null)
+    public function concat($str1, $str2 = null)
     {
-        return implode(func_get_args(), ' + ');
+        return "concat(" . implode(func_get_args(), ', ') . ")";
     }
 
     /**
@@ -19,11 +18,22 @@ class DbDblibFunctions extends DbBaseFunctions
      * @param int $start
      * @param int $qty
      * @return string
-     * @throws NotAvailableException
      */
     public function limit($sql, $start, $qty = null)
     {
-        throw new NotAvailableException("DBLib does not support LIMIT feature.");
+        if (is_null($qty)) {
+            $qty = 50;
+        }
+
+        if (stripos($sql, ' LIMIT ') === false) {
+            $sql = $sql . " LIMIT x, y";
+        }
+
+        return preg_replace(
+            '~(\s[Ll][Ii][Mm][Ii][Tt])\s.*?,\s*.*~',
+            '$1 ' . $start .', ' .$qty,
+            $sql
+        );
     }
 
     /**
@@ -34,15 +44,7 @@ class DbDblibFunctions extends DbBaseFunctions
      */
     public function top($sql, $qty)
     {
-        if (stripos($sql, ' TOP ') === false) {
-            return  preg_replace("/^\\s*(select) /i", "\\1 top $qty ", $sql);
-        }
-
-        return preg_replace(
-            '~(\s[Tt][Oo][Pp])\s.*?\d+\s~',
-            '$1 ' . $qty . ' ',
-            $sql
-        );
+        return $this->limit($sql, 0, $qty);
     }
 
     /**
@@ -60,45 +62,44 @@ class DbDblibFunctions extends DbBaseFunctions
      */
     public function hasLimit()
     {
-        return false;
+        return true;
     }
 
     /**
      * Format date column in sql string given an input format that understands Y M D
-
-*
-*@param string $format
-     * @param bool|string $column
+     *
+     * @param string $format
+     * @param string|null $column
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
     public function sqlDate($format, $column = null)
     {
         if (is_null($column)) {
-            $column = "getdate()";
+            $column = 'now()';
         }
 
         $pattern = [
-            'Y' => "YYYY",
-            'y' => "YY",
-            'M' => "MM",
-            'm' => "M",
+            'Y' => "%Y",
+            'y' => "%y",
+            'M' => "%b",
+            'm' => "%m",
             'Q' => "",
             'q' => "",
-            'D' => "dd",
-            'd' => "dd",
-            'h' => "H",
-            'H' => "HH",
-            'i' => "mm",
-            's' => "ss",
-            'a' => "",
-            'A' => "",
+            'D' => "%d",
+            'd' => "%d",
+            'h' => "%I",
+            'H' => "%H",
+            'i' => "%i",
+            's' => "%s",
+            'a' => "%p",
+            'A' => "%p",
         ];
 
         $preparedSql = $this->prepareSqlDate($format, $pattern, '');
 
         return sprintf(
-            "FORMAT(%s, '%s')",
+            "DATE_FORMAT(%s,'%s')",
             $column,
             implode('', $preparedSql)
         );
@@ -137,13 +138,13 @@ class DbDblibFunctions extends DbBaseFunctions
      */
     public function executeAndGetInsertedId($dbdataset, $sql, $param)
     {
-        $insertedId = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
-        $iterator = $dbdataset->getIterator("select @@identity id");
-        if ($iterator->hasNext()) {
-            $singleRow = $iterator->moveNext();
-            $insertedId = $singleRow->getField("id");
+        $id = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
+        $it = $dbdataset->getIterator("select LAST_INSERT_ID() id");
+        if ($it->hasNext()) {
+            $sr = $it->moveNext();
+            $id = $sr->getField("id");
         }
 
-        return $insertedId;
+        return $id;
     }
 }
