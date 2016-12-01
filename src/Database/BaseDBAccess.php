@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\AnyDatasetContext;
+use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
 use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
@@ -50,6 +51,7 @@ class BaseDBAccess
      */
     protected function executeSQL($sql, $param = null, $getId = false)
     {
+        $log = null;
         $dbfunction = $this->getDbFunctions();
 
         $debug = $this->getDebug();
@@ -59,14 +61,14 @@ class BaseDBAccess
             $log->debug("Class name: " . get_class($this));
             $log->debug("SQL: " . $sql);
             if (!is_null($param)) {
-                $s = "";
+                $strForLog = "";
                 foreach ($param as $key => $value) {
-                    if ($s != "") {
-                        $s .= ", ";
+                    if ($strForLog != "") {
+                        $strForLog .= ", ";
                     }
-                    $s .= "[$key]=$value";
+                    $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $s");
+                $log->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }
@@ -96,6 +98,7 @@ class BaseDBAccess
      */
     protected function getIterator($sql, $param = null, $ttl = null)
     {
+        $log = null;
         $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
@@ -103,27 +106,28 @@ class BaseDBAccess
             $log->debug("Class name: " . get_class($this));
             $log->debug("SQL: " . $sql);
             if (!is_null($param)) {
-                $s = "";
+                $strForLog = "";
                 foreach ($param as $key => $value) {
-                    if ($s != "") {
-                        $s .= ", ";
+                    if ($strForLog != "") {
+                        $strForLog .= ", ";
                     }
-                    $s .= "[$key]=$value";
+                    $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $s");
+                $log->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }
-        $it = $this->getDBDataset()->getIterator($sql, $param, $ttl);
+        $iterator = $this->getDBDataset()->getIterator($sql, $param, $ttl);
         if ($debug) {
             $end = microtime(true);
             $log->debug("Execution Time: " . ($end - $start) . " segundos ");
         }
-        return $it;
+        return $iterator;
     }
 
     protected function getScalar($sql, $param = null)
     {
+        $log = null;
         $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
@@ -131,14 +135,14 @@ class BaseDBAccess
             $log->debug("Class name: " . get_class($this));
             $log->debug("SQL: " . $sql);
             if (!is_null($param)) {
-                $s = "";
+                $strForLog = "";
                 foreach ($param as $key => $value) {
-                    if ($s != "") {
-                        $s .= ", ";
+                    if ($strForLog != "") {
+                        $strForLog .= ", ";
                     }
-                    $s .= "[$key]=$value";
+                    $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $s");
+                $log->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }

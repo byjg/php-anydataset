@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset\Database\Expressions;
 
+use ByJG\AnyDataset\Database\SqlHelper;
+
 class DbPgsqlFunctions extends DbBaseFunctions
 {
 
@@ -129,7 +131,7 @@ class DbPgsqlFunctions extends DbBaseFunctions
     {
         $idInserted = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
         $iterator = $dbdataset->getIterator(
-            SQLHelper::createSafeSQL(
+            SqlHelper::createSafeSQL(
                 "select currval(':sequence') id",
                 array(':sequence' => $sequence)
             )

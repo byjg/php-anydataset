@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\Database\Expressions\DbBaseFunctions;
 use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
 use ByJG\AnyDataset\Repository\DBDataset;
