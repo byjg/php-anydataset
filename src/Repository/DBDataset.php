@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\DBDriverInterface;
-use ByJG\AnyDataset\Database\DBFunctionsInterface;
+use ByJG\AnyDataset\Database\DbFunctionsInterface;
 use ByJG\AnyDataset\Database\DBOci8Driver;
 use ByJG\AnyDataset\Database\DBPDODriver;
 use ByJG\AnyDataset\Database\DBSQLRelayDriver;
@@ -222,19 +222,20 @@ class DBDataset
     }
 
     /**
-     *
-     * @var DBFunctionsInterface
+
+     * @var DbFunctionsInterface
      */
     protected $_dbFunction = null;
 
     /**
      * Get a IDbFunctions class to execute Database specific operations.
-     * @return DBFunctionsInterface
+     *
+*@return DbFunctionsInterface
      */
     public function getDbFunctions()
     {
         if (is_null($this->_dbFunction)) {
-            $dbFunc = "\\ByJG\\AnyDataset\\Database\\DB" . ucfirst($this->_connectionManagement->getDriver()) . "Functions";
+            $dbFunc = "\\ByJG\\AnyDataset\\Database\\Db" . ucfirst($this->_connectionManagement->getDriver()) . "Functions";
             $this->_dbFunction = new $dbFunc();
         }
 

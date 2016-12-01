@@ -5,10 +5,15 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Repository\DBDataset;
 
-class DBSqliteFunctions extends DBBaseFunctions
+class DbSqliteFunctions extends DbBaseFunctions
 {
 
-    function concat($s1, $s2 = null)
+    /**
+     * @param string $s1
+     * @param null $s2
+     * @return string
+     */
+    public function concat($s1, $s2 = null)
     {
         return implode(func_get_args(), ' || ');
     }
@@ -20,13 +25,21 @@ class DBSqliteFunctions extends DBBaseFunctions
      * @param int $qty
      * @return string
      */
-    function limit($sql, $start, $qty)
+    public function limit($sql, $start, $qty = null)
     {
-        if (strpos($sql, ' LIMIT ') === false) {
-            return $sql . " LIMIT $start, $qty ";
+        if (is_null($qty)) {
+            $qty = 50;
         }
 
-        return $sql;
+        if (stripos($sql, ' LIMIT ') === false) {
+            $sql = $sql . " LIMIT x, y";
+        }
+
+        return preg_replace(
+            '~(\s[Ll][Ii][Mm][Ii][Tt])\s.*?,\s*.*~',
+            '$1 ' . $start .', ' .$qty,
+            $sql
+        );
     }
 
     /**
@@ -35,7 +48,7 @@ class DBSqliteFunctions extends DBBaseFunctions
      * @param int $qty
      * @return string
      */
-    function top($sql, $qty)
+    public function top($sql, $qty)
     {
         return $this->limit($sql, 0, $qty);
     }
@@ -44,7 +57,7 @@ class DBSqliteFunctions extends DBBaseFunctions
      * Return if the database provider have a top or similar function
      * @return bool
      */
-    function hasTop()
+    public function hasTop()
     {
         return true;
     }
@@ -53,22 +66,50 @@ class DBSqliteFunctions extends DBBaseFunctions
      * Return if the database provider have a limit function
      * @return bool
      */
-    function hasLimit()
+    public function hasLimit()
     {
         return true;
     }
 
     /**
      * Format date column in sql string given an input format that understands Y M D
-     * @param string $fmt
-     * @param string|bool $col
+     *
+     * @param string $format
+     * @param string|null$column
      * @return string
      * @throws NotImplementedException
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
-    function sqlDate($fmt, $col = false)
+    public function sqlDate($format, $column = null)
     {
-        throw new NotImplementedException('Not implemented');
+        if (is_null($column)) {
+            $column = "'now'";
+        }
+
+        $pattern = [
+            'Y' => "%Y",
+            'y' => "%Y",
+            'M' => "%m",
+            'm' => "%m",
+            'Q' => "",
+            'q' => "",
+            'D' => "%d",
+            'd' => "%d",
+            'h' => "%H",
+            'H' => "%H",
+            'i' => "%M",
+            's' => "%S",
+            'a' => "",
+            'A' => "",
+        ];
+
+        $preparedSql = $this->prepareSqlDate($format, $pattern, '');
+
+        return sprintf(
+            "strftime('%s', %s)",
+            implode('', $preparedSql),
+            $column
+        );
     }
 
     /**
@@ -78,7 +119,7 @@ class DBSqliteFunctions extends DBBaseFunctions
      * @param string $dateFormat
      * @return string
      */
-    function toDate($date, $dateFormat)
+    public function toDate($date, $dateFormat)
     {
         return parent::toDate($date, $dateFormat);
     }
@@ -90,7 +131,7 @@ class DBSqliteFunctions extends DBBaseFunctions
      * @param string $dateFormat
      * @return string
      */
-    function fromDate($date, $dateFormat)
+    public function fromDate($date, $dateFormat)
     {
         return parent::fromDate($date, $dateFormat);
     }
@@ -102,7 +143,7 @@ class DBSqliteFunctions extends DBBaseFunctions
      * @param array $param
      * @return int
      */
-    function executeAndGetInsertedId($dbdataset, $sql, $param)
+    public function executeAndGetInsertedId($dbdataset, $sql, $param)
     {
         $id = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
         $it = $dbdataset->getIterator("SELECT last_insert_rowid() id");

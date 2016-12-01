@@ -252,7 +252,7 @@ class BaseDBAccess
 
     /**
      * Get a IDbFunctions class containing specific database operations
-     * @return DBFunctionsInterface
+     * @return DbFunctionsInterface
      */
     public function getDbFunctions()
     {

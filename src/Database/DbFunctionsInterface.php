@@ -4,19 +4,20 @@ namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\Repository\DBDataset;
 
-interface DBFunctionsInterface
+interface DbFunctionsInterface
 {
 
     /**
      * Given two or more string the system will return the string containing de proper SQL commands to concatenate these string;
      * use:
-     * 		for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
+     *      for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
      * to get all parameters received.
-     * @param string $s1
-     * @param string $s2
+     *
+     * @param string $str1
+     * @param string|null $str2
      * @return string
      */
-    function concat($s1, $s2 = null);
+    public function concat($str1, $str2 = null);
 
     /**
      * Given a SQL returns it with the proper LIMIT or equivalent method included
@@ -25,7 +26,7 @@ interface DBFunctionsInterface
      * @param int $qty
      * @return string
      */
-    function limit($sql, $start, $qty);
+    public function limit($sql, $start, $qty);
 
     /**
      * Given a SQL returns it with the proper TOP or equivalent method included
@@ -33,28 +34,29 @@ interface DBFunctionsInterface
      * @param int $qty
      * @return string
      */
-    function top($sql, $qty);
+    public function top($sql, $qty);
 
     /**
      * Return if the database provider have a top or similar function
      * @return bool
      */
-    function hasTop();
+    public function hasTop();
 
     /**
      * Return if the database provider have a limit function
      * @return bool
      */
-    function hasLimit();
+    public function hasLimit();
 
     /**
      * Format date column in sql string given an input format that understands Y M D
-     * @param string $fmt
-     * @param bool|string $col
+     *
+     * @param string $format
+     * @param null|string $column
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
-    function sqlDate($fmt, $col = false);
+    public function sqlDate($format, $column = null);
 
     /**
      * Format a string date to a string database readable format.
@@ -63,7 +65,7 @@ interface DBFunctionsInterface
      * @param string $dateFormat
      * @return string
      */
-    function toDate($date, $dateFormat);
+    public function toDate($date, $dateFormat);
 
     /**
      * Format a string database readable format to a string date in a free format.
@@ -72,7 +74,7 @@ interface DBFunctionsInterface
      * @param string $dateFormat
      * @return string
      */
-    function fromDate($date, $dateFormat);
+    public function fromDate($date, $dateFormat);
 
     /**
      *
@@ -81,5 +83,5 @@ interface DBFunctionsInterface
      * @param array $param
      * @return int
      */
-    function executeAndGetInsertedId($dbdataset, $sql, $param);
+    public function executeAndGetInsertedId($dbdataset, $sql, $param);
 }

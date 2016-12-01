@@ -109,7 +109,7 @@ class SQLHelper
             $param[$name] = trim($valores[1]);
             return $paramName;
         } elseif ($valores[0] == SQLFieldType::DATE) {
-            $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DBBaseFunctions::YMDH) : $valores[1]);
+            $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DbBaseFunctions::YMDH) : $valores[1]);
             $param[$name] = $date;
             if ($this->getDbDataset()->getConnectionManagement()->getDriver() == 'oci8') {
                 return "TO_DATE($paramName, 'YYYY-MM-DD')";
@@ -151,11 +151,7 @@ class SQLHelper
 
     public static function createSafeSQL($sql, $list)
     {
-        foreach ($list as $key => $value) {
-            $value = str_replace(["'", ';'], ["", ''], $value);
-            $sql = str_replace($key, $value, $sql);
-        }
-        return $sql;
+        return str_replace(array_keys($list), array_values($list), $sql);
     }
 
     /**
