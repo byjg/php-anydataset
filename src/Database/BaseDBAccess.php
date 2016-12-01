@@ -16,9 +16,10 @@ class BaseDBAccess
     private $_db = null;
 
     /**
-     * Wrapper for SQLHelper
+     * Wrapper for SqlHelper
+
      *
-     * @var SQLHelper
+*@var SqlHelper
      */
     protected $_sqlhelper = null;
 
@@ -150,14 +151,15 @@ class BaseDBAccess
     }
 
     /**
-     * Get a SQLHelper object
+     * Get a SqlHelper object
+
      *
-     * @return SQLHelper
+*@return SqlHelper
      */
     public function getSQLHelper()
     {
         if (is_null($this->_sqlhelper)) {
-            $this->_sqlhelper = new SQLHelper($this->getDBDataset());
+            $this->_sqlhelper = new SqlHelper($this->getDBDataset());
         }
 
         return $this->_sqlhelper;

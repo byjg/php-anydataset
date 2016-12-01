@@ -3,11 +3,11 @@
 namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\ConnectionManagement;
-use ByJG\AnyDataset\Database\DBDriverInterface;
+use ByJG\AnyDataset\Database\DbDriverInterface;
 use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
-use ByJG\AnyDataset\Database\DBOci8Driver;
-use ByJG\AnyDataset\Database\DBPDODriver;
-use ByJG\AnyDataset\Database\DBSQLRelayDriver;
+use ByJG\AnyDataset\Database\DbOci8Driver;
+use ByJG\AnyDataset\Database\DbPdoDriver;
+use ByJG\AnyDataset\Database\DbSqlRelayDriver;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\Cache\CacheEngineInterface;
 use PDO;
@@ -23,8 +23,8 @@ class DBDataset
     protected $connectionManagement;
 
     /**
-     *
-     * @var DBDriverInterface
+
+     * @var DbDriverInterface
      */
     private $dbDriver = null;
 
@@ -48,11 +48,11 @@ class DBDataset
 
         // Create the proper driver
         if ($this->connectionManagement->getDriver() == "sqlrelay") {
-            $this->dbDriver = new DBSQLRelayDriver($this->connectionManagement);
+            $this->dbDriver = new DbSqlRelayDriver($this->connectionManagement);
         } elseif ($this->connectionManagement->getDriver() == "oci8") {
-            $this->dbDriver = new DBOci8Driver($this->connectionManagement);
+            $this->dbDriver = new DbOci8Driver($this->connectionManagement);
         } else {
-            $this->dbDriver = DBPDODriver::factory($this->connectionManagement);
+            $this->dbDriver = DbPdoDriver::factory($this->connectionManagement);
         }
     }
 
@@ -89,7 +89,8 @@ class DBDataset
 
     /**
      * Get the DBDriver
-     * @return DBDriverInterface
+     *
+*@return DbDriverInterface
      */
     public function getDbDriver()
     {

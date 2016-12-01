@@ -8,50 +8,55 @@ use ByJG\AnyDataset\Repository\DBIterator;
 use PDO;
 use PDOStatement;
 
-class DBPDODriver implements DBDriverInterface
+class DbPdoDriver implements DbDriverInterface
 {
 
     /**
      * @var PDO
      */
-    protected $_db = null;
+    protected $instance = null;
 
     /**
      * @var ConnectionManagement
      */
-    protected $_connectionManagement;
+    protected $connectionManagement;
 
     public function __construct(ConnectionManagement $connMngt, $strcnn, $preOptions, $postOptions)
     {
-        $this->_connectionManagement = $connMngt;
+        $this->connectionManagement = $connMngt;
 
         if (is_null($strcnn)) {
-            if ($this->_connectionManagement->getFilePath() != "") {
-                $strcnn = $this->_connectionManagement->getDriver() . ":" . $this->_connectionManagement->getFilePath();
+            if ($this->connectionManagement->getFilePath() != "") {
+                $strcnn = $this->connectionManagement->getDriver() . ":" . $this->connectionManagement->getFilePath();
             } else {
-                $strcnn = $this->_connectionManagement->getDriver() . ":dbname=" . $this->_connectionManagement->getDatabase();
-                if ($this->_connectionManagement->getExtraParam("unixsocket") != "") {
-                    $strcnn .= ";unix_socket=" . $this->_connectionManagement->getExtraParam("unixsocket");
+                $strcnn = $this->connectionManagement->getDriver() . ":dbname=" .
+                    $this->connectionManagement->getDatabase();
+                if ($this->connectionManagement->getExtraParam("unixsocket") != "") {
+                    $strcnn .= ";unix_socket=" . $this->connectionManagement->getExtraParam("unixsocket");
                 } else {
-                    $strcnn .= ";host=" . $this->_connectionManagement->getServer();
-                    if ($this->_connectionManagement->getPort() != "") {
-                        $strcnn .= ";port=" . $this->_connectionManagement->getPort();
+                    $strcnn .= ";host=" . $this->connectionManagement->getServer();
+                    if ($this->connectionManagement->getPort() != "") {
+                        $strcnn .= ";port=" . $this->connectionManagement->getPort();
                     }
                 }
             }
         }
 
         // Create Connection
-        $this->_db = new PDO($strcnn, $this->_connectionManagement->getUsername(),
-            $this->_connectionManagement->getPassword(), (array) $preOptions);
-        $this->_connectionManagement->setDriver($this->_db->getAttribute(PDO::ATTR_DRIVER_NAME));
+        $this->instance = new PDO(
+            $strcnn,
+            $this->connectionManagement->getUsername(),
+            $this->connectionManagement->getPassword(),
+            (array) $preOptions
+        );
+        $this->connectionManagement->setDriver($this->instance->getAttribute(PDO::ATTR_DRIVER_NAME));
 
         // Set Specific Attributes
-        $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->_db->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        $this->instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->instance->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
 
         foreach ((array) $postOptions as $key => $value) {
-            $this->_db->setAttribute($key, $value);
+            $this->instance->setAttribute($key, $value);
         }
     }
 
@@ -68,7 +73,7 @@ class DBPDODriver implements DBDriverInterface
         $class = '\ByJG\AnyDataset\Database\Pdo' . ucfirst($connMngt->getDriver());
 
         if (!class_exists($class, true)) {
-            return new DBPDODriver($connMngt, null, null, null);
+            return new DbPdoDriver($connMngt, null, null, null);
         } else {
             return new $class($connMngt);
         }
@@ -76,7 +81,7 @@ class DBPDODriver implements DBDriverInterface
 
     public function __destruct()
     {
-        $this->_db = null;
+        $this->instance = null;
     }
 
     /**
@@ -88,12 +93,14 @@ class DBPDODriver implements DBDriverInterface
     protected function getDBStatement($sql, $array = null)
     {
         if ($array) {
-            list($sql, $array) = SQLBind::parseSQL($this->_connectionManagement, $sql, $array);
-            $stmt = $this->_db->prepare($sql);
+            list($sql, $array) = SqlBind::parseSQL($this->connectionManagement, $sql, $array);
+            $stmt = $this->instance->prepare($sql);
             foreach ($array as $key => $value) {
-                $stmt->bindValue(":" . SQLBind::keyAdj($key), $value);
+                $stmt->bindValue(":" . SqlBind::keyAdj($key), $value);
             }
-        } else $stmt = $this->_db->prepare($sql);
+        } else {
+            $stmt = $this->instance->prepare($sql);
+        }
 
         return $stmt;
     }
@@ -102,8 +109,8 @@ class DBPDODriver implements DBDriverInterface
     {
         $stmt = $this->getDBStatement($sql, $array);
         $stmt->execute();
-        $it = new DBIterator($stmt);
-        return $it;
+        $iterator = new DBIterator($stmt);
+        return $iterator;
     }
 
     public function getScalar($sql, $array = null)
@@ -121,7 +128,7 @@ class DBPDODriver implements DBDriverInterface
     public function getAllFields($tablename)
     {
         $fields = array();
-        $rs = $this->_db->query(SQLHelper::createSafeSQL("select * from :table where 0=1", array(":table" => $tablename)));
+        $rs = $this->instance->query(SqlHelper::createSafeSQL("select * from :table where 0=1", array(":table" => $tablename)));
         $fieldLength = $rs->columnCount();
         for ($i = 0; $i < $fieldLength; $i++) {
             $fld = $rs->getColumnMeta($i);
@@ -132,17 +139,17 @@ class DBPDODriver implements DBDriverInterface
 
     public function beginTransaction()
     {
-        $this->_db->beginTransaction();
+        $this->instance->beginTransaction();
     }
 
     public function commitTransaction()
     {
-        $this->_db->commit();
+        $this->instance->commit();
     }
 
     public function rollbackTransaction()
     {
-        $this->_db->rollBack();
+        $this->instance->rollBack();
     }
 
     public function executeSql($sql, $array = null)
@@ -153,21 +160,21 @@ class DBPDODriver implements DBDriverInterface
     }
 
     /**
-     * 
+     *
      * @return PDO
      */
     public function getDbConnection()
     {
-        return $this->_db;
+        return $this->instance;
     }
 
     public function getAttribute($name)
     {
-        $this->_db->getAttribute($name);
+        $this->instance->getAttribute($name);
     }
 
     public function setAttribute($name, $value)
     {
-        $this->_db->setAttribute($name, $value);
+        $this->instance->setAttribute($name, $value);
     }
 }

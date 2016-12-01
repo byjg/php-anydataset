@@ -9,23 +9,22 @@ use ByJG\AnyDataset\Repository\SingleRow;
 use DateTime;
 use Exception;
 
-class SQLHelper
+class SqlHelper
 {
 
     /**
      * @var DBDataset
      */
-    private $_db;
-    protected $_fieldDeliLeft = " ";
-    protected $_fieldDeliRight = " ";
+    private $dataset;
+    protected $fieldDeliLeft = " ";
+    protected $fieldDeliRight = " ";
 
     /**
-     *
-     * @param DBDataset $db
+     * @param DBDataset $dataset
      */
-    public function __construct(DBDataset $db)
+    public function __construct(DBDataset $dataset)
     {
-        $this->_db = $db;
+        $this->dataset = $dataset;
     }
 
     /**
@@ -56,7 +55,7 @@ class SQLHelper
                 if ($sql != "") {
                     $sql .= ", ";
                 }
-                $sql .= " " . $this->_fieldDeliLeft . $fieldname . $this->_fieldDeliRight . " = " . $this->getValue($fieldname,
+                $sql .= " " . $this->fieldDeliLeft . $fieldname . $this->fieldDeliRight . " = " . $this->getValue($fieldname,
                         $fieldvalue, $param, $decimalpoint) . " ";
             }
             $sql = "update $table set $sql where $filter ";
@@ -68,7 +67,7 @@ class SQLHelper
                     $campos .= ", ";
                     $valores .= ", ";
                 }
-                $campos .= $this->_fieldDeliLeft . $fieldname . $this->_fieldDeliRight;
+                $campos .= $this->fieldDeliLeft . $fieldname . $this->fieldDeliRight;
                 $valores .= $this->getValue($fieldname, $fieldvalue, $param, $decimalpoint);
             }
             $sql = "insert into $table ($campos) values ($valores)";
@@ -145,8 +144,8 @@ class SQLHelper
 
     public function setFieldDelimeters($left, $right)
     {
-        $this->_fieldDeliLeft = $left;
-        $this->_fieldDeliRight = $right;
+        $this->fieldDeliLeft = $left;
+        $this->fieldDeliRight = $right;
     }
 
     public static function createSafeSQL($sql, $list)
@@ -159,6 +158,6 @@ class SQLHelper
      */
     public function getDbDataset()
     {
-        return $this->_db;
+        return $this->dataset;
     }
 }

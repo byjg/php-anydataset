@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Database\SQLHelper;
+use ByJG\AnyDataset\Database\SqlHelper;
 use ByJG\AnyDataset\Enum\Relation;
 
 class IteratorFilter
@@ -59,7 +59,7 @@ class IteratorFilter
             $sql .= " where @@sqlFilter ";
         }
 
-        $sql = SQLHelper::createSafeSQL(
+        $sql = SqlHelper::createSafeSQL(
             $sql,
             [
                 "@@returnFields" => $returnFields,
