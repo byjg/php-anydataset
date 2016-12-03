@@ -14,23 +14,23 @@ class BaseDBAccess
     /**
      * @var DBDataset
      */
-    private $_db = null;
+    private $dataset = null;
 
     /**
      * Wrapper for SqlHelper
-
      *
-*@var SqlHelper
+     * @var SqlHelper
      */
-    protected $_sqlhelper = null;
+    protected $sqlHelper = null;
 
     /**
      * Base Class Constructor. Don't must be override.
-     * @param DBDataset $db
+     *
+     * @param DBDataset $dbdataset
      */
-    public function __construct(DBDataset $db)
+    public function __construct(DBDataset $dbdataset)
     {
-        $this->_db = $db;
+        $this->dataset = $dbdataset;
     }
 
     /**
@@ -39,7 +39,7 @@ class BaseDBAccess
      */
     protected function getDBDataset()
     {
-        return $this->_db;
+        return $this->dataset;
     }
 
     /**
@@ -73,10 +73,10 @@ class BaseDBAccess
             $start = microtime(true);
         }
 
+        $insertedId = null;
         if ($getId) {
-            $id = $dbfunction->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
+            $insertedId = $dbfunction->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
         } else {
-            $id = null;
             $this->getDBDataset()->execSQL($sql, $param);
         }
 
@@ -85,7 +85,7 @@ class BaseDBAccess
             $log->debug("Execution time: " . ($end - $start) . " seconds ");
         }
 
-        return $id;
+        return $insertedId;
     }
 
     /**
@@ -156,17 +156,16 @@ class BaseDBAccess
 
     /**
      * Get a SqlHelper object
-
      *
-*@return SqlHelper
+     * @return SqlHelper
      */
     public function getSQLHelper()
     {
-        if (is_null($this->_sqlhelper)) {
-            $this->_sqlhelper = new SqlHelper($this->getDBDataset());
+        if (is_null($this->sqlHelper)) {
+            $this->sqlHelper = new SqlHelper($this->getDBDataset());
         }
 
-        return $this->_sqlhelper;
+        return $this->sqlHelper;
     }
 
     /**
@@ -188,34 +187,34 @@ class BaseDBAccess
     /**
      * Get an Array from an existing Iterator
      *
-     * @param IteratorInterface $it
+     * @param IteratorInterface $iterator
      * @param string $key
      * @param string $value
      * @param string $firstElement
      * @return array
      */
-    public static function getArrayFromIterator(IteratorInterface $it, $key, $value, $firstElement = "-- Selecione --")
+    public static function getArrayFromIterator(IteratorInterface $iterator, $key, $value, $firstElement = "-- Selecione --")
     {
         $retArray = array();
         if ($firstElement != "") {
             $retArray[""] = $firstElement;
         }
-        while ($it->hasNext()) {
-            $sr = $it->moveNext();
-            $retArray[$sr->getField(strtolower($key))] = $sr->getField(strtolower($value));
+        while ($iterator->hasNext()) {
+            $singleRow = $iterator->moveNext();
+            $retArray[$singleRow->getField(strtolower($key))] = $singleRow->getField(strtolower($value));
         }
         return $retArray;
     }
 
     /**
-     *
-     * @param IteratorInterface $it
+
+     * @param IteratorInterface $iterator
      * @param string $name
      * @param array $fields
      * @param bool $echoToBrowser
      * @return string
      */
-    public static function saveToCSV($it, $name = "data.csv", $fields = null, $echoToBrowser = true)
+    public static function saveToCSV($iterator, $name = "data.csv", $fields = null, $echoToBrowser = true)
     {
         if ($echoToBrowser) {
             ob_clean();
@@ -226,12 +225,12 @@ class BaseDBAccess
 
         $first = true;
         $line = "";
-        foreach ($it as $sr) {
+        foreach ($iterator as $singleRow) {
             if ($first) {
                 $first = false;
 
                 if (is_null($fields)) {
-                    $fields = $sr->getFieldNames();
+                    $fields = $singleRow->getFieldNames();
                 }
 
                 $line .= '"' . implode('","', $fields) . '"' . "\n";
@@ -239,7 +238,7 @@ class BaseDBAccess
 
             $raw = array();
             foreach ($fields as $field) {
-                $raw[] = $sr->getField($field);
+                $raw[] = $singleRow->getField($field);
             }
             $line .= '"' . implode('","', array_values($raw)) . '"' . "\n";
 
