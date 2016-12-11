@@ -99,6 +99,15 @@ class ConnectionManagement
         $this->extraParam[$key] = $value;
     }
 
+    private function setExtraParam($value)
+    {
+        $arrAux = explode('&', $value);
+        foreach ($arrAux as $item) {
+            $aux = explode("=", $item);
+            $this->addExtraParam($aux[0], $aux[1]);
+        }
+    }
+
     public function getExtraParam($key)
     {
         if (array_key_exists($key, $this->extraParam)) {
@@ -118,6 +127,14 @@ class ConnectionManagement
     public function getFilePath()
     {
         return $this->file;
+    }
+
+    private function setFromArray($array, $key, $property)
+    {
+        $this->$property('');
+        if (isset($array[$key])) {
+            $this->$property($array[$key]);
+        }
     }
 
     /**
@@ -164,24 +181,19 @@ class ConnectionManagement
             );
         }
         
-        // If a path pattern was found set it; otherwise define the database properties
-        if (array_key_exists('path', $parts) && (!empty($parts['path']))) {
-            $this->setFilePath($parts['path']);
-        } else {
-            $this->setUsername(empty($parts['username']) ? $parts['username2'] : $parts['username']);
-            $this->setPassword(isset($parts['password']) ? $parts['password'] : '');
-            $this->setServer($parts['host']);
-            $this->setPort(isset($parts['port']) ? $parts['port'] : '');
-            $this->setDatabase(isset($parts['database']) ? $parts['database'] : '');
+        $this->setFromArray($parts, 'path', 'setFilePath');
+        $this->setFromArray($parts, 'username', 'setUsername');
+        if ($this->getUsername() === '') {
+            $this->setFromArray($parts, 'username2', 'setUsername');
         }
+        $this->setFromArray($parts, 'password', 'setPassword');
+        $this->setFromArray($parts, 'host', 'setServer');
+        $this->setFromArray($parts, 'port', 'setPort');
+        $this->setFromArray($parts, 'database', 'setDatabase');
 
         // If extra param is defined, set it.
-        if (array_key_exists('extraparam', $parts) && (!empty($parts['extraparam']))) {
-            $arrAux = explode('&', $parts['extraparam']);
-            foreach ($arrAux as $item) {
-                $aux = explode("=", $item);
-                $this->addExtraParam($aux[0], $aux[1]);
-            }
+        if ((isset($parts['extraparam']))) {
+            $this->setExtraParam($parts['extraparam']);
         }
     }
 }
