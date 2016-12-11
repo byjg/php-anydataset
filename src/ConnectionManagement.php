@@ -8,121 +8,121 @@ use InvalidArgumentException;
 class ConnectionManagement
 {
 
-    protected $_dbconnectionstring;
+    private $dbconnectionstring;
 
     public function setDbConnectionString($value)
     {
-        $this->_dbconnectionstring = $value;
+        $this->dbconnectionstring = $value;
     }
 
     public function getDbConnectionString()
     {
-        return $this->_dbconnectionstring;
+        return $this->dbconnectionstring;
     }
 
-    protected $_driver;
+    private $driver;
 
     public function setDriver($value)
     {
-        $this->_driver = $value;
+        $this->driver = $value;
     }
 
     public function getDriver()
     {
-        return $this->_driver;
+        return $this->driver;
     }
 
-    protected $_username;
+    private $username;
 
     public function setUsername($value)
     {
-        $this->_username = $value;
+        $this->username = $value;
     }
 
     public function getUsername()
     {
-        return $this->_username;
+        return $this->username;
     }
 
-    protected $_password;
+    private $password;
 
     public function setPassword($value)
     {
-        $this->_password = $value;
+        $this->password = $value;
     }
 
     public function getPassword()
     {
-        return $this->_password;
+        return $this->password;
     }
 
-    protected $_server;
+    private $server;
 
     public function setServer($value)
     {
-        $this->_server = $value;
+        $this->server = $value;
     }
 
     public function getServer()
     {
-        return $this->_server;
+        return $this->server;
     }
 
-    protected $_port = "";
+    private $port = "";
 
     public function setPort($value)
     {
-        $this->_port = $value;
+        $this->port = $value;
     }
 
     public function getPort()
     {
-        return $this->_port;
+        return $this->port;
     }
 
-    protected $_database;
+    private $database;
 
     public function setDatabase($value)
     {
-        $this->_database = $value;
+        $this->database = $value;
     }
 
     public function getDatabase()
     {
-        return $this->_database;
+        return $this->database;
     }
 
-    protected $_extraParam = array();
+    private $extraParam = array();
 
     public function addExtraParam($key, $value)
     {
-        $this->_extraParam[$key] = $value;
+        $this->extraParam[$key] = $value;
     }
 
     public function getExtraParam($key)
     {
-        if (array_key_exists($key, $this->_extraParam)) {
-            return $this->_extraParam[$key];
+        if (array_key_exists($key, $this->extraParam)) {
+            return $this->extraParam[$key];
         } else {
             return "";
         }
     }
 
-    protected $_file;
+    private $file;
 
     public function setFilePath($value)
     {
-        $this->_file = $value;
+        $this->file = $value;
     }
 
     public function getFilePath()
     {
-        return $this->_file;
+        return $this->file;
     }
 
     /**
      * The connection string must be defined in the config file 'config/anydataset.php'
-     * 
+     *
      * @param string $dbname
      * @throws DatabaseException
      * @throws InvalidArgumentException
@@ -150,26 +150,29 @@ class ConnectionManagement
         $pat = "/$patDriver($patCredentials$patHost$patDatabase|$patFile)$patExtra/i";
         $parts = array();
         if (!preg_match($pat, $this->getDbConnectionString(), $parts)) {
-            throw new InvalidArgumentException("Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it.");
+            throw new InvalidArgumentException(
+                "Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it."
+            );
         }
 
         // Set the Driver
-        $this->setDriver($parts ['driver']);
+        $this->setDriver($parts['driver']);
 
         if (!isset($parts['path']) && !isset($parts['host'])) {
-            throw new InvalidArgumentException("Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it.");
+            throw new InvalidArgumentException(
+                "Connection string " . $this->getDbConnectionString() . " is invalid! Please fix it."
+            );
         }
-
-
+        
         // If a path pattern was found set it; otherwise define the database properties
         if (array_key_exists('path', $parts) && (!empty($parts['path']))) {
             $this->setFilePath($parts['path']);
         } else {
-            $this->setUsername(empty($parts ['username']) ? $parts ['username2'] : $parts ['username']);
-            $this->setPassword(isset($parts ['password']) ? $parts ['password'] : '');
-            $this->setServer($parts ['host']);
-            $this->setPort(isset($parts ['port']) ? $parts ['port'] : '');
-            $this->setDatabase(isset($parts ['database']) ? $parts ['database'] : '');
+            $this->setUsername(empty($parts['username']) ? $parts['username2'] : $parts['username']);
+            $this->setPassword(isset($parts['password']) ? $parts['password'] : '');
+            $this->setServer($parts['host']);
+            $this->setPort(isset($parts['port']) ? $parts['port'] : '');
+            $this->setDatabase(isset($parts['database']) ? $parts['database'] : '');
         }
 
         // If extra param is defined, set it.
