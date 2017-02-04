@@ -39,7 +39,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
     protected $arrTest2 = array();
 
     // Run before each test case
-    function setUp()
+    public function setUp()
     {
         $this->arrTest = array();
         $this->arrTest[] = array("category" => "COOKING", "title" => "Everyday Italian", "lang" => "en");
@@ -52,12 +52,12 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
     }
 
     // Run end each test case
-    function teardown()
+    public function teardown()
     {
         
     }
 
-    function test_createXMLDataset()
+    public function test_createXMLDataset()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -67,7 +67,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($xmlIterator->Count(), 3);
     }
 
-    function test_navigateXMLIterator()
+    public function test_navigateXMLIterator()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -80,7 +80,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 3);
     }
 
-    function test_navigateXMLIterator2()
+    public function test_navigateXMLIterator2()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -96,12 +96,12 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    function test_xmlNotWellFormatted()
+    public function test_xmlNotWellFormatted()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_NOTOK, $this->rootNode, $this->arrColumn);
     }
 
-    function test_wrongNodeRoot()
+    public function test_wrongNodeRoot()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, "wrong", $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -109,7 +109,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($xmlIterator->count(), 0);
     }
 
-    function test_wrongColumn()
+    public function test_wrongColumn()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, array("title" => "aaaa"));
         $xmlIterator = $xmlDataset->getIterator();
@@ -117,7 +117,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($xmlIterator->count(), 3);
     }
 
-    function test_repeatedNodes()
+    public function test_repeatedNodes()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
 		<bookstore>
@@ -144,7 +144,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Another Author', $authors[1]);
     }
 
-    function test_atomXml()
+    public function test_atomXml()
     {
         $xml = '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:gd="http://schemas.google.com/g/2005" xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/">
 			<id>myId</id>
@@ -218,14 +218,14 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
      *
      * @param SingleRow $sr
      */
-    function assertSingleRow($sr, $count)
+    public function assertSingleRow($sr, $count)
     {
         $this->assertEquals($sr->getField("category"), $this->arrTest[$count]["category"]);
         $this->assertEquals($sr->getField("title"), $this->arrTest[$count]["title"]);
         $this->assertEquals($sr->getField("lang"), $this->arrTest[$count]["lang"]);
     }
 
-    function assertSingleRow2($sr, $count)
+    public function assertSingleRow2($sr, $count)
     {
         $this->assertEquals($sr->getField("id"), $this->arrTest2[$count]["id"]);
         if ($count > 0) $this->assertEquals($sr->getField("label"), $this->arrTest2[$count]["label"]);

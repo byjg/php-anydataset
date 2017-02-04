@@ -12,7 +12,7 @@ class ModelPropertyPattern extends \ByJG\Serializer\BaseModel
     protected $_Client_Name = "";
     protected $_birth_date = "";
 
-    function __construct($object = null)
+    public function __construct($object = null)
     {
         parent::__construct($object);
     }

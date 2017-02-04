@@ -13,7 +13,7 @@ class ModelGetter extends BaseModel
     protected $_Id = "";
     protected $_Name = "";
 
-    function __construct($Id, $Name)
+    public function __construct($Id, $Name)
     {
         $this->_Id = $Id;
         $this->_Name = $Name;

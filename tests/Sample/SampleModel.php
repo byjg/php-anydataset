@@ -10,7 +10,7 @@ class SampleModel extends BaseModel
     public $Id = "";
     protected $_Name = "";
 
-    function __construct($object = null)
+    public function __construct($object = null)
     {
         parent::__construct($object);
     }

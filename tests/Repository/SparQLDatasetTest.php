@@ -14,18 +14,18 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     protected static $SPARQL_NS = array("foaf" => "http://xmlns.com/foaf/0.1/");
 
     // Run before each test case
-    function setUp()
+    public function setUp()
     {
         
     }
 
     // Run end each test case
-    function teardown()
+    public function teardown()
     {
         
     }
 
-    function test_connectSparQLDataset()
+    public function test_connectSparQLDataset()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
         $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
@@ -38,7 +38,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \SparQL\ConnectionException
      */
-    function test_wrongSparQLDataset()
+    public function test_wrongSparQLDataset()
     {
         $dataset = new SparQLDataset("http://invaliddomain/", SparQLDatasetTest::$SPARQL_NS);
         $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
@@ -51,13 +51,13 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \SparQL\Exception
      */
-    function test_wrongSparQLDataset2()
+    public function test_wrongSparQLDataset2()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
         $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
     }
 
-    function test_navigateSparQLDataset()
+    public function test_navigateSparQLDataset()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
         $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 2");
@@ -85,7 +85,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(!$iterator->hasNext());
     }
 
-    function test_capabilities()
+    public function test_capabilities()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
 

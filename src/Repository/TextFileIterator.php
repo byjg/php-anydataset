@@ -100,7 +100,7 @@ class TextFileIterator extends GenericIterator
         }
     }
 
-    function key()
+    public function key()
     {
         return $this->_current;
     }
