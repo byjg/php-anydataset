@@ -86,22 +86,4 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse($iterator->hasNext());
     }
-
-    public function test_capabilities()
-    {
-        $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
-
-        $caps = $dataset->getCapabilities();
-
-        if (count($caps) == 0) {        // If does not installed the capability on PHP system, skip test;
-            $this->assertTrue(true);
-        } else {
-            $this->assertTrue($caps["select"][0] == 1);
-            // $this->assertTrue(!$caps["constant_as"][0] == 1);
-            $this->assertTrue(!$caps["math_as"][0] == 1);
-            $this->assertTrue($caps["count"][0] == 1);
-            $this->assertTrue(!$caps["sample"][0] == 1);
-            $this->assertTrue(!$caps["load"][0] == 1);
-        }
-    }
 }
