@@ -97,7 +97,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
             $this->assertTrue(true);
         } else {
             $this->assertTrue($caps["select"][0] == 1);
-            $this->assertTrue(!$caps["constant_as"][0] == 1);
+            // $this->assertTrue(!$caps["constant_as"][0] == 1);
             $this->assertTrue(!$caps["math_as"][0] == 1);
             $this->assertTrue($caps["count"][0] == 1);
             $this->assertTrue(!$caps["sample"][0] == 1);
