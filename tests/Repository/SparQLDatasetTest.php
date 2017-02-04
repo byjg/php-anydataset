@@ -9,9 +9,12 @@ use ByJG\AnyDataset\Repository\SparQLDataset;
 class SparQLDatasetTest extends PHPUnit_Framework_TestCase
 {
 
-    const SPARQL_URL = 'http://rdf.ecs.soton.ac.uk/sparql/';
+    const SPARQL_URL = 'http://dbpedia.org/sparql';
 
-    protected static $SPARQL_NS = array("foaf" => "http://xmlns.com/foaf/0.1/");
+    protected static $SPARQL_NS = [
+        'dbpedia-owl' => 'http://dbpedia.org/ontology/',
+        'dbpprop' => 'http://dbpedia.org/property/'
+    ];
 
     // Run before each test case
     public function setUp()
@@ -28,7 +31,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     public function test_connectSparQLDataset()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
-        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
+        $iterator = $dataset->getIterator("select distinct ?Concept where {[] a ?Concept} LIMIT 5");
 
         $this->assertTrue($iterator instanceof IteratorInterface);
         $this->assertTrue($iterator->hasNext());
@@ -41,7 +44,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     public function test_wrongSparQLDataset()
     {
         $dataset = new SparQLDataset("http://invaliddomain/", SparQLDatasetTest::$SPARQL_NS);
-        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
+        $iterator = $dataset->getIterator("select distinct ?Concept where {[] a ?Concept} LIMIT 5");
 
         $this->assertTrue($iterator instanceof IteratorInterface);
         $this->assertTrue($iterator->hasNext());
@@ -54,35 +57,34 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     public function test_wrongSparQLDataset2()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
-        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 5");
+        $iterator = $dataset->getIterator("?Concept where {[] a ?Concept} LIMIT 5");
     }
 
     public function test_navigateSparQLDataset()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL, SparQLDatasetTest::$SPARQL_NS);
-        $iterator = $dataset->getIterator("SELECT * WHERE { ?person a foaf:Person . ?person foaf:name ?name } LIMIT 2");
+        $iterator = $dataset->getIterator(
+            'SELECT  ?name ?meaning
+                WHERE 
+                {
+                    ?s a  dbpedia-owl:Name;
+                    dbpprop:name  ?name;
+                    dbpprop:meaning  ?meaning 
+                    . FILTER (str(?name) = "John")
+                }'
+        );
 
         $this->assertTrue($iterator->hasNext());
-        $this->assertEquals($iterator->count(), 2);
+        $this->assertEquals($iterator->count(), 1);
 
         $sr = $iterator->moveNext();
 
-        //$this->assertEquals($sr->getField("person"), "b4ee30d00000000");
-        $this->assertEquals($sr->getField("person.type"), "bnode");
-        //$this->assertEquals($sr->getField("name"), "zm");
+        $this->assertEquals($sr->getField("name"), "John");
         $this->assertEquals($sr->getField("name.type"), "literal");
-        $this->assertEquals($sr->getField("name.datatype"), "http://www.w3.org/2001/XMLSchema#string");
+        $this->assertEquals($sr->getField("meaning"), "Graced by Yahweh , Yahweh is gracious");
+        $this->assertEquals($sr->getField("meaning.type"), "literal");
 
-        $this->assertTrue($iterator->hasNext());
-        $sr = $iterator->moveNext();
-
-        //$this->assertEquals($sr->getField("person"), "bf1120a00000002");
-        $this->assertEquals($sr->getField("person.type"), "bnode");
-        //$this->assertEquals($sr->getField("name"), "trp");
-        $this->assertEquals($sr->getField("name.type"), "literal");
-        $this->assertEquals($sr->getField("name.datatype"), "http://www.w3.org/2001/XMLSchema#string");
-
-        $this->assertTrue(!$iterator->hasNext());
+        $this->assertFalse($iterator->hasNext());
     }
 
     public function test_capabilities()
