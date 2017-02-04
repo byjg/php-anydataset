@@ -3,12 +3,12 @@
 namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\ConnectionManagement;
-use ByJG\AnyDataset\Database\MongoDBDriver;
-use ByJG\AnyDataset\Database\NoSQLDriverInterface;
+use ByJG\AnyDataset\Database\MongoDbDriver;
+use ByJG\AnyDataset\Database\NoSqlDriverInterface;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use InvalidArgumentException;
 
-class NoSqlDataset implements NoSQLDriverInterface
+class NoSqlDataset implements NoSqlDriverInterface
 {
 
     /**
@@ -19,8 +19,8 @@ class NoSqlDataset implements NoSQLDriverInterface
     private $_connectionManagement;
 
     /**
-     *
-     * @var NoSQLDriverInterface
+
+     * @var NoSqlDriverInterface
      */
     private $_dbDriver = null;
 
@@ -35,7 +35,7 @@ class NoSqlDataset implements NoSQLDriverInterface
         $this->_connectionManagement = new ConnectionManagement($dbname);
 
         if ($this->_connectionManagement->getDriver() == "mongodb") {
-            $this->_dbDriver = new MongoDBDriver($this->_connectionManagement, $collection);
+            $this->_dbDriver = new MongoDbDriver($this->_connectionManagement, $collection);
         } else {
             throw new InvalidArgumentException("There is no '{$this->_connectionManagement->getDriver()}' NoSQL database");
         }
@@ -50,7 +50,7 @@ class NoSqlDataset implements NoSQLDriverInterface
     }
 
     /**
-     * @return MongoDBDriver|NoSQLDriverInterface
+     * @return MongoDbDriver|NoSqlDriverInterface
      */
     public function getDbDriver()
     {

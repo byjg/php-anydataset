@@ -12,23 +12,23 @@ class AnyIterator extends GenericIterator
      * Row Elements
      * @var array
      */
-    private $_list;
+    private $list;
 
     /**
      * Current row number
      * @var int
      */
-    private $_curRow; //int
+    private $curRow; //int
 
     /**
      * Iterator constructor
-     * @param SingleRow[] $list 
+     * @param SingleRow[] $list
      */
 
     public function __construct($list)
     {
-        $this->_curRow = 0;
-        $this->_list = $list;
+        $this->curRow = 0;
+        $this->list = $list;
     }
 
     /**
@@ -37,7 +37,7 @@ class AnyIterator extends GenericIterator
      */
     public function count()
     {
-        return sizeof($this->_list);
+        return sizeof($this->list);
     }
 
     /**
@@ -46,7 +46,7 @@ class AnyIterator extends GenericIterator
      */
     public function hasNext()
     {
-        return ($this->_curRow < $this->count());
+        return ($this->curRow < $this->count());
     }
 
     /**
@@ -58,12 +58,12 @@ class AnyIterator extends GenericIterator
         if (!$this->hasNext()) {
             return null;
         } else {
-            return $this->_list[$this->_curRow++];
+            return $this->list[$this->curRow++];
         }
     }
 
-    function key()
+    public function key()
     {
-        return $this->_curRow;
+        return $this->curRow;
     }
 }

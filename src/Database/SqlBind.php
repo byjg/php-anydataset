@@ -8,11 +8,12 @@ use ByJG\AnyDataset\ConnectionManagement;
  * Class to create and manipulate Several Data Types
  *
  */
-class SQLBind
+class SqlBind
 {
 
     /**
-     * Each provider have your own model for pass parameter. This method define how each provider name define the parameters
+     * Each provider have your own model for pass parameter.
+     * This method define how each provider name define the parameters
      *
      * @param ConnectionManagement $connData
      * @return string
@@ -29,7 +30,8 @@ class SQLBind
     }
 
     /**
-     * Transform generic parameters [[PARAM]] in a parameter recognized by the provider name based on current DbParameter array.
+     * Transform generic parameters [[PARAM]] in a parameter recognized by the provider
+     * name based on current DbParameter array.
      *
      * @param ConnectionManagement $connData
      * @param string $sql
@@ -39,12 +41,12 @@ class SQLBind
     public static function parseSQL(ConnectionManagement $connData, $sql, $params = null)
     {
         if (is_null($params)) {
-            return $sql;
+            return [$sql, null];
         }
 
-        $paramSubstName = SQLBind::getParamModel($connData);
+        $paramSubstName = SqlBind::getParamModel($connData);
         foreach ($params as $key => $value) {
-            $arg = str_replace("_", SQLBind::keyAdj($key), $paramSubstName);
+            $arg = str_replace("_", SqlBind::keyAdj($key), $paramSubstName);
 
             $count = 0;
             $sql = preg_replace("/(\[\[$key\]\]|:" . $key . "[\s\W]|:$key\$)/", $arg . ' ', $sql, -1, $count);
@@ -55,7 +57,7 @@ class SQLBind
 
         $sql = preg_replace("/\[\[(.*?)\]\]/", "null", $sql);
 
-        return array($sql, $params);
+        return [$sql, $params];
     }
 
     public static function keyAdj($key)

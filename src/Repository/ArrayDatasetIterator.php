@@ -10,19 +10,19 @@ class ArrayDatasetIterator extends GenericIterator
     /**
      * @var array
      */
-    protected $_rows;
+    protected $rows;
 
     /**
      * Enter description here...
      *
      * @var array
      */
-    protected $_keys;
+    protected $keys;
 
     /**
       /* @var int
      */
-    protected $_currentRow;
+    protected $currentRow;
 
     /**
      * @param $rows
@@ -32,9 +32,9 @@ class ArrayDatasetIterator extends GenericIterator
         if (!is_array($rows)) {
             throw new InvalidArgumentException("ArrayDatasetIterator must receive an array");
         }
-        $this->_currentRow = 0;
-        $this->_rows = $rows;
-        $this->_keys = array_keys($rows);
+        $this->currentRow = 0;
+        $this->rows = $rows;
+        $this->keys = array_keys($rows);
     }
 
     /**
@@ -42,7 +42,7 @@ class ArrayDatasetIterator extends GenericIterator
      */
     public function count()
     {
-        return count($this->_rows);
+        return count($this->rows);
     }
 
     /**
@@ -50,7 +50,7 @@ class ArrayDatasetIterator extends GenericIterator
      */
     public function hasNext()
     {
-        return ($this->_currentRow < $this->count());
+        return ($this->currentRow < $this->count());
     }
 
     /**
@@ -59,27 +59,27 @@ class ArrayDatasetIterator extends GenericIterator
     public function moveNext()
     {
         if ($this->hasNext()) {
-            $key = $this->_keys[$this->_currentRow];
-            $cols = $this->_rows[$key];
+            $key = $this->keys[$this->currentRow];
+            $cols = $this->rows[$key];
 
             $any = new AnyDataset();
             $any->appendRow();
-            $any->addField("__id", $this->_currentRow);
+            $any->addField("__id", $this->currentRow);
             $any->addField("__key", $key);
             foreach ($cols as $key => $value) {
                 $any->addField(strtolower($key), $value);
             }
-            $it = $any->getIterator(null);
-            $sr = $it->moveNext();
-            $this->_currentRow++;
-            return $sr;
+            $iterator = $any->getIterator(null);
+            $singleRow = $iterator->moveNext();
+            $this->currentRow++;
+            return $singleRow;
         } else {
             return null;
         }
     }
 
-    function key()
+    public function key()
     {
-        return $this->_currentRow;
+        return $this->currentRow;
     }
 }

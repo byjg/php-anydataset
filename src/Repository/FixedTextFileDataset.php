@@ -11,13 +11,13 @@ use InvalidArgumentException;
 class FixedTextFileDataset
 {
 
-    protected $_source;
+    protected $source;
 
     /**
      * @var FixedTextDefinition[]
      */
-    protected $_fieldDefinition;
-    protected $_sourceType;
+    protected $fieldDefinition;
+    protected $sourceType;
 
     /**
      * Text File Data Set
@@ -32,29 +32,29 @@ class FixedTextFileDataset
             throw new InvalidArgumentException("You must define an array of field definition.");
         }
 
-        $this->_source = $source;
-        $this->_sourceType = "HTTP";
+        $this->source = $source;
+        $this->sourceType = "HTTP";
 
         if (!preg_match("~^https?://~", $source)) {
-            if (!file_exists($this->_source)) {
-                throw new NotFoundException("The specified file " . $this->_source . " does not exists");
+            if (!file_exists($this->source)) {
+                throw new NotFoundException("The specified file " . $this->source . " does not exists");
             }
 
-            $this->_sourceType = "FILE";
+            $this->sourceType = "FILE";
         }
 
-        $this->_fieldDefinition = $fieldDefinition;
+        $this->fieldDefinition = $fieldDefinition;
     }
 
     /**
      * @access public
-     * @return DBIterator
+     * @return GenericIterator
      * @throws DatasetException
      * @throws Exception
      */
     public function getIterator()
     {
-        if ($this->_sourceType == "HTTP") {
+        if ($this->sourceType == "HTTP") {
             return $this->getIteratorHttp();
         } else {
             return $this->getIteratorFile();
@@ -68,7 +68,7 @@ class FixedTextFileDataset
         // [2]: Server name
         // [3]: Full Path
         $pat = "/(http|ftp|https):\/\/([\w+|\.]+)/i";
-        $urlParts = preg_split($pat, $this->_source, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $urlParts = preg_split($pat, $this->source, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         $handle = fsockopen($urlParts[2], 80, $errno, $errstr, 30);
         if (!$handle) {
@@ -81,8 +81,7 @@ class FixedTextFileDataset
             fwrite($handle, $out);
 
             try {
-                $it = new FixedTextFileIterator($handle, $this->_fieldDefinition);
-                return $it;
+                return new FixedTextFileIterator($handle, $this->fieldDefinition);
             } catch (Exception $ex) {
                 fclose($handle);
                 throw $ex;
@@ -92,13 +91,12 @@ class FixedTextFileDataset
 
     protected function getIteratorFile()
     {
-        $handle = fopen($this->_source, "r");
+        $handle = fopen($this->source, "r");
         if (!$handle) {
             throw new DatasetException("TextFileDataset File open error");
         } else {
             try {
-                $it = new FixedTextFileIterator($handle, $this->_fieldDefinition);
-                return $it;
+                return new FixedTextFileIterator($handle, $this->fieldDefinition);
             } catch (Exception $ex) {
                 fclose($handle);
                 throw $ex;

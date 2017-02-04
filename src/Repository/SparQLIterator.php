@@ -65,7 +65,7 @@ class SparQLIterator extends GenericIterator
         }
     }
 
-    function key()
+    public function key()
     {
         return $this->_current;
     }

@@ -93,7 +93,7 @@ class Oci8Iterator extends GenericIterator
         }
     }
 
-    function key()
+    public function key()
     {
         return $this->_moveNextRow;
     }

@@ -12,17 +12,17 @@ class FixedTextFileIterator extends GenericIterator
      *
      * @var FixedTextDefinition[]
      */
-    protected $_fields;
+    protected $fields;
 
     /**
      * @var resource
      */
-    protected $_handle;
+    protected $handle;
 
     /**
      * @var int
      */
-    protected $_current = 0;
+    protected $current = 0;
 
     /**
      *
@@ -31,9 +31,9 @@ class FixedTextFileIterator extends GenericIterator
      */
     public function __construct($handle, $fields)
     {
-        $this->_fields = $fields;
-        $this->_handle = $handle;
-        $this->_current = 0;
+        $this->fields = $fields;
+        $this->handle = $handle;
+        $this->current = 0;
     }
 
     /**
@@ -51,11 +51,11 @@ class FixedTextFileIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if (!$this->_handle) {
+        if (!$this->handle) {
             return false;
         } else {
-            if (feof($this->_handle)) {
-                fclose($this->_handle);
+            if (feof($this->handle)) {
+                fclose($this->handle);
                 return false;
             } else {
                 return true;
@@ -71,23 +71,23 @@ class FixedTextFileIterator extends GenericIterator
     public function moveNext()
     {
         if ($this->hasNext()) {
-            $buffer = fgets($this->_handle, 4096);
+            $buffer = fgets($this->handle, 4096);
 
             if ($buffer == "") {
                 return new SingleRow();
             }
 
-            $fields = $this->processBuffer($buffer, $this->_fields);
+            $fields = $this->processBuffer($buffer, $this->fields);
 
             if (is_null($fields)) {
                 throw new IteratorException("Definition does not match");
             }
 
-            $this->_current++;
+            $this->current++;
             return new SingleRow($fields);
         } else {
-            if ($this->_handle) {
-                fclose($this->_handle);
+            if ($this->handle) {
+                fclose($this->handle);
             }
             return null;
         }
@@ -101,9 +101,18 @@ class FixedTextFileIterator extends GenericIterator
             $fieldDef = $fieldDefinition[$i];
 
             $fields[$fieldDef->fieldName] = substr($buffer, $fieldDef->startPos, $fieldDef->length);
-            if (!empty($fieldDef->requiredValue) && (!preg_match("/^[" . $fieldDef->requiredValue . "]$/",
-                    $fields[$fieldDef->fieldName]))) {
-                throw new IteratorException("Expected the value '" . $fieldDef->requiredValue . "' and I got '" . $fields[$fieldDef->fieldName] . "'");
+            if (!empty($fieldDef->requiredValue)
+                && (
+                    !preg_match("/^[" . $fieldDef->requiredValue . "]$/", $fields[$fieldDef->fieldName])
+                )
+            ) {
+                throw new IteratorException(
+                    "Expected the value '"
+                    . $fieldDef->requiredValue
+                    . "' and I got '"
+                    . $fields[$fieldDef->fieldName]
+                    . "'"
+                );
             } elseif (is_array($fieldDef->subTypes)) {
                 $fields[$fieldDef->fieldName] = $this->processBuffer($fields[$fieldDef->fieldName], $fieldDef->subTypes);
             }
@@ -112,8 +121,8 @@ class FixedTextFileIterator extends GenericIterator
         return $fields;
     }
 
-    function key()
+    public function key()
     {
-        return $this->_current;
+        return $this->current;
     }
 }

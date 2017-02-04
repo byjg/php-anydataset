@@ -88,7 +88,7 @@ class SocketIterator extends GenericIterator
         return $sr;
     }
 
-    function key()
+    public function key()
     {
         return $this->_current;
     }

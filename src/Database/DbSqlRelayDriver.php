@@ -8,7 +8,7 @@ use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Repository\SQLRelayIterator;
 
-class DBSQLRelayDriver implements DBDriverInterface
+class DbSqlRelayDriver implements DbDriverInterface
 {
 
     /**
@@ -16,38 +16,42 @@ class DBSQLRelayDriver implements DBDriverInterface
      *
      * @var ConnectionManagement
      */
-    protected $_connectionManagement;
+    protected $connectionManagement;
 
     /** Used for SQL Relay connections * */
-    protected $_conn;
-    protected $_transaction = false;
+    protected $conn;
+    protected $transaction = false;
 
     public function __construct($connMngt)
     {
-        $this->_connectionManagement = $connMngt;
+        $this->connectionManagement = $connMngt;
 
-        $this->_conn = sqlrcon_alloc(
-            $this->_connectionManagement->getServer(), $this->_connectionManagement->getPort(),
-            $this->_connectionManagement->getExtraParam("unixsocket"), $this->_connectionManagement->getUsername(),
-            $this->_connectionManagement->getPassword(), 0, 1
+        $this->conn = sqlrcon_alloc(
+            $this->connectionManagement->getServer(),
+            $this->connectionManagement->getPort(),
+            $this->connectionManagement->getExtraParam("unixsocket"),
+            $this->connectionManagement->getUsername(),
+            $this->connectionManagement->getPassword(),
+            0,
+            1
         );
 
-        sqlrcon_autoCommitOn($this->_conn);
+        sqlrcon_autoCommitOn($this->conn);
     }
 
     public function __destruct()
     {
-        if (!is_null($this->_conn)) {
-            sqlrcon_free($this->_conn);
+        if (!is_null($this->conn)) {
+            sqlrcon_free($this->conn);
         }
     }
 
     protected function getSQLRelayCursor($sql, $array = null)
     {
-        $cur = sqlrcur_alloc($this->_conn);
+        $cur = sqlrcur_alloc($this->conn);
 
         if ($array) {
-            list($sql, $array) = SQLBind::parseSQL($this->_connectionManagement, $sql, $array);
+            list($sql, $array) = SqlBind::parseSQL($this->connectionManagement, $sql, $array);
 
             sqlrcur_prepareQuery($cur, $sql);
             $bindCount = 1;
@@ -56,10 +60,10 @@ class DBSQLRelayDriver implements DBDriverInterface
                 sqlrcur_inputBind($cur, $field, $value);
             }
             $success = sqlrcur_executeQuery($cur);
-            sqlrcon_endSession($this->_conn);
+            sqlrcon_endSession($this->conn);
         } else {
             $success = sqlrcur_sendQuery($cur, $sql);
-            sqlrcon_endSession($this->_conn);
+            sqlrcon_endSession($this->conn);
         }
         if (!$success) {
             throw new DatasetException(sqlrcur_errorMessage($cur));
@@ -72,8 +76,8 @@ class DBSQLRelayDriver implements DBDriverInterface
     public function getIterator($sql, $array = null)
     {
         $cur = $this->getSQLRelayCursor($sql, $array);
-        $it = new SQLRelayIterator($cur);
-        return $it;
+        $iterator = new SQLRelayIterator($cur);
+        return $iterator;
     }
 
     public function getScalar($sql, $array = null)
@@ -87,10 +91,12 @@ class DBSQLRelayDriver implements DBDriverInterface
 
     public function getAllFields($tablename)
     {
-        $cur = sqlrcur_alloc($this->_conn);
+        $cur = sqlrcur_alloc($this->conn);
 
-        $success = sqlrcur_sendQuery($cur,
-            SQLHelper::createSafeSQL("select * from :table", array(":table" => $tablename)));
+        $success = sqlrcur_sendQuery(
+            $cur,
+            SqlHelper::createSafeSQL("select * from :table", array(":table" => $tablename))
+        );
         sqlrcon_endSession($cur);
 
         if (!$success) {
@@ -110,39 +116,39 @@ class DBSQLRelayDriver implements DBDriverInterface
 
     public function beginTransaction()
     {
-        $this->_transaction = true;
-        sqlrcon_autoCommitOff($this->_conn);
+        $this->transaction = true;
+        sqlrcon_autoCommitOff($this->conn);
     }
 
     public function commitTransaction()
     {
-        if ($this->_transaction) {
-            $this->_transaction = false;
+        if ($this->transaction) {
+            $this->transaction = false;
 
-            $ret = sqlrcon_commit($this->_conn);
+            $ret = sqlrcon_commit($this->conn);
             if ($ret === 0) {
                 throw new DatabaseException('Commit failed');
-            } else if ($ret === -1) {
+            } elseif ($ret === -1) {
                 throw new DatabaseException('An error occurred. Commit failed');
             }
 
-            sqlrcon_autoCommitOn($this->_conn);
+            sqlrcon_autoCommitOn($this->conn);
         }
     }
 
     public function rollbackTransaction()
     {
-        if ($this->_transaction) {
-            $this->_transaction = false;
+        if ($this->transaction) {
+            $this->transaction = false;
 
-            $ret = sqlrcon_rollback($this->_conn);
+            $ret = sqlrcon_rollback($this->conn);
             if ($ret === 0) {
                 throw new DatabaseException('Commit failed');
-            } else if ($ret === -1) {
+            } elseif ($ret === -1) {
                 throw new DatabaseException('An error occurred. Commit failed');
             }
 
-            sqlrcon_autoCommitOn($this->_conn);
+            sqlrcon_autoCommitOn($this->conn);
         }
     }
 
@@ -159,7 +165,7 @@ class DBSQLRelayDriver implements DBDriverInterface
      */
     public function getDbConnection()
     {
-        return $this->_conn;
+        return $this->conn;
     }
 
     public function getAttribute($name)

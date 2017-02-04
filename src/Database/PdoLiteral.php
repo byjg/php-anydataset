@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Database;
 use ByJG\AnyDataset\ConnectionManagement;
 use PDO;
 
-class PdoLiteral extends DBPDODriver
+class PdoLiteral extends DbPdoDriver
 {
 
     public function __construct(ConnectionManagement $connMngt)

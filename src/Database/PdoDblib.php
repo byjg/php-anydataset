@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-class PdoDblib extends DBPDODriver
+class PdoDblib extends DbPdoDriver
 {
 
     public function __construct($connMngt)

@@ -18,13 +18,13 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         "C" => array('code' => 1002, 'name' => "ProdC"));
 
     // Run before each test case
-    function setUp()
+    public function setUp()
     {
         
     }
 
     // Run end each test case
-    function teardown()
+    public function teardown()
     {
         
     }
@@ -32,12 +32,12 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException UnexpectedValueException
      */
-    function test_InvalidConstructor()
+    public function test_InvalidConstructor()
     {
         $arrayDataset = new ArrayDataset('aaa');
     }
 
-    function test_createArrayIteratorSample1()
+    public function test_createArrayIteratorSample1()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE1);
         $arrayIterator = $arrayDataset->getIterator();
@@ -48,7 +48,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    function test_createArrayIteratorSample2()
+    public function test_createArrayIteratorSample2()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE2);
         $arrayIterator = $arrayDataset->getIterator();
@@ -58,7 +58,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    function test_createArrayIteratorSample3()
+    public function test_createArrayIteratorSample3()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE3);
         $arrayIterator = $arrayDataset->getIterator();
@@ -68,7 +68,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    function test_navigateArrayIteratorSample1()
+    public function test_navigateArrayIteratorSample1()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE1);
         $arrayIterator = $arrayDataset->getIterator();
@@ -100,7 +100,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    function test_navigateArrayIteratorSample2()
+    public function test_navigateArrayIteratorSample2()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE2);
         $arrayIterator = $arrayDataset->getIterator();
@@ -132,7 +132,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    function test_navigateArrayIteratorSample3()
+    public function test_navigateArrayIteratorSample3()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE3);
         $arrayIterator = $arrayDataset->getIterator();
@@ -167,7 +167,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    function test_createFromModel1()
+    public function test_createFromModel1()
     {
         $model = array(
             new \AnyDataSet\Tests\Sample\ModelPublic(1, 'ProdA'),
@@ -184,7 +184,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    function test_navigateFromModel1()
+    public function test_navigateFromModel1()
     {
         $model = array(
             new \AnyDataSet\Tests\Sample\ModelPublic(1, 'ProdA'),
@@ -228,7 +228,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    function test_createFromModel2()
+    public function test_createFromModel2()
     {
         $model = array(
             new AnyDataSet\Tests\Sample\ModelGetter(1, 'ProdA'),
@@ -245,7 +245,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    function test_navigateFromModel2()
+    public function test_navigateFromModel2()
     {
         $model = array(
             new AnyDataSet\Tests\Sample\ModelGetter(1, 'ProdA'),
@@ -293,12 +293,12 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
      *
      * @param SingleRow $sr
      */
-    function assertField($sr, $line, $field, $value)
+    public function assertField($sr, $line, $field, $value)
     {
         $this->assertEquals($sr->getField($field), $value); //, "At line $line field '$field' I expected '" . $value . "' but I got '" . $sr->getField($field) . "'");
     }
 
-    function assertSingleRow2($sr, $count)
+    public function assertSingleRow2($sr, $count)
     {
         $this->assertEquals($sr->getField("__id"), $this->arrTest2[$count]["__id"]); //, "At line $count field 'id' I expected '" . $this->arrTest2[$count]["__id"] . "' but I got '" . $sr->getField("__id") . "'");
         if ($count > 0)

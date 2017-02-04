@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\Database\Expressions\DbBaseFunctions;
 use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
 use ByJG\AnyDataset\Repository\DBDataset;
@@ -9,23 +10,22 @@ use ByJG\AnyDataset\Repository\SingleRow;
 use DateTime;
 use Exception;
 
-class SQLHelper
+class SqlHelper
 {
 
     /**
      * @var DBDataset
      */
-    private $_db;
-    protected $_fieldDeliLeft = " ";
-    protected $_fieldDeliRight = " ";
+    private $dataset;
+    protected $fieldDeliLeft = " ";
+    protected $fieldDeliRight = " ";
 
     /**
-     *
-     * @param DBDataset $db
+     * @param DBDataset $dataset
      */
-    public function __construct(DBDataset $db)
+    public function __construct(DBDataset $dataset)
     {
-        $this->_db = $db;
+        $this->dataset = $dataset;
     }
 
     /**
@@ -40,8 +40,14 @@ class SQLHelper
      * @return string
      * @throws Exception
      */
-    public function generateSQL($table, $fields, &$param, $type = SQLType::SQL_INSERT, $filter = "", $decimalpoint = ".")
-    {
+    public function generateSQL(
+        $table,
+        $fields,
+        &$param,
+        $type = SQLType::SQL_INSERT,
+        $filter = "",
+        $decimalpoint = "."
+    ) {
         if ($fields instanceof SingleRow) {
             return $this->generateSQL($table, $fields->toArray(), $param, $type, $filter, $decimalpoint);
         }
@@ -56,8 +62,13 @@ class SQLHelper
                 if ($sql != "") {
                     $sql .= ", ";
                 }
-                $sql .= " " . $this->_fieldDeliLeft . $fieldname . $this->_fieldDeliRight . " = " . $this->getValue($fieldname,
-                        $fieldvalue, $param, $decimalpoint) . " ";
+                $sql .= " "
+                    . $this->fieldDeliLeft
+                    . $fieldname
+                    . $this->fieldDeliRight
+                    . " = "
+                    . $this->getValue($fieldname, $fieldvalue, $param, $decimalpoint)
+                    . " ";
             }
             $sql = "update $table set $sql where $filter ";
         } elseif ($type == SQLType::SQL_INSERT) {
@@ -68,7 +79,7 @@ class SQLHelper
                     $campos .= ", ";
                     $valores .= ", ";
                 }
-                $campos .= $this->_fieldDeliLeft . $fieldname . $this->_fieldDeliRight;
+                $campos .= $this->fieldDeliLeft . $fieldname . $this->fieldDeliRight;
                 $valores .= $this->getValue($fieldname, $fieldvalue, $param, $decimalpoint);
             }
             $sql = "insert into $table ($campos) values ($valores)";
@@ -109,7 +120,7 @@ class SQLHelper
             $param[$name] = trim($valores[1]);
             return $paramName;
         } elseif ($valores[0] == SQLFieldType::DATE) {
-            $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DBBaseFunctions::YMDH) : $valores[1]);
+            $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DbBaseFunctions::YMDH) : $valores[1]);
             $param[$name] = $date;
             if ($this->getDbDataset()->getConnectionManagement()->getDriver() == 'oci8') {
                 return "TO_DATE($paramName, 'YYYY-MM-DD')";
@@ -145,17 +156,13 @@ class SQLHelper
 
     public function setFieldDelimeters($left, $right)
     {
-        $this->_fieldDeliLeft = $left;
-        $this->_fieldDeliRight = $right;
+        $this->fieldDeliLeft = $left;
+        $this->fieldDeliRight = $right;
     }
 
     public static function createSafeSQL($sql, $list)
     {
-        foreach ($list as $key => $value) {
-            $value = str_replace(["'", ';'], ["", ''], $value);
-            $sql = str_replace($key, $value, $sql);
-        }
-        return $sql;
+        return str_replace(array_keys($list), array_values($list), $sql);
     }
 
     /**
@@ -163,6 +170,6 @@ class SQLHelper
      */
     public function getDbDataset()
     {
-        return $this->_db;
+        return $this->dataset;
     }
 }

@@ -24,7 +24,7 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
         throw new NotImplementedException("Implement this method");
     }
 
-    function key()
+    public function key()
     {
         throw new NotImplementedException("Implement this method");
     }
@@ -47,22 +47,22 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
     /**
      * @return SingleRow
      */
-    function current()
+    public function current()
     {
         return $this->moveNext();
     }
 
-    function rewind()
+    public function rewind()
     {
         // There is no necessary
     }
 
-    function next()
+    public function next()
     {
         // There is no necessary
     }
 
-    function valid()
+    public function valid()
     {
         return $this->hasNext();
     }

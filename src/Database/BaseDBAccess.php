@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Database;
 
 use ByJG\AnyDataset\AnyDatasetContext;
+use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
 use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
@@ -13,22 +14,23 @@ class BaseDBAccess
     /**
      * @var DBDataset
      */
-    private $_db = null;
+    private $dataset = null;
 
     /**
-     * Wrapper for SQLHelper
+     * Wrapper for SqlHelper
      *
-     * @var SQLHelper
+     * @var SqlHelper
      */
-    protected $_sqlhelper = null;
+    protected $sqlHelper = null;
 
     /**
      * Base Class Constructor. Don't must be override.
-     * @param DBDataset $db
+     *
+     * @param DBDataset $dbdataset
      */
-    public function __construct(DBDataset $db)
+    public function __construct(DBDataset $dbdataset)
     {
-        $this->_db = $db;
+        $this->dataset = $dbdataset;
     }
 
     /**
@@ -37,7 +39,7 @@ class BaseDBAccess
      */
     protected function getDBDataset()
     {
-        return $this->_db;
+        return $this->dataset;
     }
 
     /**
@@ -49,6 +51,7 @@ class BaseDBAccess
      */
     protected function executeSQL($sql, $param = null, $getId = false)
     {
+        $log = null;
         $dbfunction = $this->getDbFunctions();
 
         $debug = $this->getDebug();
@@ -58,22 +61,22 @@ class BaseDBAccess
             $log->debug("Class name: " . get_class($this));
             $log->debug("SQL: " . $sql);
             if (!is_null($param)) {
-                $s = "";
+                $strForLog = "";
                 foreach ($param as $key => $value) {
-                    if ($s != "") {
-                        $s .= ", ";
+                    if ($strForLog != "") {
+                        $strForLog .= ", ";
                     }
-                    $s .= "[$key]=$value";
+                    $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $s");
+                $log->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }
 
+        $insertedId = null;
         if ($getId) {
-            $id = $dbfunction->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
+            $insertedId = $dbfunction->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
         } else {
-            $id = null;
             $this->getDBDataset()->execSQL($sql, $param);
         }
 
@@ -82,7 +85,7 @@ class BaseDBAccess
             $log->debug("Execution time: " . ($end - $start) . " seconds ");
         }
 
-        return $id;
+        return $insertedId;
     }
 
     /**
@@ -95,6 +98,7 @@ class BaseDBAccess
      */
     protected function getIterator($sql, $param = null, $ttl = null)
     {
+        $log = null;
         $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
@@ -102,27 +106,28 @@ class BaseDBAccess
             $log->debug("Class name: " . get_class($this));
             $log->debug("SQL: " . $sql);
             if (!is_null($param)) {
-                $s = "";
+                $strForLog = "";
                 foreach ($param as $key => $value) {
-                    if ($s != "") {
-                        $s .= ", ";
+                    if ($strForLog != "") {
+                        $strForLog .= ", ";
                     }
-                    $s .= "[$key]=$value";
+                    $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $s");
+                $log->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }
-        $it = $this->getDBDataset()->getIterator($sql, $param, $ttl);
+        $iterator = $this->getDBDataset()->getIterator($sql, $param, $ttl);
         if ($debug) {
             $end = microtime(true);
             $log->debug("Execution Time: " . ($end - $start) . " segundos ");
         }
-        return $it;
+        return $iterator;
     }
 
     protected function getScalar($sql, $param = null)
     {
+        $log = null;
         $debug = $this->getDebug();
         $start = 0;
         if ($debug) {
@@ -130,14 +135,14 @@ class BaseDBAccess
             $log->debug("Class name: " . get_class($this));
             $log->debug("SQL: " . $sql);
             if (!is_null($param)) {
-                $s = "";
+                $strForLog = "";
                 foreach ($param as $key => $value) {
-                    if ($s != "") {
-                        $s .= ", ";
+                    if ($strForLog != "") {
+                        $strForLog .= ", ";
                     }
-                    $s .= "[$key]=$value";
+                    $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $s");
+                $log->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }
@@ -150,17 +155,17 @@ class BaseDBAccess
     }
 
     /**
-     * Get a SQLHelper object
+     * Get a SqlHelper object
      *
-     * @return SQLHelper
+     * @return SqlHelper
      */
     public function getSQLHelper()
     {
-        if (is_null($this->_sqlhelper)) {
-            $this->_sqlhelper = new SQLHelper($this->getDBDataset());
+        if (is_null($this->sqlHelper)) {
+            $this->sqlHelper = new SqlHelper($this->getDBDataset());
         }
 
-        return $this->_sqlhelper;
+        return $this->sqlHelper;
     }
 
     /**
@@ -182,34 +187,34 @@ class BaseDBAccess
     /**
      * Get an Array from an existing Iterator
      *
-     * @param IteratorInterface $it
+     * @param IteratorInterface $iterator
      * @param string $key
      * @param string $value
      * @param string $firstElement
      * @return array
      */
-    public static function getArrayFromIterator(IteratorInterface $it, $key, $value, $firstElement = "-- Selecione --")
+    public static function getArrayFromIterator(IteratorInterface $iterator, $key, $value, $firstElement = "-- Selecione --")
     {
         $retArray = array();
         if ($firstElement != "") {
             $retArray[""] = $firstElement;
         }
-        while ($it->hasNext()) {
-            $sr = $it->moveNext();
-            $retArray[$sr->getField(strtolower($key))] = $sr->getField(strtolower($value));
+        while ($iterator->hasNext()) {
+            $singleRow = $iterator->moveNext();
+            $retArray[$singleRow->getField(strtolower($key))] = $singleRow->getField(strtolower($value));
         }
         return $retArray;
     }
 
     /**
-     *
-     * @param IteratorInterface $it
+
+     * @param IteratorInterface $iterator
      * @param string $name
      * @param array $fields
      * @param bool $echoToBrowser
      * @return string
      */
-    public static function saveToCSV($it, $name = "data.csv", $fields = null, $echoToBrowser = true)
+    public static function saveToCSV($iterator, $name = "data.csv", $fields = null, $echoToBrowser = true)
     {
         if ($echoToBrowser) {
             ob_clean();
@@ -220,12 +225,12 @@ class BaseDBAccess
 
         $first = true;
         $line = "";
-        foreach ($it as $sr) {
+        foreach ($iterator as $singleRow) {
             if ($first) {
                 $first = false;
 
                 if (is_null($fields)) {
-                    $fields = $sr->getFieldNames();
+                    $fields = $singleRow->getFieldNames();
                 }
 
                 $line .= '"' . implode('","', $fields) . '"' . "\n";
@@ -233,7 +238,7 @@ class BaseDBAccess
 
             $raw = array();
             foreach ($fields as $field) {
-                $raw[] = $sr->getField($field);
+                $raw[] = $singleRow->getField($field);
             }
             $line .= '"' . implode('","', array_values($raw)) . '"' . "\n";
 
@@ -252,7 +257,7 @@ class BaseDBAccess
 
     /**
      * Get a IDbFunctions class containing specific database operations
-     * @return DBFunctionsInterface
+     * @return DbFunctionsInterface
      */
     public function getDbFunctions()
     {

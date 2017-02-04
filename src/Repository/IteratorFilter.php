@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Database\SQLHelper;
+use ByJG\AnyDataset\Database\SqlHelper;
 use ByJG\AnyDataset\Enum\Relation;
 
 class IteratorFilter
@@ -14,14 +14,14 @@ class IteratorFilter
     /**
      * @var array
      */
-    private $_filters;
+    private $filters;
 
     /**
      * @desc IteratorFilter Constructor
      */
     public function __construct()
     {
-        $this->_filters = array();
+        $this->filters = array();
     }
 
     /**
@@ -59,12 +59,14 @@ class IteratorFilter
             $sql .= " where @@sqlFilter ";
         }
 
-        $sql = SQLHelper::createSafeSQL($sql,
-                array(
+        $sql = SqlHelper::createSafeSQL(
+            $sql,
+            [
                 "@@returnFields" => $returnFields,
                 "@@tableName" => $tableName,
                 "@@sqlFilter" => $sqlFilter
-        ));
+            ]
+        );
 
         return $sql;
     }
@@ -100,7 +102,7 @@ class IteratorFilter
         $param = array();
 
         $previousValue = null;
-        foreach ($this->_filters as $value) {
+        foreach ($this->filters as $value) {
             if ($value[0] == "(") {
                 if (!is_null($previousValue)) {
                     $filter .= " or ( ";
@@ -140,38 +142,38 @@ class IteratorFilter
 
         $result = "";
         switch ($relation) {
-            case Relation::EQUAL: {
-                    $result = $field . "=" . $value;
-                    break;
-                }
-            case Relation::GREATER_THAN: {
-                    $result = $field . ">" . $value;
-                    break;
-                }
-            case Relation::LESS_THAN: {
-                    $result = $field . "<" . $value;
-                    break;
-                }
-            case Relation::GREATER_OR_EQUAL_THAN: {
-                    $result = $field . ">=" . $value;
-                    break;
-                }
-            case Relation::LESS_OR_EQUAL_THAN: {
-                    $result = $field . "<=" . $value;
-                    break;
-                }
-            case Relation::NOT_EQUAL: {
-                    $result = $field . "!=" . $value;
-                    break;
-                }
-            case Relation::STARTS_WITH: {
-                    $result = " starts-with($field, $value) ";
-                    break;
-                }
-            case Relation::CONTAINS: {
-                    $result = " contains($field, $value) ";
-                    break;
-                }
+            case Relation::EQUAL:
+                $result = $field . "=" . $value;
+                break;
+
+            case Relation::GREATER_THAN:
+                $result = $field . ">" . $value;
+                break;
+
+            case Relation::LESS_THAN:
+                $result = $field . "<" . $value;
+                break;
+
+            case Relation::GREATER_OR_EQUAL_THAN:
+                $result = $field . ">=" . $value;
+                break;
+
+            case Relation::LESS_OR_EQUAL_THAN:
+                $result = $field . "<=" . $value;
+                break;
+
+            case Relation::NOT_EQUAL:
+                $result = $field . "!=" . $value;
+                break;
+
+            case Relation::STARTS_WITH:
+                $result = " starts-with($field, $value) ";
+                break;
+
+            case Relation::CONTAINS:
+                $result = " contains($field, $value) ";
+                break;
+
         }
         return $result;
     }
@@ -251,7 +253,7 @@ class IteratorFilter
 
         $result[0] = true;
 
-        foreach ($this->_filters as $filter) {
+        foreach ($this->filters as $filter) {
             if (($filter[0] == ")") || ($filter[0] == " or ")) {
                 $finalResult |= $result[$pos];
                 $result[++$pos] = true;
@@ -317,7 +319,7 @@ class IteratorFilter
      */
     public function addRelation($name, $relation, $value)
     {
-        $this->_filters[] = array(" and ", $name, $relation, $value);
+        $this->filters[] = array(" and ", $name, $relation, $value);
     }
 
     /**
@@ -329,7 +331,7 @@ class IteratorFilter
      */
     public function addRelationOr($name, $relation, $value)
     {
-        $this->_filters[] = array(" or ", $name, $relation, $value);
+        $this->filters[] = array(" or ", $name, $relation, $value);
     }
 
     /**
@@ -338,7 +340,7 @@ class IteratorFilter
      */
     public function startGroup()
     {
-        $this->_filters[] = array("(", "", "", "");
+        $this->filters[] = array("(", "", "", "");
     }
 
     /**
@@ -347,6 +349,6 @@ class IteratorFilter
      */
     public function endGroup()
     {
-        $this->_filters[] = array(")", "", "", "");
+        $this->filters[] = array(")", "", "", "");
     }
 }

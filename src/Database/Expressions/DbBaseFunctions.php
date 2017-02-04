@@ -1,11 +1,11 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset\Database\Expressions;
 
 use ByJG\AnyDataset\Repository\DBDataset;
 use DateTime;
 
-abstract class DBBaseFunctions implements DBFunctionsInterface
+abstract class DbBaseFunctions implements DbFunctionsInterface
 {
 
     const DMY = "d-m-Y";
@@ -16,18 +16,17 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
     const YMDH = "Y-m-d H:i:s";
 
     /**
-     * Given two or more string the system will return the string containing de proper SQL commands to concatenate these string;
+     * Given two or more string the system will return the string containing the proper
+     * SQL commands to concatenate these string;
      * use:
      *     for ($i = 0, $numArgs = func_num_args(); $i < $numArgs ; $i++)
      * to get all parameters received.
-     * @param string $s1
-     * @param string $s2
+     *
+     * @param string $str1
+     * @param string|null $str2
      * @return string
      */
-    function concat($s1, $s2 = null)
-    {
-        return "";
-    }
+    abstract public function concat($str1, $str2 = null);
 
     /**
      * Given a SQL returns it with the proper LIMIT or equivalent method included
@@ -36,10 +35,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @param int $qty
      * @return string
      */
-    function limit($sql, $start, $qty)
-    {
-        return $sql;
-    }
+    abstract public function limit($sql, $start, $qty = null);
 
     /**
      * Given a SQL returns it with the proper TOP or equivalent method included
@@ -47,16 +43,13 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @param int $qty
      * @return string
      */
-    function top($sql, $qty)
-    {
-        return $sql;
-    }
+    abstract public function top($sql, $qty);
 
     /**
      * Return if the database provider have a top or similar function
      * @return bool
      */
-    function hasTop()
+    public function hasTop()
     {
         return false;
     }
@@ -65,21 +58,41 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * Return if the database provider have a limit function
      * @return bool
      */
-    function hasLimit()
+    public function hasLimit()
     {
         return false;
     }
 
     /**
      * Format date column in sql string given an input format that understands Y M D
-     * @param string $fmt
-     * @param bool|string $col
+     *
+     * @param string $format
+     * @param string|bool $column
      * @return string
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
-    function sqlDate($fmt, $col = false)
+    abstract public function sqlDate($format, $column = null);
+
+
+    protected function prepareSqlDate($input, $pattern, $delimitString = "'")
     {
-        return "";
+        $prepareString = preg_split('/([YyMmQqDdhHisaA])/', $input, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        foreach ($prepareString as $key => $value) {
+            if ('' === $value) {
+                unset($prepareString[$key]);
+                continue;
+            }
+
+            if (isset($pattern[$value])) {
+                $formatted = $pattern[$value];
+            } else {
+                $formatted = $delimitString . $value . $delimitString;
+            }
+            $prepareString[$key] = $formatted;
+        }
+
+        return $prepareString;
     }
 
     /**
@@ -89,7 +102,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @param string $dateFormat
      * @return string
      */
-    function toDate($date, $dateFormat)
+    public function toDate($date, $dateFormat)
     {
         $dateTime = DateTime::createFromFormat($dateFormat, $date);
         return $dateTime->format(self::YMDH);
@@ -102,7 +115,7 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @param string $dateFormat
      * @return string
      */
-    function fromDate($date, $dateFormat)
+    public function fromDate($date, $dateFormat)
     {
         $dateTime = DateTime::createFromFormat(self::YMDH, $date);
         return $dateTime->format($dateFormat);
@@ -113,10 +126,9 @@ abstract class DBBaseFunctions implements DBFunctionsInterface
      * @param DBDataset $dbdataset
      * @param string $sql
      * @param array $param
-     * @param string $sequence
      * @return int
      */
-    function executeAndGetInsertedId($dbdataset, $sql, $param, $sequence = null)
+    public function executeAndGetInsertedId($dbdataset, $sql, $param)
     {
         $dbdataset->execSQL($sql, $param);
         return -1;

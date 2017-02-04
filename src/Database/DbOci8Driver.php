@@ -6,7 +6,7 @@ use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Repository\Oci8Iterator;
 
-class DBOci8Driver implements DBDriverInterface
+class DbOci8Driver implements DbDriverInterface
 {
 
     /**
@@ -14,11 +14,11 @@ class DBOci8Driver implements DBDriverInterface
      *
      * @var ConnectionManagement
      */
-    protected $_connectionManagement;
+    protected $connectionManagement;
 
     /** Used for OCI8 connections * */
-    protected $_conn;
-    protected $_transaction = OCI_COMMIT_ON_SUCCESS;
+    protected $conn;
+    protected $transaction = OCI_COMMIT_ON_SUCCESS;
 
     /**
      * Ex.
@@ -30,20 +30,23 @@ class DBOci8Driver implements DBDriverInterface
      */
     public function __construct($connMngt)
     {
-        $this->_connectionManagement = $connMngt;
+        $this->connectionManagement = $connMngt;
 
-        $codePage = $this->_connectionManagement->getExtraParam("codepage");
+        $codePage = $this->connectionManagement->getExtraParam("codepage");
         $codePage = ($codePage == "") ? 'UTF8' : $codePage;
 
-        $tns = DBOci8Driver::getTnsString($connMngt);
+        $tns = DbOci8Driver::getTnsString($connMngt);
 
-        $this->_conn = oci_connect(
-            $this->_connectionManagement->getUsername(), $this->_connectionManagement->getPassword(), $tns, $codePage
+        $this->conn = oci_connect(
+            $this->connectionManagement->getUsername(),
+            $this->connectionManagement->getPassword(),
+            $tns,
+            $codePage
         );
 
-        if (!$this->_conn) {
-            $e = oci_error();
-            throw new DatabaseException($e['message']);
+        if (!$this->conn) {
+            $error = oci_error();
+            throw new DatabaseException($error['message']);
         }
     }
 
@@ -74,18 +77,18 @@ class DBOci8Driver implements DBDriverInterface
 
     public function __destruct()
     {
-        $this->_conn = null;
+        $this->conn = null;
     }
 
     protected function getOci8Cursor($sql, $array = null)
     {
-        list($query, $array) = SQLBind::parseSQL($this->_connectionManagement, $sql, $array);
+        list($query, $array) = SqlBind::parseSQL($this->connectionManagement, $sql, $array);
 
         // Prepare the statement
-        $stid = oci_parse($this->_conn, $query);
+        $stid = oci_parse($this->conn, $query);
         if (!$stid) {
-            $e = oci_error($this->_conn);
-            throw new DatabaseException($e['message']);
+            $error = oci_error($this->conn);
+            throw new DatabaseException($error['message']);
         }
 
         // Bind the parameters
@@ -96,22 +99,27 @@ class DBOci8Driver implements DBDriverInterface
         }
 
         // Perform the logic of the query
-        $r = oci_execute($stid, $this->_transaction);
+        $result = oci_execute($stid, $this->transaction);
 
         // Check if is OK;
-        if (!$r) {
-            $e = oci_error($stid);
-            throw new DatabaseException($e['message']);
+        if (!$result) {
+            $error = oci_error($stid);
+            throw new DatabaseException($error['message']);
         }
 
         return $stid;
     }
 
+    /**
+     * @param $sql
+     * @param null $array
+     * @return \ByJG\AnyDataset\Repository\Oci8Iterator
+     */
     public function getIterator($sql, $array = null)
     {
         $cur = $this->getOci8Cursor($sql, $array);
-        $it = new Oci8Iterator($cur);
-        return $it;
+        $iterator = new Oci8Iterator($cur);
+        return $iterator;
     }
 
     public function getScalar($sql, $array = null)
@@ -132,7 +140,7 @@ class DBOci8Driver implements DBDriverInterface
 
     public function getAllFields($tablename)
     {
-        $cur = $this->getOci8Cursor(SQLHelper::createSafeSQL("select * from :table", array(':table' => $tablename)));
+        $cur = $this->getOci8Cursor(SqlHelper::createSafeSQL("select * from :table", array(':table' => $tablename)));
 
         $ncols = oci_num_fields($cur);
 
@@ -148,33 +156,33 @@ class DBOci8Driver implements DBDriverInterface
 
     public function beginTransaction()
     {
-        $this->_transaction = OCI_NO_AUTO_COMMIT;
+        $this->transaction = OCI_NO_AUTO_COMMIT;
     }
 
     public function commitTransaction()
     {
-        if ($this->_transaction == OCI_COMMIT_ON_SUCCESS) {
+        if ($this->transaction == OCI_COMMIT_ON_SUCCESS) {
             throw new DatabaseException('No transaction for commit');
         }
 
-        $this->_transaction = OCI_COMMIT_ON_SUCCESS;
+        $this->transaction = OCI_COMMIT_ON_SUCCESS;
 
-        $result = oci_commit($this->_conn);
+        $result = oci_commit($this->conn);
         if (!$result) {
-            $error = oci_error($this->_conn);
+            $error = oci_error($this->conn);
             throw new DatabaseException($error['message']);
         }
     }
 
     public function rollbackTransaction()
     {
-        if ($this->_transaction == OCI_COMMIT_ON_SUCCESS) {
+        if ($this->transaction == OCI_COMMIT_ON_SUCCESS) {
             throw new DatabaseException('No transaction for rollback');
         }
 
-        $this->_transaction = OCI_COMMIT_ON_SUCCESS;
+        $this->transaction = OCI_COMMIT_ON_SUCCESS;
 
-        oci_rollback($this->_conn);
+        oci_rollback($this->conn);
     }
 
     public function executeSql($sql, $array = null)
@@ -190,7 +198,7 @@ class DBOci8Driver implements DBDriverInterface
      */
     public function getDbConnection()
     {
-        return $this->_conn;
+        return $this->conn;
     }
 
     public function getAttribute($name)
