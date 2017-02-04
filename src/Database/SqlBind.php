@@ -41,7 +41,7 @@ class SqlBind
     public static function parseSQL(ConnectionManagement $connData, $sql, $params = null)
     {
         if (is_null($params)) {
-            return $sql;
+            return [$sql, null];
         }
 
         $paramSubstName = SqlBind::getParamModel($connData);
@@ -57,7 +57,7 @@ class SqlBind
 
         $sql = preg_replace("/\[\[(.*?)\]\]/", "null", $sql);
 
-        return array($sql, $params);
+        return [$sql, $params];
     }
 
     public static function keyAdj($key)

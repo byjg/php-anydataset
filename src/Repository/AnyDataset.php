@@ -11,20 +11,21 @@ use InvalidArgumentException;
  * AnyDataset is a simple way to store data using only XML file.
  * Your structure is hierarquical and each "row" contains "fields" but these structure can vary for each row.
  * Anydataset files have extension ".anydata.xml" and have many classes to put and get data into anydataset xml file.
- * Anydataset class just read and write files. To search elements you need use AnyIterator and IteratorFilter. Each row have a class SingleRow.
+ * Anydataset class just read and write files. To search elements you need use AnyIterator
+ * and IteratorFilter. Each row have a class SingleRow.
  *
  * XML Structure
  * <code>
  * <anydataset>
- * 		<row>
- * 			<field name="fieldname1">value of fieldname 1</field>
- * 			<field name="fieldname2">value of fieldname 2</field>
- * 			<field name="fieldname3">value of fieldname 3</field>
- * 		</row>
- * 		<row>
- * 			<field name="fieldname1">value of fieldname 1</field>
- * 			<field name="fieldname4">value of fieldname 4</field>
- * 		</row>
+ *    <row>
+ *        <field name="fieldname1">value of fieldname 1</field>
+ *        <field name="fieldname2">value of fieldname 2</field>
+ *        <field name="fieldname3">value of fieldname 3</field>
+ *    </row>
+ *    <row>
+ *        <field name="fieldname1">value of fieldname 1</field>
+ *        <field name="fieldname4">value of fieldname 4</field>
+ *    </row>
  * </anydataset>
  * </code>
  *
@@ -45,19 +46,19 @@ class AnyDataset
      * Internal structure represent the current SingleRow
      * @var SingleRow[]
      */
-    private $_collection;
+    private $collection;
 
     /**
      * Current node anydataset works
      * @var int
      */
-    private $_currentRow;
+    private $currentRow;
 
     /**
      * Path to anydataset file
      * @var string
      */
-    private $_path;
+    private $path;
 
     /**
      *
@@ -66,21 +67,21 @@ class AnyDataset
      */
     public function __construct($file = null)
     {
-        $this->_collection = array();
-        $this->_currentRow = -1;
+        $this->collection = array();
+        $this->currentRow = -1;
 
-        $this->_path = null;
+        $this->path = null;
         if (!is_null($file)) {
             if (is_string($file)) {
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
                 if (empty($ext)) {
                     $file .= '.anydata.xml';
                 }
-                $this->_path = $file;
+                $this->path = $file;
             } else {
                 throw new \InvalidArgumentException('I expected a string as a file name');
             }
-            $this->createFrom($this->_path);
+            $this->createFrom($this->path);
         }
     }
 
@@ -93,7 +94,7 @@ class AnyDataset
     {
         if (file_exists($filepath)) {
             $anyDataSet = XmlUtil::createXmlDocumentFromFile($filepath);
-            $this->_collection = array();
+            $this->collection = array();
 
             $rows = $anyDataSet->getElementsByTagName("row");
             foreach ($rows as $row) {
@@ -108,9 +109,9 @@ class AnyDataset
                     }
                 }
                 $sr->acceptChanges();
-                $this->_collection[] = $sr;
+                $this->collection[] = $sr;
             }
-            $this->_currentRow = sizeof($this->_collection) - 1;
+            $this->currentRow = sizeof($this->collection) - 1;
         }
     }
 
@@ -131,7 +132,7 @@ class AnyDataset
     {
         $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset/>");
         $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
-        foreach ($this->_collection as $sr) {
+        foreach ($this->collection as $sr) {
             $row = $sr->getDomObject();
             $nodeRow = $row->getElementsByTagName("row")->item(0);
             $newRow = XmlUtil::createChild($nodeRoot, "row");
@@ -150,51 +151,52 @@ class AnyDataset
     {
         if (!is_null($file)) {
             if (is_string($file)) {
-                $this->_path = $file;
+                $this->path = $file;
             } else {
                 throw new InvalidArgumentException('Invalid file name');
             }
         }
 
-        if (is_null($this->_path)) {
+        if (is_null($this->path)) {
             throw new DatabaseException("No such file path to save anydataset");
         }
 
-        XmlUtil::saveXmlDocument($this->getDomObject(), $this->_path);
+        XmlUtil::saveXmlDocument($this->getDomObject(), $this->path);
     }
 
     /**
      * Append one row to AnyDataset.
-     * @param SingleRow $sr
+     *
+     * @param SingleRow $singleRow
      * @return void
      */
-    public function appendRow($sr = null)
+    public function appendRow($singleRow = null)
     {
-        if (!is_null($sr)) {
-            if ($sr instanceof SingleRow) {
-                $this->_collection[] = $sr;
-                $sr->acceptChanges();
-            } elseif (is_array($sr)) {
-                $this->_collection[] = new SingleRow($sr);
+        if (!is_null($singleRow)) {
+            if ($singleRow instanceof SingleRow) {
+                $this->collection[] = $singleRow;
+                $singleRow->acceptChanges();
+            } elseif (is_array($singleRow)) {
+                $this->collection[] = new SingleRow($singleRow);
             } else {
                 throw new InvalidArgumentException("You must pass an array or a SingleRow object");
             }
         } else {
-            $sr = new SingleRow();
-            $this->_collection[] = $sr;
-            $sr->acceptChanges();
+            $singleRow = new SingleRow();
+            $this->collection[] = $singleRow;
+            $singleRow->acceptChanges();
         }
-        $this->_currentRow = count($this->_collection) - 1;
+        $this->currentRow = count($this->collection) - 1;
     }
 
     /**
      * Enter description here...
      *
-     * @param IteratorInterface $it
+     * @param IteratorInterface $ititerator
      */
-    public function import(IteratorInterface $it)
+    public function import(IteratorInterface $ititerator)
     {
-        foreach ($it as $singleRow) {
+        foreach ($ititerator as $singleRow) {
             $this->appendRow($singleRow);
         }
     }
@@ -206,15 +208,15 @@ class AnyDataset
      */
     public function insertRowBefore($rowNumber, $row = null)
     {
-        if ($rowNumber > count($this->_collection)) {
+        if ($rowNumber > count($this->collection)) {
             $this->appendRow($row);
         } else {
             $singleRow = $row;
             if (!($row instanceof SingleRow)) {
                 $singleRow = new SingleRow($row);
             }
-            array_splice($this->_collection, $rowNumber, 0, '');
-            $this->_collection[$rowNumber] = $singleRow;
+            array_splice($this->collection, $rowNumber, 0, '');
+            $this->collection[$rowNumber] = $singleRow;
         }
     }
 
@@ -226,24 +228,24 @@ class AnyDataset
     public function removeRow($row = null)
     {
         if (is_null($row)) {
-            $row = $this->_currentRow;
+            $row = $this->currentRow;
         }
         if ($row instanceof SingleRow) {
-            $i = 0;
-            foreach ($this->_collection as $sr) {
+            $iPos = 0;
+            foreach ($this->collection as $sr) {
                 if ($sr->toArray() == $row->toArray()) {
-                    $this->removeRow($i);
+                    $this->removeRow($iPos);
                     break;
                 }
-                $i++;
+                $iPos++;
             }
             return;
         }
 
         if ($row == 0) {
-            $this->_collection = array_slice($this->_collection, 1);
+            $this->collection = array_slice($this->collection, 1);
         } else {
-            $this->_collection = array_slice($this->_collection, 0, $row) + array_slice($this->_collection, $row);
+            $this->collection = array_slice($this->collection, 0, $row) + array_slice($this->collection, $row);
         }
     }
 
@@ -255,10 +257,10 @@ class AnyDataset
      */
     public function addField($name, $value)
     {
-        if ($this->_currentRow < 0) {
+        if ($this->currentRow < 0) {
             $this->appendRow();
         }
-        $this->_collection[$this->_currentRow]->addField($name, $value);
+        $this->collection[$this->currentRow]->addField($name, $value);
     }
 
     /**
@@ -269,9 +271,9 @@ class AnyDataset
     public function getIterator(IteratorFilter $itf = null)
     {
         if (is_null($itf)) {
-            return new AnyIterator($this->_collection);
+            return new AnyIterator($this->collection);
         } else {
-            return new AnyIterator($itf->match($this->_collection));
+            return new AnyIterator($itf->match($this->collection));
         }
     }
 
@@ -283,11 +285,11 @@ class AnyDataset
      */
     public function getArray($itf, $fieldName)
     {
-        $it = $this->getIterator($itf);
+        $iterator = $this->getIterator($itf);
         $result = array();
-        while ($it->hasNext()) {
-            $sr = $it->moveNext();
-            $result [] = $sr->getField($fieldName);
+        while ($iterator->hasNext()) {
+            $singleRow = $iterator->moveNext();
+            $result [] = $singleRow->getField($fieldName);
         }
         return $result;
     }
@@ -299,32 +301,38 @@ class AnyDataset
      */
     public function sort($field)
     {
-        if (count($this->_collection) == 0) {
+        if (count($this->collection) == 0) {
             return;
         }
 
-        $this->_collection = $this->quickSortExec($this->_collection, $field);
+        $this->collection = $this->quickSortExec($this->collection, $field);
 
         return;
     }
 
     protected function quickSortExec($seq, $field)
     {
-        if (!count($seq)) return $seq;
+        if (!count($seq)) {
+            return $seq;
+        }
 
-        $k = $seq [0];
-        $x = $y = array();
+        $key = $seq[0];
+        $left = $right = array();
 
         $cntSeq = count($seq);
         for ($i = 1; $i < $cntSeq; $i ++) {
-            if ($seq[$i]->getField($field) <= $k->getField($field)) {
-                $x [] = $seq [$i];
+            if ($seq[$i]->getField($field) <= $key->getField($field)) {
+                $left[] = $seq[$i];
             } else {
-                $y [] = $seq [$i];
+                $right[] = $seq[$i];
             }
         }
 
-        return array_merge($this->quickSortExec($x, $field), array($k), $this->quickSortExec($y, $field));
+        return array_merge(
+            $this->quickSortExec($left, $field),
+            [ $key ],
+            $this->quickSortExec($right, $field)
+        );
     }
 
     /**

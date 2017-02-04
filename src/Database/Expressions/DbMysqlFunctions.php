@@ -138,13 +138,13 @@ class DbMysqlFunctions extends DbBaseFunctions
      */
     public function executeAndGetInsertedId($dbdataset, $sql, $param)
     {
-        $id = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
-        $it = $dbdataset->getIterator("select LAST_INSERT_ID() id");
-        if ($it->hasNext()) {
-            $sr = $it->moveNext();
-            $id = $sr->getField("id");
+        $returnedId = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
+        $iterator = $dbdataset->getIterator("select LAST_INSERT_ID() id");
+        if ($iterator->hasNext()) {
+            $singleRow = $iterator->moveNext();
+            $returnedId = $singleRow->getField("id");
         }
 
-        return $id;
+        return $returnedId;
     }
 }

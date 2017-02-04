@@ -10,7 +10,7 @@ class ArrayDataset
     /**
      * @var array
      */
-    protected $_array;
+    protected $array;
 
     /**
      * Constructor Method
@@ -21,16 +21,18 @@ class ArrayDataset
     public function __construct($array, $fieldName = "value")
     {
 
-        $this->_array = array();
+        $this->array = array();
 
-        if (!$array) return;
+        if (!$array) {
+            return;
+        }
 
         if (is_array($array)) {
             foreach ($array as $key => $value) {
                 if (is_array($value)) {
-                    $this->_array[$key] = $value;
+                    $this->array[$key] = $value;
                 } elseif (!is_object($value)) {
-                    $this->_array[$key] = array($fieldName => $value);
+                    $this->array[$key] = array($fieldName => $value);
                 } else {
                     $result = array("__class" => get_class($value));
                     $methods = get_class_methods($value);
@@ -39,9 +41,9 @@ class ArrayDataset
                             $result[substr($method, 3)] = $value->{$method}();
                         }
                     }
-                    $this->_array[$key] = $result;
+                    $this->array[$key] = $result;
                     $props = get_object_vars($value);
-                    $this->_array[$key] += $props;
+                    $this->array[$key] += $props;
                 }
             }
         } else {
@@ -56,6 +58,6 @@ class ArrayDataset
      */
     public function getIterator()
     {
-        return new ArrayDatasetIterator($this->_array);
+        return new ArrayDatasetIterator($this->array);
     }
 }

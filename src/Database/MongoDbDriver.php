@@ -17,32 +17,32 @@ class MongoDbDriver implements NoSqlDriverInterface
     /**
      * @var MongoDB
      */
-    protected $_db = null;
+    protected $dataset = null;
 
     /**
      *
      * @var MongoClient;
      */
-    protected $_client = null;
+    protected $mongoClient = null;
 
     /**
      * Enter description here...
      *
      * @var ConnectionManagement
      */
-    protected $_connectionManagement;
+    protected $connectionManagement;
 
     /**
      *
      * @var MongoCollection MongoDB collection
      */
-    protected $_collection;
+    protected $collection;
 
     /**
      *
      * @var string
      */
-    protected $_collectionName;
+    protected $collectionName;
 
     /**
      * Creates a new MongoDB connection. This class is managed from NoSqlDataset
@@ -52,13 +52,13 @@ class MongoDbDriver implements NoSqlDriverInterface
      */
     public function __construct($connMngt, $collection)
     {
-        $this->_connectionManagement = $connMngt;
+        $this->connectionManagement = $connMngt;
 
-        $hosts = $this->_connectionManagement->getServer();
-        $port = $this->_connectionManagement->getPort() == '' ? 27017 : $this->_connectionManagement->getPort();
-        $database = $this->_connectionManagement->getDatabase();
-        $username = $this->_connectionManagement->getUsername();
-        $password = $this->_connectionManagement->getPassword();
+        $hosts = $this->connectionManagement->getServer();
+        $port = $this->connectionManagement->getPort() == '' ? 27017 : $this->connectionManagement->getPort();
+        $database = $this->connectionManagement->getDatabase();
+        $username = $this->connectionManagement->getUsername();
+        $password = $this->connectionManagement->getPassword();
 
         if ($username != '' && $password != '') {
             $auth = array('username' => $username, 'password' => $password, 'connect' => 'true');
@@ -66,9 +66,9 @@ class MongoDbDriver implements NoSqlDriverInterface
             $auth = array('connect' => 'true');
         }
 
-        $connecting_string = sprintf('mongodb://%s:%d', $hosts, $port);
-        $this->_client = new MongoClient($connecting_string, $auth);
-        $this->_db = new MongoDB($this->_client, $database);
+        $connectString = sprintf('mongodb://%s:%d', $hosts, $port);
+        $this->mongoClient = new MongoClient($connectString, $auth);
+        $this->dataset = new MongoDB($this->mongoClient, $database);
 
         $this->setCollection($collection);
     }
@@ -78,8 +78,8 @@ class MongoDbDriver implements NoSqlDriverInterface
      */
     public function __destruct()
     {
-        $this->_client->close();
-        $this->_db = null;
+        $this->mongoClient->close();
+        $this->dataset = null;
     }
 
     /**
@@ -88,16 +88,17 @@ class MongoDbDriver implements NoSqlDriverInterface
      */
     public function getCollection()
     {
-        return $this->_collectionName;
+        return $this->collectionName;
     }
 
     /**
-     * Gets the instance of MongoDB; You do not need uses this directly. If you have to, probably something is missing in this class
+     * Gets the instance of MongoDB; You do not need uses this directly.
+     * If you have to, probably something is missing in this class
      * @return \MongoDB
      */
     public function getDbConnection()
     {
-        return $this->_db;
+        return $this->dataset;
     }
 
     /**
@@ -115,7 +116,7 @@ class MongoDbDriver implements NoSqlDriverInterface
         if (is_null($fields)) {
             $fields = array();
         }
-        $cursor = $this->_collection->find($filter, $fields);
+        $cursor = $this->collection->find($filter, $fields);
         $arrIt = iterator_to_array($cursor);
 
         return new ArrayDatasetIterator($arrIt);
@@ -130,11 +131,11 @@ class MongoDbDriver implements NoSqlDriverInterface
     {
         if (is_array($document)) {
             $document['created_at'] = new MongoDate();
-        } else if ($document instanceof stdClass) {
+        } elseif ($document instanceof stdClass) {
             $document->created_at = new MongoDate();
         }
 
-        return $this->_collection->insert($document);
+        return $this->collection->insert($document);
     }
 
     /**
@@ -143,8 +144,8 @@ class MongoDbDriver implements NoSqlDriverInterface
      */
     public function setCollection($collection)
     {
-        $this->_collection = $this->_db->selectCollection($collection);
-        $this->_collectionName = $collection;
+        $this->collection = $this->dataset->selectCollection($collection);
+        $this->collectionName = $collection;
     }
 
     /**
@@ -152,17 +153,17 @@ class MongoDbDriver implements NoSqlDriverInterface
      *
      * Options for MongoDB is an array of:
      *
-     * sort array	Determines which document the operation will modify if the
+     * sort array   Determines which document the operation will modify if the
      *              query selects multiple documents. findAndModify will modify
      *              the first document in the sort order specified by this argument.
-     * remove boolean	Optional if update field exists. When TRUE, removes the
+     * remove boolean Optional if update field exists. When TRUE, removes the
      *              selected document. The default is FALSE.
-     * update array	Optional if remove field exists. Performs an update of the
+     * update array Optional if remove field exists. Performs an update of the
      *              selected document.
-     * new boolean	Optional. When TRUE, returns the modified document rather than the original.
+     * new boolean  Optional. When TRUE, returns the modified document rather than the original.
      *              The findAndModify method ignores the new option for remove operations.
      *              The default is FALSE.
-     * upsert boolean	Optional. Used in conjunction with the update field. When TRUE,
+     * upsert boolean ptional. Used in conjunction with the update field. When TRUE,
      *              the findAndModify command creates a new document if the query
      *              returns no documents. The default is false. In MongoDB 2.2, the findAndModify
      *              command returns NULL when upsert is TRUE.
@@ -196,7 +197,7 @@ class MongoDbDriver implements NoSqlDriverInterface
         if (is_null($options)) {
             $options = array('new' => true);
         }
-        return $this->_collection->findAndModify($filter, $update, array(), $options);
+        return $this->collection->findAndModify($filter, $update, array(), $options);
     }
     /*
       public function getAttribute($name)

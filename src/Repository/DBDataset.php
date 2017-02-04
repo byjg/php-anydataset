@@ -226,7 +226,7 @@ class DBDataset
 
      * @var DbFunctionsInterface
      */
-    protected $_dbFunction = null;
+    protected $dbFunction = null;
 
     /**
      * Get a IDbFunctions class to execute Database specific operations.
@@ -235,12 +235,14 @@ class DBDataset
      */
     public function getDbFunctions()
     {
-        if (is_null($this->_dbFunction)) {
-            $dbFunc = "\\ByJG\\AnyDataset\\Database\\Expressions\\Db" . ucfirst($this->connectionManagement->getDriver()) . "Functions";
-            $this->_dbFunction = new $dbFunc();
+        if (is_null($this->dbFunction)) {
+            $dbFunc = "\\ByJG\\AnyDataset\\Database\\Expressions\\Db"
+                . ucfirst($this->connectionManagement->getDriver())
+                . "Functions";
+            $this->dbFunction = new $dbFunc();
         }
 
-        return $this->_dbFunction;
+        return $this->dbFunction;
     }
 
     public function setDriverAttribute($name, $value)

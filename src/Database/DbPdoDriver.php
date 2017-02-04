@@ -128,10 +128,17 @@ class DbPdoDriver implements DbDriverInterface
     public function getAllFields($tablename)
     {
         $fields = array();
-        $rs = $this->instance->query(SqlHelper::createSafeSQL("select * from :table where 0=1", array(":table" => $tablename)));
-        $fieldLength = $rs->columnCount();
+        $statement = $this->instance->query(
+            SqlHelper::createSafeSQL(
+                "select * from :table where 0=1",
+                [
+                    ":table" => $tablename
+                ]
+            )
+        );
+        $fieldLength = $statement->columnCount();
         for ($i = 0; $i < $fieldLength; $i++) {
-            $fld = $rs->getColumnMeta($i);
+            $fld = $statement->getColumnMeta($i);
             $fields [] = strtolower($fld ["name"]);
         }
         return $fields;

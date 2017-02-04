@@ -40,8 +40,14 @@ class SqlHelper
      * @return string
      * @throws Exception
      */
-    public function generateSQL($table, $fields, &$param, $type = SQLType::SQL_INSERT, $filter = "", $decimalpoint = ".")
-    {
+    public function generateSQL(
+        $table,
+        $fields,
+        &$param,
+        $type = SQLType::SQL_INSERT,
+        $filter = "",
+        $decimalpoint = "."
+    ) {
         if ($fields instanceof SingleRow) {
             return $this->generateSQL($table, $fields->toArray(), $param, $type, $filter, $decimalpoint);
         }
@@ -56,8 +62,13 @@ class SqlHelper
                 if ($sql != "") {
                     $sql .= ", ";
                 }
-                $sql .= " " . $this->fieldDeliLeft . $fieldname . $this->fieldDeliRight . " = " . $this->getValue($fieldname,
-                        $fieldvalue, $param, $decimalpoint) . " ";
+                $sql .= " "
+                    . $this->fieldDeliLeft
+                    . $fieldname
+                    . $this->fieldDeliRight
+                    . " = "
+                    . $this->getValue($fieldname, $fieldvalue, $param, $decimalpoint)
+                    . " ";
             }
             $sql = "update $table set $sql where $filter ";
         } elseif ($type == SQLType::SQL_INSERT) {

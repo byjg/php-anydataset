@@ -12,21 +12,21 @@ class DBIterator extends GenericIterator
 
     const RECORD_BUFFER = 50;
 
-    private $_rowBuffer;
-    private $_currentRow = 0;
+    private $rowBuffer;
+    private $currentRow = 0;
 
     /**
      * @var PDOStatement
      */
-    private $_rs;
+    private $recordset;
 
     /**
      * @param PDOStatement $recordset
      */
     public function __construct($recordset)
     {
-        $this->_rs = $recordset;
-        $this->_rowBuffer = array();
+        $this->recordset = $recordset;
+        $this->rowBuffer = array();
     }
 
     /**
@@ -34,7 +34,7 @@ class DBIterator extends GenericIterator
      */
     public function count()
     {
-        return $this->_rs->rowCount();
+        return $this->recordset->rowCount();
     }
 
     /**
@@ -42,11 +42,11 @@ class DBIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if (count($this->_rowBuffer) >= DBIterator::RECORD_BUFFER) {
+        if (count($this->rowBuffer) >= DBIterator::RECORD_BUFFER) {
             return true;
-        } else if (is_null($this->_rs)) {
-            return (count($this->_rowBuffer) > 0);
-        } else if ($row = $this->_rs->fetch(PDO::FETCH_ASSOC)) {
+        } elseif (is_null($this->recordset)) {
+            return (count($this->rowBuffer) > 0);
+        } elseif ($row = $this->recordset->fetch(PDO::FETCH_ASSOC)) {
             foreach ($row as $key => $value) {
                 if (is_null($value)) {
                     $row[$key] = "";
@@ -56,21 +56,21 @@ class DBIterator extends GenericIterator
                     $row[$key] = Encoding::toUTF8($value);
                 }
             }
-            $sr = new SingleRow($row);
+            $singleRow = new SingleRow($row);
 
             // Enfileira o registo
-            array_push($this->_rowBuffer, $sr);
+            array_push($this->rowBuffer, $singleRow);
             // Traz novos até encher o Buffer
-            if (count($this->_rowBuffer) < DBIterator::RECORD_BUFFER) {
+            if (count($this->rowBuffer) < DBIterator::RECORD_BUFFER) {
                 $this->hasNext();
             }
 
             return true;
         } else {
-            $this->_rs->closeCursor();
-            $this->_rs = null;
+            $this->recordset->closeCursor();
+            $this->recordset = null;
 
-            return (count($this->_rowBuffer) > 0);
+            return (count($this->rowBuffer) > 0);
         }
     }
 
@@ -83,14 +83,14 @@ class DBIterator extends GenericIterator
         if (!$this->hasNext()) {
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         } else {
-            $sr = array_shift($this->_rowBuffer);
-            $this->_currentRow++;
-            return $sr;
+            $singleRow = array_shift($this->rowBuffer);
+            $this->currentRow++;
+            return $singleRow;
         }
     }
 
-    function key()
+    public function key()
     {
-        return $this->_currentRow;
+        return $this->currentRow;
     }
 }
