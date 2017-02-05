@@ -2,11 +2,10 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\AnyDatasetContext;
 use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
-use ByJG\AnyDataset\LogHandler;
 use ByJG\AnyDataset\Repository\DBDataset;
 use ByJG\AnyDataset\Repository\IteratorInterface;
+use Psr\Log\LoggerInterface;
 
 class BaseDBAccess
 {
@@ -23,14 +22,18 @@ class BaseDBAccess
      */
     protected $sqlHelper = null;
 
+    private $logger = null;
+
     /**
      * Base Class Constructor. Don't must be override.
      *
      * @param DBDataset $dbdataset
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(DBDataset $dbdataset)
+    public function __construct(DBDataset $dbdataset, LoggerInterface $logger = null)
     {
         $this->dataset = $dbdataset;
+        $this->logger = $logger;
     }
 
     /**
@@ -42,24 +45,12 @@ class BaseDBAccess
         return $this->dataset;
     }
 
-    /**
-     * Execute a SQL and dont wait for a response.
-     * @param string $sql
-     * @param string $param
-     * @param bool $getId
-     * @return int|null
-     */
-    protected function executeSQL($sql, $param = null, $getId = false)
+    protected function logStart($sql, $param)
     {
-        $log = null;
-        $dbfunction = $this->getDbFunctions();
-
-        $debug = $this->getDebug();
         $start = 0;
-        if ($debug) {
-            $log = LogHandler::getInstance();
-            $log->debug("Class name: " . get_class($this));
-            $log->debug("SQL: " . $sql);
+        if (!is_null($this->logger)) {
+            $this->logger->debug("Class name: " . get_class($this));
+            $this->logger->debug("SQL: " . $sql);
             if (!is_null($param)) {
                 $strForLog = "";
                 foreach ($param as $key => $value) {
@@ -68,22 +59,40 @@ class BaseDBAccess
                     }
                     $strForLog .= "[$key]=$value";
                 }
-                $log->debug("Params: $strForLog");
+                $this->logger->debug("Params: $strForLog");
             }
             $start = microtime(true);
         }
+        return $start;
+    }
+
+    protected function logEnd($startTime)
+    {
+        if (!is_null($this->logger)) {
+            $end = microtime(true);
+            $this->logger->debug("Execution time: " . ($end - $startTime) . " seconds ");
+        }
+    }
+
+    /**
+     * Execute a SQL and dont wait for a response.
+     * @param string $sql
+     * @param array $param
+     * @param bool $getId
+     * @return int|null
+     */
+    protected function executeSQL($sql, $param = null, $getId = false)
+    {
+        $start = $this->logStart($sql, $param);
 
         $insertedId = null;
         if ($getId) {
-            $insertedId = $dbfunction->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
+            $insertedId = $this->getDbFunctions()->executeAndGetInsertedId($this->getDBDataset(), $sql, $param);
         } else {
             $this->getDBDataset()->execSQL($sql, $param);
         }
 
-        if ($debug) {
-            $end = microtime(true);
-            $log->debug("Execution time: " . ($end - $start) . " seconds ");
-        }
+        $this->logEnd($start);
 
         return $insertedId;
     }
@@ -98,59 +107,23 @@ class BaseDBAccess
      */
     protected function getIterator($sql, $param = null, $ttl = null)
     {
-        $log = null;
-        $debug = $this->getDebug();
-        $start = 0;
-        if ($debug) {
-            $log = LogHandler::getInstance();
-            $log->debug("Class name: " . get_class($this));
-            $log->debug("SQL: " . $sql);
-            if (!is_null($param)) {
-                $strForLog = "";
-                foreach ($param as $key => $value) {
-                    if ($strForLog != "") {
-                        $strForLog .= ", ";
-                    }
-                    $strForLog .= "[$key]=$value";
-                }
-                $log->debug("Params: $strForLog");
-            }
-            $start = microtime(true);
-        }
+        $start = $this->logStart($sql, $param);
+
         $iterator = $this->getDBDataset()->getIterator($sql, $param, $ttl);
-        if ($debug) {
-            $end = microtime(true);
-            $log->debug("Execution Time: " . ($end - $start) . " segundos ");
-        }
+
+        $this->logEnd($start);
+
         return $iterator;
     }
 
     protected function getScalar($sql, $param = null)
     {
-        $log = null;
-        $debug = $this->getDebug();
-        $start = 0;
-        if ($debug) {
-            $log = LogHandler::getInstance();
-            $log->debug("Class name: " . get_class($this));
-            $log->debug("SQL: " . $sql);
-            if (!is_null($param)) {
-                $strForLog = "";
-                foreach ($param as $key => $value) {
-                    if ($strForLog != "") {
-                        $strForLog .= ", ";
-                    }
-                    $strForLog .= "[$key]=$value";
-                }
-                $log->debug("Params: $strForLog");
-            }
-            $start = microtime(true);
-        }
+        $start = $this->logStart($sql, $param);
+
         $scalar = $this->getDBDataset()->getScalar($sql, $param);
-        if ($debug) {
-            $end = microtime(true);
-            $log->debug("Execution Time: " . ($end - $start) . " segundos ");
-        }
+
+        $this->logEnd($start);
+
         return $scalar;
     }
 
@@ -277,13 +250,5 @@ class BaseDBAccess
     public function rollbackTransaction()
     {
         $this->getDBDataset()->rollbackTransaction();
-    }
-
-    /**
-     * @return bool
-     */
-    public function getDebug()
-    {
-        return AnyDatasetContext::getInstance()->getDebug();
     }
 }
