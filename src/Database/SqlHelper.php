@@ -122,7 +122,7 @@ class SqlHelper
         } elseif ($valores[0] == SQLFieldType::DATE) {
             $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DbBaseFunctions::YMDH) : $valores[1]);
             $param[$name] = $date;
-            if ($this->getDbDataset()->getConnectionManagement()->getDriver() == 'oci8') {
+            if ($this->getDbDataset()->getConnectionUri()->getDriver() == 'oci8') {
                 return "TO_DATE($paramName, 'YYYY-MM-DD')";
             }
             return $paramName;

@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\DbDriverInterface;
 use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
 use ByJG\AnyDataset\Database\DbOci8Driver;
@@ -10,17 +9,23 @@ use ByJG\AnyDataset\Database\DbPdoDriver;
 use ByJG\AnyDataset\Database\DbSqlRelayDriver;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\Cache\CacheEngineInterface;
+use ByJG\Util\Uri;
 use PDO;
 
+/**
+ * Class DBDataset
+ * @todo Review projects with Anydata dependency
+ * @package ByJG\AnyDataset\Repository
+ */
 class DBDataset
 {
 
     /**
      * Enter description here...
      *
-     * @var ConnectionManagement
+     * @var Uri
      */
-    protected $connectionManagement;
+    protected $connectionUri;
 
     /**
 
@@ -35,33 +40,28 @@ class DBDataset
     protected $cacheEngine;
 
     /**
-     * @param ConnectionManagement|string $dbname Name of file without '_db' and extention '.xml'.
+     * @param string $connectionString Uri of the connection string.
      */
-    public function __construct($dbname)
+    public function __construct($connectionString)
     {
-        // Create the object ConnectionManagement
-        if (is_string($dbname)) {
-            $this->connectionManagement = new ConnectionManagement($dbname);
-        } elseif ($dbname instanceof ConnectionManagement) {
-            $this->connectionManagement = $dbname;
-        }
+        $this->connectionUri = new Uri($connectionString);
 
         // Create the proper driver
-        if ($this->connectionManagement->getDriver() == "sqlrelay") {
-            $this->dbDriver = new DbSqlRelayDriver($this->connectionManagement);
-        } elseif ($this->connectionManagement->getDriver() == "oci8") {
-            $this->dbDriver = new DbOci8Driver($this->connectionManagement);
+        if ($this->connectionUri->getScheme() == "sqlrelay") {
+            $this->dbDriver = new DbSqlRelayDriver($this->connectionUri);
+        } elseif ($this->connectionUri->getScheme() == "oci8") {
+            $this->dbDriver = new DbOci8Driver($this->connectionUri->__toString());
         } else {
-            $this->dbDriver = DbPdoDriver::factory($this->connectionManagement);
+            $this->dbDriver = DbPdoDriver::factory($this->connectionUri);
         }
     }
 
     /**
-     * @return ConnectionManagement
+     * @return Uri
      */
-    public function getConnectionManagement()
+    public function getConnectionUri()
     {
-        return $this->connectionManagement;
+        return $this->connectionUri;
     }
 
     public function testConnection()
@@ -70,6 +70,10 @@ class DBDataset
     }
 
 
+    /**
+     * @todo Remove dependency on ByJG/Cache-Engine and to psr/cache
+     * @param \ByJG\Cache\CacheEngineInterface $cache
+     */
     public function setCacheEngine(CacheEngineInterface $cache)
     {
         $this->cacheEngine = $cache;
@@ -77,6 +81,7 @@ class DBDataset
 
     /**
      * @return CacheEngineInterface
+     * @todo Think another way to this.
      * @throws NotAvailableException
      */
     public function getCacheEngine()
@@ -116,6 +121,7 @@ class DBDataset
         $key = $this->getQueryKey($sql, $params);
 
         // Get the CACHE
+        // @todo Analyse that
         $cache = $this->getCacheEngine()->get($key, $ttl);
         if ($cache === false) {
             $cache = array();
@@ -124,6 +130,7 @@ class DBDataset
                 $cache[] = $value->toArray();
             }
 
+            // @todo Analyse that
             $this->getCacheEngine()->set($key, $cache, $ttl);
         }
 
@@ -237,7 +244,7 @@ class DBDataset
     {
         if (is_null($this->dbFunction)) {
             $dbFunc = "\\ByJG\\AnyDataset\\Database\\Expressions\\Db"
-                . ucfirst($this->connectionManagement->getDriver())
+                . ucfirst($this->connectionUri->getScheme())
                 . "Functions";
             $this->dbFunction = new $dbFunc();
         }

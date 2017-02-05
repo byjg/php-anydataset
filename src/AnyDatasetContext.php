@@ -13,7 +13,9 @@ use Iconfig\Config;
 
 /**
  * Description of CacheContext
- *
+ * @todo Remove this class
+ * @todo Remove IConfig dependency
+ * @todo Remove byjg Singleton
  * @author jg
  */
 class AnyDatasetContext

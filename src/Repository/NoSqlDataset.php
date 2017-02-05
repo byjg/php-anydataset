@@ -2,10 +2,10 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Database\MongoDbDriver;
 use ByJG\AnyDataset\Database\NoSqlDriverInterface;
 use ByJG\AnyDataset\Exception\NotImplementedException;
+use ByJG\Util\Uri;
 use InvalidArgumentException;
 
 class NoSqlDataset implements NoSqlDriverInterface
@@ -14,39 +14,38 @@ class NoSqlDataset implements NoSqlDriverInterface
     /**
      * Enter description here...
      *
-     * @var ConnectionManagement
+     * @var Uri
      */
-    private $_connectionManagement;
+    private $connectionUri;
 
     /**
 
      * @var NoSqlDriverInterface
      */
-    private $_dbDriver = null;
+    private $dbDriver = null;
 
     /**
-     *
-     * @param string $dbname
+     * @param string $connectionString
      * @param string $collection
      * @throws InvalidArgumentException
      */
-    public function __construct($dbname, $collection)
+    public function __construct($connectionString, $collection)
     {
-        $this->_connectionManagement = new ConnectionManagement($dbname);
+        $this->connectionUri = new Uri($connectionString);
 
-        if ($this->_connectionManagement->getDriver() == "mongodb") {
-            $this->_dbDriver = new MongoDbDriver($this->_connectionManagement, $collection);
+        if ($this->connectionUri->getScheme() == "mongodb") {
+            $this->dbDriver = new MongoDbDriver($this->connectionUri, $collection);
         } else {
-            throw new InvalidArgumentException("There is no '{$this->_connectionManagement->getDriver()}' NoSQL database");
+            throw new InvalidArgumentException("There is no '{$this->connectionUri->getScheme()}' NoSQL database");
         }
     }
 
     /**
-     * @return ConnectionManagement
+     * @return Uri
      */
-    public function getConnectionManagement()
+    public function getConnectionUri()
     {
-        return $this->_connectionManagement;
+        return $this->connectionUri;
     }
 
     /**
@@ -54,7 +53,7 @@ class NoSqlDataset implements NoSqlDriverInterface
      */
     public function getDbDriver()
     {
-        return $this->_dbDriver;
+        return $this->dbDriver;
     }
 
     public function testConnection()

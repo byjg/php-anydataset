@@ -2,11 +2,11 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Repository\SQLRelayIterator;
+use ByJG\Util\Uri;
 
 class DbSqlRelayDriver implements DbDriverInterface
 {
@@ -14,24 +14,24 @@ class DbSqlRelayDriver implements DbDriverInterface
     /**
      * Enter description here...
      *
-     * @var ConnectionManagement
+     * @var Uri
      */
-    protected $connectionManagement;
+    protected $connectionUri;
 
     /** Used for SQL Relay connections * */
     protected $conn;
     protected $transaction = false;
 
-    public function __construct($connMngt)
+    public function __construct(Uri $connUri)
     {
-        $this->connectionManagement = $connMngt;
+        $this->connectionUri = $connUri;
 
         $this->conn = sqlrcon_alloc(
-            $this->connectionManagement->getServer(),
-            $this->connectionManagement->getPort(),
-            $this->connectionManagement->getExtraParam("unixsocket"),
-            $this->connectionManagement->getUsername(),
-            $this->connectionManagement->getPassword(),
+            $this->connectionUri->getScheme(),
+            $this->connectionUri->getPort(),
+            $this->connectionUri->getQueryPart("unixsocket"),
+            $this->connectionUri->getUsername(),
+            $this->connectionUri->getPassword(),
             0,
             1
         );
@@ -51,7 +51,7 @@ class DbSqlRelayDriver implements DbDriverInterface
         $cur = sqlrcur_alloc($this->conn);
 
         if ($array) {
-            list($sql, $array) = SqlBind::parseSQL($this->connectionManagement, $sql, $array);
+            list($sql, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
 
             sqlrcur_prepareQuery($cur, $sql);
             $bindCount = 1;

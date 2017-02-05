@@ -2,9 +2,9 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Repository\DBIterator;
+use ByJG\Util\Uri;
 use PDO;
 use PDOStatement;
 
@@ -17,39 +17,27 @@ class DbPdoDriver implements DbDriverInterface
     protected $instance = null;
 
     /**
-     * @var ConnectionManagement
+     * @var Uri
      */
-    protected $connectionManagement;
+    protected $connectionUri;
 
-    public function __construct(ConnectionManagement $connMngt, $strcnn, $preOptions, $postOptions)
+    public function __construct(Uri $connUri, $strcnn, $preOptions, $postOptions)
     {
-        $this->connectionManagement = $connMngt;
+        $this->connectionUri = $connUri;
 
-        if (is_null($strcnn)) {
-            if ($this->connectionManagement->getFilePath() != "") {
-                $strcnn = $this->connectionManagement->getDriver() . ":" . $this->connectionManagement->getFilePath();
-            } else {
-                $strcnn = $this->connectionManagement->getDriver() . ":dbname=" .
-                    $this->connectionManagement->getDatabase();
-                if ($this->connectionManagement->getExtraParam("unixsocket") != "") {
-                    $strcnn .= ";unix_socket=" . $this->connectionManagement->getExtraParam("unixsocket");
-                } else {
-                    $strcnn .= ";host=" . $this->connectionManagement->getServer();
-                    if ($this->connectionManagement->getPort() != "") {
-                        $strcnn .= ";port=" . $this->connectionManagement->getPort();
-                    }
-                }
-            }
+        if (empty($strcnn)) {
+            $strcnn = $this->createPboConnStr($connUri);
         }
 
         // Create Connection
         $this->instance = new PDO(
             $strcnn,
-            $this->connectionManagement->getUsername(),
-            $this->connectionManagement->getPassword(),
+            $this->connectionUri->getUsername(),
+            $this->connectionUri->getPassword(),
             (array) $preOptions
         );
-        $this->connectionManagement->setDriver($this->instance->getAttribute(PDO::ATTR_DRIVER_NAME));
+
+        $this->connectionUri->withScheme($this->instance->getAttribute(PDO::ATTR_DRIVER_NAME));
 
         // Set Specific Attributes
         $this->instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -59,23 +47,47 @@ class DbPdoDriver implements DbDriverInterface
             $this->instance->setAttribute($key, $value);
         }
     }
+    
+    private function createPboConnStr(Uri $connUri)
+    {
+        if ($connUri->getHost() != "") {
+            return $connUri->getScheme() . ":" . $connUri->getPath();
+        }
+        
+        $strcnn =
+            $connUri->getScheme()
+            . ":dbname="
+            . preg_replace('~^/~', '', $connUri->getPath())
+        ;
 
-    public static function factory(ConnectionManagement $connMngt)
+        if ($connUri->getQueryPart("unixsocket") != "") {
+            $strcnn .= ";unix_socket=" . $connUri->getQueryPart("unixsocket");
+        } else {
+            $strcnn .= ";host=" . $connUri->getHost();
+            if ($connUri->getPort() != "") {
+                $strcnn .= ";port=" . $connUri->getPort();
+            }
+        }
+
+        return $strcnn;
+    }
+    
+    public static function factory(Uri $connUri)
     {
         if (!defined('PDO::ATTR_DRIVER_NAME')) {
             throw new NotAvailableException("Extension 'PDO' is not loaded");
         }
 
-        if (!extension_loaded('pdo_' . strtolower($connMngt->getDriver()))) {
-            throw new NotAvailableException("Extension 'pdo_" . strtolower($connMngt->getDriver()) . "' is not loaded");
+        if (!extension_loaded('pdo_' . strtolower($connUri->getScheme()))) {
+            throw new NotAvailableException("Extension 'pdo_" . strtolower($connUri->getScheme()) . "' is not loaded");
         }
 
-        $class = '\ByJG\AnyDataset\Database\Pdo' . ucfirst($connMngt->getDriver());
+        $class = '\ByJG\AnyDataset\Database\Pdo' . ucfirst($connUri->getScheme());
 
         if (!class_exists($class, true)) {
-            return new DbPdoDriver($connMngt, null, null, null);
+            return new DbPdoDriver($connUri, null, null, null);
         } else {
-            return new $class($connMngt);
+            return new $class($connUri);
         }
     }
 
@@ -93,7 +105,7 @@ class DbPdoDriver implements DbDriverInterface
     protected function getDBStatement($sql, $array = null)
     {
         if ($array) {
-            list($sql, $array) = SqlBind::parseSQL($this->connectionManagement, $sql, $array);
+            list($sql, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
             $stmt = $this->instance->prepare($sql);
             foreach ($array as $key => $value) {
                 $stmt->bindValue(":" . SqlBind::keyAdj($key), $value);

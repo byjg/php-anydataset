@@ -25,7 +25,8 @@
         "psr/log": "1.0.*",
         "sheikhheera/iconfig": "1.0.*",
         "byjg/cache-engine": "1.0.*",
-        "byjg/serializer": "1.0.*"
+        "byjg/serializer": "1.0.*",
+        "byjg/uri": "1.0.*"
     },
     "suggest": {
         "ext-curl": "*",

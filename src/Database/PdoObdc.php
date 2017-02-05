@@ -2,15 +2,13 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
+use ByJG\Util\Uri;
 
 class PdoOdbc extends DbPdoDriver
 {
 
-    public function __construct(ConnectionManagement $connMngt)
+    public function __construct(Uri $connUri)
     {
-        $strcnn = $connMngt->getDriver() . ":" . $connMngt->getServer();
-
-        parent::__construct($connMngt, $strcnn, [], []);
+        parent::__construct($connUri, null, [], []);
     }
 }

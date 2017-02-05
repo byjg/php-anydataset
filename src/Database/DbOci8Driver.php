@@ -2,9 +2,9 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Repository\Oci8Iterator;
+use ByJG\Util\Uri;
 
 class DbOci8Driver implements DbDriverInterface
 {
@@ -12,9 +12,9 @@ class DbOci8Driver implements DbDriverInterface
     /**
      * Enter description here...
      *
-     * @var ConnectionManagement
+     * @var Uri
      */
-    protected $connectionManagement;
+    protected $connectionUri;
 
     /** Used for OCI8 connections * */
     protected $conn;
@@ -25,21 +25,21 @@ class DbOci8Driver implements DbDriverInterface
      *
      *    oci8://username:password@host:1521/servicename?protocol=TCP&codepage=WE8MSWIN1252
      *
-     * @param ConnectionManagement $connMngt
+     * @param string $connectionString
      * @throws DatabaseException
      */
-    public function __construct($connMngt)
+    public function __construct($connectionString)
     {
-        $this->connectionManagement = $connMngt;
+        $this->connectionUri = $connectionString;
 
-        $codePage = $this->connectionManagement->getExtraParam("codepage");
+        $codePage = $this->connectionUri->getQueryPart("codepage");
         $codePage = ($codePage == "") ? 'UTF8' : $codePage;
 
-        $tns = DbOci8Driver::getTnsString($connMngt);
+        $tns = DbOci8Driver::getTnsString($this->connectionUri);
 
         $this->conn = oci_connect(
-            $this->connectionManagement->getUsername(),
-            $this->connectionManagement->getPassword(),
+            $this->connectionUri->getUsername(),
+            $this->connectionUri->getPassword(),
             $tns,
             $codePage
         );
@@ -52,24 +52,24 @@ class DbOci8Driver implements DbDriverInterface
 
     /**
      *
-     * @param ConnectionManagement $connMngt
+     * @param Uri $connUri
      * @return string
      */
-    public static function getTnsString($connMngt)
+    public static function getTnsString(Uri $connUri)
     {
-        $protocol = $connMngt->getExtraParam("protocol");
+        $protocol = $connUri->getQueryPart("protocol");
         $protocol = ($protocol == "") ? 'TCP' : $protocol;
 
-        $port = $connMngt->getPort();
+        $port = $connUri->getPort();
         $port = ($port == "") ? 1521 : $port;
 
-        $svcName = $connMngt->getDatabase();
+        $svcName = preg_replace('~^/~', '', $connUri->getPath());
 
-        $host = $connMngt->getServer();
+        $host = $connUri->getHost();
 
         $tns = "(DESCRIPTION = " .
-            "	(ADDRESS = (PROTOCOL = $protocol)(HOST = $host)(PORT = $port)) " .
-            "		(CONNECT_DATA = (SERVICE_NAME = $svcName)) " .
+            "    (ADDRESS = (PROTOCOL = $protocol)(HOST = $host)(PORT = $port)) " .
+            "        (CONNECT_DATA = (SERVICE_NAME = $svcName)) " .
             ")";
 
         return $tns;
@@ -82,7 +82,7 @@ class DbOci8Driver implements DbDriverInterface
 
     protected function getOci8Cursor($sql, $array = null)
     {
-        list($query, $array) = SqlBind::parseSQL($this->connectionManagement, $sql, $array);
+        list($query, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
 
         // Prepare the statement
         $stid = oci_parse($this->conn, $query);

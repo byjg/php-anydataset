@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
+use ByJG\Util\Uri;
 
 /**
  * Class to create and manipulate Several Data Types
@@ -15,14 +15,14 @@ class SqlBind
      * Each provider have your own model for pass parameter.
      * This method define how each provider name define the parameters
      *
-     * @param ConnectionManagement $connData
+     * @param Uri $connData
      * @return string
      */
-    public static function getParamModel(ConnectionManagement $connData)
+    public static function getParamModel(Uri $connData)
     {
-        if ($connData->getExtraParam("parammodel") != "") {
-            return $connData->getExtraParam("parammodel");
-        } elseif ($connData->getDriver() == "sqlrelay") {
+        if ($connData->getQueryPart("parammodel") != "") {
+            return $connData->getQueryPart("parammodel");
+        } elseif ($connData->getScheme() == "sqlrelay") {
             return "?";
         } else {
             return ":_";
@@ -33,12 +33,12 @@ class SqlBind
      * Transform generic parameters [[PARAM]] in a parameter recognized by the provider
      * name based on current DbParameter array.
      *
-     * @param ConnectionManagement $connData
+     * @param Uri $connData
      * @param string $sql
      * @param array $params
      * @return array An array with the adjusted SQL and PARAMs
      */
-    public static function parseSQL(ConnectionManagement $connData, $sql, $params = null)
+    public static function parseSQL(Uri $connData, $sql, $params = null)
     {
         if (is_null($params)) {
             return [$sql, null];

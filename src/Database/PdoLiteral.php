@@ -2,20 +2,17 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use PDO;
 
 class PdoLiteral extends DbPdoDriver
 {
 
-    public function __construct(ConnectionManagement $connMngt)
+    public function __construct($connString)
     {
-        $strcnn = $connMngt->getDbConnectionString();
-
         $postOptions = [
             PDO::ATTR_EMULATE_PREPARES => true
         ];
 
-        parent::__construct($connMngt, $strcnn, [], $postOptions);
+        parent::__construct(null, $connString, [], $postOptions);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
 use ByJG\AnyDataset\Repository\ArrayDatasetIterator;
+use ByJG\Util\Uri;
 use InvalidArgumentException;
 use MongoClient;
 use MongoCollection;
@@ -28,9 +28,9 @@ class MongoDbDriver implements NoSqlDriverInterface
     /**
      * Enter description here...
      *
-     * @var ConnectionManagement
+     * @var Uri
      */
-    protected $connectionManagement;
+    protected $connectionUri;
 
     /**
      *
@@ -47,18 +47,18 @@ class MongoDbDriver implements NoSqlDriverInterface
     /**
      * Creates a new MongoDB connection. This class is managed from NoSqlDataset
      *
-     * @param ConnectionManagement $connMngt
+     * @param Uri $connUri
      * @param string $collection
      */
-    public function __construct($connMngt, $collection)
+    public function __construct(Uri $connUri, $collection)
     {
-        $this->connectionManagement = $connMngt;
+        $this->connectionUri = $connUri;
 
-        $hosts = $this->connectionManagement->getServer();
-        $port = $this->connectionManagement->getPort() == '' ? 27017 : $this->connectionManagement->getPort();
-        $database = $this->connectionManagement->getDatabase();
-        $username = $this->connectionManagement->getUsername();
-        $password = $this->connectionManagement->getPassword();
+        $hosts = $this->connectionUri->getHost();
+        $port = $this->connectionUri->getPort() == '' ? 27017 : $this->connectionUri->getPort();
+        $database = preg_replace('~^/~', '', $this->connectionUri->getPath());
+        $username = $this->connectionUri->getUsername();
+        $password = $this->connectionUri->getPassword();
 
         if ($username != '' && $password != '') {
             $auth = array('username' => $username, 'password' => $password, 'connect' => 'true');

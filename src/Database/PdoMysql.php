@@ -2,13 +2,13 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
+use ByJG\Util\Uri;
 use PDO;
 
 class PdoMysql extends DbPdoDriver
 {
 
-    public function __construct(ConnectionManagement $connMngt)
+    public function __construct(Uri $connUri)
     {
         $preOptions = [
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
@@ -19,6 +19,6 @@ class PdoMysql extends DbPdoDriver
             PDO::ATTR_EMULATE_PREPARES => true
         ];
 
-        parent::__construct($connMngt, null, $preOptions, $postOptions);
+        parent::__construct($connUri, null, $preOptions, $postOptions);
     }
 }

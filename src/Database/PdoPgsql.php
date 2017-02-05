@@ -2,13 +2,12 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\ConnectionManagement;
+use ByJG\Util\Uri;
 
 class PdoPgsql extends DbPdoDriver
 {
-
-    public function __construct(ConnectionManagement $connMngt)
+    public function __construct(Uri $connUri)
     {
-        parent::__construct($connMngt, null, [], []);
+        parent::__construct($connUri, null, [], []);
     }
 }
