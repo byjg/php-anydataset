@@ -22,7 +22,7 @@
         "byjg/sparqllib": "1.0.*",
         "byjg/singleton-pattern": "1.0.*",
         "neitanod/forceutf8": "v2.0",
-        "monolog/monolog": "1.*",
+        "psr/log": "1.0.*",
         "sheikhheera/iconfig": "1.0.*",
         "byjg/cache-engine": "1.0.*",
         "byjg/serializer": "1.0.*"
