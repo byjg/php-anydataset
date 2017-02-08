@@ -20,17 +20,16 @@
         "ext-json": "*",
         "byjg/xmlutil": "1.0.*",
         "byjg/sparqllib": "1.0.*",
-        "byjg/singleton-pattern": "1.0.*",
         "neitanod/forceutf8": "v2.0",
         "psr/log": "1.0.*",
-        "sheikhheera/iconfig": "1.0.*",
-        "byjg/cache-engine": "1.0.*",
+        "psr/cache": "1.0.*",
         "byjg/serializer": "1.0.*",
         "byjg/uri": "1.0.*"
     },
     "suggest": {
         "ext-curl": "*",
-        "ext-pdo_mysql": "*"
+        "ext-pdo_mysql": "*",
+        "byjg/cache-engine": "1.0.*"
     },
     "license": "MIT"
 }

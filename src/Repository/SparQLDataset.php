@@ -10,7 +10,7 @@ class SparQLDataset
     /**
      * @var object
      */
-    private $_db;
+    private $connection;
 
     /**
      *
@@ -19,17 +19,17 @@ class SparQLDataset
      */
     public function __construct($url, $namespaces = null)
     {
-        $this->_db = new Connection($url);
+        $this->connection = new Connection($url);
 
         if (is_array($namespaces)) {
             foreach ($namespaces as $key => $value) {
-                $this->_db->ns($key, $value);
+                $this->connection->ns($key, $value);
             }
         }
 
         if (function_exists('dba_open')) {
             $cache = sys_get_temp_dir() . "/caps.db";
-            $this->_db->capabilityCache($cache);
+            $this->connection->capabilityCache($cache);
         }
     }
 
@@ -38,8 +38,8 @@ class SparQLDataset
         $return = array();
 
         if (function_exists('dba_open')) {
-            foreach ($this->_db->capabilityCodes() as $code) {
-                $return[$code] = array($this->_db->supports($code), $this->_db->capabilityDescription($code));
+            foreach ($this->connection->capabilityCodes() as $code) {
+                $return[$code] = array($this->connection->supports($code), $this->connection->capabilityDescription($code));
             }
         }
 
@@ -52,7 +52,7 @@ class SparQLDataset
      */
     public function getIterator($sparql)
     {
-        $result = $this->_db->query($sparql);
+        $result = $this->connection->query($sparql);
         return new SparQLIterator($result);
     }
 }

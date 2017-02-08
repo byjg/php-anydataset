@@ -101,9 +101,6 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($collection, $this->object->match($collection));
 
-        $this->object->addRelation('field1', Relation::EQUAL, 'value1');
-        $this->assertEquals([ $row1], $this->object->match($collection));
-
         $this->object->addRelation('field2', Relation::EQUAL, 'other2');
         $this->assertEquals([ $row2], $this->object->match($collection));
 
@@ -167,7 +164,9 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         $returnFields = '*';
         $sql = $this->object->getSql('tablename', $params, $returnFields);
         $this->assertEquals(['field' => 'test', 'field2' => 'test2', 'field3' => 'test3'], $params);
-        $this->assertEquals('select * from tablename  where  (  field = [[field]]  and  field2 = [[field2]] ) or  field3 = [[field3]]  ',
-            $sql);
+        $this->assertEquals(
+            'select * from tablename  where  (  field = [[field]]  and  field2 = [[field2]] ) or  field3 = [[field3]]  ',
+            $sql
+        );
     }
 }
