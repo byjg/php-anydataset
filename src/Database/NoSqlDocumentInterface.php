@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
-interface NoSqlDriverInterface
+interface NoSqlDocumentInterface
 {
 
     public function getIterator($filter = null, $fields = null);

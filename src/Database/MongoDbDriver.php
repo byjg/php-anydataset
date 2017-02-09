@@ -11,7 +11,7 @@ use MongoDate;
 use MongoDB;
 use stdClass;
 
-class MongoDbDriver implements NoSqlDriverInterface
+class MongoDbDriver implements NoSqlDocumentInterface
 {
 
     /**
@@ -47,16 +47,19 @@ class MongoDbDriver implements NoSqlDriverInterface
     /**
      * Creates a new MongoDB connection. This class is managed from NoSqlDataset
      *
+     *  mongodb://username:passwortd@host:port/database/collection
+     *
      * @param Uri $connUri
-     * @param string $collection
      */
-    public function __construct(Uri $connUri, $collection)
+    public function __construct(Uri $connUri)
     {
         $this->connectionUri = $connUri;
 
         $hosts = $this->connectionUri->getHost();
         $port = $this->connectionUri->getPort() == '' ? 27017 : $this->connectionUri->getPort();
-        $database = preg_replace('~^/~', '', $this->connectionUri->getPath());
+        $path = explode('/', preg_replace('~^/~', '', $this->connectionUri->getPath()));
+        $database = $path[0];
+        $collection = $path[1];
         $username = $this->connectionUri->getUsername();
         $password = $this->connectionUri->getPassword();
 

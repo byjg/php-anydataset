@@ -8,9 +8,9 @@ use ByJG\AnyDataset\Database\DbOci8Driver;
 use ByJG\AnyDataset\Database\DbPdoDriver;
 use ByJG\AnyDataset\Database\DbSqlRelayDriver;
 use ByJG\AnyDataset\Exception\NotAvailableException;
-use ByJG\Cache\CacheEngineInterface;
 use ByJG\Util\Uri;
 use PDO;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class DBDataset
@@ -72,15 +72,15 @@ class DBDataset
 
     /**
      * @todo Remove dependency on ByJG/Cache-Engine and to psr/cache
-     * @param \ByJG\Cache\CacheEngineInterface $cache
+     * @param \Psr\Cache\CacheItemPoolInterface $cache
      */
-    public function setCacheEngine(CacheEngineInterface $cache)
+    public function setCacheEngine(CacheItemPoolInterface $cache)
     {
         $this->cacheEngine = $cache;
     }
 
     /**
-     * @return CacheEngineInterface
+     * @return CacheItemPoolInterface
      * @todo Think another way to this.
      * @throws NotAvailableException
      */
@@ -94,8 +94,7 @@ class DBDataset
 
     /**
      * Get the DBDriver
-     *
-*@return DbDriverInterface
+     * @return DbDriverInterface
      */
     public function getDbDriver()
     {
@@ -122,19 +121,17 @@ class DBDataset
 
         // Get the CACHE
         // @todo Analyse that
-        $cache = $this->getCacheEngine()->get($key, $ttl);
-        if ($cache === false) {
-            $cache = array();
+        $cacheItem = $this->getCacheEngine()->getItem($key);
+        if (!$cacheItem->isHit()) {
             $iterator = $this->getDbDriver()->getIterator($sql, $params);
-            foreach ($iterator as $value) {
-                $cache[] = $value->toArray();
-            }
 
-            // @todo Analyse that
-            $this->getCacheEngine()->set($key, $cache, $ttl);
+            $cacheItem->set($iterator->toArray());
+            $cacheItem->expiresAfter(new \DateInterval("$ttl seconds"));
+
+            $this->getCacheEngine()->save($key, $cacheItem);
         }
 
-        $arrayDS = new ArrayDataset($cache);
+        $arrayDS = new ArrayDataset($cacheItem);
         return $arrayDS->getIterator();
     }
 

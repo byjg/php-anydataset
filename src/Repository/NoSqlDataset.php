@@ -3,12 +3,18 @@
 namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Database\MongoDbDriver;
-use ByJG\AnyDataset\Database\NoSqlDriverInterface;
+use ByJG\AnyDataset\Database\NoSqlDocumentInterface;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\Util\Uri;
 use InvalidArgumentException;
 
-class NoSqlDataset implements NoSqlDriverInterface
+/**
+ * Class NoSqlDataset
+ * @todo Essa classe não tem sentido... (inclusive DBDataset).
+ * @todo Por que não criar um factory que devolve um objeto que implemente a interface de acordo com o Schema?
+ * @package ByJG\AnyDataset\Repository
+ */
+class NoSqlDataset implements NoSqlDocumentInterface
 {
 
     /**
@@ -19,8 +25,7 @@ class NoSqlDataset implements NoSqlDriverInterface
     private $connectionUri;
 
     /**
-
-     * @var NoSqlDriverInterface
+ * @var NoSqlDocumentInterface
      */
     private $dbDriver = null;
 
@@ -49,7 +54,7 @@ class NoSqlDataset implements NoSqlDriverInterface
     }
 
     /**
-     * @return MongoDbDriver|NoSqlDriverInterface
+     * @return MongoDbDriver|NoSqlDocumentInterface
      */
     public function getDbDriver()
     {
