@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset;
 
-use ByJG\AnyDataset\Repository\DBDataset;
+use ByJG\AnyDataset\Dataset\DBDataset;
 
 interface DbFunctionsInterface
 {

@@ -7,7 +7,7 @@
 
 namespace ByJG\AnyDataset;
 
-use ByJG\AnyDataset\Database\PdoLiteral;
+use ByJG\AnyDataset\Store\PdoLiteral;
 use ByJG\Util\Uri;
 
 class Factory
@@ -25,7 +25,7 @@ class Factory
 
         $scheme = $connectionUri->getScheme();
 
-        $prefix = '\\ByJG\\AnyDataset\\Database\\';
+        $prefix = '\\ByJG\\AnyDataset\\Store\\';
         $validSchemes = array_merge(
             [
                 "sqlrelay" => $prefix . "DbSqlRelayDriver",
@@ -52,7 +52,7 @@ class Factory
      */
     public static function getDbFunctions(Uri $connectionUri)
     {
-        $dbFunc = "\\ByJG\\AnyDataset\\Database\\Expressions\\Db"
+        $dbFunc = "\\ByJG\\AnyDataset\\Store\\Helpers\\Db"
             . ucfirst($connectionUri->getScheme())
             . "Functions";
         return new $dbFunc();

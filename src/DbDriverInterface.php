@@ -18,6 +18,13 @@ interface DbDriverInterface
 
     public function executeSql($sql, $array = null);
 
+    public function executeSqlAndGetId($sql, $array = null);
+
+    /**
+     * @return DbFunctionsInterface
+     */
+    public function getDbHelper();
+
     public function beginTransaction();
 
     public function commitTransaction();
