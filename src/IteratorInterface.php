@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Repository;
+namespace ByJG\AnyDataset;
 
 interface IteratorInterface
 {

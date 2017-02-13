@@ -7,10 +7,10 @@
 
 namespace ByJG\AnyDataset\Database;
 
-
 use Aws\S3\S3Client;
+use ByJG\AnyDataset\NoSqlKeyValueInterface;
 use ByJG\AnyDataset\Repository\ArrayDataset;
-use ByJG\AnyDataset\Repository\IteratorInterface;
+use ByJG\AnyDataset\IteratorInterface;
 use ByJG\Util\Uri;
 
 class AwsS3Driver implements NoSqlKeyValueInterface

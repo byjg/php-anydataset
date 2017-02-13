@@ -2,13 +2,14 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\NotAvailableException;
-use ByJG\AnyDataset\Repository\DBIterator;
+use ByJG\AnyDataset\Repository\DbIterator;
 use ByJG\Util\Uri;
 use PDO;
 use PDOStatement;
 
-class DbPdoDriver implements DbDriverInterface
+abstract class DbPdoDriver implements DbDriverInterface
 {
 
     /**
@@ -21,13 +22,19 @@ class DbPdoDriver implements DbDriverInterface
      */
     protected $connectionUri;
 
-    public function __construct(Uri $connUri, $strcnn, $preOptions, $postOptions)
+    public function __construct(Uri $connUri, $preOptions = null, $postOptions = null)
     {
         $this->connectionUri = $connUri;
 
-        if (empty($strcnn)) {
-            $strcnn = $this->createPboConnStr($connUri);
+        if (!defined('PDO::ATTR_DRIVER_NAME')) {
+            throw new NotAvailableException("Extension 'PDO' is not loaded");
         }
+
+        if (!extension_loaded('pdo_' . strtolower($connUri->getScheme()))) {
+            throw new NotAvailableException("Extension 'pdo_" . strtolower($connUri->getScheme()) . "' is not loaded");
+        }
+
+        $strcnn = $this->createPboConnStr($connUri);
 
         // Create Connection
         $this->instance = new PDO(
@@ -48,49 +55,27 @@ class DbPdoDriver implements DbDriverInterface
         }
     }
     
-    private function createPboConnStr(Uri $connUri)
+    public function createPboConnStr(Uri $connUri)
     {
-        if ($connUri->getHost() != "") {
+        $host = $connUri->getHost();
+        if (empty($host)) {
             return $connUri->getScheme() . ":" . $connUri->getPath();
         }
         
-        $strcnn =
-            $connUri->getScheme()
-            . ":dbname="
-            . preg_replace('~^/~', '', $connUri->getPath())
-        ;
+        $strcnn = $connUri->getScheme() . ":"
+            . "dbname=" . preg_replace('~^/~', '', $connUri->getPath())
+            . ";host=" . $connUri->getHost();
 
-        if ($connUri->getQueryPart("unixsocket") != "") {
-            $strcnn .= ";unix_socket=" . $connUri->getQueryPart("unixsocket");
-        } else {
-            $strcnn .= ";host=" . $connUri->getHost();
-            if ($connUri->getPort() != "") {
-                $strcnn .= ";port=" . $connUri->getPort();
-            }
+        if ($connUri->getPort() != "") {
+            $strcnn .= ";port=" . $connUri->getPort();
         }
+
+        $query = $connUri->getQuery();
+        $strcnn .= ";" . implode(';', explode('&', $query));
 
         return $strcnn;
     }
     
-    public static function factory(Uri $connUri)
-    {
-        if (!defined('PDO::ATTR_DRIVER_NAME')) {
-            throw new NotAvailableException("Extension 'PDO' is not loaded");
-        }
-
-        if (!extension_loaded('pdo_' . strtolower($connUri->getScheme()))) {
-            throw new NotAvailableException("Extension 'pdo_" . strtolower($connUri->getScheme()) . "' is not loaded");
-        }
-
-        $class = '\ByJG\AnyDataset\Database\Pdo' . ucfirst($connUri->getScheme());
-
-        if (!class_exists($class, true)) {
-            return new DbPdoDriver($connUri, null, null, null);
-        } else {
-            return new $class($connUri);
-        }
-    }
-
     public function __destruct()
     {
         $this->instance = null;
@@ -121,7 +106,7 @@ class DbPdoDriver implements DbDriverInterface
     {
         $stmt = $this->getDBStatement($sql, $array);
         $stmt->execute();
-        $iterator = new DBIterator($stmt);
+        $iterator = new DbIterator($stmt);
         return $iterator;
     }
 

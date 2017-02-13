@@ -1,10 +1,15 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset;
 
 interface DbDriverInterface
 {
 
+    /**
+     * @param string $sql
+     * @param null $array
+     * @return IteratorInterface
+     */
     public function getIterator($sql, $array = null);
 
     public function getScalar($sql, $array = null);

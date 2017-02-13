@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Database;
+namespace ByJG\AnyDataset;
 
 interface NoSqlKeyValueInterface
 {

@@ -68,7 +68,7 @@ class SQLRelayIterator extends GenericIterator
             // Enfileira o registo
             array_push($this->_rowBuffer, $sr);
             // Traz novos até encher o Buffer
-            if (count($this->_rowBuffer) < DBIterator::RECORD_BUFFER) {
+            if (count($this->_rowBuffer) < DbIterator::RECORD_BUFFER) {
                 $this->hasNext();
             }
 

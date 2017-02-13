@@ -7,7 +7,7 @@ use ForceUTF8\Encoding;
 use PDO;
 use PDOStatement;
 
-class DBIterator extends GenericIterator
+class DbIterator extends GenericIterator
 {
 
     const RECORD_BUFFER = 50;
@@ -42,7 +42,7 @@ class DBIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if (count($this->rowBuffer) >= DBIterator::RECORD_BUFFER) {
+        if (count($this->rowBuffer) >= DbIterator::RECORD_BUFFER) {
             return true;
         } elseif (is_null($this->recordset)) {
             return (count($this->rowBuffer) > 0);
@@ -61,7 +61,7 @@ class DBIterator extends GenericIterator
             // Enfileira o registo
             array_push($this->rowBuffer, $singleRow);
             // Traz novos até encher o Buffer
-            if (count($this->rowBuffer) < DBIterator::RECORD_BUFFER) {
+            if (count($this->rowBuffer) < DbIterator::RECORD_BUFFER) {
                 $this->hasNext();
             }
 

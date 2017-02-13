@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Exception\NotAvailableException;

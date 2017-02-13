@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database\Expressions;
 
+use ByJG\AnyDataset\DbFunctionsInterface;
 use ByJG\AnyDataset\Repository\DBDataset;
 use DateTime;
 

@@ -16,6 +16,6 @@ class PdoOci extends DbPdoDriver
             PDO::ATTR_EMULATE_PREPARES => true
         ];
 
-        parent::__construct(null, $strcnn, [], $postOptions);
+        parent::__construct(null, [], $postOptions);
     }
 }

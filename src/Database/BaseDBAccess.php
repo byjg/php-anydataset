@@ -2,9 +2,9 @@
 
 namespace ByJG\AnyDataset\Database;
 
-use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
+use ByJG\AnyDataset\DbFunctionsInterface;
 use ByJG\AnyDataset\Repository\DBDataset;
-use ByJG\AnyDataset\Repository\IteratorInterface;
+use ByJG\AnyDataset\IteratorInterface;
 use Psr\Log\LoggerInterface;
 
 class BaseDBAccess

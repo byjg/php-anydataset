@@ -71,7 +71,7 @@ class XmlDataset
 
     /**
      * @access public
-     * @return DBIterator
+     * @return DbIterator
      */
     public function getIterator()
     {

@@ -9,6 +9,6 @@ class PdoOdbc extends DbPdoDriver
 
     public function __construct(Uri $connUri)
     {
-        parent::__construct($connUri, null, [], []);
+        parent::__construct($connUri, [], []);
     }
 }

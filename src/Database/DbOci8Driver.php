@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Repository\Oci8Iterator;
 use ByJG\Util\Uri;
@@ -25,10 +26,10 @@ class DbOci8Driver implements DbDriverInterface
      *
      *    oci8://username:password@host:1521/servicename?protocol=TCP&codepage=WE8MSWIN1252
      *
-     * @param string $connectionString
+     * @param Uri $connectionString
      * @throws DatabaseException
      */
-    public function __construct($connectionString)
+    public function __construct(Uri $connectionString)
     {
         $this->connectionUri = $connectionString;
 

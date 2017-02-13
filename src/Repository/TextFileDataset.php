@@ -61,7 +61,7 @@ class TextFileDataset
 
     /**
      * @access public
-     * @return DBIterator
+     * @return DbIterator
      * @throws DatasetException
      * @throws Exception
      */

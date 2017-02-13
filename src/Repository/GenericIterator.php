@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Repository;
 
 use ByJG\AnyDataset\Exception\NotImplementedException;
+use ByJG\AnyDataset\IteratorInterface;
 use ByJG\Serializer\DumpToArrayInterface;
 use Iterator;
 

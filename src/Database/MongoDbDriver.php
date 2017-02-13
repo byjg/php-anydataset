@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Database;
 
+use ByJG\AnyDataset\NoSqlDocumentInterface;
 use ByJG\AnyDataset\Repository\ArrayDatasetIterator;
 use ByJG\Util\Uri;
 use InvalidArgumentException;

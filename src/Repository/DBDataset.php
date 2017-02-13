@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Repository;
 
-use ByJG\AnyDataset\Database\DbDriverInterface;
-use ByJG\AnyDataset\Database\Expressions\DbFunctionsInterface;
+use ByJG\AnyDataset\DbDriverInterface;
+use ByJG\AnyDataset\DbFunctionsInterface;
 use ByJG\AnyDataset\Database\DbOci8Driver;
 use ByJG\AnyDataset\Database\DbPdoDriver;
 use ByJG\AnyDataset\Database\DbSqlRelayDriver;

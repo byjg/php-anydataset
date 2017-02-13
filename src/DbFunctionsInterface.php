@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Database\Expressions;
+namespace ByJG\AnyDataset;
 
 use ByJG\AnyDataset\Repository\DBDataset;
 

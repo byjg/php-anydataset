@@ -55,7 +55,7 @@ class JsonDataset
      * @access public
      * @param string $path
      * @param bool $throwErr
-     * @return DBIterator
+     * @return DbIterator
      */
     public function getIterator($path = "", $throwErr = false)
     {
