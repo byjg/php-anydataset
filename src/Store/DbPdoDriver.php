@@ -6,7 +6,7 @@ use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Dataset\DbIterator;
 use ByJG\AnyDataset\Factory;
-use ByJG\AnyDataset\Helpers\SqlBind;
+use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\AnyDataset\Store\Helpers\SqlHelper;
 use ByJG\Util\Uri;
 use PDO;
@@ -92,14 +92,13 @@ abstract class DbPdoDriver implements DbDriverInterface
      */
     protected function getDBStatement($sql, $array = null)
     {
-        if ($array) {
-            list($sql, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
-            $stmt = $this->instance->prepare($sql);
+        list($sql, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
+        $stmt = $this->instance->prepare($sql);
+
+        if (!empty($array)) {
             foreach ($array as $key => $value) {
                 $stmt->bindValue(":" . SqlBind::keyAdj($key), $value);
             }
-        } else {
-            $stmt = $this->instance->prepare($sql);
         }
 
         return $stmt;

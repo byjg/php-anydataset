@@ -53,14 +53,15 @@ class FixedTextFileIterator extends GenericIterator
     {
         if (!$this->handle) {
             return false;
-        } else {
-            if (feof($this->handle)) {
-                fclose($this->handle);
-                return false;
-            } else {
-                return true;
-            }
         }
+
+        if (feof($this->handle)) {
+            fclose($this->handle);
+
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -85,12 +86,12 @@ class FixedTextFileIterator extends GenericIterator
 
             $this->current++;
             return new SingleRow($fields);
-        } else {
-            if ($this->handle) {
-                fclose($this->handle);
-            }
-            return null;
         }
+
+        if ($this->handle) {
+            fclose($this->handle);
+        }
+        return null;
     }
 
     protected function processBuffer($buffer, $fieldDefinition)

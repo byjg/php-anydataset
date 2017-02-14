@@ -56,9 +56,8 @@ class FixedTextFileDataset
     {
         if ($this->sourceType == "HTTP") {
             return $this->getIteratorHttp();
-        } else {
-            return $this->getIteratorFile();
         }
+        return $this->getIteratorFile();
     }
 
     protected function getIteratorHttp()
@@ -73,19 +72,19 @@ class FixedTextFileDataset
         $handle = fsockopen($urlParts[2], 80, $errno, $errstr, 30);
         if (!$handle) {
             throw new DatasetException("TextFileDataset Socket error: $errstr ($errno)");
-        } else {
-            $out = "GET " . $urlParts[4] . " HTTP/1.1\r\n";
-            $out .= "Host: " . $urlParts[2] . "\r\n";
-            $out .= "Connection: Close\r\n\r\n";
+        }
 
-            fwrite($handle, $out);
+        $out = "GET " . $urlParts[4] . " HTTP/1.1\r\n";
+        $out .= "Host: " . $urlParts[2] . "\r\n";
+        $out .= "Connection: Close\r\n\r\n";
 
-            try {
-                return new FixedTextFileIterator($handle, $this->fieldDefinition);
-            } catch (Exception $ex) {
-                fclose($handle);
-                throw $ex;
-            }
+        fwrite($handle, $out);
+
+        try {
+            return new FixedTextFileIterator($handle, $this->fieldDefinition);
+        } catch (Exception $ex) {
+            fclose($handle);
+            throw $ex;
         }
     }
 
@@ -94,13 +93,13 @@ class FixedTextFileDataset
         $handle = fopen($this->source, "r");
         if (!$handle) {
             throw new DatasetException("TextFileDataset File open error");
-        } else {
-            try {
-                return new FixedTextFileIterator($handle, $this->fieldDefinition);
-            } catch (Exception $ex) {
-                fclose($handle);
-                throw $ex;
-            }
+        }
+
+        try {
+            return new FixedTextFileIterator($handle, $this->fieldDefinition);
+        } catch (Exception $ex) {
+            fclose($handle);
+            throw $ex;
         }
     }
 }

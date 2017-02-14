@@ -58,24 +58,24 @@ class ArrayDatasetIterator extends GenericIterator
      */
     public function moveNext()
     {
-        if ($this->hasNext()) {
-            $key = $this->keys[$this->currentRow];
-            $cols = $this->rows[$key];
-
-            $any = new AnyDataset();
-            $any->appendRow();
-            $any->addField("__id", $this->currentRow);
-            $any->addField("__key", $key);
-            foreach ($cols as $key => $value) {
-                $any->addField(strtolower($key), $value);
-            }
-            $iterator = $any->getIterator(null);
-            $singleRow = $iterator->moveNext();
-            $this->currentRow++;
-            return $singleRow;
-        } else {
+        if (!$this->hasNext()) {
             return null;
         }
+
+        $key = $this->keys[$this->currentRow];
+        $cols = $this->rows[$key];
+
+        $any = new AnyDataset();
+        $any->appendRow();
+        $any->addField("__id", $this->currentRow);
+        $any->addField("__key", $key);
+        foreach ($cols as $key => $value) {
+            $any->addField(strtolower($key), $value);
+        }
+        $iterator = $any->getIterator(null);
+        $singleRow = $iterator->moveNext();
+        $this->currentRow++;
+        return $singleRow;
     }
 
     public function key()

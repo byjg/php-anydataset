@@ -57,9 +57,8 @@ class AnyIterator extends GenericIterator
     {
         if (!$this->hasNext()) {
             return null;
-        } else {
-            return $this->list[$this->curRow++];
         }
+        return $this->list[$this->curRow++];
     }
 
     public function key()

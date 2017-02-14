@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Helpers;
+namespace ByJG\AnyDataset\Store\Helpers;
 
 use ByJG\Util\Uri;
 

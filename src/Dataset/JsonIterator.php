@@ -27,7 +27,9 @@ class JsonIterator extends GenericIterator
         }
 
         if ($path != "") {
-            if ($path[0] == "/") $path = substr($path, 1);
+            if ($path[0] == "/") {
+                $path = substr($path, 1);
+            }
 
             $pathAr = explode("/", $path);
 
@@ -44,7 +46,9 @@ class JsonIterator extends GenericIterator
                 }
             }
             $this->_jsonObject = $newjsonObject;
-        } else $this->_jsonObject = $jsonObject;
+        } else {
+            $this->_jsonObject = $jsonObject;
+        }
 
         $this->_current = 0;
     }

@@ -73,15 +73,16 @@ class AnyDataset
 
         $this->path = null;
         if (!is_null($file)) {
-            if (is_string($file)) {
-                $ext = pathinfo($file, PATHINFO_EXTENSION);
-                if (empty($ext)) {
-                    $file .= '.anydata.xml';
-                }
-                $this->path = $file;
-            } else {
+            if (!is_string($file)) {
                 throw new \InvalidArgumentException('I expected a string as a file name');
             }
+
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            if (empty($ext)) {
+                $file .= '.anydata.xml';
+            }
+            $this->path = $file;
+
             $this->createFrom($this->path);
         }
     }
@@ -103,11 +104,11 @@ class AnyDataset
                 $fields = $row->getElementsByTagName("field");
                 foreach ($fields as $field) {
                     $attr = $field->attributes->getNamedItem("name");
-                    if (!is_null($attr)) {
-                        $sr->addField($attr->nodeValue, $field->nodeValue);
-                    } else {
+                    if (is_null($attr)) {
                         throw new \InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
                     }
+
+                    $sr->addField($attr->nodeValue, $field->nodeValue);
                 }
                 $sr->acceptChanges();
                 $this->collection[] = $sr;
@@ -151,11 +152,11 @@ class AnyDataset
     public function save($file = null)
     {
         if (!is_null($file)) {
-            if (is_string($file)) {
-                $this->path = $file;
-            } else {
+            if (!is_string($file)) {
                 throw new InvalidArgumentException('Invalid file name');
             }
+
+            $this->path = $file;
         }
 
         if (is_null($this->path)) {
