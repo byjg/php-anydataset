@@ -189,7 +189,7 @@ class DbOci8Driver implements DbDriverInterface
         oci_rollback($this->conn);
     }
 
-    public function executeSql($sql, $array = null)
+    public function execute($sql, $array = null)
     {
         $cur = $this->getOci8Cursor($sql, $array);
         oci_free_cursor($cur);
@@ -215,7 +215,7 @@ class DbOci8Driver implements DbDriverInterface
         throw new NotImplementedException('Method not implemented for OCI Driver');
     }
 
-    public function executeSqlAndGetId($sql, $array = null)
+    public function executeAndGetId($sql, $array = null)
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
     }

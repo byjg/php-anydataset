@@ -131,7 +131,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
      */
     public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
-        $dbdataset->executeSql($sql, $param);
+        $dbdataset->execute($sql, $param);
         return -1;
     }
 }

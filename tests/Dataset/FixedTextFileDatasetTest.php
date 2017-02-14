@@ -64,11 +64,16 @@ class FixedTextFileDatasetTest extends \PHPUnit_Framework_TestCase
             new \ByJG\AnyDataset\Enum\FixedTextDefinition('id', 0, 3),
             new \ByJG\AnyDataset\Enum\FixedTextDefinition('name', 3, 7),
             new \ByJG\AnyDataset\Enum\FixedTextDefinition('enable', 10, 1, null, 'S|N'),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('code', 11, 4, null,
+            new \ByJG\AnyDataset\Enum\FixedTextDefinition(
+                'code',
+                11,
+                4,
+                null,
                 [
-                new \ByJG\AnyDataset\Enum\FixedTextDefinition('first', 0, 1),
-                new \ByJG\AnyDataset\Enum\FixedTextDefinition('second', 1, 3),
-                ]),
+                    new \ByJG\AnyDataset\Enum\FixedTextDefinition('first', 0, 1),
+                    new \ByJG\AnyDataset\Enum\FixedTextDefinition('second', 1, 3),
+                ]
+            ),
         ];
 
         $repository = new FixedTextFileDataset(__DIR__ . '/sample-fixed.txt', $fieldDefinition);

@@ -96,9 +96,9 @@ class DbCached implements DbDriverInterface
         $this->dbDriver->getAllFields($tablename);
     }
 
-    public function executeSql($sql, $array = null)
+    public function execute($sql, $array = null)
     {
-        $this->dbDriver->executeSql($sql, $array);
+        $this->dbDriver->execute($sql, $array);
     }
 
     public function beginTransaction()
@@ -131,9 +131,9 @@ class DbCached implements DbDriverInterface
         $this->dbDriver->getAttribute($name);
     }
 
-    public function executeSqlAndGetId($sql, $array = null)
+    public function executeAndGetId($sql, $array = null)
     {
-        $this->dbDriver->executeSqlAndGetId($sql, $array);
+        $this->dbDriver->executeAndGetId($sql, $array);
     }
 
     public function getDbHelper()

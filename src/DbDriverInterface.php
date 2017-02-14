@@ -18,9 +18,9 @@ interface DbDriverInterface
 
     public function getAllFields($tablename);
 
-    public function executeSql($sql, $array = null);
+    public function execute($sql, $array = null);
 
-    public function executeSqlAndGetId($sql, $array = null);
+    public function executeAndGetId($sql, $array = null);
 
     /**
      * @return DbFunctionsInterface

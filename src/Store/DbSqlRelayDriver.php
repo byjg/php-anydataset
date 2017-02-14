@@ -155,7 +155,7 @@ class DbSqlRelayDriver implements DbDriverInterface
         }
     }
 
-    public function executeSql($sql, $array = null)
+    public function execute($sql, $array = null)
     {
         $cur = $this->getSQLRelayCursor($sql, $array);
         sqlrcur_free($cur);
@@ -181,7 +181,7 @@ class DbSqlRelayDriver implements DbDriverInterface
         throw new NotImplementedException('Method not implemented for SQL Relay Driver');
     }
 
-    public function executeSqlAndGetId($sql, $array = null)
+    public function executeAndGetId($sql, $array = null)
     {
         throw new NotImplementedException('Method not implemented for SQL Relay Driver');
     }

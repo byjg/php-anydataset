@@ -158,14 +158,14 @@ abstract class DbPdoDriver implements DbDriverInterface
         $this->instance->rollBack();
     }
 
-    public function executeSql($sql, $array = null)
+    public function execute($sql, $array = null)
     {
         $stmt = $this->getDBStatement($sql, $array);
         $result = $stmt->execute();
         return $result;
     }
 
-    public function executeSqlAndGetId($sql, $array = null)
+    public function executeAndGetId($sql, $array = null)
     {
         $this->getDbHelper()->executeAndGetInsertedId($this, $sql, $array);
     }
