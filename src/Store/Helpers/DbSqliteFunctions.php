@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Store\Helpers;
 
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\NotImplementedException;
-use ByJG\AnyDataset\Dataset\DBDataset;
 
 class DbSqliteFunctions extends DbBaseFunctions
 {
@@ -138,12 +138,12 @@ class DbSqliteFunctions extends DbBaseFunctions
 
     /**
      *
-     * @param DBDataset $dbdataset
+     * @param DbDriverInterface $dbdataset
      * @param string $sql
      * @param array $param
      * @return int
      */
-    public function executeAndGetInsertedId($dbdataset, $sql, $param)
+    public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
         $returnedId = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
         $iterator = $dbdataset->getIterator("SELECT last_insert_rowid() id");

@@ -2,9 +2,6 @@
 
 namespace ByJG\AnyDataset\Store;
 
-use ByJG\AnyDataset\Store\Helpers\DbDblibFunctions;
-use ByJG\AnyDataset\DbFunctionsInterface;
-
 class PdoDblib extends DbPdoDriver
 {
 

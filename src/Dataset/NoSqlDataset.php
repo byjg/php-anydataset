@@ -2,8 +2,9 @@
 
 namespace ByJG\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Store\MongoDbDriver;
-use ByJG\AnyDataset\Store\NoSqlDocumentInterface;
+use ByJG\AnyDataset\NoSqlDocumentInterface;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\Util\Uri;
 use InvalidArgumentException;
@@ -25,7 +26,7 @@ class NoSqlDataset implements NoSqlDocumentInterface
     private $connectionUri;
 
     /**
- * @var NoSqlDocumentInterface
+     * @var NoSqlDocumentInterface
      */
     private $dbDriver = null;
 

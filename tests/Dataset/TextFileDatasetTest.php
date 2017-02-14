@@ -1,8 +1,8 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\AnyDataset\Repository\SingleRow;
-use ByJG\AnyDataset\Repository\TextFileDataset;
+use ByJG\AnyDataset\IteratorInterface;
+use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\TextFileDataset;
 
 /**
  * NOTE: The class name must end with "Test" suffix.

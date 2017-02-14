@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Repository;
+namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Enum\Relation;
 
@@ -21,7 +21,7 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new IteratorFilter;
+        $this->object = new IteratorFilter();
     }
 
     /**
@@ -33,48 +33,60 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\IteratorFilter::getXPath
-     */
     public function testGetXPath()
     {
-        $this->assertEquals('/anydataset/row', $this->object->getXPath());
+        $this->assertEquals(
+            '/anydataset/row',
+            $this->object->format(new IteratorFilterXPathFormatter())
+        );
 
         $this->object->addRelation('field', Relation::EQUAL, 'test');
-        $this->assertEquals("/anydataset/row[field[@name='field'] = 'test' ]", $this->object->getXPath());
+        $this->assertEquals(
+            "/anydataset/row[field[@name='field'] = 'test' ]",
+            $this->object->format(new IteratorFilterXPathFormatter())
+        );
 
         $this->object->addRelation('field2', Relation::EQUAL, 'test2');
         $this->assertEquals(
             "/anydataset/row[field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ]",
-            $this->object->getXPath()
+            $this->object->format(new IteratorFilterXPathFormatter())
         );
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\IteratorFilter::getSql
-     */
     public function testGetSql()
     {
         $params = null;
         $returnFields = '*';
-        $sql = $this->object->getSql('tablename', $params, $returnFields);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
         $this->assertEquals([], $params);
         $this->assertEquals('select * from tablename ', $sql);
 
         $this->object->addRelation('field', Relation::EQUAL, 'test');
-        $sql = $this->object->getSql('tablename', $params, $returnFields);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
         $this->assertEquals(['field' => 'test'], $params);
         $this->assertEquals('select * from tablename  where  field = [[field]]  ', $sql);
 
         $this->object->addRelation('field2', Relation::EQUAL, 'test2');
-        $sql = $this->object->getSql('tablename', $params, $returnFields);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
         $this->assertEquals(['field' => 'test', 'field2' => 'test2'], $params);
         $this->assertEquals('select * from tablename  where  field = [[field]]  and  field2 = [[field2]]  ', $sql);
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\IteratorFilter::match
-     */
     public function testMatch()
     {
 
@@ -116,9 +128,6 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([ $row3], $this->object->match($collection));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\IteratorFilter::getFilter
-     */
     public function testGetFilter()
     {
         // -------------------------
@@ -126,28 +135,27 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         // -------------------------
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\IteratorFilter::addRelationOr
-     */
     public function testAddRelationOr()
     {
         $this->object->addRelation('field', Relation::EQUAL, 'test');
         $this->object->addRelationOr('field2', Relation::EQUAL, 'test2');
         $this->assertEquals(
             "/anydataset/row[field[@name='field'] = 'test'  or field[@name='field2'] = 'test2' ]",
-            $this->object->getXPath()
+            $this->object->format(new IteratorFilterXPathFormatter())
         );
 
         $params = null;
         $returnFields = '*';
-        $sql = $this->object->getSql('tablename', $params, $returnFields);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
         $this->assertEquals(['field' => 'test', 'field2' => 'test2'], $params);
         $this->assertEquals('select * from tablename  where  field = [[field]]  or  field2 = [[field2]]  ', $sql);
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\IteratorFilter::startGroup
-     */
     public function testGroup()
     {
         $this->object->startGroup();
@@ -157,12 +165,17 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
         $this->object->addRelationOr('field3', Relation::EQUAL, 'test3');
         $this->assertEquals(
             "/anydataset/row[ ( field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ) or field[@name='field3'] = 'test3' ]",
-            $this->object->getXPath()
+            $this->object->format(new IteratorFilterXPathFormatter())
         );
 
         $params = null;
         $returnFields = '*';
-        $sql = $this->object->getSql('tablename', $params, $returnFields);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
         $this->assertEquals(['field' => 'test', 'field2' => 'test2', 'field3' => 'test3'], $params);
         $this->assertEquals(
             'select * from tablename  where  (  field = [[field]]  and  field2 = [[field2]] ) or  field3 = [[field3]]  ',

@@ -6,7 +6,9 @@ use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Dataset\SQLRelayIterator;
+use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Helpers\SqlBind;
+use ByJG\AnyDataset\Store\Helpers\SqlHelper;
 use ByJG\Util\Uri;
 
 class DbSqlRelayDriver implements DbDriverInterface
@@ -187,5 +189,13 @@ class DbSqlRelayDriver implements DbDriverInterface
     public function getDbHelper()
     {
         throw new NotImplementedException('Method not implemented for SQL Relay Driver');
+    }
+
+    /**
+     * @return Uri
+     */
+    public function getUri()
+    {
+        return $this->connectionUri;
     }
 }

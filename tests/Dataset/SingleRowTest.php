@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Repository;
+namespace ByJG\AnyDataset\Dataset;
 use AnyDataSet\Tests\Sample\ModelGetter;
 use AnyDataSet\Tests\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
@@ -43,9 +43,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::AddField
-     */
     public function testAddField()
     {
         $this->object->addField('field1', '10');
@@ -91,9 +88,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::getField
-     */
     public function testGetField()
     {
         $this->fill();
@@ -104,9 +98,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->object->getField('not-exists'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::getFieldArray
-     */
     public function testGetFieldArray()
     {
         $this->fill();
@@ -120,9 +111,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $this->object->getFieldArray('field3'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::getFieldNames
-     */
     public function testGetFieldNames()
     {
         $this->fill();
@@ -130,9 +118,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('field1', 'field2'), $this->object->getFieldNames());
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::setField
-     */
     public function testSetField()
     {
         $this->fill();
@@ -147,9 +132,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(50, $this->object->getField('field3'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::removeFieldName
-     */
     public function testRemoveFieldName()
     {
         $this->fill();
@@ -159,9 +141,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(40, $this->object->getField('field2'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::removeFieldName
-     */
     public function testRemoveFieldName2()
     {
         $this->fill();
@@ -171,9 +150,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->object->getField('field2'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::removeFieldNameValue
-     */
     public function testRemoveFieldNameValue()
     {
         $this->fill();
@@ -188,9 +164,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->object->getField('field2'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::setFieldValue
-     */
     public function testSetFieldValue()
     {
         $this->fill();
@@ -208,9 +181,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(10, 190, 30), $this->object->getFieldArray('field1'));
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::getDomObject
-     */
     public function testGetDomObject()
     {
         $this->fill();
@@ -227,9 +197,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($dom, $this->object->getDomObject());
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::getOriginalRawFormat
-     */
     public function testGetOriginalRawFormat()
     {
         $this->fill();
@@ -241,9 +208,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::hasChanges
-     */
     public function testHasChanges()
     {
         $this->fill();
@@ -253,9 +217,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->object->hasChanges());
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::acceptChanges
-     */
     public function testAcceptChanges()
     {
         $this->fill();
@@ -266,9 +227,6 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->getOriginalRawFormat());
     }
 
-    /**
-     * @covers \ByJG\AnyDataset\Repository\SingleRow::rejectChanges
-     */
     public function testRejectChanges()
     {
         $this->fill();

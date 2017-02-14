@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\IteratorInterface;
 use UnexpectedValueException;
 
 class ArrayDataset

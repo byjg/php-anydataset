@@ -1,7 +1,7 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\AnyDataset\Repository\SparQLDataset;
+use ByJG\AnyDataset\IteratorInterface;
+use ByJG\AnyDataset\Dataset\SparQLDataset;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
@@ -57,7 +57,7 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
     public function test_wrongSparQLDataset2()
     {
         $dataset = new SparQLDataset(SparQLDatasetTest::SPARQL_URL);
-        $iterator = $dataset->getIterator("?Concept where {[] a ?Concept} LIMIT 5");
+        $dataset->getIterator("?Concept where {[] a ?Concept} LIMIT 5");
     }
 
     public function test_navigateSparQLDataset()

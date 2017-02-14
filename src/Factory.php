@@ -34,7 +34,8 @@ class Factory
                 "mysql" => $prefix . "PdoMysql",
                 "pgsql" => $prefix . "PdoPgsql",
                 "oci" => $prefix . "PdoOci",
-                "odbc" => $prefix . "PdoOdbc"
+                "odbc" => $prefix . "PdoOdbc",
+                "sqlite" => $prefix . "PdoSqlite",
             ],
             (array)$schemesAlternative
         );

@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Repository;
+namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\Serializer\SerializerObject;
 
@@ -8,7 +8,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 {
     public function testBindSingleRow()
     {
-        $sr = new \ByJG\AnyDataset\Repository\SingleRow();
+        $sr = new \ByJG\AnyDataset\Dataset\SingleRow();
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
 
@@ -20,9 +20,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testBindIterator()
     {
-        $anydata = new \ByJG\AnyDataset\Repository\AnyDataset();
+        $anydata = new \ByJG\AnyDataset\Dataset\AnyDataset();
 
-        $sr = new \ByJG\AnyDataset\Repository\SingleRow();
+        $sr = new \ByJG\AnyDataset\Dataset\SingleRow();
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
         $anydata->appendRow($sr);
@@ -33,12 +33,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Testing", $object->getName());
     }
 
-    /**
-     * @covers ByJG\Serializer\BinderObject::bind
-     */
     public function testBind_Iterator2()
     {
-        $anydata = new \ByJG\AnyDataset\Repository\AnyDataset();
+        $anydata = new \ByJG\AnyDataset\Dataset\AnyDataset();
         $anydata->addField('Id', 10);
         $anydata->addField('Name', 'Joao');
         $anydata->appendRow();

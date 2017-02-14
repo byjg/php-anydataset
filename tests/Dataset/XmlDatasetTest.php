@@ -1,8 +1,8 @@
 <?php
 
-use ByJG\AnyDataset\Repository\IteratorInterface;
-use ByJG\AnyDataset\Repository\SingleRow;
-use ByJG\AnyDataset\Repository\XmlDataset;
+use ByJG\AnyDataset\IteratorInterface;
+use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\XmlDataset;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
@@ -225,11 +225,4 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($sr->getField("lang"), $this->arrTest[$count]["lang"]);
     }
 
-    public function assertSingleRow2($sr, $count)
-    {
-        $this->assertEquals($sr->getField("id"), $this->arrTest2[$count]["id"]);
-        if ($count > 0) $this->assertEquals($sr->getField("label"), $this->arrTest2[$count]["label"]);
-    }
 }
-
-?>

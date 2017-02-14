@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Store\Helpers;
 
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\NotAvailableException;
-use ByJG\AnyDataset\Dataset\DBDataset;
 
 class DbDblibFunctions extends DbBaseFunctions
 {
@@ -130,12 +130,12 @@ class DbDblibFunctions extends DbBaseFunctions
 
     /**
      *
-     * @param DBDataset $dbdataset
+     * @param DbDriverInterface $dbdataset
      * @param string $sql
      * @param array $param
      * @return int
      */
-    public function executeAndGetInsertedId($dbdataset, $sql, $param)
+    public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
         $insertedId = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
         $iterator = $dbdataset->getIterator("select @@identity id");

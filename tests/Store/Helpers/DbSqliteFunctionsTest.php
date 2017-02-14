@@ -7,18 +7,18 @@
 
 namespace Database;
 
-use ByJG\AnyDataset\Database\Expressions\DbPgsqlFunctions;
+use ByJG\AnyDataset\Store\Helpers\DbSqliteFunctions;
 
-class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
+class DbSqliteFunctionsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DbPgsqlFunctions
+     * @var DbSqliteFunctions
      */
     private $object;
 
     protected function setUp()
     {
-        $this->object = new DbPgsqlFunctions();
+        $this->object = new DbSqliteFunctions();
     }
 
     protected function tearDown()
@@ -43,13 +43,13 @@ class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
         $baseSql = 'select * from table';
 
         $result = $this->object->limit($baseSql, 10);
-        $this->assertEquals($baseSql . ' LIMIT 50 OFFSET 10', $result);
+        $this->assertEquals($baseSql . ' LIMIT 10, 50', $result);
 
         $result = $this->object->limit($baseSql, 10, 20);
-        $this->assertEquals($baseSql . ' LIMIT 20 OFFSET 10', $result);
+        $this->assertEquals($baseSql . ' LIMIT 10, 20', $result);
 
-        $result = $this->object->limit($baseSql . ' LIMIT 5 OFFSET 50', 10, 20);
-        $this->assertEquals($baseSql . ' LIMIT 20 OFFSET 10', $result);
+        $result = $this->object->limit($baseSql . ' LIMIT 5, 50', 10, 20);
+        $this->assertEquals($baseSql . ' LIMIT 10, 20', $result);
     }
 
     public function testTop()
@@ -57,10 +57,10 @@ class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
         $baseSql = 'select * from table';
 
         $result = $this->object->top($baseSql, 10);
-        $this->assertEquals($baseSql . ' LIMIT 10 OFFSET 0', $result);
+        $this->assertEquals($baseSql . ' LIMIT 0, 10', $result);
 
-        $result = $this->object->top($baseSql . ' LIMIT 350 OFFSET 20', 10);
-        $this->assertEquals($baseSql . ' LIMIT 10 OFFSET 0', $result);
+        $result = $this->object->top($baseSql . ' LIMIT 20,350', 10);
+        $this->assertEquals($baseSql . ' LIMIT 0, 10', $result);
     }
 
     public function testHasTop()
@@ -75,12 +75,12 @@ class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
 
     public function testSqlDate()
     {
-        $this->assertEquals("TO_CHAR(column,'DD/Mon/YYYY')", $this->object->sqlDate('d/M/Y', 'column'));
-        $this->assertEquals("TO_CHAR(column,'DD/MM/YYYY HH24:MI')", $this->object->sqlDate('d/m/Y H:i', 'column'));
-        $this->assertEquals("TO_CHAR(column,'HH24:MI')", $this->object->sqlDate('H:i', 'column'));
-        $this->assertEquals("TO_CHAR(column,'DD MM YYYY HH24 MI')", $this->object->sqlDate('d m Y H i', 'column'));
-        $this->assertEquals("TO_CHAR(column,'Mon Q')", $this->object->sqlDate('M q', 'column'));
-        $this->assertEquals("TO_CHAR(current_timestamp,'DD/MM/YY HH:MI')", $this->object->sqlDate('d/m/y h:i'));
+        $this->assertEquals("strftime('%d/%m/%Y', column)", $this->object->sqlDate('d/M/Y', 'column'));
+        $this->assertEquals("strftime('%d/%m/%Y %H:%M', column)", $this->object->sqlDate('d/m/Y H:i', 'column'));
+        $this->assertEquals("strftime('%H:%M', column)", $this->object->sqlDate('H:i', 'column'));
+        $this->assertEquals("strftime('%d %m %Y %H %M', column)", $this->object->sqlDate('d m Y H i', 'column'));
+        $this->assertEquals("strftime('%d/%m/%Y %H:%M', 'now')", $this->object->sqlDate('d/m/y h:i'));
+        $this->assertEquals("strftime('%m ', column)", $this->object->sqlDate('M q', 'column'));
     }
 
     public function testToDate()

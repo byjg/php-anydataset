@@ -9,8 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "ByJG\\AnyDataset\\": "src/",
-            "AnyDataSet\\Tests\\": "tests/"
+            "ByJG\\AnyDataset\\": "src/"
         }
     },
     "prefer-stable": true,

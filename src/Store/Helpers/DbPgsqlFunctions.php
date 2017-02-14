@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Store\Helpers;
 
-use ByJG\AnyDataset\Helpers\SqlHelper;
+use ByJG\AnyDataset\DbDriverInterface;
 
 class DbPgsqlFunctions extends DbBaseFunctions
 {
@@ -127,7 +127,14 @@ class DbPgsqlFunctions extends DbBaseFunctions
         return parent::fromDate($date, $dateFormat);
     }
 
-    public function executeAndGetInsertedId($dbdataset, $sql, $param, $sequence = null)
+    /**
+     * @param DbDriverInterface $dbdataset
+     * @param string $sql
+     * @param array $param
+     * @param null $sequence
+     * @return int
+     */
+    public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param, $sequence = null)
     {
         $idInserted = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
         $iterator = $dbdataset->getIterator(

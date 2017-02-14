@@ -1,11 +1,10 @@
 <?php
 
-namespace ByJG\AnyDataset\Helpers;
+namespace ByJG\AnyDataset\Store\Helpers;
 
-use ByJG\AnyDataset\Store\Helpers\DbBaseFunctions;
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
-use ByJG\AnyDataset\Dataset\DBDataset;
 use ByJG\AnyDataset\Dataset\SingleRow;
 use DateTime;
 use Exception;
@@ -14,16 +13,16 @@ class SqlHelper
 {
 
     /**
-     * @var DBDataset
+     * @var DbDriverInterface
      */
     private $dataset;
     protected $fieldDeliLeft = " ";
     protected $fieldDeliRight = " ";
 
     /**
-     * @param DBDataset $dataset
+     * @param DbDriverInterface $dataset
      */
-    public function __construct(DBDataset $dataset)
+    public function __construct(DbDriverInterface $dataset)
     {
         $this->dataset = $dataset;
     }
@@ -122,7 +121,7 @@ class SqlHelper
         } elseif ($valores[0] == SQLFieldType::DATE) {
             $date = ($valores[1] instanceof DateTime ? $valores[1]->format(DbBaseFunctions::YMDH) : $valores[1]);
             $param[$name] = $date;
-            if ($this->getDbDataset()->getConnectionUri()->getDriver() == 'oci8') {
+            if ($this->getDbDataset()->getUri()->getScheme() == 'oci8') {
                 return "TO_DATE($paramName, 'YYYY-MM-DD')";
             }
             return $paramName;
@@ -166,7 +165,7 @@ class SqlHelper
     }
 
     /**
-     * @return DBDataset
+     * @return DbDriverInterface
      */
     public function getDbDataset()
     {

@@ -7,7 +7,7 @@
 
 namespace Database;
 
-use ByJG\AnyDataset\Database\Expressions\DbMysqlFunctions;
+use ByJG\AnyDataset\Store\Helpers\DbMysqlFunctions;
 
 class DbMysqlFunctionsTest extends \PHPUnit_Framework_TestCase
 {

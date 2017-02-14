@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset;
 
+use ByJG\Util\Uri;
+
 interface DbDriverInterface
 {
 
@@ -32,6 +34,11 @@ interface DbDriverInterface
     public function rollbackTransaction();
 
     public function getDbConnection();
+
+    /**
+     * @return Uri
+     */
+    public function getUri();
 
     public function setAttribute($name, $value);
 

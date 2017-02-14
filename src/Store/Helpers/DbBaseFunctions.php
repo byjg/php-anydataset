@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Store\Helpers;
 
+use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\DbFunctionsInterface;
-use ByJG\AnyDataset\Dataset\DBDataset;
 use DateTime;
 
 abstract class DbBaseFunctions implements DbFunctionsInterface
@@ -124,14 +124,14 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
 
     /**
      *
-     * @param DBDataset $dbdataset
+     * @param DbDriverInterface $dbdataset
      * @param string $sql
      * @param array $param
      * @return int
      */
-    public function executeAndGetInsertedId($dbdataset, $sql, $param)
+    public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
-        $dbdataset->execSQL($sql, $param);
+        $dbdataset->executeSql($sql, $param);
         return -1;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset;
 
+use ByJG\AnyDataset\Dataset\SingleRow;
+
 interface IteratorInterface
 {
 

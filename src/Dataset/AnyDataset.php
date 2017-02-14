@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Exception\DatabaseException;
+use ByJG\AnyDataset\IteratorInterface;
 use ByJG\Util\XmlUtil;
 use ForceUTF8\Encoding;
 use InvalidArgumentException;
@@ -194,7 +195,7 @@ class AnyDataset
      *
      * @param IteratorInterface $ititerator
      */
-    public function import(IteratorInterface $ititerator)
+    public function import($ititerator)
     {
         foreach ($ititerator as $singleRow) {
             $this->appendRow($singleRow);
@@ -266,15 +267,15 @@ class AnyDataset
     /**
      * Get an Iterator filtered by an IteratorFilter
      * @param IteratorFilter $itf
-     * @return IteratorInterface
+     * @return AnyIterator
      */
     public function getIterator(IteratorFilter $itf = null)
     {
         if (is_null($itf)) {
             return new AnyIterator($this->collection);
-        } else {
-            return new AnyIterator($itf->match($this->collection));
         }
+
+        return new AnyIterator($itf->match($this->collection));
     }
 
     /**

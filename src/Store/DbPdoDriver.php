@@ -7,6 +7,7 @@ use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Dataset\DbIterator;
 use ByJG\AnyDataset\Factory;
 use ByJG\AnyDataset\Helpers\SqlBind;
+use ByJG\AnyDataset\Store\Helpers\SqlHelper;
 use ByJG\Util\Uri;
 use PDO;
 use PDOStatement;
@@ -197,5 +198,10 @@ abstract class DbPdoDriver implements DbDriverInterface
             $this->dbHelper = Factory::getDbFunctions($this->connectionUri);
         }
         return $this->dbHelper;
+    }
+
+    public function getUri()
+    {
+        return $this->connectionUri;
     }
 }

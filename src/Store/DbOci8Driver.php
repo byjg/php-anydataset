@@ -3,11 +3,11 @@
 namespace ByJG\AnyDataset\Store;
 
 use ByJG\AnyDataset\DbDriverInterface;
-use ByJG\AnyDataset\DbFunctionsInterface;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Dataset\Oci8Iterator;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Helpers\SqlBind;
+use ByJG\AnyDataset\Store\Helpers\SqlHelper;
 use ByJG\Util\Uri;
 
 class DbOci8Driver implements DbDriverInterface
@@ -223,5 +223,13 @@ class DbOci8Driver implements DbDriverInterface
     public function getDbHelper()
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
+    }
+
+    /**
+     * @return Uri
+     */
+    public function getUri()
+    {
+        return $this->connectionUri;
     }
 }

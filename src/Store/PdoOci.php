@@ -10,12 +10,18 @@ class PdoOci extends DbPdoDriver
 
     public function __construct(Uri $connUri)
     {
-        $strcnn = $connUri->getDriver() . ":dbname=" . DbOci8Driver::getTnsString($connUri);
+        $this->connectionUri = $connUri;
+        $strconn = $connUri->getScheme(). ":dbname=" . DbOci8Driver::getTnsString($connUri);
 
-        $postOptions = [
-            PDO::ATTR_EMULATE_PREPARES => true
-        ];
+        // Create Connection
+        $this->instance = new PDO(
+            $strconn,
+            $this->connectionUri->getUsername(),
+            $this->connectionUri->getPassword()
+        );
 
-        parent::__construct(null, [], $postOptions);
+        $this->instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->instance->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        $this->instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
     }
 }
