@@ -114,6 +114,19 @@ Just type: `composer require "byjg/anydataset=2.1.*"`
 phpunit
 ```
 
+#### Running database tests
+
+Run integration tests require you to have the databases up e run with the follow configuration
+
+- Server: XXXXX_container (where XXXX is the driver e.g. mysql)
+- Database: test
+- Username: root
+- password: password
+
+```
+phpunit tests/Store/PdoMySqlTest.php 
+phpunit tests/Store/PdoSqliteTest.php 
+```
 
 ----
 [Open source ByJG](http://opensource.byjg.com)

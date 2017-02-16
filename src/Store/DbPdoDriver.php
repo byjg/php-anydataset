@@ -98,6 +98,7 @@ abstract class DbPdoDriver implements DbDriverInterface
     protected function getDBStatement($sql, $array = null)
     {
         list($sql, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
+
         $stmt = $this->instance->prepare($sql);
 
         if (!empty($array)) {
@@ -134,9 +135,9 @@ abstract class DbPdoDriver implements DbDriverInterface
         $fields = array();
         $statement = $this->instance->query(
             SqlHelper::createSafeSQL(
-                "select * from :table where 0=1",
+                "select * from @@table where 0=1",
                 [
-                    ":table" => $tablename
+                    "@@table" => $tablename
                 ]
             )
         );
@@ -172,7 +173,7 @@ abstract class DbPdoDriver implements DbDriverInterface
 
     public function executeAndGetId($sql, $array = null)
     {
-        $this->getDbHelper()->executeAndGetInsertedId($this, $sql, $array);
+        return $this->getDbHelper()->executeAndGetInsertedId($this, $sql, $array);
     }
 
     /**

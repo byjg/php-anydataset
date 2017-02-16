@@ -145,13 +145,7 @@ class DbSqliteFunctions extends DbBaseFunctions
      */
     public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
-        $returnedId = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
-        $iterator = $dbdataset->getIterator("SELECT last_insert_rowid() id");
-        if ($iterator->hasNext()) {
-            $singleRow = $iterator->moveNext();
-            $returnedId = $singleRow->getField("id");
-        }
-
-        return $returnedId;
+        parent::executeAndGetInsertedId($dbdataset, $sql, $param);
+        return $dbdataset->getScalar("SELECT last_insert_rowid()");
     }
 }

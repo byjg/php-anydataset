@@ -37,19 +37,14 @@ class Factory
                     "sqlite" => $prefix . "PdoSqlite",
                 ],
                 (array)$schemesAlternative
-            )
+            ),
+            DbDriverInterface::class
         );
-
-        if (!($instance instanceof DbDriverInterface)) {
-            throw new \InvalidArgumentException(
-                "The class '" . get_class($instance) . "' is not a instance of DbDriverInterface"
-            );
-        }
 
         return $instance;
     }
 
-    protected static function getInstance($connectionString, $validSchemes)
+    protected static function getInstance($connectionString, $validSchemes, $typeOf)
     {
         $connectionUri = new Uri($connectionString);
 
@@ -57,7 +52,15 @@ class Factory
 
         $class = isset($validSchemes[$scheme]) ? $validSchemes[$scheme] : PdoLiteral::class;
 
-        return new $class($connectionUri);
+        $instance = new $class($connectionUri);
+
+        if (!is_a($instance, $typeOf)) {
+            throw new \InvalidArgumentException(
+                "The class '$typeOf' is not a instance of DbDriverInterface"
+            );
+        }
+
+        return $instance;
     }
 
     /**

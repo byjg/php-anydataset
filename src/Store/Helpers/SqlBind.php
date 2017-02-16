@@ -42,24 +42,52 @@ class SqlBind
      */
     public static function parseSQL(Uri $connData, $sql, $params = null)
     {
-        if (is_null($params)) {
-            return [$sql, null];
-        }
-
         $paramSubstName = SqlBind::getParamModel($connData);
-        foreach ($params as $key => $value) {
-            $arg = str_replace("_", SqlBind::keyAdj($key), $paramSubstName);
+        preg_match_all(
+            "/(?<deliStart>\\[\\[|:)(?<param>[\\w\\d]+)(?<deliEnd>\\]\\]|[^\\d\\w]|$)/",
+            $sql,
+            $matches
+        );
+
+        $usedParams = [];
+
+        foreach ($matches['param'] as $paramName) {
+            if (!array_key_exists($paramName, $params)) {
+                // Remove NON DEFINED parameters
+                $sql = preg_replace(
+                    [
+                        "/\\[\\[$paramName\\]\\]/",
+                        "/:$paramName([^\\d\\w]|$)/"
+                    ],
+                    [
+                        "null",
+                        "null$2"
+                    ],
+                    $sql
+                );
+                continue;
+            }
+
+            $usedParams[$paramName] = isset($params[$paramName]) ? $params[$paramName] : null;
+            $dbArg = str_replace("_", SqlBind::keyAdj($paramName), $paramSubstName);
 
             $count = 0;
-            $sql = preg_replace("/(\[\[$key\]\]|:" . $key . "[\s\W]|:$key\$)/", $arg . ' ', $sql, -1, $count);
-            if ($count === 0) {
-                unset($params[$key]);
-            }
+            $sql = preg_replace(
+                [
+                    "/\\[\\[$paramName\\]\\]/",
+                    "/:$paramName([^\\w\\d]|$)/",
+                ],
+                [
+                    $dbArg . '',
+                    $dbArg . '$1',
+                ],
+                $sql,
+                -1,
+                $count
+            );
         }
 
-        $sql = preg_replace("/\[\[(.*?)\]\]/", "null", $sql);
-
-        return [$sql, $params];
+        return [$sql, $usedParams];
     }
 
     public static function keyAdj($key)
