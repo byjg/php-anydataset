@@ -5,11 +5,11 @@ namespace ByJG\AnyDataset\Dataset;
 class TextFileIterator extends GenericIterator
 {
 
-    protected $_fields;
-    protected $_fieldexpression;
-    protected $_handle;
-    protected $_current = 0;
-    protected $_currentBuffer = "";
+    protected $fields;
+    protected $fieldexpression;
+    protected $handle;
+    protected $current = 0;
+    protected $currentBuffer = "";
 
     /**
      * @access public
@@ -19,23 +19,27 @@ class TextFileIterator extends GenericIterator
      */
     public function __construct($handle, $fields, $fieldexpression)
     {
-        $this->_fields = $fields;
-        $this->_fieldexpression = $fieldexpression;
-        $this->_handle = $handle;
+        $this->fields = $fields;
+        $this->fieldexpression = $fieldexpression;
+        $this->handle = $handle;
 
         $this->readNextLine();
     }
 
     protected function readNextLine()
     {
-        if ($this->hasNext()) {
-            $buffer = fgets($this->_handle, 4096);
-            $this->_currentBuffer = false;
+        if (!$this->hasNext()) {
+            return;
+        }
 
-            if (($buffer !== false) && (trim($buffer) != "")) {
-                $this->_current++;
-                $this->_currentBuffer = $buffer;
-            } else $this->readNextLine();
+        $buffer = fgets($this->handle, 4096);
+        $this->currentBuffer = false;
+
+        if (($buffer !== false) && (trim($buffer) != "")) {
+            $this->current++;
+            $this->currentBuffer = $buffer;
+        } else {
+            $this->readNextLine();
         }
     }
 
@@ -54,19 +58,21 @@ class TextFileIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if ($this->_currentBuffer !== false) {
+        if ($this->currentBuffer !== false) {
             return true;
-        } elseif (!$this->_handle) {
-            return false;
-        } else {
-            if (feof($this->_handle)) {
-                fclose($this->_handle);
-                $this->_handle = null;
-                return false;
-            } else {
-                return true;
-            }
         }
+
+        if (!$this->handle) {
+            return false;
+        }
+
+        if (feof($this->handle)) {
+            fclose($this->handle);
+            $this->handle = null;
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -76,32 +82,32 @@ class TextFileIterator extends GenericIterator
     public function moveNext()
     {
         if ($this->hasNext()) {
-            $cols = preg_split($this->_fieldexpression, $this->_currentBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $cols = preg_split($this->fieldexpression, $this->currentBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
             $sr = new SingleRow();
 
-            for ($i = 0; ($i < sizeof($this->_fields)) && ($i < sizeof($cols)); $i++) {
+            for ($i = 0; ($i < sizeof($this->fields)) && ($i < sizeof($cols)); $i++) {
                 $column = $cols[$i];
 
-                if (($i >= sizeof($this->_fields) - 1) || ($i >= sizeof($cols) - 1)) {
+                if (($i >= sizeof($this->fields) - 1) || ($i >= sizeof($cols) - 1)) {
                     $column = preg_replace("/(\r?\n?)$/", "", $column);
                 }
 
-                $sr->addField(strtolower($this->_fields[$i]), $column);
+                $sr->addField(strtolower($this->fields[$i]), $column);
             }
 
             $this->readNextLine();
             return $sr;
-        } else {
-            if ($this->_handle) {
-                fclose($this->_handle);
-            }
-            return null;
         }
+
+        if ($this->handle) {
+            fclose($this->handle);
+        }
+        return null;
     }
 
     public function key()
     {
-        return $this->_current;
+        return $this->current;
     }
 }

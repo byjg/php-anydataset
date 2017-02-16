@@ -8,9 +8,9 @@
 namespace ByJG\AnyDataset\Store;
 
 use Aws\S3\S3Client;
+use ByJG\AnyDataset\Dataset\GenericIterator;
 use ByJG\AnyDataset\NoSqlKeyValueInterface;
 use ByJG\AnyDataset\Dataset\ArrayDataset;
-use ByJG\AnyDataset\IteratorInterface;
 use ByJG\Util\Uri;
 
 class AwsS3Driver implements NoSqlKeyValueInterface
@@ -51,7 +51,7 @@ class AwsS3Driver implements NoSqlKeyValueInterface
 
     /**
      * @param array $options
-     * @return IteratorInterface
+     * @return GenericIterator
      */
     public function getIterator($options = [])
     {

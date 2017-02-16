@@ -48,7 +48,7 @@ class SparQLDataset
 
     /**
      * @param string $sparql
-     * @return DbIterator
+     * @return GenericIterator
      */
     public function getIterator($sparql)
     {

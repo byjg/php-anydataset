@@ -15,22 +15,22 @@ class XmlIterator extends GenericIterator
      *
      * @var DOMNodeList
      */
-    private $_nodeList = null;
+    private $nodeList = null;
 
     /**
      * Enter description here...
      *
      * @var string[]
      */
-    private $_colNodes = null;
+    private $colNodes = null;
 
     /**
      * Enter description here...
      *
      * @var int
      */
-    private $_current = 0;
-    protected $_registerNS;
+    private $current = 0;
+    protected $registerNS;
 
     public function __construct($nodeList, $colNodes, $registerNS)
     {
@@ -42,16 +42,16 @@ class XmlIterator extends GenericIterator
         }
 
 
-        $this->_registerNS = $registerNS;
-        $this->_nodeList = $nodeList;
-        $this->_colNodes = $colNodes;
+        $this->registerNS = $registerNS;
+        $this->nodeList = $nodeList;
+        $this->colNodes = $colNodes;
 
-        $this->_current = 0;
+        $this->current = 0;
     }
 
     public function count()
     {
-        return $this->_nodeList->length;
+        return $this->nodeList->length;
     }
 
     /**
@@ -60,11 +60,11 @@ class XmlIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if ($this->_current < $this->count()) {
+        if ($this->current < $this->count()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -78,12 +78,12 @@ class XmlIterator extends GenericIterator
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         }
 
-        $node = $this->_nodeList->item($this->_current++);
+        $node = $this->nodeList->item($this->current++);
 
         $sr = new SingleRow();
 
-        foreach ($this->_colNodes as $key => $colxpath) {
-            $nodecol = XmlUtil::selectNodes($node, $colxpath, $this->_registerNS);
+        foreach ($this->colNodes as $key => $colxpath) {
+            $nodecol = XmlUtil::selectNodes($node, $colxpath, $this->registerNS);
             if (is_null($nodecol)) {
                 $sr->addField(strtolower($key), "");
             } else {
@@ -98,6 +98,6 @@ class XmlIterator extends GenericIterator
 
     public function key()
     {
-        return $this->_current;
+        return $this->current;
     }
 }

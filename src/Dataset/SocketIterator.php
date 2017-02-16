@@ -5,12 +5,12 @@ namespace ByJG\AnyDataset\Dataset;
 class SocketIterator extends GenericIterator
 {
 
-    private $_colsep = null;
-    private $_rowsep = null;
-    private $_fields = null; //Array
-    private $_handle = null;
-    private $_rows = null;
-    private $_current = 0;
+    private $colsep = null;
+    private $rowsep = null;
+    private $fields = null; //Array
+    private $handle = null;
+    private $rows = null;
+    private $current = 0;
 
     /**
      *
@@ -21,41 +21,41 @@ class SocketIterator extends GenericIterator
      */
     public function __construct($handle, $fieldnames, $rowsep, $colsep)
     {
-        $this->_rowsep = $rowsep;
-        $this->_colsep = $colsep;
-        $this->_fields = $fieldnames;
-        $this->_handle = $handle;
+        $this->rowsep = $rowsep;
+        $this->colsep = $colsep;
+        $this->fields = $fieldnames;
+        $this->handle = $handle;
 
         $header = true;
-        while (!feof($this->_handle) && $header) {
-            $x = fgets($this->_handle);
+        while (!feof($this->handle) && $header) {
+            $x = fgets($this->handle);
             $header = (trim($x) != "");
         }
 
         $linha = "";
-        while (!feof($this->_handle)) {
-            $x = fgets($this->_handle, 4096);
-            if ((trim($x) != "") && (strpos($x, $this->_colsep) > 0)) {
+        while (!feof($this->handle)) {
+            $x = fgets($this->handle, 4096);
+            if ((trim($x) != "") && (strpos($x, $this->colsep) > 0)) {
                 $linha .= $x;
             }
         }
 
-        $this->_rows = array();
-        $rowsaux = preg_split("/" . $this->_rowsep . "/", $linha);
+        $this->rows = array();
+        $rowsaux = preg_split("/" . $this->rowsep . "/", $linha);
         sort($rowsaux);
         foreach ($rowsaux as $key => $value) {
-            $colsaux = preg_split("/" . $this->_colsep . "/", $value);
+            $colsaux = preg_split("/" . $this->colsep . "/", $value);
             if (sizeof($colsaux) == sizeof($fieldnames)) {
-                $this->_rows[] = $value;
+                $this->rows[] = $value;
             }
         }
 
-        fclose($this->_handle);
+        fclose($this->handle);
     }
 
     public function count()
     {
-        return sizeof($this->_rows);
+        return sizeof($this->rows);
     }
 
     /**
@@ -64,11 +64,11 @@ class SocketIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if ($this->_current < $this->count()) {
+        if ($this->current < $this->count()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -77,19 +77,19 @@ class SocketIterator extends GenericIterator
      */
     public function moveNext()
     {
-        $cols = preg_split("/" . $this->_colsep . "/", $this->_rows[$this->_current]);
-        $this->_current++;
+        $cols = preg_split("/" . $this->colsep . "/", $this->rows[$this->current]);
+        $this->current++;
 
         $sr = new SingleRow();
-        $cntFields = count($this->_fields);
+        $cntFields = count($this->fields);
         for ($i = 0; $i < $cntFields; $i++) {
-            $sr->addField(strtolower($this->_fields[$i]), $cols[$i]);
+            $sr->addField(strtolower($this->fields[$i]), $cols[$i]);
         }
         return $sr;
     }
 
     public function key()
     {
-        return $this->_current;
+        return $this->current;
     }
 }

@@ -10,7 +10,7 @@ class JsonDataset
     /**
      * @var object
      */
-    private $_jsonObject;
+    private $jsonObject;
 
     /**
      * JsonDataset constructor.
@@ -19,7 +19,7 @@ class JsonDataset
      */
     public function __construct($json)
     {
-        $this->_jsonObject = json_decode($json, true);
+        $this->jsonObject = json_decode($json, true);
 
         $lastError = json_last_error();
         switch ($lastError) {
@@ -55,11 +55,11 @@ class JsonDataset
      * @access public
      * @param string $path
      * @param bool $throwErr
-     * @return DbIterator
+     * @return GenericIterator
      */
     public function getIterator($path = "", $throwErr = false)
     {
-        $it = new JsonIterator($this->_jsonObject, $path, $throwErr);
-        return $it;
+        $iterator = new JsonIterator($this->jsonObject, $path, $throwErr);
+        return $iterator;
     }
 }

@@ -180,7 +180,9 @@ class MongoDbDriver implements NoSqlDocumentInterface
     public function update($document, $filter = null, $options = null)
     {
         if (is_null($filter)) {
-            throw new InvalidArgumentException('You need to set the filter for update, or pass an empty array for all fields');
+            throw new InvalidArgumentException(
+                'You need to set the filter for update, or pass an empty array for all fields'
+            );
         }
 
         $update = array();

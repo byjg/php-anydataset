@@ -14,10 +14,10 @@ class TextFileDataset
     const CSVFILE_SEMICOLON = '/[;](?=(?:[^"]*"[^"]*")*(?![^"]*"))/';
     const CSVFILE_COMMA = '/[,](?=(?:[^"]*"[^"]*")*(?![^"]*"))/';
 
-    protected $_source;
-    protected $_fields;
-    protected $_fieldexpression;
-    protected $_sourceType;
+    protected $source;
+    protected $fields;
+    protected $fieldexpression;
+    protected $sourceType;
 
     /**
      * Text File Data Set
@@ -37,49 +37,49 @@ class TextFileDataset
             throw new InvalidArgumentException("You must define an array of fields.");
         }
         if (!preg_match('~(http|https|ftp)://~', $source)) {
-            $this->_source = $source;
+            $this->source = $source;
 
-            if (!file_exists($this->_source)) {
-                throw new NotFoundException("The specified file " . $this->_source . " does not exists");
+            if (!file_exists($this->source)) {
+                throw new NotFoundException("The specified file " . $this->source . " does not exists");
             }
 
-            $this->_sourceType = "FILE";
+            $this->sourceType = "FILE";
         } else {
-            $this->_source = $source;
-            $this->_sourceType = "HTTP";
+            $this->source = $source;
+            $this->sourceType = "HTTP";
         }
 
 
-        $this->_fields = $fields;
+        $this->fields = $fields;
 
         if ($fieldexpression == 'CSVFILE') {
-            $this->_fieldexpression = TextFileDataset::CSVFILE;
+            $this->fieldexpression = TextFileDataset::CSVFILE;
         } else {
-            $this->_fieldexpression = $fieldexpression;
+            $this->fieldexpression = $fieldexpression;
         }
     }
 
     /**
      * @access public
-     * @return DbIterator
+     * @return GenericIterator
      * @throws DatasetException
      * @throws Exception
      */
     public function getIterator()
     {
         $old = ini_set('auto_detect_line_endings', true);
-        $handle = @fopen($this->_source, "r");
+        $handle = @fopen($this->source, "r");
         ini_set('auto_detect_line_endings', $old);
         if (!$handle) {
             throw new DatasetException("TextFileDataset failed to open resource");
-        } else {
-            try {
-                $it = new TextFileIterator($handle, $this->_fields, $this->_fieldexpression);
-                return $it;
-            } catch (Exception $ex) {
-                fclose($handle);
-                throw $ex;
-            }
+        }
+
+        try {
+            $iterator = new TextFileIterator($handle, $this->fields, $this->fieldexpression);
+            return $iterator;
+        } catch (Exception $ex) {
+            fclose($handle);
+            throw $ex;
         }
     }
 }

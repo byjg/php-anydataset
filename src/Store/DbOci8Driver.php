@@ -6,7 +6,7 @@ use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Dataset\Oci8Iterator;
 use ByJG\AnyDataset\Exception\NotImplementedException;
-use ByJG\AnyDataset\Helpers\SqlBind;
+use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\AnyDataset\Store\Helpers\SqlHelper;
 use ByJG\Util\Uri;
 

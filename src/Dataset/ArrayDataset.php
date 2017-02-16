@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Dataset;
 
-use ByJG\AnyDataset\IteratorInterface;
 use UnexpectedValueException;
 
 class ArrayDataset
@@ -55,7 +54,7 @@ class ArrayDataset
     /**
      * Return a IteratorInterface
      *
-     * @return IteratorInterface
+     * @return GenericIterator
      */
     public function getIterator()
     {

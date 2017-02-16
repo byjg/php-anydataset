@@ -7,7 +7,7 @@ use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
 use ByJG\AnyDataset\Dataset\SQLRelayIterator;
 use ByJG\AnyDataset\Exception\NotImplementedException;
-use ByJG\AnyDataset\Helpers\SqlBind;
+use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\AnyDataset\Store\Helpers\SqlHelper;
 use ByJG\Util\Uri;
 

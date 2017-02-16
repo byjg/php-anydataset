@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Dataset;
 
-use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Store\MongoDbDriver;
 use ByJG\AnyDataset\NoSqlDocumentInterface;
 use ByJG\AnyDataset\Exception\NotImplementedException;
@@ -80,7 +79,7 @@ class NoSqlDataset implements NoSqlDocumentInterface
      *
      * @param mixed $filter
      * @param null $fields
-     * @return IteratorInterface $filter
+     * @return GenericIterator $filter
      */
     public function getIterator($filter = null, $fields = null)
     {

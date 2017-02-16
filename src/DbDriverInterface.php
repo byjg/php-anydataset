@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset;
 
+use ByJG\AnyDataset\Dataset\GenericIterator;
 use ByJG\Util\Uri;
 
 interface DbDriverInterface
@@ -10,7 +11,7 @@ interface DbDriverInterface
     /**
      * @param string $sql
      * @param null $array
-     * @return IteratorInterface
+     * @return GenericIterator
      */
     public function getIterator($sql, $array = null);
 

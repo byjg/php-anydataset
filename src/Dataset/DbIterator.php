@@ -44,9 +44,13 @@ class DbIterator extends GenericIterator
     {
         if (count($this->rowBuffer) >= DbIterator::RECORD_BUFFER) {
             return true;
-        } elseif (is_null($this->recordset)) {
+        }
+
+        if (is_null($this->recordset)) {
             return (count($this->rowBuffer) > 0);
-        } elseif ($row = $this->recordset->fetch(PDO::FETCH_ASSOC)) {
+        }
+
+        if ($row = $this->recordset->fetch(PDO::FETCH_ASSOC)) {
             foreach ($row as $key => $value) {
                 if (is_null($value)) {
                     $row[$key] = "";
@@ -66,12 +70,12 @@ class DbIterator extends GenericIterator
             }
 
             return true;
-        } else {
-            $this->recordset->closeCursor();
-            $this->recordset = null;
-
-            return (count($this->rowBuffer) > 0);
         }
+
+        $this->recordset->closeCursor();
+        $this->recordset = null;
+
+        return (count($this->rowBuffer) > 0);
     }
 
     /**
@@ -82,11 +86,11 @@ class DbIterator extends GenericIterator
     {
         if (!$this->hasNext()) {
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
-        } else {
-            $singleRow = array_shift($this->rowBuffer);
-            $this->currentRow++;
-            return $singleRow;
         }
+
+        $singleRow = array_shift($this->rowBuffer);
+        $this->currentRow++;
+        return $singleRow;
     }
 
     public function key()

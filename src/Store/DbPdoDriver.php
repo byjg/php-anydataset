@@ -39,9 +39,14 @@ abstract class DbPdoDriver implements DbDriverInterface
 
         $strcnn = $this->createPboConnStr($connUri);
 
+        $this->createPdoInstance($strcnn, $preOptions, $postOptions);
+    }
+
+    protected function createPdoInstance($pdoConnectionString, $preOptions = null, $postOptions = null)
+    {
         // Create Connection
         $this->instance = new PDO(
-            $strcnn,
+            $pdoConnectionString,
             $this->connectionUri->getUsername(),
             $this->connectionUri->getPassword(),
             (array) $preOptions
@@ -58,7 +63,7 @@ abstract class DbPdoDriver implements DbDriverInterface
         }
     }
     
-    public function createPboConnStr(Uri $connUri)
+    protected function createPboConnStr(Uri $connUri)
     {
         $host = $connUri->getHost();
         if (empty($host)) {

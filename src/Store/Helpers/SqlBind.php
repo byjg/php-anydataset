@@ -22,11 +22,13 @@ class SqlBind
     {
         if ($connData->getQueryPart("parammodel") != "") {
             return $connData->getQueryPart("parammodel");
-        } elseif ($connData->getScheme() == "sqlrelay") {
-            return "?";
-        } else {
-            return ":_";
         }
+
+        if ($connData->getScheme() == "sqlrelay") {
+            return "?";
+        }
+
+        return ":_";
     }
 
     /**

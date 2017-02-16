@@ -15,25 +15,25 @@ class XmlDataset
      *
      * @var string
      */
-    private $_rowNode = null;
+    private $rowNode = null;
 
     /**
      * Enter description here...
      *
      * @var string[]
      */
-    private $_colNodes = null;
+    private $colNodes = null;
 
     /**
      * @var DOMDocument
      */
-    private $_domDocument;
+    private $domDocument;
 
     /**
      *
      * @var string
      */
-    protected $_registerNS;
+    protected $registerNS;
 
     /**
      *
@@ -51,9 +51,9 @@ class XmlDataset
         }
 
         if ($xml instanceof DOMDocument) {
-            $this->_domDocument = $xml;
+            $this->domDocument = $xml;
         } else {
-            $this->_domDocument = XmlUtil::createXmlDocumentFromStr($xml);
+            $this->domDocument = XmlUtil::createXmlDocumentFromStr($xml);
         }
 
         if (is_null($registerNS)) {
@@ -64,19 +64,26 @@ class XmlDataset
             throw new InvalidArgumentException('The parameter $registerNS must be an associative array');
         }
 
-        $this->_registerNS = $registerNS;
-        $this->_rowNode = $rowNode;
-        $this->_colNodes = $colNode;
+        $this->registerNS = $registerNS;
+        $this->rowNode = $rowNode;
+        $this->colNodes = $colNode;
     }
 
     /**
      * @access public
-     * @return DbIterator
+     * @return GenericIterator
      */
     public function getIterator()
     {
-        $it = new XmlIterator(XmlUtil::selectNodes($this->_domDocument->documentElement, $this->_rowNode,
-                $this->_registerNS), $this->_colNodes, $this->_registerNS);
-        return $it;
+        $iterator = new XmlIterator(
+            XmlUtil::selectNodes(
+                $this->domDocument->documentElement,
+                $this->rowNode,
+                $this->registerNS
+            ),
+            $this->colNodes,
+            $this->registerNS
+        );
+        return $iterator;
     }
 }

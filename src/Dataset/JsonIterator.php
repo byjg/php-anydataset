@@ -11,14 +11,14 @@ class JsonIterator extends GenericIterator
     /**
      * @var object
      */
-    private $_jsonObject;
+    private $jsonObject;
 
     /**
      * Enter description here...
      *
      * @var int
      */
-    private $_current = 0;
+    private $current = 0;
 
     public function __construct($jsonObject, $path = "", $throwErr = false)
     {
@@ -45,17 +45,17 @@ class JsonIterator extends GenericIterator
                     break;
                 }
             }
-            $this->_jsonObject = $newjsonObject;
+            $this->jsonObject = $newjsonObject;
         } else {
-            $this->_jsonObject = $jsonObject;
+            $this->jsonObject = $jsonObject;
         }
 
-        $this->_current = 0;
+        $this->current = 0;
     }
 
     public function count()
     {
-        return (count($this->_jsonObject));
+        return (count($this->jsonObject));
     }
 
     /**
@@ -64,11 +64,11 @@ class JsonIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if ($this->_current < $this->count()) {
+        if ($this->current < $this->count()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -82,13 +82,13 @@ class JsonIterator extends GenericIterator
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         }
 
-        $sr = new SingleRow($this->_jsonObject[$this->_current++]);
+        $sr = new SingleRow($this->jsonObject[$this->current++]);
 
         return $sr;
     }
 
     public function key()
     {
-        return $this->_current;
+        return $this->current;
     }
 }

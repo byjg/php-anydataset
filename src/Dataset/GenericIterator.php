@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Dataset;
 
-use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\Serializer\DumpToArrayInterface;
 use Iterator;
@@ -10,25 +9,13 @@ use Iterator;
 abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArrayInterface
 {
 
-    public function hasNext()
-    {
-        throw new NotImplementedException("Implement this method");
-    }
+    abstract public function hasNext();
 
-    public function moveNext()
-    {
-        throw new NotImplementedException("Implement this method");
-    }
+    abstract public function moveNext();
 
-    public function count()
-    {
-        throw new NotImplementedException("Implement this method");
-    }
+    abstract public function count();
 
-    public function key()
-    {
-        throw new NotImplementedException("Implement this method");
-    }
+    abstract public function key();
 
     public function toArray()
     {

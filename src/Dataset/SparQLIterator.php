@@ -11,25 +11,25 @@ class SparQLIterator extends GenericIterator
     /**
      * @var Result
      */
-    private $_sparqlQuery;
+    private $sparqlQuery;
 
     /**
      * Enter description here...
      *
      * @var int
      */
-    private $_current = 0;
+    private $current = 0;
 
     public function __construct(Result $sparqlQuery)
     {
-        $this->_sparqlQuery = $sparqlQuery;
+        $this->sparqlQuery = $sparqlQuery;
 
-        $this->_current = 0;
+        $this->current = 0;
     }
 
     public function count()
     {
-        return ($this->_sparqlQuery->numRows());
+        return ($this->sparqlQuery->numRows());
     }
 
     /**
@@ -38,11 +38,11 @@ class SparQLIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if ($this->_current < $this->count()) {
+        if ($this->current < $this->count()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -56,9 +56,9 @@ class SparQLIterator extends GenericIterator
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         }
 
-        if ($row = $this->_sparqlQuery->fetchArray()) {
+        if ($row = $this->sparqlQuery->fetchArray()) {
             $sr = new SingleRow($row);
-            $this->_current++;
+            $this->current++;
             return $sr;
         } else {
             throw new IteratorException("No more records. Unexpected behavior.");
@@ -67,6 +67,6 @@ class SparQLIterator extends GenericIterator
 
     public function key()
     {
-        return $this->_current;
+        return $this->current;
     }
 }

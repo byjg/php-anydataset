@@ -15,9 +15,9 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      * \DOMNode represents a SingleRow
      * @var DOMNode
      */
-    private $_node = null;
-    private $_row = null;
-    private $_originalRow = null;
+    private $node = null;
+    private $row = null;
+    private $originalRow = null;
 
     /**
      * SingleRow constructor
@@ -26,11 +26,11 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
     public function __construct($instance = null)
     {
         if (is_null($instance)) {
-            $this->_row = array();
+            $this->row = array();
         } else if (is_array($instance)) {
-            $this->_row = $instance;
+            $this->row = $instance;
         } else {
-            $this->_row = array();
+            $this->row = array();
             $this->bind($instance);
         }
 
@@ -44,12 +44,12 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function addField($name, $value)
     {
-        if (!array_key_exists($name, $this->_row)) {
-            $this->_row[$name] = $value;
-        } elseif (is_array($this->_row[$name])) {
-            $this->_row[$name][] = $value;
+        if (!array_key_exists($name, $this->row)) {
+            $this->row[$name] = $value;
+        } elseif (is_array($this->row[$name])) {
+            $this->row[$name][] = $value;
         } else {
-            $this->_row[$name] = array($this->_row[$name], $value);
+            $this->row[$name] = array($this->row[$name], $value);
         }
         $this->informChanges();
     }
@@ -61,11 +61,11 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function getField($name)
     {
-        if (!array_key_exists($name, $this->_row)) {
-            return NULL;
+        if (!array_key_exists($name, $this->row)) {
+            return null;
         }
 
-        $result = $this->_row[$name];
+        $result = $this->row[$name];
         if (is_array($result)) {
             return array_shift($result);
         } else {
@@ -81,11 +81,11 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function getFieldArray($name)
     {
-        if (!array_key_exists($name, $this->_row)) {
+        if (!array_key_exists($name, $this->row)) {
             return array();
         }
 
-        $result = $this->_row[$name];
+        $result = $this->row[$name];
         if (empty($result)) {
             return array();
         } elseif (is_array($result)) {
@@ -101,7 +101,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function getFieldNames()
     {
-        return array_keys($this->_row);
+        return array_keys($this->row);
     }
 
     /**
@@ -111,10 +111,10 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function setField($name, $value)
     {
-        if (!array_key_exists($name, $this->_row)) {
+        if (!array_key_exists($name, $this->row)) {
             $this->addField($name, $value);
         } else {
-            $this->_row[$name] = $value;
+            $this->row[$name] = $value;
         }
         $this->informChanges();
     }
@@ -125,8 +125,8 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function removeFieldName($name)
     {
-        if (array_key_exists($name, $this->_row)) {
-            unset($this->_row[$name]);
+        if (array_key_exists($name, $this->row)) {
+            unset($this->row[$name]);
             $this->informChanges();
         }
     }
@@ -138,10 +138,10 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function removeFieldNameValue($name, $value)
     {
-        $result = $this->_row[$name];
+        $result = $this->row[$name];
         if (!is_array($result)) {
             if ($value == $result) {
-                unset($this->_row[$name]);
+                unset($this->row[$name]);
                 $this->informChanges();
             }
         } else {
@@ -152,7 +152,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
                     $this->informChanges();
                 }
             }
-            $this->_row[$name] = array_values($result);
+            $this->row[$name] = array_values($result);
         }
     }
 
@@ -165,16 +165,16 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function setFieldValue($name, $oldvalue, $newvalue)
     {
-        $result = $this->_row[$name];
+        $result = $this->row[$name];
         if (!is_array($result)) {
             if ($oldvalue == $result) {
-                $this->_row[$name] = $newvalue;
+                $this->row[$name] = $newvalue;
                 $this->informChanges();
             }
         } else {
             for ($i = sizeof($result) - 1; $i >= 0; $i--) {
                 if ($result[$i] == $oldvalue) {
-                    $this->_row[$name][$i] = $newvalue;
+                    $this->row[$name][$i] = $newvalue;
                     $this->informChanges();
                 }
             }
@@ -183,14 +183,14 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
 
     /**
      * Get the \DOMElement row objet
-     * @return \DOMElement
+     * @return \DOMNode
      */
     public function getDomObject()
     {
-        if (is_null($this->_node)) {
-            $this->_node = XmlUtil::createXmlDocumentFromStr("<row />");
-            $root = $this->_node->getElementsByTagName("row")->item(0);
-            foreach ($this->_row as $key => $value) {
+        if (is_null($this->node)) {
+            $this->node = XmlUtil::createXmlDocumentFromStr("<row />");
+            $root = $this->node->getElementsByTagName("row")->item(0);
+            foreach ($this->row as $key => $value) {
                 if (!is_array($value)) {
                     $field = XmlUtil::createChild($root, "field", $value);
                     XmlUtil::addAttribute($field, "name", $key);
@@ -202,12 +202,12 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
                 }
             }
         }
-        return $this->_node;
+        return $this->node;
     }
 
     public function toArray()
     {
-        return $this->_row;
+        return $this->row;
     }
 
     /**
@@ -216,10 +216,10 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function getAsJSON()
     {
-        if (is_array($this->_row)) {
-            return json_decode(json_encode($this->_row));
+        if (is_array($this->row)) {
+            return json_decode(json_encode($this->row));
         } else {
-            throw new UnexpectedValueException('I expected that getRawFormat is array() but ' . gettype($this->_row) . ' was given');
+            throw new UnexpectedValueException('I expected that getRawFormat is array() but ' . gettype($this->row) . ' was given');
         }
     }
 
@@ -228,7 +228,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function getOriginalRawFormat()
     {
-        return $this->_originalRow;
+        return $this->originalRow;
     }
 
     /**
@@ -237,7 +237,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function hasChanges()
     {
-        return ($this->_row != $this->_originalRow);
+        return ($this->row != $this->originalRow);
     }
 
     /**
@@ -246,7 +246,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function acceptChanges()
     {
-        $this->_originalRow = $this->_row;
+        $this->originalRow = $this->row;
     }
 
     /**
@@ -255,12 +255,12 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      */
     public function rejectChanges()
     {
-        $this->_row = $this->_originalRow;
+        $this->row = $this->originalRow;
     }
 
     protected function informChanges()
     {
-        $this->_node = null;
+        $this->node = null;
     }
 
     /**

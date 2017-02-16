@@ -60,6 +60,12 @@ class FixedTextFileDataset
         return $this->getIteratorFile();
     }
 
+    /**
+     * @return \ByJG\AnyDataset\Dataset\FixedTextFileIterator
+     * @throws \ByJG\AnyDataset\Exception\DatasetException
+     * @throws \Exception
+     * @return GenericIterator
+     */
     protected function getIteratorHttp()
     {
         // Expression Regular:
@@ -88,6 +94,12 @@ class FixedTextFileDataset
         }
     }
 
+    /**
+     * @return \ByJG\AnyDataset\Dataset\FixedTextFileIterator
+     * @throws \ByJG\AnyDataset\Exception\DatasetException
+     * @throws \Exception
+     * @return GenericIterator
+     */
     protected function getIteratorFile()
     {
         $handle = fopen($this->source, "r");

@@ -114,7 +114,9 @@ class FixedTextFileIterator extends GenericIterator
                     . $fields[$fieldDef->fieldName]
                     . "'"
                 );
-            } elseif (is_array($fieldDef->subTypes)) {
+            }
+
+            if (is_array($fieldDef->subTypes)) {
                 $fields[$fieldDef->fieldName] = $this->processBuffer($fields[$fieldDef->fieldName], $fieldDef->subTypes);
             }
         }

@@ -268,7 +268,7 @@ class AnyDataset
     /**
      * Get an Iterator filtered by an IteratorFilter
      * @param IteratorFilter $itf
-     * @return AnyIterator
+     * @return GenericIterator
      */
     public function getIterator(IteratorFilter $itf = null)
     {
