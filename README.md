@@ -124,8 +124,8 @@ Run integration tests require you to have the databases up e run with the follow
 - password: password
 
 ```
-phpunit tests/Store/PdoMySqlTest.php 
-phpunit tests/Store/PdoSqliteTest.php 
+phpunit testsdb/PdoMySqlTest.php 
+phpunit testsdb/PdoSqliteTest.php 
 ```
 
 ----

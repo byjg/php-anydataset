@@ -21,8 +21,7 @@ and open the template in the editor.
     
     <testsuites>
         <testsuite name="Test Suite">
-            <directory>./tests/Dataset</directory>
-            <directory>./tests/Store/Helpers</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
     
