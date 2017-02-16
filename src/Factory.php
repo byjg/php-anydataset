@@ -21,24 +21,39 @@ class Factory
      */
     public static function getDbRelationalInstance($connectionString, $schemesAlternative = null)
     {
+        $prefix = '\\ByJG\\AnyDataset\\Store\\';
+
+        $instance = self::getInstance(
+            $connectionString,
+            array_merge(
+                [
+                    "sqlrelay" => $prefix . "DbSqlRelayDriver",
+                    "oci8" => $prefix . "DbOci8Driver",
+                    "dblib" => $prefix . "PdoDblib",
+                    "mysql" => $prefix . "PdoMysql",
+                    "pgsql" => $prefix . "PdoPgsql",
+                    "oci" => $prefix . "PdoOci",
+                    "odbc" => $prefix . "PdoOdbc",
+                    "sqlite" => $prefix . "PdoSqlite",
+                ],
+                (array)$schemesAlternative
+            )
+        );
+
+        if (!($instance instanceof DbDriverInterface)) {
+            throw new \InvalidArgumentException(
+                "The class '" . get_class($instance) . "' is not a instance of DbDriverInterface"
+            );
+        }
+
+        return $instance;
+    }
+
+    protected static function getInstance($connectionString, $validSchemes)
+    {
         $connectionUri = new Uri($connectionString);
 
         $scheme = $connectionUri->getScheme();
-
-        $prefix = '\\ByJG\\AnyDataset\\Store\\';
-        $validSchemes = array_merge(
-            [
-                "sqlrelay" => $prefix . "DbSqlRelayDriver",
-                "oci8" => $prefix . "DbOci8Driver",
-                "dblib" => $prefix . "PdoDblib",
-                "mysql" => $prefix . "PdoMysql",
-                "pgsql" => $prefix . "PdoPgsql",
-                "oci" => $prefix . "PdoOci",
-                "odbc" => $prefix . "PdoOdbc",
-                "sqlite" => $prefix . "PdoSqlite",
-            ],
-            (array)$schemesAlternative
-        );
 
         $class = isset($validSchemes[$scheme]) ? $validSchemes[$scheme] : PdoLiteral::class;
 
