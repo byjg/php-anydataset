@@ -241,18 +241,20 @@ class MongoDbDriver implements NoSqlInterface
 
         $data = BinderObject::toArrayFrom($document->getDocument(), false, self::MONGO_DOCUMENT);
 
-        if (empty($data['created'])) {
-            $data['created'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
+        $idDocument = $document->getIdDocument();
+        if (empty($idDocument)) {
+            $idDocument = isset($data['_id']) ? $data['_id'] : null;
         }
 
-        $data['updated'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
-
-        if (empty($data['_id'])) {
-            $data['_id']  = new ObjectID();
+        if (empty($idDocument)) {
+            $data['_id'] = $idDocument = new ObjectID();
+            $data['created'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
             $bulkWrite->insert($data);
         } else {
-            $bulkWrite->update(['_id' => $data['_id']], ["\$set" => $data]);
+            $data['_id'] = $idDocument;
+            $bulkWrite->update(['_id' => $idDocument], ["\$set" => $data]);
         }
+        $data['updated'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
 
         $this->mongoManager->executeBulkWrite(
             $this->database . "." . $document->getCollection(),
@@ -261,7 +263,7 @@ class MongoDbDriver implements NoSqlInterface
         );
 
         $document->setDocument($data);
-        $document->setIdDocument($data['_id']);
+        $document->setIdDocument($idDocument);
 
         return $document;
     }
