@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset;
 
 use ByJG\AnyDataset\Dataset\IteratorFilter;
 
-interface NoSqlDocumentInterface
+interface NoSqlInterface
 {
 
     /**

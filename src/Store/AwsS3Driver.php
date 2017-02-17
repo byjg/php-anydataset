@@ -9,11 +9,11 @@ namespace ByJG\AnyDataset\Store;
 
 use Aws\S3\S3Client;
 use ByJG\AnyDataset\Dataset\GenericIterator;
-use ByJG\AnyDataset\NoSqlKeyValueInterface;
+use ByJG\AnyDataset\KeyValueInterface;
 use ByJG\AnyDataset\Dataset\ArrayDataset;
 use ByJG\Util\Uri;
 
-class AwsS3Driver implements NoSqlKeyValueInterface
+class AwsS3Driver implements KeyValueInterface
 {
 
     /**
@@ -65,7 +65,6 @@ class AwsS3Driver implements NoSqlKeyValueInterface
         $result = $this->s3Client->listObjects($data);
 
         return (new ArrayDataset($result['Contents']))->getIterator();
-
     }
 
     public function get($key, $options = [])
@@ -120,6 +119,4 @@ class AwsS3Driver implements NoSqlKeyValueInterface
     {
         return $this->s3Client;
     }
-
-
 }

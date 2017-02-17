@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset;
 
-interface NoSqlKeyValueInterface
+interface KeyValueInterface
 {
 
     public function getIterator($options = []);

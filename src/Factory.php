@@ -44,6 +44,47 @@ class Factory
         return $instance;
     }
 
+    /**
+     * @param $connectionString
+     * @param $schemesAlternative
+     * @return NoSqlInterface
+     */
+    public static function getNoSqlInstance($connectionString, $schemesAlternative = null)
+    {
+        $prefix = '\\ByJG\\AnyDataset\\Store\\';
+
+        $instance = self::getInstance(
+            $connectionString,
+            array_merge(
+                [
+                    "mongodb" => $prefix . "MongoDbDriver",
+                ],
+                (array)$schemesAlternative
+            ),
+            NoSqlInterface::class
+        );
+
+        return $instance;
+    }
+
+    public static function getKeyValueInstance($connectionString, $schemesAlternative = null)
+    {
+        $prefix = '\\ByJG\\AnyDataset\\Store\\';
+
+        $instance = self::getInstance(
+            $connectionString,
+            array_merge(
+                [
+                    "s3" => $prefix . "AwsS3Driver",
+                ],
+                (array)$schemesAlternative
+            ),
+            KeyValueInterface::class
+        );
+
+        return $instance;
+    }
+
     protected static function getInstance($connectionString, $validSchemes, $typeOf)
     {
         $connectionUri = new Uri($connectionString);

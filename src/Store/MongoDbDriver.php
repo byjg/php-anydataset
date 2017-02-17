@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Store;
 use ByJG\AnyDataset\Dataset\IteratorFilter;
 use ByJG\AnyDataset\Enum\Relation;
 use ByJG\AnyDataset\NoSqlDocument;
-use ByJG\AnyDataset\NoSqlDocumentInterface;
+use ByJG\AnyDataset\NoSqlInterface;
 use ByJG\Serializer\BinderObject;
 use ByJG\Util\Uri;
 use MongoDB\BSON\Binary;
@@ -19,7 +19,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\WriteConcern;
 
-class MongoDbDriver implements NoSqlDocumentInterface
+class MongoDbDriver implements NoSqlInterface
 {
     const MONGO_DOCUMENT = [
         Binary::class,
@@ -51,7 +51,7 @@ class MongoDbDriver implements NoSqlDocumentInterface
     protected $database;
 
     /**
-     * Creates a new MongoDB connection. This class is managed from NoSqlDataset
+     * Creates a new MongoDB connection.
      *
      *  mongodb://username:passwortd@host:port/database
      *
