@@ -16,7 +16,7 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "ext-json": "*",
         "byjg/xmlutil": "1.0.*",
         "byjg/sparqllib": "1.0.*",
@@ -30,6 +30,8 @@
     "suggest": {
         "ext-curl": "*",
         "ext-pdo_mysql": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-mongodb": "*",
         "byjg/cache-engine": "1.0.*"
     },
     "license": "MIT"
