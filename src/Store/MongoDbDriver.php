@@ -2,18 +2,31 @@
 
 namespace ByJG\AnyDataset\Store;
 
+use ByJG\AnyDataset\NoSqlDocument;
 use ByJG\AnyDataset\NoSqlDocumentInterface;
-use ByJG\AnyDataset\Dataset\ArrayDatasetIterator;
+use ByJG\Serializer\BinderObject;
 use ByJG\Util\Uri;
-use InvalidArgumentException;
-use MongoClient;
-use MongoCollection;
-use MongoDate;
-use MongoDB;
-use stdClass;
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Javascript;
+use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Query;
+use MongoDB\Driver\WriteConcern;
 
 class MongoDbDriver implements NoSqlDocumentInterface
 {
+    const MONGO_DOCUMENT = [
+        Binary::class,
+        Decimal128::class,
+        Javascript::class,
+        ObjectID::class,
+        Timestamp::class,
+        UTCDateTime::class,
+    ];
 
     /**
      * @var MongoDB
@@ -22,9 +35,9 @@ class MongoDbDriver implements NoSqlDocumentInterface
 
     /**
      *
-     * @var MongoClient;
+     * @var Manager;
      */
-    protected $mongoClient = null;
+    protected $mongoManager = null;
 
     /**
      * Enter description here...
@@ -33,22 +46,12 @@ class MongoDbDriver implements NoSqlDocumentInterface
      */
     protected $connectionUri;
 
-    /**
-     *
-     * @var MongoCollection MongoDB collection
-     */
-    protected $collection;
-
-    /**
-     *
-     * @var string
-     */
-    protected $collectionName;
+    protected $database;
 
     /**
      * Creates a new MongoDB connection. This class is managed from NoSqlDataset
      *
-     *  mongodb://username:passwortd@host:port/database/collection
+     *  mongodb://username:passwortd@host:port/database
      *
      * @param Uri $connUri
      */
@@ -58,9 +61,8 @@ class MongoDbDriver implements NoSqlDocumentInterface
 
         $hosts = $this->connectionUri->getHost();
         $port = $this->connectionUri->getPort() == '' ? 27017 : $this->connectionUri->getPort();
-        $path = explode('/', preg_replace('~^/~', '', $this->connectionUri->getPath()));
-        $database = $path[0];
-        $collection = $path[1];
+        $path = preg_replace('~^/~', '', $this->connectionUri->getPath());
+        $database = $path;
         $username = $this->connectionUri->getUsername();
         $password = $this->connectionUri->getPassword();
 
@@ -71,10 +73,8 @@ class MongoDbDriver implements NoSqlDocumentInterface
         }
 
         $connectString = sprintf('mongodb://%s:%d', $hosts, $port);
-        $this->mongoClient = new MongoClient($connectString, $auth);
-        $this->dataset = new MongoDB($this->mongoClient, $database);
-
-        $this->setCollection($collection);
+        $this->mongoManager = new Manager($connectString, $auth);
+        $this->database = $database;
     }
 
     /**
@@ -82,138 +82,82 @@ class MongoDbDriver implements NoSqlDocumentInterface
      */
     public function __destruct()
     {
-        $this->mongoClient->close();
-        $this->dataset = null;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getCollection()
-    {
-        return $this->collectionName;
+        // $this->mongoManager->
     }
 
     /**
      * Gets the instance of MongoDB; You do not need uses this directly.
      * If you have to, probably something is missing in this class
-     * @return \MongoDB
+     * @return Manager
      */
     public function getDbConnection()
     {
-        return $this->dataset;
+        return $this->mongoManager;
     }
 
     /**
-     * Return a IteratorInterface
-     *
-     * @param array $filter
-     * @param array $fields
-     * @return ArrayDatasetIterator
+     * @param $idDocument
+     * @param null $collection
+     * @return \ByJG\AnyDataset\NoSqlDocument|null
      */
-    public function getIterator($filter = null, $fields = null)
+    public function getDocumentById($idDocument, $collection = null)
     {
-        if (is_null($filter)) {
-            $filter = array();
+        if (empty($collection)) {
+            throw new \InvalidArgumentException('Collection is mandatory for MongoDB');
         }
-        if (is_null($fields)) {
-            $fields = array();
-        }
-        $cursor = $this->collection->find($filter, $fields);
-        $arrIt = iterator_to_array($cursor);
 
-        return new ArrayDatasetIterator($arrIt);
+        $query = new Query(['_id' => $idDocument]);
+
+        $dataCursor = $this->mongoManager->executeQuery($this->database . '.' . $collection, $query);
+
+        if (empty($dataCursor)) {
+            return null;
+        }
+
+        $data = $dataCursor->toArray();
+
+        $document = new NoSqlDocument(
+            $data[0]->_id,
+            $collection,
+            BinderObject::toArrayFrom($data[0], false, self::MONGO_DOCUMENT)
+        );
+
+        return $document;
     }
 
-    /**
-     * Insert a document in the MongoDB
-     * @param mixed $document
-     * @return bool
-     */
-    public function insert($document)
+    public function save(NoSqlDocument $document)
     {
-        if (is_array($document)) {
-            $document['created_at'] = new MongoDate();
-        } elseif ($document instanceof stdClass) {
-            $document->created_at = new MongoDate();
+        if (empty($document->getCollection())) {
+            throw new \InvalidArgumentException('Collection is mandatory for MongoDB');
         }
 
-        return $this->collection->insert($document);
+        $writeConcern = new WriteConcern(WriteConcern::MAJORITY, 100);
+        $bulkWrite = new BulkWrite();
+
+        $data = BinderObject::toArrayFrom($document->getDocument(), false, self::MONGO_DOCUMENT);
+
+        if (empty($data['created'])) {
+            $data['created'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
+        }
+
+        $data['updated'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
+
+        if (empty($data['_id'])) {
+            $data['_id']  = new ObjectID();
+            $bulkWrite->insert($data);
+        } else {
+            $bulkWrite->update(['_id' => $data['_id']], ["\$set" => $data]);
+        }
+
+        $this->mongoManager->executeBulkWrite(
+            $this->database . "." . $document->getCollection(),
+            $bulkWrite,
+            $writeConcern
+        );
+
+        $document->setDocument($data);
+        $document->setIdDocument($data['_id']);
+
+        return $document;
     }
-
-    /**
-     * Defines the new Collection
-     * @param string $collection
-     */
-    public function setCollection($collection)
-    {
-        $this->collection = $this->dataset->selectCollection($collection);
-        $this->collectionName = $collection;
-    }
-
-    /**
-     * Update a document based on your criteria
-     *
-     * Options for MongoDB is an array of:
-     *
-     * sort array   Determines which document the operation will modify if the
-     *              query selects multiple documents. findAndModify will modify
-     *              the first document in the sort order specified by this argument.
-     * remove boolean Optional if update field exists. When TRUE, removes the
-     *              selected document. The default is FALSE.
-     * update array Optional if remove field exists. Performs an update of the
-     *              selected document.
-     * new boolean  Optional. When TRUE, returns the modified document rather than the original.
-     *              The findAndModify method ignores the new option for remove operations.
-     *              The default is FALSE.
-     * upsert boolean ptional. Used in conjunction with the update field. When TRUE,
-     *              the findAndModify command creates a new document if the query
-     *              returns no documents. The default is false. In MongoDB 2.2, the findAndModify
-     *              command returns NULL when upsert is TRUE.
-     *
-     * @param mixed $document
-     * @param array $filter
-     * @param array $options See:
-     * @return bool
-     */
-    public function update($document, $filter = null, $options = null)
-    {
-        if (is_null($filter)) {
-            throw new InvalidArgumentException(
-                'You need to set the filter for update, or pass an empty array for all fields'
-            );
-        }
-
-        $update = array();
-        if (is_array($document)) {
-            $document['updated_at'] = new MongoDate();
-        }
-        if ($document instanceof stdClass) {
-            $document->updated_at = new MongoDate();
-        }
-        foreach ($document as $key => $value) {
-            if ($key[0] == '$') {
-                $update[$key] = $value;
-            } else {
-                $update['$set'][$key] = $value;
-            }
-        }
-
-        if (is_null($options)) {
-            $options = array('new' => true);
-        }
-        return $this->collection->findAndModify($filter, $update, array(), $options);
-    }
-    /*
-      public function getAttribute($name)
-      {
-      $this->_db->getAttribute($name);
-      }
-
-      public function setAttribute($name, $value)
-      {
-      $this->_db->setAttribute ( $name, $value );
-      }
-     */
 }
