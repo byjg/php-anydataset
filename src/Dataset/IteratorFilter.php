@@ -155,4 +155,9 @@ class IteratorFilter
     {
         $this->filters[] = [")", "", "", ""];
     }
+
+    public function getRawFilters()
+    {
+        return $this->filters;
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset\Store;
 
+use ByJG\AnyDataset\Dataset\IteratorFilter;
+use ByJG\AnyDataset\Enum\Relation;
 use ByJG\AnyDataset\NoSqlDocument;
 use ByJG\AnyDataset\NoSqlDocumentInterface;
 use ByJG\Serializer\BinderObject;
@@ -102,13 +104,32 @@ class MongoDbDriver implements NoSqlDocumentInterface
      */
     public function getDocumentById($idDocument, $collection = null)
     {
+        $filter = new IteratorFilter();
+        $filter->addRelation('_id', Relation::EQUAL, $idDocument);
+        $document = $this->getDocuments($filter, $collection);
+
+        if (empty($document)) {
+            return null;
+        }
+
+        return $document[0];
+    }
+
+    /**
+     * @param \ByJG\AnyDataset\Dataset\IteratorFilter $filter
+     * @param null $collection
+     * @return \ByJG\AnyDataset\NoSqlDocument[]|null
+     */
+    public function getDocuments(IteratorFilter $filter, $collection = null)
+    {
         if (empty($collection)) {
             throw new \InvalidArgumentException('Collection is mandatory for MongoDB');
         }
 
-        $query = new Query(['_id' => $idDocument]);
-
-        $dataCursor = $this->mongoManager->executeQuery($this->database . '.' . $collection, $query);
+        $dataCursor = $this->mongoManager->executeQuery(
+            $this->database . '.' . $collection,
+            $this->getMongoFilterArray($filter)
+        );
 
         if (empty($dataCursor)) {
             return null;
@@ -116,13 +137,97 @@ class MongoDbDriver implements NoSqlDocumentInterface
 
         $data = $dataCursor->toArray();
 
-        $document = new NoSqlDocument(
-            $data[0]->_id,
-            $collection,
-            BinderObject::toArrayFrom($data[0], false, self::MONGO_DOCUMENT)
-        );
+        $result = [];
+        foreach ($data as $item) {
+            $result[] = new NoSqlDocument(
+                $item->_id,
+                $collection,
+                BinderObject::toArrayFrom($item, false, self::MONGO_DOCUMENT)
+            );
+        }
 
-        return $document;
+        return $result;
+    }
+
+    protected function getMongoFilterArray(IteratorFilter $filter)
+    {
+        $result = [];
+
+        foreach ($filter->getRawFilters() as $itemFilter) {
+            $name = $itemFilter[1];
+            $relation = $itemFilter[2];
+            $value = $itemFilter[3];
+
+            if ($itemFilter[0] == ' or ') {
+                throw new \InvalidArgumentException('MongoDBDriver does not support the addRelationOr');
+            }
+
+            if (isset($result[$name])) {
+                throw new \InvalidArgumentException('MongoDBDriver does not support filtering the same field twice');
+            }
+
+            switch ($relation) {
+                case Relation::EQUAL:
+                    $result[$name] = $value;
+                    break;
+
+                case Relation::GREATER_THAN:
+                    $result[$name] = [ '$gt' => $value ];
+                    break;
+
+                case Relation::LESS_THAN:
+                    $result[$name] = [ '$lt' => $value ];
+                    break;
+
+                case Relation::GREATER_OR_EQUAL_THAN:
+                    $result[$name] = [ '$gte' => $value ];
+                    break;
+
+                case Relation::LESS_OR_EQUAL_THAN:
+                    $result[$name] = [ '$lte' => $value ];
+                    break;
+
+                case Relation::NOT_EQUAL:
+                    $result[$name] = [ '$ne' => $value ];
+                    break;
+
+                case Relation::STARTS_WITH:
+                    $result[$name] = "/$value.*";
+                    break;
+
+                case Relation::CONTAINS:
+                    $result[$name] = "/.*$value.*";
+                    break;
+
+            }
+        }
+
+        return new Query($result);
+    }
+
+    public function deleteDocumentById($idDocument, $collection = null)
+    {
+        $filter = new IteratorFilter();
+        $filter->addRelation('_id', Relation::EQUAL, $idDocument);
+        $this->deleteDocuments($filter, $collection);
+    }
+
+
+    public function deleteDocuments(IteratorFilter $filter, $collection = null)
+    {
+        if (empty($collection)) {
+            throw new \InvalidArgumentException('Collection is mandatory for MongoDB');
+        }
+
+        $writeConcern = new WriteConcern(WriteConcern::MAJORITY, 100);
+        $bulkWrite = new BulkWrite();
+
+        $bulkWrite->delete($this->getMongoFilterArray($filter));
+        $this->mongoManager->executeBulkWrite(
+            $this->database . '.' . $collection,
+            $bulkWrite,
+            $writeConcern
+        );
     }
 
     public function save(NoSqlDocument $document)
