@@ -31,11 +31,6 @@ class MongoDbDriver implements NoSqlInterface
     ];
 
     /**
-     * @var MongoDB
-     */
-    protected $dataset = null;
-
-    /**
      *
      * @var Manager;
      */
