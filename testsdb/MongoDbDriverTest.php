@@ -85,6 +85,7 @@ class MongoDbDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($data['_id']);
         $this->assertNotEmpty($data['created']);
         $this->assertNotEmpty($data['updated']);
+        $this->assertEquals($data['created'], $data['updated']);
         unset($data['_id']);
         unset($data['created']);
         unset($data['updated']);
@@ -101,6 +102,7 @@ class MongoDbDriverTest extends \PHPUnit_Framework_TestCase
             self::TEST_COLLECTION,
             [ 'price' => 150000 ]
         );
+        sleep(1); // Just to force a new Update DateTime
         $documentSaved = $this->dbDriver->save($documentToUpdate);
 
         // Get the saved document
@@ -112,6 +114,7 @@ class MongoDbDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data['_id'], $document[0]->getIdDocument());
         $this->assertNotEmpty($data['created']);
         $this->assertNotEmpty($data['updated']);
+        $this->assertNotEquals($data['created'], $data['updated']);
         unset($data['_id']);
         unset($data['created']);
         unset($data['updated']);
@@ -135,5 +138,65 @@ class MongoDbDriverTest extends \PHPUnit_Framework_TestCase
         // Check if object does not exists
         $document = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
         $this->assertEmpty($document);
+    }
+
+    public function testGetDocuments()
+    {
+        $filter = new IteratorFilter();
+        $filter->addRelation('price', Relation::LESS_OR_EQUAL_THAN, 40000);
+        $documents = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
+        $this->assertEquals(2, count($documents));
+        $this->assertEquals('Fox', $documents[0]->getDocument()['name']);
+        $this->assertEquals('Volkswagen', $documents[0]->getDocument()['brand']);
+        $this->assertEquals('40000', $documents[0]->getDocument()['price']);
+        $this->assertEquals('Uno', $documents[1]->getDocument()['name']);
+        $this->assertEquals('Fiat', $documents[1]->getDocument()['brand']);
+        $this->assertEquals('35000', $documents[1]->getDocument()['price']);
+
+        $filter = new IteratorFilter();
+        $filter->addRelation('price', Relation::LESS_THAN, 40000);
+        $documents = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
+        $this->assertEquals(1, count($documents));
+        $this->assertEquals('Uno', $documents[0]->getDocument()['name']);
+        $this->assertEquals('Fiat', $documents[0]->getDocument()['brand']);
+        $this->assertEquals('35000', $documents[0]->getDocument()['price']);
+
+        $filter = new IteratorFilter();
+        $filter->addRelation('price', Relation::GREATER_OR_EQUAL_THAN, 90000);
+        $documents = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
+        $this->assertEquals(2, count($documents));
+        $this->assertEquals('Hilux', $documents[0]->getDocument()['name']);
+        $this->assertEquals('Toyota', $documents[0]->getDocument()['brand']);
+        $this->assertEquals('120000', $documents[0]->getDocument()['price']);
+        $this->assertEquals('A3', $documents[1]->getDocument()['name']);
+        $this->assertEquals('Audi', $documents[1]->getDocument()['brand']);
+        $this->assertEquals('90000', $documents[1]->getDocument()['price']);
+
+        $filter = new IteratorFilter();
+        $filter->addRelation('price', Relation::GREATER_THAN, 90000);
+        $documents = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
+        $this->assertEquals(1, count($documents));
+        $this->assertEquals('Hilux', $documents[0]->getDocument()['name']);
+        $this->assertEquals('Toyota', $documents[0]->getDocument()['brand']);
+        $this->assertEquals('120000', $documents[0]->getDocument()['price']);
+
+        $filter = new IteratorFilter();
+        $filter->addRelation('name', Relation::STARTS_WITH, 'Co');
+        $documents = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
+        $this->assertEquals(2, count($documents));
+        $this->assertEquals('Corolla', $documents[0]->getDocument()['name']);
+        $this->assertEquals('Toyota', $documents[0]->getDocument()['brand']);
+        $this->assertEquals('80000', $documents[0]->getDocument()['price']);
+        $this->assertEquals('Cobalt', $documents[1]->getDocument()['name']);
+        $this->assertEquals('Chevrolet', $documents[1]->getDocument()['brand']);
+        $this->assertEquals('60000', $documents[1]->getDocument()['price']);
+
+        $filter = new IteratorFilter();
+        $filter->addRelation('name', Relation::CONTAINS, 'oba');
+        $documents = $this->dbDriver->getDocuments($filter, self::TEST_COLLECTION);
+        $this->assertEquals(1, count($documents));
+        $this->assertEquals('Cobalt', $documents[0]->getDocument()['name']);
+        $this->assertEquals('Chevrolet', $documents[0]->getDocument()['brand']);
+        $this->assertEquals('60000', $documents[0]->getDocument()['price']);
     }
 }

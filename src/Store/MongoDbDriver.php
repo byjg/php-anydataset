@@ -192,11 +192,11 @@ class MongoDbDriver implements NoSqlInterface
                     break;
 
                 case Relation::STARTS_WITH:
-                    $result[$name] = "/$value.*";
+                    $result[$name] = [ '$regex' => "^$value" ];
                     break;
 
                 case Relation::CONTAINS:
-                    $result[$name] = "/.*$value.*";
+                    $result[$name] = [ '$regex' => "$value" ];
                     break;
 
             }
@@ -246,6 +246,7 @@ class MongoDbDriver implements NoSqlInterface
             $idDocument = isset($data['_id']) ? $data['_id'] : null;
         }
 
+        $data['updated'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
         if (empty($idDocument)) {
             $data['_id'] = $idDocument = new ObjectID();
             $data['created'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
@@ -254,7 +255,6 @@ class MongoDbDriver implements NoSqlInterface
             $data['_id'] = $idDocument;
             $bulkWrite->update(['_id' => $idDocument], ["\$set" => $data]);
         }
-        $data['updated'] = new UTCDateTime((new \DateTime())->getTimestamp()*1000);
 
         $this->mongoManager->executeBulkWrite(
             $this->database . "." . $document->getCollection(),
