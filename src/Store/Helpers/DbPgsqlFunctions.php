@@ -131,23 +131,12 @@ class DbPgsqlFunctions extends DbBaseFunctions
      * @param DbDriverInterface $dbdataset
      * @param string $sql
      * @param array $param
-     * @param null $sequence
      * @return int
      */
-    public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param, $sequence = null)
+    public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
-        $idInserted = parent::executeAndGetInsertedId($dbdataset, $sql, $param);
-        $iterator = $dbdataset->getIterator(
-            SqlHelper::createSafeSQL(
-                "select currval(':sequence') id",
-                array(':sequence' => $sequence)
-            )
-        );
-
-        if ($iterator->hasNext()) {
-            $singleRow = $iterator->moveNext();
-            $idInserted = $singleRow->getField("id");
-        }
+        parent::executeAndGetInsertedId($dbdataset, $sql, $param);
+        $idInserted = $dbdataset->getScalar('select lastval()');
 
         return $idInserted;
     }

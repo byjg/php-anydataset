@@ -19,7 +19,7 @@ class MongoDbDriverTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->dbDriver = Factory::getNoSqlInstance('mongodb://192.168.1.181/test');
+        $this->dbDriver = Factory::getNoSqlInstance('mongodb://mongodb-container/test');
 
         $this->dbDriver->save(
             new NoSqlDocument(

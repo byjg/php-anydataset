@@ -11,13 +11,13 @@ class PdoPostgresTest extends BasePdoTest
 
     protected function createInstance()
     {
-        $this->dbDriver = Factory::getDbRelationalInstance('postgres://postgres:password@postgres-container/test');
+        $this->dbDriver = Factory::getDbRelationalInstance('pgsql://postgres:password@postgres-container/test');
     }
 
     protected function createDatabase()
     {
         //create the database
-        $this->dbDriver->execute("CREATE TABLE Dogs (Id INTEGER PRIMARY KEY auto_increment, Breed TEXT, Name TEXT, Age INTEGER)");
+        $this->dbDriver->execute("CREATE TABLE Dogs (Id SERIAL PRIMARY KEY, Breed TEXT, Name TEXT, Age INTEGER)");
     }
 
     public function tearDown()
