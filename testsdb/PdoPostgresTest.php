@@ -17,7 +17,7 @@ class PdoPostgresTest extends BasePdoTest
     protected function createDatabase()
     {
         //create the database
-        $this->dbDriver->execute("CREATE TABLE Dogs (Id SERIAL PRIMARY KEY, Breed TEXT, Name TEXT, Age INTEGER)");
+        $this->dbDriver->execute("CREATE TABLE Dogs (Id SERIAL PRIMARY KEY, Breed VARCHAR(50), Name VARCHAR(50), Age INTEGER)");
     }
 
     public function tearDown()
