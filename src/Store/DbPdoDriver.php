@@ -69,10 +69,15 @@ abstract class DbPdoDriver implements DbDriverInterface
         if (empty($host)) {
             return $connUri->getScheme() . ":" . $connUri->getPath();
         }
-        
+
+        $database = preg_replace('~^/~', '', $connUri->getPath());
+        if (!empty($database)) {
+            $database = ";dbname=$database";
+        }
+
         $strcnn = $connUri->getScheme() . ":"
-            . "dbname=" . preg_replace('~^/~', '', $connUri->getPath())
-            . ";host=" . $connUri->getHost();
+            . "host=" . $connUri->getHost()
+            . $database;
 
         if ($connUri->getPort() != "") {
             $strcnn .= ";port=" . $connUri->getPort();
