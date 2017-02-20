@@ -16,12 +16,12 @@ Defines the prefix name of the getter method. The default prefix is 'get'
  */
 class MyClass
 { 
-	protected $unePropriete
-	
-	public function obtenirUnePropriete()
-	{
-		// ...
-	}
+    protected $unePropriete
+
+    public function obtenirUnePropriete()
+    {
+        // ...
+    }
 }
 ```
 

@@ -1,14 +1,8 @@
 <?php
-/**
- * User: jg
- * Date: 16/02/17
- * Time: 10:17
- */
 
 namespace Store;
 
 use ByJG\AnyDataset\DbDriverInterface;
-use ByJG\AnyDataset\Factory;
 
 class BasePdoTest extends \PHPUnit_Framework_TestCase
 {
@@ -93,9 +87,6 @@ class BasePdoTest extends \PHPUnit_Framework_TestCase
             $singleRow = $iterator->moveNext();
             $this->assertEquals($array[$i++], $singleRow->toArray());
         }
-
-        // See --> http://php.net/manual/pt_BR/pdostatement.rowcount.php
-        //$this->assertEquals(3, $iterator->count());
     }
 
     public function testExecuteAndGetId()
