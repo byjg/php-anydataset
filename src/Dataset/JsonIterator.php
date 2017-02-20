@@ -9,7 +9,7 @@ class JsonIterator extends GenericIterator
 {
 
     /**
-     * @var object
+     * @var array
      */
     private $jsonObject;
 
@@ -82,9 +82,7 @@ class JsonIterator extends GenericIterator
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         }
 
-        $sr = new SingleRow($this->jsonObject[$this->current++]);
-
-        return $sr;
+        return new SingleRow($this->jsonObject[$this->current++]);
     }
 
     public function key()

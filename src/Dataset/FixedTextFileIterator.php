@@ -26,7 +26,7 @@ class FixedTextFileIterator extends GenericIterator
 
     /**
      *
-     * @param int $handle
+     * @param resource $handle
      * @param FixedTextDefinition[] $fields
      */
     public function __construct($handle, $fields)

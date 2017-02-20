@@ -19,9 +19,9 @@ class SocketDataSet
     private $colsep = null;
     private $rowsep = null;
     /**
-     * @var array|null
+     * @var array
      */
-    private $fields = null;
+    private $fields = [];
     private $port = null;
     private $path = null;
 

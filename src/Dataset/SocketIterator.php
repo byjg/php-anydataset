@@ -43,9 +43,9 @@ class SocketIterator extends GenericIterator
         $this->rows = array();
         $rowsaux = preg_split("/" . $this->rowsep . "/", $linha);
         sort($rowsaux);
-        foreach ($rowsaux as $key => $value) {
+        foreach ($rowsaux as $value) {
             $colsaux = preg_split("/" . $this->colsep . "/", $value);
-            if (sizeof($colsaux) == sizeof($fieldnames)) {
+            if (count($colsaux) == count($fieldnames)) {
                 $this->rows[] = $value;
             }
         }
@@ -55,7 +55,7 @@ class SocketIterator extends GenericIterator
 
     public function count()
     {
-        return sizeof($this->rows);
+        return count($this->rows);
     }
 
     /**

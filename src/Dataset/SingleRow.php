@@ -172,7 +172,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
                 $this->informChanges();
             }
         } else {
-            for ($i = sizeof($result) - 1; $i >= 0; $i--) {
+            for ($i = count($result) - 1; $i >= 0; $i--) {
                 if ($result[$i] == $oldvalue) {
                     $this->row[$name][$i] = $newvalue;
                     $this->informChanges();

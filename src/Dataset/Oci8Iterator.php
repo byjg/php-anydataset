@@ -45,29 +45,31 @@ class Oci8Iterator extends GenericIterator
     {
         if (count($this->rowBuffer) >= Oci8Iterator::RECORD_BUFFER) {
             return true;
-        } else if (is_null($this->cursor)) {
-            return (count($this->rowBuffer) > 0);
-        } else {
-            $row = oci_fetch_array($this->cursor, OCI_ASSOC + OCI_RETURN_NULLS);
-            if ($row) {
-                $row = array_change_key_case($row, CASE_LOWER);
-                $sr = new SingleRow($row);
-
-                $this->currentRow++;
-
-                // Enfileira o registo
-                array_push($this->rowBuffer, $sr);
-                // Traz novos até encher o Buffer
-                if (count($this->rowBuffer) < DbIterator::RECORD_BUFFER) {
-                    $this->hasNext();
-                }
-                return true;
-            } else {
-                oci_free_statement($this->cursor);
-                $this->cursor = null;
-                return (count($this->rowBuffer) > 0);
-            }
         }
+
+        if (is_null($this->cursor)) {
+            return (count($this->rowBuffer) > 0);
+        }
+
+        $row = oci_fetch_array($this->cursor, OCI_ASSOC + OCI_RETURN_NULLS);
+        if (!empty($row)) {
+            $row = array_change_key_case($row, CASE_LOWER);
+            $singleRow = new SingleRow($row);
+
+            $this->currentRow++;
+
+            // Enfileira o registo
+            array_push($this->rowBuffer, $singleRow);
+            // Traz novos até encher o Buffer
+            if (count($this->rowBuffer) < DbIterator::RECORD_BUFFER) {
+                $this->hasNext();
+            }
+            return true;
+        }
+
+        oci_free_statement($this->cursor);
+        $this->cursor = null;
+        return (count($this->rowBuffer) > 0);
     }
 
     public function __destruct()

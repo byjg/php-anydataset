@@ -37,7 +37,7 @@ class AnyIterator extends GenericIterator
      */
     public function count()
     {
-        return sizeof($this->list);
+        return count($this->list);
     }
 
     /**

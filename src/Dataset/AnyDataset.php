@@ -3,7 +3,6 @@
 namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Exception\DatabaseException;
-use ByJG\AnyDataset\IteratorInterface;
 use ByJG\Util\XmlUtil;
 use ForceUTF8\Encoding;
 use InvalidArgumentException;
@@ -113,7 +112,7 @@ class AnyDataset
                 $sr->acceptChanges();
                 $this->collection[] = $sr;
             }
-            $this->currentRow = sizeof($this->collection) - 1;
+            $this->currentRow = count($this->collection) - 1;
         }
     }
 
@@ -194,11 +193,11 @@ class AnyDataset
     /**
      * Enter description here...
      *
-     * @param IteratorInterface $ititerator
+     * @param GenericIterator $iterator
      */
-    public function import($ititerator)
+    public function import($iterator)
     {
-        foreach ($ititerator as $singleRow) {
+        foreach ($iterator as $singleRow) {
             $this->appendRow($singleRow);
         }
     }

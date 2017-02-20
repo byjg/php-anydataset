@@ -201,7 +201,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, $count, "__id", 0);
             $this->assertField($sr, $count, "__key", 0);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\Tests\Sample\ModelPublic");
+            $this->assertField($sr, $count, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
             $this->assertField($sr, $count, "id", 1);
             $this->assertField($sr, $count, "name", 'ProdA');
             $count++;
@@ -210,7 +210,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, $count, "__id", 1);
             $this->assertField($sr, $count, "__key", 1);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\Tests\Sample\ModelPublic");
+            $this->assertField($sr, $count, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
             $this->assertField($sr, $count, "id", 2);
             $this->assertField($sr, $count, "name", 'ProdB');
             $count++;
@@ -219,7 +219,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, $count, "__id", 2);
             $this->assertField($sr, $count, "__key", 2);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\Tests\Sample\ModelPublic");
+            $this->assertField($sr, $count, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
             $this->assertField($sr, $count, "id", 3);
             $this->assertField($sr, $count, "name", 'ProdC');
             $count++;
@@ -295,14 +295,19 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
      */
     public function assertField($sr, $line, $field, $value)
     {
-        $this->assertEquals($sr->getField($field), $value); //, "At line $line field '$field' I expected '" . $value . "' but I got '" . $sr->getField($field) . "'");
+        $this->assertEquals($value, $sr->getField($field));
     }
 
+    /**
+     * @param SingleRow $sr
+     * @param $count
+     */
     public function assertSingleRow2($sr, $count)
     {
-        $this->assertEquals($sr->getField("__id"), $this->arrTest2[$count]["__id"]); //, "At line $count field 'id' I expected '" . $this->arrTest2[$count]["__id"] . "' but I got '" . $sr->getField("__id") . "'");
-        if ($count > 0)
-                $this->assertEquals($sr->getField("label"), $this->arrTest2[$count]["label"]); //, "At line $count field 'label' I expected '" . $this->arrTest2[$count]["label"] . "' but I got '" . $sr->getField("label") . "'");
+        $this->assertEquals($this->arrTest2[$count]["__id"], $sr->getField("__id"));
+        if ($count > 0) {
+            $this->assertEquals($this->arrTest2[$count]["label"] . $sr->getField("label"));
+        }
     }
 }
 

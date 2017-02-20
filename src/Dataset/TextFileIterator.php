@@ -86,10 +86,10 @@ class TextFileIterator extends GenericIterator
 
             $sr = new SingleRow();
 
-            for ($i = 0; ($i < sizeof($this->fields)) && ($i < sizeof($cols)); $i++) {
+            for ($i = 0; ($i < count($this->fields)) && ($i < count($cols)); $i++) {
                 $column = $cols[$i];
 
-                if (($i >= sizeof($this->fields) - 1) || ($i >= sizeof($cols) - 1)) {
+                if (($i >= count($this->fields) - 1) || ($i >= count($cols) - 1)) {
                     $column = preg_replace("/(\r?\n?)$/", "", $column);
                 }
 
