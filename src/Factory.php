@@ -67,6 +67,11 @@ class Factory
         return $instance;
     }
 
+    /**
+     * @param string $connectionString
+     * @param array $schemesAlternative
+     * @return KeyValueInterface
+     */
     public static function getKeyValueInstance($connectionString, $schemesAlternative = null)
     {
         $prefix = '\\ByJG\\AnyDataset\\Store\\';

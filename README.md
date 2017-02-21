@@ -10,22 +10,27 @@ A data abstraction layer in PHP to manipulate any set of data with a standardize
 ## Features
 
 ### Read an write* with a number of data sources accessed by a standardized interface ([see more here](docs/Connecting-to-Data-Sources.md)):
+
 * Array
-* Relational Databases (based on PDO)
-* DBLib (SQL Server php native - windows only)
+* Relational Databases (based on PDO - Sqlite, MySql, Postgres, Oracle, and others)
+* DBLib (SQL Server php native)
 * OCI8 (Oracle php native interface)
 * Text files (fixed and delimeted like CSV)
 * Json documents
 * Xml documents
 * Sockets
 * [MongoDB](docs/Connecting-to-MongoDB.md)
+* Amazon Aws S3
 * SparQL
 
 ## Examples
 
+### Querying Datasets (Text, Xml, Json, Sockets, Array, etc)
+
 The easiest way to work is to get an repository and get an iterator for navigate throught the data.
 
 ```php
+<?php
 $repository = new TextFileDataset('myfile', ['field1', 'field2', 'field3'], TextFileDataset::CSVFILE);
 $iterator = $repository->getIterator();
 
@@ -38,14 +43,24 @@ foreach ($iterator as $row) {
 print_r($iterator->toArray());
 ```
 
-### Cache results
-
-You can easily cache your results with the CachedDBDataset class;
+### Querying Relational Databases
 
 ```php
-$repository = new DBDataset('connection');
-$repository->setCacheEngine(new \ByJG\Cache\MemcachedEngine());
-$iterator = $repository->getIterator('select field1, field2 from sometable', [], 120); // cache for 2 minutes
+<?php
+$dbDriver = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://username:password@host/database');
+$iterator = $dbDriver->getIterator('select * from table where field = :param', ['param' => 'value']);
+```
+
+### Cache results
+
+You can easily cache your results with the DbCached class; You need to add to your project an
+implementation of PSR-6. We suggested you add "byjg/cache".
+
+```php
+<?php
+$dbDriver = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://username:password@host/database');
+$dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, $psrCacheEngine, 30);
+$iterator = $dbDriver->getIterator('select * from table where field = :param', ['param' => 'value']);
 ```
 
 ### Relational database connections string based on URL
@@ -53,22 +68,40 @@ $iterator = $repository->getIterator('select field1, field2 from sometable', [],
 The connection string for relational databases is based on URL. Connect to mysql in the server localhost with user 'root'
 and password 'somepass' is easy as `mysql://root:somepass@localhost/schema`
 
-You can store your connections string in the file `config/anydatasetconfig.php` like 
+
+### Querying Non-Relational Databases
 
 ```php
-return [
-    'connections' => [
-        'development' => [
-            'url' => 'mysql://root:somepass@localhost/schema',
-            'type' => 'dsn'
-        ],
-        'staging' => [
-            'url' => 'mysql://root:otherpass@192.168.1.205:3307/schema',
-            'type' => 'dsn'
-        ]
-    ]
-];
+<?php
+// Get a document
+$dbDriver = \ByJG\AnyDataset\Factory::getNoSqlInstance('mongodb://host');
+$document = $dbDriver->getDocumentById('iddcouemnt');
+
+// Update some fields in there
+$data = $document->getDocument();
+$data['some_field'] = 'some_value';
+$document->setDocument($data);
+
+// Save the document
+$dbDriver->save($document);
 ```
+
+### Querying Key/Value Databases
+
+```php
+<?php
+// Get a document
+$dbDriver = \ByJG\AnyDataset\Factory::getKeyValueInstance('s3://awsid:secret@region');
+$file = $dbDriver->get('key');
+
+// Save the document
+$dbDriver->put('key', file_get_contents('/path/to/file'));
+
+// Delete the document
+$dbDriver->remove('key');
+```
+
+
 
 ### Load balance and connection pooling 
 
@@ -81,24 +114,6 @@ You only need change your connection string to:
 sqlrelay://root:somepass@server/schema
 ```
 
-### Create DAL class easily
-   
-```php
-class MyDAL extends BaseDBAccess
-{
-    public function getById($id)
-    {
-        return $this->getIterator('select * from sometable where id = :id', [ 'id' => $id ]);
-    }
-
-    // Some query need to be cached for 180 seconds
-    public function getExpensiveQuery()
-    {
-        return $this->getIterator('select * from expensive_query', null, 180);
-    }
-}
-```
-
 ### And more
 
 And more...
@@ -106,9 +121,11 @@ And more...
 
 ## Install
 
-Just type: `composer require "byjg/anydataset=2.1.*"`
+Just type: `composer require "byjg/anydataset=3.0.*"`
 
-## Running Tests
+#### Running Unit tests
+
+Running the Unit tests
 
 ```php
 phpunit
@@ -126,6 +143,9 @@ Run integration tests require you to have the databases up e run with the follow
 ```
 phpunit testsdb/PdoMySqlTest.php 
 phpunit testsdb/PdoSqliteTest.php 
+phpunit testsdb/PdoPostgresTest.php 
+phpunit testsdb/PdoDblibTest.php 
+phpunit testsdb/MongoDbDriverTest.php 
 ```
 
 ----
