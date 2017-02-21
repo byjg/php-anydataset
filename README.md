@@ -63,10 +63,23 @@ $dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, $psrCacheEngine, 30);
 $iterator = $dbDriver->getIterator('select * from table where field = :param', ['param' => 'value']);
 ```
 
-### Relational database connections string based on URL
+### Commection based on URI
 
-The connection string for relational databases is based on URL. Connect to mysql in the server localhost with user 'root'
-and password 'somepass' is easy as `mysql://root:somepass@localhost/schema`
+The connection string for databases is based on URL. 
+
+See below the current implemented drivers:
+
+| Database      | Connection String                                     | Factory
+| ------------- | ----------------------------------------------------- | -------------------------  |
+| Sqlite        | sqlite:///path/to/file                                | getDbRelationalInstance()  |
+| MySql/MariaDb | mysql://username:password@hostname:port/database      | getDbRelationalInstance()  |
+| Postgres      | psql://username:password@hostname:port/database       | getDbRelationalInstance()  |
+| Sql Server    | dblib://username:password@hostname:port/database      | getDbRelationalInstance()  |
+| Oracle (OCI)  | oci://username:password@hostname:port/database        | getDbRelationalInstance()  |
+| Oracle (OCI8) | oci8://username:password@hostname:port/database       | getDbRelationalInstance()  |
+| Sql Relay     | sqlrelay://username:password@hostname:port/database   | getDbRelationalInstance()  |
+| MongoDB       | mongodb://username:passwortd@host:port/database       | getNoSqlInstance()         |
+| Amazon S3     | s3://key:secret@region/bucket                         | getKeyValueInstance()      |
 
 
 ### Querying Non-Relational Databases
