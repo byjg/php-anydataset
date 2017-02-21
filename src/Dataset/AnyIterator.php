@@ -22,7 +22,8 @@ class AnyIterator extends GenericIterator
 
     /**
      * Iterator constructor
-     * @param SingleRow[] $list
+     *
+*@param Row[] $list
      */
 
     public function __construct($list)
@@ -51,7 +52,8 @@ class AnyIterator extends GenericIterator
 
     /**
      * Return the next row.
-     * @return SingleRow
+     *
+*@return Row
      */
     public function moveNext()
     {

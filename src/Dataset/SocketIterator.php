@@ -73,14 +73,14 @@ class SocketIterator extends GenericIterator
 
     /**
      * @access public
-     * @return SingleRow
+     * @return Row
      */
     public function moveNext()
     {
         $cols = preg_split("/" . $this->colsep . "/", $this->rows[$this->current]);
         $this->current++;
 
-        $sr = new SingleRow();
+        $sr = new Row();
         $cntFields = count($this->fields);
         for ($i = 0; $i < $cntFields; $i++) {
             $sr->addField(strtolower($this->fields[$i]), $cols[$i]);

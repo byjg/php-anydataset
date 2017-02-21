@@ -2,7 +2,7 @@
 
 use ByJG\AnyDataset\Dataset\ArrayDataset;
 use ByJG\AnyDataset\IteratorInterface;
-use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\Row;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
@@ -32,12 +32,12 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException UnexpectedValueException
      */
-    public function test_InvalidConstructor()
+    public function testInvalidConstructor()
     {
-        $arrayDataset = new ArrayDataset('aaa');
+        new ArrayDataset('aaa');
     }
 
-    public function test_createArrayIteratorSample1()
+    public function testcreateArrayIteratorSample1()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE1);
         $arrayIterator = $arrayDataset->getIterator();
@@ -48,7 +48,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_createArrayIteratorSample2()
+    public function testcreateArrayIteratorSample2()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE2);
         $arrayIterator = $arrayDataset->getIterator();
@@ -58,7 +58,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_createArrayIteratorSample3()
+    public function testcreateArrayIteratorSample3()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE3);
         $arrayIterator = $arrayDataset->getIterator();
@@ -68,7 +68,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_navigateArrayIteratorSample1()
+    public function testnavigateArrayIteratorSample1()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE1);
         $arrayIterator = $arrayDataset->getIterator();
@@ -77,30 +77,30 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
 
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 0);
-            $this->assertField($sr, $count, "__key", 0);
-            $this->assertField($sr, $count, "value", 'ProdA');
+            $this->assertField($sr, "__id", 0);
+            $this->assertField($sr, "__key", 0);
+            $this->assertField($sr, "value", 'ProdA');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 1);
-            $this->assertField($sr, $count, "__key", 1);
-            $this->assertField($sr, $count, "value", 'ProdB');
+            $this->assertField($sr, "__id", 1);
+            $this->assertField($sr, "__key", 1);
+            $this->assertField($sr, "value", 'ProdB');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 2);
-            $this->assertField($sr, $count, "__key", 2);
-            $this->assertField($sr, $count, "value", 'ProdC');
+            $this->assertField($sr, "__id", 2);
+            $this->assertField($sr, "__key", 2);
+            $this->assertField($sr, "value", 'ProdC');
             $count++;
         }
         $this->assertTrue(!$arrayIterator->hasNext()); //, 'I did not expected more records');
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    public function test_navigateArrayIteratorSample2()
+    public function testnavigateArrayIteratorSample2()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE2);
         $arrayIterator = $arrayDataset->getIterator();
@@ -109,30 +109,30 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
 
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 0);
-            $this->assertField($sr, $count, "__key", 'A');
-            $this->assertField($sr, $count, "value", 'ProdA');
+            $this->assertField($sr, "__id", 0);
+            $this->assertField($sr, "__key", 'A');
+            $this->assertField($sr, "value", 'ProdA');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 1);
-            $this->assertField($sr, $count, "__key", 'B');
-            $this->assertField($sr, $count, "value", 'ProdB');
+            $this->assertField($sr, "__id", 1);
+            $this->assertField($sr, "__key", 'B');
+            $this->assertField($sr, "value", 'ProdB');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 2);
-            $this->assertField($sr, $count, "__key", 'C');
-            $this->assertField($sr, $count, "value", 'ProdC');
+            $this->assertField($sr, "__id", 2);
+            $this->assertField($sr, "__key", 'C');
+            $this->assertField($sr, "value", 'ProdC');
             $count++;
         }
         $this->assertTrue(!$arrayIterator->hasNext()); //, 'I did not expected more records');
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    public function test_navigateArrayIteratorSample3()
+    public function testnavigateArrayIteratorSample3()
     {
         $arrayDataset = new ArrayDataset($this->SAMPLE3);
         $arrayIterator = $arrayDataset->getIterator();
@@ -141,33 +141,33 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
 
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 0);
-            $this->assertField($sr, $count, "__key", 'A');
-            $this->assertField($sr, $count, "code", 1000);
-            $this->assertField($sr, $count, "name", 'ProdA');
+            $this->assertField($sr, "__id", 0);
+            $this->assertField($sr, "__key", 'A');
+            $this->assertField($sr, "code", 1000);
+            $this->assertField($sr, "name", 'ProdA');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 1);
-            $this->assertField($sr, $count, "__key", 'B');
-            $this->assertField($sr, $count, "code", 1001);
-            $this->assertField($sr, $count, "name", 'ProdB');
+            $this->assertField($sr, "__id", 1);
+            $this->assertField($sr, "__key", 'B');
+            $this->assertField($sr, "code", 1001);
+            $this->assertField($sr, "name", 'ProdB');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 2);
-            $this->assertField($sr, $count, "__key", 'C');
-            $this->assertField($sr, $count, "code", 1002);
-            $this->assertField($sr, $count, "name", 'ProdC');
+            $this->assertField($sr, "__id", 2);
+            $this->assertField($sr, "__key", 'C');
+            $this->assertField($sr, "code", 1002);
+            $this->assertField($sr, "name", 'ProdC');
             $count++;
         }
         $this->assertTrue(!$arrayIterator->hasNext()); //, 'I did not expected more records');
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    public function test_createFromModel1()
+    public function testcreateFromModel1()
     {
         $model = array(
             new \AnyDataSet\Tests\Sample\ModelPublic(1, 'ProdA'),
@@ -184,7 +184,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_navigateFromModel1()
+    public function testnavigateFromModel1()
     {
         $model = array(
             new \AnyDataSet\Tests\Sample\ModelPublic(1, 'ProdA'),
@@ -199,36 +199,36 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
 
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 0);
-            $this->assertField($sr, $count, "__key", 0);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
-            $this->assertField($sr, $count, "id", 1);
-            $this->assertField($sr, $count, "name", 'ProdA');
+            $this->assertField($sr, "__id", 0);
+            $this->assertField($sr, "__key", 0);
+            $this->assertField($sr, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
+            $this->assertField($sr, "id", 1);
+            $this->assertField($sr, "name", 'ProdA');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 1);
-            $this->assertField($sr, $count, "__key", 1);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
-            $this->assertField($sr, $count, "id", 2);
-            $this->assertField($sr, $count, "name", 'ProdB');
+            $this->assertField($sr, "__id", 1);
+            $this->assertField($sr, "__key", 1);
+            $this->assertField($sr, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
+            $this->assertField($sr, "id", 2);
+            $this->assertField($sr, "name", 'ProdB');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 2);
-            $this->assertField($sr, $count, "__key", 2);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
-            $this->assertField($sr, $count, "id", 3);
-            $this->assertField($sr, $count, "name", 'ProdC');
+            $this->assertField($sr, "__id", 2);
+            $this->assertField($sr, "__key", 2);
+            $this->assertField($sr, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
+            $this->assertField($sr, "id", 3);
+            $this->assertField($sr, "name", 'ProdC');
             $count++;
         }
         $this->assertTrue(!$arrayIterator->hasNext()); //, 'I did not expected more records');
         $this->assertEquals($count, 3); //, "Count records mismatch. Need to process 3 records.");
     }
 
-    public function test_createFromModel2()
+    public function testcreateFromModel2()
     {
         $model = array(
             new AnyDataSet\Tests\Sample\ModelGetter(1, 'ProdA'),
@@ -245,7 +245,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($arrayIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_navigateFromModel2()
+    public function testnavigateFromModel2()
     {
         $model = array(
             new AnyDataSet\Tests\Sample\ModelGetter(1, 'ProdA'),
@@ -260,29 +260,29 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
 
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 0);
-            $this->assertField($sr, $count, "__key", 0);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
-            $this->assertField($sr, $count, "id", 1);
-            $this->assertField($sr, $count, "name", 'ProdA');
+            $this->assertField($sr, "__id", 0);
+            $this->assertField($sr, "__key", 0);
+            $this->assertField($sr, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
+            $this->assertField($sr, "id", 1);
+            $this->assertField($sr, "name", 'ProdA');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 1);
-            $this->assertField($sr, $count, "__key", 1);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
-            $this->assertField($sr, $count, "id", 2);
-            $this->assertField($sr, $count, "name", 'ProdB');
+            $this->assertField($sr, "__id", 1);
+            $this->assertField($sr, "__key", 1);
+            $this->assertField($sr, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
+            $this->assertField($sr, "id", 2);
+            $this->assertField($sr, "name", 'ProdB');
             $count++;
         }
         if ($arrayIterator->hasNext()) {
             $sr = $arrayIterator->moveNext();
-            $this->assertField($sr, $count, "__id", 2);
-            $this->assertField($sr, $count, "__key", 2);
-            $this->assertField($sr, $count, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
-            $this->assertField($sr, $count, "id", 3);
-            $this->assertField($sr, $count, "name", 'ProdC');
+            $this->assertField($sr, "__id", 2);
+            $this->assertField($sr, "__key", 2);
+            $this->assertField($sr, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
+            $this->assertField($sr, "id", 3);
+            $this->assertField($sr, "name", 'ProdC');
             $count++;
         }
         $this->assertTrue(!$arrayIterator->hasNext()); //, 'I did not expected more records');
@@ -290,24 +290,13 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
-     * @param SingleRow $sr
+     * @param Row $row
+     * @param $field
+     * @param $value
      */
-    public function assertField($sr, $line, $field, $value)
+    public function assertField($row, $field, $value)
     {
-        $this->assertEquals($value, $sr->getField($field));
-    }
-
-    /**
-     * @param SingleRow $sr
-     * @param $count
-     */
-    public function assertSingleRow2($sr, $count)
-    {
-        $this->assertEquals($this->arrTest2[$count]["__id"], $sr->getField("__id"));
-        if ($count > 0) {
-            $this->assertEquals($this->arrTest2[$count]["label"] . $sr->getField("label"));
-        }
+        $this->assertEquals($value, $row->get($field));
     }
 }
 

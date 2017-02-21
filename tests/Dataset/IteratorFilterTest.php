@@ -91,19 +91,19 @@ class IteratorFilterTest extends \PHPUnit_Framework_TestCase
     {
 
         $collection = [
-            $row1 = new SingleRow(
+            $row1 = new Row(
                 [
                     'field' => 'value1',
                     'field2' => 'value2'
                 ]
             ),
-            $row2 = new SingleRow(
+            $row2 = new Row(
                 [
                     'field' => 'other1',
                     'field2' => 'other2'
                 ]
             ),
-            $row3 = new SingleRow(
+            $row3 = new Row(
                 [
                     'field' => 'last1',
                     'field2' => 'last2'

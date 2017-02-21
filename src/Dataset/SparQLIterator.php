@@ -47,7 +47,7 @@ class SparQLIterator extends GenericIterator
 
     /**
      * @access public
-     * @return SingleRow
+     * @return Row
      * @throws IteratorException
      */
     public function moveNext()
@@ -57,7 +57,7 @@ class SparQLIterator extends GenericIterator
         }
 
         if ($row = $this->sparqlQuery->fetchArray()) {
-            $sr = new SingleRow($row);
+            $sr = new Row($row);
             $this->current++;
             return $sr;
         } else {

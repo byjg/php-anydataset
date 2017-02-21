@@ -12,7 +12,7 @@ A data abstraction layer in PHP to manipulate any set of data with a standardize
 ### Read an write* with a number of data sources accessed by a standardized interface ([see more here](docs/Connecting-to-Data-Sources.md)):
 
 * Array
-* Relational Databases (based on PDO - Sqlite, MySql, Postgres, Oracle, and others)
+* Relational Databases (based on PDO - Sqlite, MySql, Postgres, Sql Server, Oracle, and others)
 * DBLib (SQL Server php native)
 * OCI8 (Oracle php native interface)
 * Text files (fixed and delimeted like CSV)
@@ -31,12 +31,16 @@ The easiest way to work is to get an repository and get an iterator for navigate
 
 ```php
 <?php
-$repository = new TextFileDataset('myfile', ['field1', 'field2', 'field3'], TextFileDataset::CSVFILE);
+$repository = new \ByJG\AnyDataset\Dataset\TextFileDataset(
+    'myfile',
+    ['field1', 'field2', 'field3'],
+    \ByJG\AnyDataset\Dataset\TextFileDataset::CSVFILE
+);
 $iterator = $repository->getIterator();
 
 // and then:
 foreach ($iterator as $row) {
-    echo $row->getField('field1');  // or $row->toArray();
+    echo $row->get('field1');  // or $row->toArray();
 }
 
 // Or 
@@ -63,7 +67,7 @@ $dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, $psrCacheEngine, 30);
 $iterator = $dbDriver->getIterator('select * from table where field = :param', ['param' => 'value']);
 ```
 
-### Commection based on URI
+### Connection based on URI
 
 The connection string for databases is based on URL. 
 

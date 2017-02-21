@@ -73,7 +73,7 @@ class JsonIterator extends GenericIterator
 
     /**
      * @access public
-     * @return SingleRow
+     * @return Row
      * @throws IteratorException
      */
     public function moveNext()
@@ -82,7 +82,7 @@ class JsonIterator extends GenericIterator
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         }
 
-        return new SingleRow($this->jsonObject[$this->current++]);
+        return new Row($this->jsonObject[$this->current++]);
     }
 
     public function key()

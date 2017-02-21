@@ -77,14 +77,14 @@ class TextFileIterator extends GenericIterator
 
     /**
      * @access public
-     * @return SingleRow
+     * @return Row
      */
     public function moveNext()
     {
         if ($this->hasNext()) {
             $cols = preg_split($this->fieldexpression, $this->currentBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-            $sr = new SingleRow();
+            $sr = new Row();
 
             for ($i = 0; ($i < count($this->fields)) && ($i < count($cols)); $i++) {
                 $column = $cols[$i];

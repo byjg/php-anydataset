@@ -141,7 +141,7 @@ class DbDblibFunctions extends DbBaseFunctions
         $iterator = $dbdataset->getIterator("select @@identity id");
         if ($iterator->hasNext()) {
             $singleRow = $iterator->moveNext();
-            $insertedId = $singleRow->getField("id");
+            $insertedId = $singleRow->get("id");
         }
 
         return $insertedId;

@@ -79,10 +79,10 @@ class SparQLDatasetTest extends PHPUnit_Framework_TestCase
 
         $sr = $iterator->moveNext();
 
-        $this->assertEquals($sr->getField("name"), "John");
-        $this->assertEquals($sr->getField("name.type"), "literal");
-        $this->assertEquals($sr->getField("meaning"), "Graced by Yahweh , Yahweh is gracious");
-        $this->assertEquals($sr->getField("meaning.type"), "literal");
+        $this->assertEquals($sr->get("name"), "John");
+        $this->assertEquals($sr->get("name.type"), "literal");
+        $this->assertEquals($sr->get("meaning"), "Graced by Yahweh , Yahweh is gracious");
+        $this->assertEquals($sr->get("meaning.type"), "literal");
 
         $this->assertFalse($iterator->hasNext());
     }

@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset;
 
-use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\Row;
 
 interface IteratorInterface
 {
@@ -14,8 +14,8 @@ interface IteratorInterface
     public function hasNext();
 
     /**
-     * @desc Get the next record.Return a SingleRow object
-     * @return SingleRow
+     * @desc Get the next record.Return a Row object
+     * @return Row
      */
     public function moveNext();
 

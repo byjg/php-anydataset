@@ -1,7 +1,8 @@
 <?php
 
+use ByJG\AnyDataset\Dataset\GenericIterator;
 use ByJG\AnyDataset\IteratorInterface;
-use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Dataset\TextFileDataset;
 
 /**
@@ -79,7 +80,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         // Nothing Here
     }
 
-    public function test_createTextFileData_Unix()
+    public function testcreateTextFileData_Unix()
     {
         $txtFile = new TextFileDataset(self::$fileName_Unix, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -90,7 +91,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertRowCount($txtIterator, 2000);
     }
 
-    public function test_createTextFileData_Windows()
+    public function testcreateTextFileData_Windows()
     {
         $txtFile = new TextFileDataset(self::$fileName_Windows, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -101,7 +102,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertRowCount($txtIterator, 2000);
     }
 
-    public function test_createTextFileData_MacClassic()
+    public function testcreateTextFileData_MacClassic()
     {
         $txtFile = new TextFileDataset(self::$fileName_MacClassic, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -112,7 +113,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertRowCount($txtIterator, 2000);
     }
 
-    public function test_createTextFileData_BlankLine()
+    public function testcreateTextFileData_BlankLine()
     {
         $txtFile = new TextFileDataset(self::$fileName_BlankLine, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -123,7 +124,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertRowCount($txtIterator, 2000);
     }
 
-    public function test_navigateTextIterator_Unix()
+    public function testnavigateTextIterator_Unix()
     {
         $txtFile = new TextFileDataset(self::$fileName_Windows, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -136,7 +137,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 2000);
     }
 
-    public function test_navigateTextIterator_Windows()
+    public function testnavigateTextIterator_Windows()
     {
         $txtFile = new TextFileDataset(self::$fileName_Windows, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -149,7 +150,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 2000);
     }
 
-    public function test_navigateTextIterator_MacClassic()
+    public function testnavigateTextIterator_MacClassic()
     {
         $txtFile = new TextFileDataset(self::$fileName_Windows, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -162,7 +163,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 2000);
     }
 
-    public function test_navigateTextIterator_BlankLine()
+    public function testnavigateTextIterator_BlankLine()
     {
         $txtFile = new TextFileDataset(self::$fileName_BlankLine, self::$fieldNames, TextFileDataset::CSVFILE);
         $txtIterator = $txtFile->getIterator();
@@ -175,7 +176,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 2000);
     }
 
-    public function test_navigateTextIterator_Remote_Unix()
+    public function testnavigateTextIterator_Remote_Unix()
     {
         $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_Unix), self::$fieldNames,
             TextFileDataset::CSVFILE);
@@ -189,7 +190,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 2000);
     }
 
-    public function test_navigateTextIterator_Remote_Windows()
+    public function testnavigateTextIterator_Remote_Windows()
     {
         $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_Windows), self::$fieldNames,
             TextFileDataset::CSVFILE);
@@ -206,7 +207,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * fsockopen and fgets is buggy when read a Mac classic document (\r line ending)
      */
-    public function test_navigateTextIterator_Remote_MacClassic()
+    public function testnavigateTextIterator_Remote_MacClassic()
     {
         $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_MacClassic), self::$fieldNames,
             TextFileDataset::CSVFILE);
@@ -220,7 +221,7 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 2000);
     }
 
-    public function test_navigateTextIterator_Remote_BlankLine()
+    public function testnavigateTextIterator_Remote_BlankLine()
     {
         $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_BlankLine), self::$fieldNames,
             TextFileDataset::CSVFILE);
@@ -237,48 +238,48 @@ class TextFileDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \ByJG\AnyDataset\Exception\NotFoundException
      */
-    public function test_fileNotFound()
+    public function testfileNotFound()
     {
-        $txtFile = new TextFileDataset("/tmp/xyz", self::$fieldNames, TextFileDataset::CSVFILE);
+        new TextFileDataset("/tmp/xyz", self::$fieldNames, TextFileDataset::CSVFILE);
     }
 
     /**
      * @expectedException \ByJG\AnyDataset\Exception\DatasetException
      */
-    public function test_remoteFileNotFound()
+    public function testremoteFileNotFound()
     {
         $txtFile = new TextFileDataset(self::RemoteURL . "notfound-test", self::$fieldNames, TextFileDataset::CSVFILE);
-        $txtIterator = $txtFile->getIterator();
+        $txtFile->getIterator();
     }
 
     /**
      * @expectedException \ByJG\AnyDataset\Exception\DatasetException
      */
-    public function test_serverNotFound()
+    public function testserverNotFound()
     {
         $txtFile = new TextFileDataset("http://notfound-test/alalal", self::$fieldNames, TextFileDataset::CSVFILE);
-        $txtIterator = $txtFile->getIterator();
+        $txtFile->getIterator();
     }
 
     /**
-     *
-     * @param SingleRow $sr
+
+     * @param Row $sr
      */
     public function assertSingleRow($sr, $count)
     {
-        $this->assertEquals($sr->getField("field1"), $count);
-        $this->assertEquals($sr->getField("field2"), "STRING$count");
-        $this->assertEquals($sr->getField("field3"), "VALUE$count");
+        $this->assertEquals($sr->get("field1"), $count);
+        $this->assertEquals($sr->get("field2"), "STRING$count");
+        $this->assertEquals($sr->get("field3"), "VALUE$count");
     }
 
-    public function assertRowCount($it, $qty)
+    /**
+     * @param GenericIterator $it
+     * @param $qty
+     */
+    public function assertRowCount(GenericIterator $it, $qty)
     {
-        $count = 0;
-        foreach ($it as $sr)
-            $count++;
+        $result = $it->toArray();
 
-        $this->assertEquals($qty, $count);
+        $this->assertEquals($qty, count($result));
     }
 }
-
-?>

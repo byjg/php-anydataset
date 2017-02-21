@@ -12,8 +12,8 @@ use InvalidArgumentException;
  * Your structure is hierarquical and each "row" contains "fields" but these structure can vary for each row.
  * Anydataset files have extension ".anydata.xml" and have many classes to put and get data into anydataset xml file.
  * Anydataset class just read and write files. To search elements you need use AnyIterator
- * and IteratorFilter. Each row have a class SingleRow.
- *
+ * and IteratorFilter. Each row have a class Row.
+
  * XML Structure
  * <code>
  * <anydataset>
@@ -28,23 +28,25 @@ use InvalidArgumentException;
  *    </row>
  * </anydataset>
  * </code>
- *
+
  * How to use:
  * <code>
  * $any = new AnyDataset();
  * </code>
+
  *
- * @see SingleRow
+*@see Row
  * @see AnyIterator
  * @see IteratorFilter
- *
+
  */
 class AnyDataset
 {
 
     /**
-     * Internal structure represent the current SingleRow
-     * @var SingleRow[]
+     * Internal structure represent the current Row
+     *
+*@var Row[]
      */
     private $collection;
 
@@ -89,7 +91,6 @@ class AnyDataset
     /**
      * Private method used to read and populate anydataset class from specified file
      * @param string $filepath Path and Filename to be read
-     * @return null
      */
     private function createFrom($filepath)
     {
@@ -99,7 +100,7 @@ class AnyDataset
 
             $rows = $anyDataSet->getElementsByTagName("row");
             foreach ($rows as $row) {
-                $sr = new SingleRow();
+                $sr = new Row();
                 $fields = $row->getElementsByTagName("field");
                 foreach ($fields as $field) {
                     $attr = $field->attributes->getNamedItem("name");
@@ -134,7 +135,7 @@ class AnyDataset
         $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset/>");
         $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
         foreach ($this->collection as $sr) {
-            $row = $sr->getDomObject();
+            $row = $sr->getAsDom();
             $nodeRow = $row->getElementsByTagName("row")->item(0);
             $newRow = XmlUtil::createChild($nodeRoot, "row");
             XmlUtil::addNodeFromNode($newRow, $nodeRow);
@@ -167,23 +168,24 @@ class AnyDataset
 
     /**
      * Append one row to AnyDataset.
+
      *
-     * @param SingleRow $singleRow
+*@param Row $singleRow
      * @return void
      */
     public function appendRow($singleRow = null)
     {
         if (!is_null($singleRow)) {
-            if ($singleRow instanceof SingleRow) {
+            if ($singleRow instanceof Row) {
                 $this->collection[] = $singleRow;
                 $singleRow->acceptChanges();
             } elseif (is_array($singleRow)) {
-                $this->collection[] = new SingleRow($singleRow);
+                $this->collection[] = new Row($singleRow);
             } else {
-                throw new InvalidArgumentException("You must pass an array or a SingleRow object");
+                throw new InvalidArgumentException("You must pass an array or a Row object");
             }
         } else {
-            $singleRow = new SingleRow();
+            $singleRow = new Row();
             $this->collection[] = $singleRow;
             $singleRow->acceptChanges();
         }
@@ -213,8 +215,8 @@ class AnyDataset
             $this->appendRow($row);
         } else {
             $singleRow = $row;
-            if (!($row instanceof SingleRow)) {
-                $singleRow = new SingleRow($row);
+            if (!($row instanceof Row)) {
+                $singleRow = new Row($row);
             }
             array_splice($this->collection, $rowNumber, 0, '');
             $this->collection[$rowNumber] = $singleRow;
@@ -224,14 +226,13 @@ class AnyDataset
     /**
      *
      * @param mixed $row
-     * @return null
      */
     public function removeRow($row = null)
     {
         if (is_null($row)) {
             $row = $this->currentRow;
         }
-        if ($row instanceof SingleRow) {
+        if ($row instanceof Row) {
             $iPos = 0;
             foreach ($this->collection as $sr) {
                 if ($sr->toArray() == $row->toArray()) {
@@ -290,7 +291,7 @@ class AnyDataset
         $result = array();
         while ($iterator->hasNext()) {
             $singleRow = $iterator->moveNext();
-            $result [] = $singleRow->getField($fieldName);
+            $result [] = $singleRow->get($fieldName);
         }
         return $result;
     }
@@ -311,6 +312,11 @@ class AnyDataset
         return;
     }
 
+    /**
+     * @param Row[] $seq
+     * @param $field
+     * @return array
+     */
     protected function quickSortExec($seq, $field)
     {
         if (!count($seq)) {
@@ -322,7 +328,7 @@ class AnyDataset
 
         $cntSeq = count($seq);
         for ($i = 1; $i < $cntSeq; $i ++) {
-            if ($seq[$i]->getField($field) <= $key->getField($field)) {
+            if ($seq[$i]->get($field) <= $key->get($field)) {
                 $left[] = $seq[$i];
             } else {
                 $right[] = $seq[$i];

@@ -37,7 +37,7 @@ class XmlDataset
 
     /**
      *
-     * @param DOMDocument $xml
+     * @param DOMDocument|string $xml
      * @param string $rowNode
      * @param string[] $colNode
      * @param array $registerNS

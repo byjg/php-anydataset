@@ -5,29 +5,28 @@ namespace ByJG\AnyDataset\Dataset;
 use ByJG\Serializer\BinderObject;
 use ByJG\Serializer\DumpToArrayInterface;
 use ByJG\Util\XmlUtil;
-use DOMNode;
 use UnexpectedValueException;
 
-class SingleRow extends BinderObject implements DumpToArrayInterface
+class Row extends BinderObject implements DumpToArrayInterface
 {
 
     /**
-     * \DOMNode represents a SingleRow
-     * @var DOMNode
+     * \DOMNode represents a Row
+     * @var \DOMElement
      */
     private $node = null;
     private $row = null;
     private $originalRow = null;
 
     /**
-     * SingleRow constructor
+     * Row constructor
      * @param array()
      */
     public function __construct($instance = null)
     {
         if (is_null($instance)) {
             $this->row = array();
-        } else if (is_array($instance)) {
+        } elseif (is_array($instance)) {
             $this->row = $instance;
         } else {
             $this->row = array();
@@ -59,7 +58,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      * @return string
      * @desc et the string value from a field name
      */
-    public function getField($name)
+    public function get($name)
     {
         if (!array_key_exists($name, $this->row)) {
             return null;
@@ -76,27 +75,26 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
     /**
      * Get array from a single field
      *
-     * @param string $name
+     * @param string $fieldName
      * @return array
      */
-    public function getFieldArray($name)
+    public function getAsArray($fieldName)
     {
-        if (!array_key_exists($name, $this->row)) {
-            return array();
+        if (!array_key_exists($fieldName, $this->row)) {
+            return [];
         }
 
-        $result = $this->row[$name];
+        $result = $this->row[$fieldName];
+
         if (empty($result)) {
-            return array();
-        } elseif (is_array($result)) {
-            return $result;
-        } else {
-            return array($result);
+            return [];
         }
+
+        return (array)$result;
     }
 
     /**
-     * Return all Field Names from current SingleRow
+     * Return all Field Names from current Row
      * @return array
      */
     public function getFieldNames()
@@ -109,7 +107,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
      * @param string $name
      * @param string $value
      */
-    public function setField($name, $value)
+    public function set($name, $value)
     {
         if (!array_key_exists($name, $this->row)) {
             $this->addField($name, $value);
@@ -121,27 +119,29 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
 
     /**
      * Remove specified field name from row.
-     * @param string $name
+     *
+     * @param string $fieldName
      */
-    public function removeFieldName($name)
+    public function removeField($fieldName)
     {
-        if (array_key_exists($name, $this->row)) {
-            unset($this->row[$name]);
+        if (array_key_exists($fieldName, $this->row)) {
+            unset($this->row[$fieldName]);
             $this->informChanges();
         }
     }
 
     /**
      * Remove specified field name with specified value name from row.
-     * @param string $name
+     *
+     * @param string $fieldName
      * @param $value
      */
-    public function removeFieldNameValue($name, $value)
+    public function removeValue($fieldName, $value)
     {
-        $result = $this->row[$name];
+        $result = $this->row[$fieldName];
         if (!is_array($result)) {
             if ($value == $result) {
-                unset($this->row[$name]);
+                unset($this->row[$fieldName]);
                 $this->informChanges();
             }
         } else {
@@ -152,29 +152,29 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
                     $this->informChanges();
                 }
             }
-            $this->row[$name] = array_values($result);
+            $this->row[$fieldName] = array_values($result);
         }
     }
 
     /**
      * Update a specific field and specific value with new value
      *
-     * @param String $name
+     * @param String $fieldName
      * @param String $oldvalue
      * @param String $newvalue
      */
-    public function setFieldValue($name, $oldvalue, $newvalue)
+    public function replaceValue($fieldName, $oldvalue, $newvalue)
     {
-        $result = $this->row[$name];
+        $result = $this->row[$fieldName];
         if (!is_array($result)) {
             if ($oldvalue == $result) {
-                $this->row[$name] = $newvalue;
+                $this->row[$fieldName] = $newvalue;
                 $this->informChanges();
             }
         } else {
             for ($i = count($result) - 1; $i >= 0; $i--) {
                 if ($result[$i] == $oldvalue) {
-                    $this->row[$name][$i] = $newvalue;
+                    $this->row[$fieldName][$i] = $newvalue;
                     $this->informChanges();
                 }
             }
@@ -183,9 +183,9 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
 
     /**
      * Get the \DOMElement row objet
-     * @return \DOMNode
+     * @return \DOMElement
      */
-    public function getDomObject()
+    public function getAsDom()
     {
         if (is_null($this->node)) {
             $this->node = XmlUtil::createXmlDocumentFromStr("<row />");
@@ -226,7 +226,7 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
     /**
      * @return array
      */
-    public function getOriginalRawFormat()
+    public function getAsRaw()
     {
         return $this->originalRow;
     }
@@ -242,7 +242,6 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
 
     /**
      *
-     * @return bool
      */
     public function acceptChanges()
     {
@@ -251,7 +250,6 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
 
     /**
      *
-     * @return bool
      */
     public function rejectChanges()
     {
@@ -264,15 +262,15 @@ class SingleRow extends BinderObject implements DumpToArrayInterface
     }
 
     /**
-     * Override Specific implementation of setPropValue to SingleRow
+     * Override Specific implementation of setPropValue to Row
      *
-     * @param SingleRow $obj
+     * @param Row $obj
      * @param string $propName
      * @param string $value
      */
     protected function setPropValue($obj, $propName, $value)
     {
-        $obj->setField($propName, $value);
+        $obj->set($propName, $value);
     }
 
 

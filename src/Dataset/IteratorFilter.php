@@ -22,7 +22,7 @@ class IteratorFilter
 
     /**
      * @param $array
-     * @return SingleRow[]
+     * @return Row[]
      */
     public function match($array)
     {
@@ -44,10 +44,10 @@ class IteratorFilter
 
 
     /**
-     * @param SingleRow $singleRow
+     * @param Row $singleRow
      * @return string
      */
-    private function evalString(SingleRow $singleRow)
+    private function evalString(Row $singleRow)
     {
         $result = [];
         $finalResult = false;
@@ -65,7 +65,7 @@ class IteratorFilter
             $relation = $filter[2];
             $value = $filter[3];
 
-            $field = $singleRow->getField($name);
+            $field = $singleRow->get($name);
 
             if (!is_array($field)) {
                 $field = [$field];

@@ -2,7 +2,7 @@
 
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\JsonDataset;
-use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\Row;
 
 /**
  * NOTE: The class name must end with "Test" suffix.
@@ -36,7 +36,7 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
 
     }
 
-    public function test_createJsonIterator()
+    public function testcreateJsonIterator()
     {
         $jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK);
         $jsonIterator = $jsonDataset->getIterator();
@@ -46,7 +46,7 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($jsonIterator->Count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_navigateJsonIterator()
+    public function testnavigateJsonIterator()
     {
         $jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK);
         $jsonIterator = $jsonDataset->getIterator();
@@ -59,7 +59,7 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($jsonIterator->count(), 3); //, "Count() method must return 3");
     }
 
-    public function test_navigateJsonIterator2()
+    public function testnavigateJsonIterator2()
     {
         $jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK);
         $jsonIterator = $jsonDataset->getIterator();
@@ -75,9 +75,9 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \ByJG\AnyDataset\Exception\DatasetException
      */
-    public function test_jsonNotWellFormatted()
+    public function testjsonNotWellFormatted()
     {
-        $jsonDataset = new JsonDataset(JsonDatasetTest::JSON_NOTOK);
+        new JsonDataset(JsonDatasetTest::JSON_NOTOK);
     }
 
     public function navigateJSONComplex($path)
@@ -93,17 +93,17 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($jsonIterator->count(), 2); //, "Count() method must return 3");
     }
 
-    public function test_navigateJSONComplexIterator()
+    public function testnavigateJSONComplexIterator()
     {
         $this->navigateJSONComplex("/menu/items");
     }
 
-    public function test_navigateJSONComplexIteratorWithOutSlash()
+    public function testnavigateJSONComplexIteratorWithOutSlash()
     {
         $this->navigateJSONComplex("menu/items");
     }
 
-    public function test_navigateJSONComplexIteratorWrongPath()
+    public function testnavigateJSONComplexIteratorWrongPath()
     {
         $jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK2);
         $jsonIterator = $jsonDataset->getIterator("/menu/wrong");
@@ -114,27 +114,31 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \ByJG\AnyDataset\Exception\IteratorException
      */
-    public function test_navigateJSONComplexIteratorWrongPath2()
+    public function testnavigateJSONComplexIteratorWrongPath2()
     {
         $jsonDataset = new JsonDataset(JsonDatasetTest::JSON_OK2);
-        $jsonIterator = $jsonDataset->getIterator("/menu/wrong", true);
+        $jsonDataset->getIterator("/menu/wrong", true);
     }
 
     /**
-     *
-     * @param SingleRow $sr
+
+     * @param Row $sr
      */
     public function assertSingleRow($sr, $count)
     {
-        $this->assertEquals($sr->getField("name"), $this->arrTest[$count]["name"]);
-        $this->assertEquals($sr->getField("surname"), $this->arrTest[$count]["surname"]);
-        $this->assertEquals($sr->getField("age"), $this->arrTest[$count]["age"]);
+        $this->assertEquals($sr->get("name"), $this->arrTest[$count]["name"]);
+        $this->assertEquals($sr->get("surname"), $this->arrTest[$count]["surname"]);
+        $this->assertEquals($sr->get("age"), $this->arrTest[$count]["age"]);
     }
 
+    /**
+     * @param Row $sr
+     * @param $count
+     */
     public function assertSingleRow2($sr, $count)
     {
-        $this->assertEquals($sr->getField("id"), $this->arrTest2[$count]["id"]);
-        if ($count > 0) $this->assertEquals($sr->getField("label"), $this->arrTest2[$count]["label"]);
+        $this->assertEquals($sr->get("id"), $this->arrTest2[$count]["id"]);
+        if ($count > 0) $this->assertEquals($sr->get("label"), $this->arrTest2[$count]["label"]);
     }
 }
 

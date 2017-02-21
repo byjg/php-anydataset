@@ -66,7 +66,7 @@ class FixedTextFileIterator extends GenericIterator
 
 
     /**
-     * @return SingleRow|null
+     * @return Row|null
      * @throws IteratorException
      */
     public function moveNext()
@@ -75,7 +75,7 @@ class FixedTextFileIterator extends GenericIterator
             $buffer = fgets($this->handle, 4096);
 
             if ($buffer == "") {
-                return new SingleRow();
+                return new Row();
             }
 
             $fields = $this->processBuffer($buffer, $this->fields);
@@ -85,7 +85,7 @@ class FixedTextFileIterator extends GenericIterator
             }
 
             $this->current++;
-            return new SingleRow($fields);
+            return new Row($fields);
         }
 
         if ($this->handle) {

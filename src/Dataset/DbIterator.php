@@ -48,17 +48,20 @@ class DbIterator extends GenericIterator
 
         if (is_null($this->recordset)) {
             return (count($this->rowBuffer) > 0);
-        } if ($row = $this->recordset->fetch(PDO::FETCH_ASSOC)) {
-            foreach ($row as $key => $value) {
+        }
+
+        $rowArray = $this->recordset->fetch(PDO::FETCH_ASSOC);
+        if (!empty($rowArray)) {
+            foreach ($rowArray as $key => $value) {
                 if (is_null($value)) {
-                    $row[$key] = "";
+                    $rowArray[$key] = "";
                 } elseif (is_object($value)) {
-                    $row[$key] = "[OBJECT]";
+                    $rowArray[$key] = "[OBJECT]";
                 } else {
-                    $row[$key] = Encoding::toUTF8($value);
+                    $rowArray[$key] = Encoding::toUTF8($value);
                 }
             }
-            $singleRow = new SingleRow($row);
+            $singleRow = new Row($rowArray);
 
             // Enfileira o registo
             array_push($this->rowBuffer, $singleRow);
@@ -68,16 +71,16 @@ class DbIterator extends GenericIterator
             }
 
             return true;
-        } else {
-            $this->recordset->closeCursor();
-            $this->recordset = null;
-
-            return (count($this->rowBuffer) > 0);
         }
+
+        $this->recordset->closeCursor();
+        $this->recordset = null;
+
+        return (count($this->rowBuffer) > 0);
     }
 
     /**
-     * @return SingleRow
+     * @return Row
      * @throws IteratorException
      */
     public function moveNext()

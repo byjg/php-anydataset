@@ -12,7 +12,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var SingleRow
+     * @var Row
      */
     protected $object;
 
@@ -22,7 +22,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new SingleRow;
+        $this->object = new Row;
     }
 
     protected function fill()
@@ -92,23 +92,23 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
     {
         $this->fill();
 
-        $this->assertEquals(10, $this->object->getField('field1'));
-        $this->assertEquals(10, $this->object->getField('field1'));  // Test it again, because is an array
-        $this->assertEquals(40, $this->object->getField('field2'));
-        $this->assertEquals(null, $this->object->getField('not-exists'));
+        $this->assertEquals(10, $this->object->get('field1'));
+        $this->assertEquals(10, $this->object->get('field1'));  // Test it again, because is an array
+        $this->assertEquals(40, $this->object->get('field2'));
+        $this->assertEquals(null, $this->object->get('not-exists'));
     }
 
     public function testGetFieldArray()
     {
         $this->fill();
 
-        $this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1'));
-        $this->assertEquals(array(40), $this->object->getFieldArray('field2'));
+        $this->assertEquals(array(10, 20, 30), $this->object->getAsArray('field1'));
+        $this->assertEquals(array(40), $this->object->getAsArray('field2'));
 
         $this->object->addField('field3', '');
         $this->object->acceptChanges();
 
-        $this->assertEquals(array(), $this->object->getFieldArray('field3'));
+        $this->assertEquals(array(), $this->object->getAsArray('field3'));
     }
 
     public function testGetFieldNames()
@@ -122,63 +122,63 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
     {
         $this->fill();
 
-        $this->object->setField('field1', 70);
-        $this->assertEquals(70, $this->object->getField('field1'));
+        $this->object->set('field1', 70);
+        $this->assertEquals(70, $this->object->get('field1'));
 
-        $this->object->setField('field2', 60);
-        $this->assertEquals(60, $this->object->getField('field2'));
+        $this->object->set('field2', 60);
+        $this->assertEquals(60, $this->object->get('field2'));
 
-        $this->object->setField('field3', 50);
-        $this->assertEquals(50, $this->object->getField('field3'));
+        $this->object->set('field3', 50);
+        $this->assertEquals(50, $this->object->get('field3'));
     }
 
     public function testRemoveFieldName()
     {
         $this->fill();
 
-        $this->object->removeFieldName('field1');
-        $this->assertEquals(null, $this->object->getField('field1'));
-        $this->assertEquals(40, $this->object->getField('field2'));
+        $this->object->removeField('field1');
+        $this->assertEquals(null, $this->object->get('field1'));
+        $this->assertEquals(40, $this->object->get('field2'));
     }
 
     public function testRemoveFieldName2()
     {
         $this->fill();
 
-        $this->object->removeFieldName('field2');
-        $this->assertEquals(10, $this->object->getField('field1'));
-        $this->assertEquals(null, $this->object->getField('field2'));
+        $this->object->removeField('field2');
+        $this->assertEquals(10, $this->object->get('field1'));
+        $this->assertEquals(null, $this->object->get('field2'));
     }
 
     public function testRemoveFieldNameValue()
     {
         $this->fill();
 
-        $this->object->removeFieldNameValue('field1', 20);
-        $this->assertEquals(array(10, 30), $this->object->getFieldArray('field1'));
+        $this->object->removeValue('field1', 20);
+        $this->assertEquals(array(10, 30), $this->object->getAsArray('field1'));
 
-        $this->object->removeFieldNameValue('field2', 100);
-        $this->assertEquals(40, $this->object->getField('field2')); // Element was not removed
+        $this->object->removeValue('field2', 100);
+        $this->assertEquals(40, $this->object->get('field2')); // Element was not removed
 
-        $this->object->removeFieldNameValue('field2', 40);
-        $this->assertEquals(null, $this->object->getField('field2'));
+        $this->object->removeValue('field2', 40);
+        $this->assertEquals(null, $this->object->get('field2'));
     }
 
     public function testSetFieldValue()
     {
         $this->fill();
 
-        $this->object->setFieldValue('field2', 100, 200);
-        $this->assertEquals(40, $this->object->getField('field2')); // Element was not changed
+        $this->object->replaceValue('field2', 100, 200);
+        $this->assertEquals(40, $this->object->get('field2')); // Element was not changed
 
-        $this->object->setFieldValue('field2', 40, 200);
-        $this->assertEquals(200, $this->object->getField('field2'));
+        $this->object->replaceValue('field2', 40, 200);
+        $this->assertEquals(200, $this->object->get('field2'));
 
-        $this->object->setFieldValue('field1', 500, 190);
-        $this->assertEquals(array(10, 20, 30), $this->object->getFieldArray('field1')); // Element was not changed
+        $this->object->replaceValue('field1', 500, 190);
+        $this->assertEquals(array(10, 20, 30), $this->object->getAsArray('field1')); // Element was not changed
 
-        $this->object->setFieldValue('field1', 20, 190);
-        $this->assertEquals(array(10, 190, 30), $this->object->getFieldArray('field1'));
+        $this->object->replaceValue('field1', 20, 190);
+        $this->assertEquals(array(10, 190, 30), $this->object->getAsArray('field1'));
     }
 
     public function testGetDomObject()
@@ -194,17 +194,17 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
             . "</row>"
         );
 
-        $this->assertEquals($dom, $this->object->getDomObject());
+        $this->assertEquals($dom, $this->object->getAsDom());
     }
 
     public function testGetOriginalRawFormat()
     {
         $this->fill();
 
-        $this->object->setField('field2', 150);
+        $this->object->set('field2', 150);
         $this->assertEquals(
             array('field1' => array(10, 20, 30), 'field2' => 40),
-            $this->object->getOriginalRawFormat()
+            $this->object->getAsRaw()
         );
     }
 
@@ -213,7 +213,7 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $this->fill();
 
         $this->assertFalse($this->object->hasChanges());
-        $this->object->setField('field2', 150);
+        $this->object->set('field2', 150);
         $this->assertTrue($this->object->hasChanges());
     }
 
@@ -221,32 +221,32 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
     {
         $this->fill();
 
-        $this->object->setField('field2', 150);
-        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->getOriginalRawFormat());
+        $this->object->set('field2', 150);
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->getAsRaw());
         $this->object->acceptChanges();
-        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->getOriginalRawFormat());
+        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->getAsRaw());
     }
 
     public function testRejectChanges()
     {
         $this->fill();
 
-        $this->object->setField('field2', 150);
+        $this->object->set('field2', 150);
         $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->toArray());
-        $this->assertEquals(150, $this->object->getField('field2'));
+        $this->assertEquals(150, $this->object->get('field2'));
         $this->object->rejectChanges();
         $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->toArray());
-        $this->assertEquals(40, $this->object->getField('field2'));
+        $this->assertEquals(40, $this->object->get('field2'));
     }
 
     public function testConstructor_ModelPublic()
     {
         $model = new ModelPublic(10, 'Testing');
 
-        $sr = new SingleRow($model);
+        $sr = new Row($model);
 
-        $this->assertEquals(10, $sr->getField("Id"));
-        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(10, $sr->get("Id"));
+        $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
     }
 
@@ -254,10 +254,10 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
     {
         $model = new ModelGetter(10, 'Testing');
 
-        $sr = new SingleRow($model);
+        $sr = new Row($model);
 
-        $this->assertEquals(10, $sr->getField("Id"));
-        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(10, $sr->get("Id"));
+        $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
     }
 
@@ -267,10 +267,10 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $model->Id = 10;
         $model->Name = "Testing";
 
-        $sr = new SingleRow($model);
+        $sr = new Row($model);
 
-        $this->assertEquals(10, $sr->getField("Id"));
-        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(10, $sr->get("Id"));
+        $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
     }
 
@@ -278,10 +278,10 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
     {
         $array = array("Id" => 10, "Name" => "Testing");
 
-        $sr = new SingleRow($array);
+        $sr = new Row($array);
 
-        $this->assertEquals(10, $sr->getField("Id"));
-        $this->assertEquals("Testing", $sr->getField("Name"));
+        $this->assertEquals(10, $sr->get("Id"));
+        $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals($array, $sr->toArray());
     }
 
@@ -291,12 +291,12 @@ class SingleRowTest extends \PHPUnit_Framework_TestCase
         $model->setIdModel(10);
         $model->setClientName("Testing");
 
-        $sr = new SingleRow($model);
+        $sr = new Row($model);
 
         // Important to note:
         // The property is _Id_Model, but is changed to "set/get IdModel" throught PropertyName
         // Because this, the field is Id_Model instead IdModel
-        $this->assertEquals(10, $sr->getField("IdModel"));
-        $this->assertEquals("Testing", $sr->getField("ClientName"));
+        $this->assertEquals(10, $sr->get("IdModel"));
+        $this->assertEquals("Testing", $sr->get("ClientName"));
     }
 }

@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Store\Helpers;
 use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Enum\SQLFieldType;
 use ByJG\AnyDataset\Enum\SQLType;
-use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\Row;
 use DateTime;
 use Exception;
 
@@ -47,7 +47,7 @@ class SqlHelper
         $filter = "",
         $decimalpoint = "."
     ) {
-        if ($fields instanceof SingleRow) {
+        if ($fields instanceof Row) {
             return $this->generateSQL($table, $fields->toArray(), $param, $type, $filter, $decimalpoint);
         }
 

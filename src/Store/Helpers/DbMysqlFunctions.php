@@ -142,7 +142,7 @@ class DbMysqlFunctions extends DbBaseFunctions
         $iterator = $dbdataset->getIterator("select LAST_INSERT_ID() id");
         if ($iterator->hasNext()) {
             $singleRow = $iterator->moveNext();
-            $returnedId = $singleRow->getField("id");
+            $returnedId = $singleRow->get("id");
         }
 
         return $returnedId;

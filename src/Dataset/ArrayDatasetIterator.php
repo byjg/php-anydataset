@@ -54,7 +54,7 @@ class ArrayDatasetIterator extends GenericIterator
     }
 
     /**
-     * @return SingleRow
+     * @return Row
      */
     public function moveNext()
     {

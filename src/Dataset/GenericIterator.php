@@ -33,7 +33,7 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
     /* ------------------------------------- */
 
     /**
-     * @return SingleRow
+     * @return Row
      */
     public function current()
     {

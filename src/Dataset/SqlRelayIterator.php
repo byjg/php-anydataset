@@ -4,7 +4,7 @@ namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Exception\IteratorException;
 
-class SQLRelayIterator extends GenericIterator
+class SqlRelayIterator extends GenericIterator
 {
 
     const RECORD_BUFFER = 50;
@@ -41,7 +41,7 @@ class SQLRelayIterator extends GenericIterator
      */
     public function hasNext()
     {
-        if (count($this->rowBuffer) >= SQLRelayIterator::RECORD_BUFFER) {
+        if (count($this->rowBuffer) >= SqlRelayIterator::RECORD_BUFFER) {
             return true;
         }
 
@@ -50,7 +50,7 @@ class SQLRelayIterator extends GenericIterator
         }
 
         if ($this->currentRow < $this->count()) {
-            $sr = new SingleRow();
+            $sr = new Row();
 
             $colCount = sqlrcur_colCount($this->cursor);
             for ($col = 0; $col < $colCount; $col++) {
@@ -94,7 +94,7 @@ class SQLRelayIterator extends GenericIterator
     }
 
     /**
-     * @return SingleRow
+     * @return Row
      * @throws IteratorException
      */
     public function moveNext()

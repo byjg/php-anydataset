@@ -8,7 +8,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 {
     public function testBindSingleRow()
     {
-        $sr = new \ByJG\AnyDataset\Dataset\SingleRow();
+        $sr = new \ByJG\AnyDataset\Dataset\Row();
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
 
@@ -22,7 +22,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $anydata = new \ByJG\AnyDataset\Dataset\AnyDataset();
 
-        $sr = new \ByJG\AnyDataset\Dataset\SingleRow();
+        $sr = new \ByJG\AnyDataset\Dataset\Row();
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
         $anydata->appendRow($sr);

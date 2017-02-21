@@ -1,7 +1,7 @@
 <?php
 
 use ByJG\AnyDataset\IteratorInterface;
-use ByJG\AnyDataset\Dataset\SingleRow;
+use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Dataset\XmlDataset;
 
 /**
@@ -57,7 +57,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         
     }
 
-    public function test_createXMLDataset()
+    public function testcreateXMLDataset()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -67,7 +67,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($xmlIterator->Count(), 3);
     }
 
-    public function test_navigateXMLIterator()
+    public function testnavigateXMLIterator()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -80,7 +80,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($count, 3);
     }
 
-    public function test_navigateXMLIterator2()
+    public function testnavigateXMLIterator2()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -96,12 +96,12 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function test_xmlNotWellFormatted()
+    public function testxmlNotWellFormatted()
     {
-        $xmlDataset = new XmlDataset(XmlDatasetTest::XML_NOTOK, $this->rootNode, $this->arrColumn);
+        new XmlDataset(XmlDatasetTest::XML_NOTOK, $this->rootNode, $this->arrColumn);
     }
 
-    public function test_wrongNodeRoot()
+    public function testwrongNodeRoot()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, "wrong", $this->arrColumn);
         $xmlIterator = $xmlDataset->getIterator();
@@ -109,7 +109,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($xmlIterator->count(), 0);
     }
 
-    public function test_wrongColumn()
+    public function testwrongColumn()
     {
         $xmlDataset = new XmlDataset(XmlDatasetTest::XML_OK, $this->rootNode, array("title" => "aaaa"));
         $xmlIterator = $xmlDataset->getIterator();
@@ -117,7 +117,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($xmlIterator->count(), 3);
     }
 
-    public function test_repeatedNodes()
+    public function testrepeatedNodes()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
 		<bookstore>
@@ -137,19 +137,19 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $xmlIterator->Count());
 
         $sr = $xmlIterator->moveNext();
-        $authors = $sr->getFieldArray('author');
+        $authors = $sr->getAsArray('author');
 
         $this->assertEquals(2, count($authors));
         $this->assertEquals('Giada De Laurentiis', $authors[0]);
         $this->assertEquals('Another Author', $authors[1]);
     }
 
-    public function test_atomXml()
+    public function testatomXml()
     {
         $xml = '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:gd="http://schemas.google.com/g/2005" xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/">
 			<id>myId</id>
 			<updated>2014-09-15T19:35:55.795Z</updated>
-			<category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+			<category scheme="http://schemas.google.com/g/2005#kind" term="gContact#contact"/>
 			<title type="text">Title</title>
 			<link rel="alternate" type="text/html" href="https://www.google.com/"/>
 			<link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/my%40gmail.com/full"/>
@@ -168,7 +168,7 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
 			<entry>
 			 <id>http://www.google.com/m8/feeds/contacts/my%40gmail.com/base/0</id>
 			 <updated>2013-10-05T22:16:03.564Z</updated>
-			 <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+			 <category scheme="http://schemas.google.com/g/2005#kind" term="gContact#contact"/>
 			 <title type="text">Person 1</title>
 			 <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/my%40gmail.com/1/ABCDE"/>
 			 <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/my%40gmail.com/1"/>
@@ -202,27 +202,27 @@ class XmlDatasetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $xmlIterator->Count());
 
         $row = $xmlIterator->moveNext();
-        $this->assertEquals("http://www.google.com/m8/feeds/contacts/my%40gmail.com/base/0", $row->getField("id"));
-        $this->assertEquals("2013-10-05T22:16:03.564Z", $row->getField("updated"));
-        $this->assertEquals("Person 1", $row->getField("name"));
-        $this->assertEquals("p1@gmail.com", $row->getField("email"));
+        $this->assertEquals("http://www.google.com/m8/feeds/contacts/my%40gmail.com/base/0", $row->get("id"));
+        $this->assertEquals("2013-10-05T22:16:03.564Z", $row->get("updated"));
+        $this->assertEquals("Person 1", $row->get("name"));
+        $this->assertEquals("p1@gmail.com", $row->get("email"));
 
         $row = $xmlIterator->moveNext();
-        $this->assertEquals("http://www.google.com/m8/feeds/contacts/my%40gmail.com/base/1", $row->getField("id"));
-        $this->assertEquals("2012-07-12T17:19:17.546Z", $row->getField("updated"));
-        $this->assertEquals("Person 2", $row->getField("name"));
-        $this->assertEquals("p2@gmail.com", $row->getField("email"));
+        $this->assertEquals("http://www.google.com/m8/feeds/contacts/my%40gmail.com/base/1", $row->get("id"));
+        $this->assertEquals("2012-07-12T17:19:17.546Z", $row->get("updated"));
+        $this->assertEquals("Person 2", $row->get("name"));
+        $this->assertEquals("p2@gmail.com", $row->get("email"));
     }
 
     /**
-     *
-     * @param SingleRow $sr
+
+     * @param Row $sr
      */
     public function assertSingleRow($sr, $count)
     {
-        $this->assertEquals($sr->getField("category"), $this->arrTest[$count]["category"]);
-        $this->assertEquals($sr->getField("title"), $this->arrTest[$count]["title"]);
-        $this->assertEquals($sr->getField("lang"), $this->arrTest[$count]["lang"]);
+        $this->assertEquals($sr->get("category"), $this->arrTest[$count]["category"]);
+        $this->assertEquals($sr->get("title"), $this->arrTest[$count]["title"]);
+        $this->assertEquals($sr->get("lang"), $this->arrTest[$count]["lang"]);
     }
 
 }

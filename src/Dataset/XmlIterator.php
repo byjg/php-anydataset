@@ -69,7 +69,7 @@ class XmlIterator extends GenericIterator
 
     /**
      * @access public
-     * @return SingleRow
+     * @return Row
      * @throws IteratorException
      */
     public function moveNext()
@@ -80,7 +80,7 @@ class XmlIterator extends GenericIterator
 
         $node = $this->nodeList->item($this->current++);
 
-        $sr = new SingleRow();
+        $sr = new Row();
 
         foreach ($this->colNodes as $key => $colxpath) {
             $nodecol = XmlUtil::selectNodes($node, $colxpath, $this->registerNS);

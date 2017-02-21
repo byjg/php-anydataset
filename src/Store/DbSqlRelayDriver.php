@@ -5,7 +5,7 @@ namespace ByJG\AnyDataset\Store;
 use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\AnyDataset\Exception\DatasetException;
-use ByJG\AnyDataset\Dataset\SQLRelayIterator;
+use ByJG\AnyDataset\Dataset\SqlRelayIterator;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\AnyDataset\Store\Helpers\SqlHelper;
@@ -79,7 +79,7 @@ class DbSqlRelayDriver implements DbDriverInterface
     public function getIterator($sql, $array = null)
     {
         $cur = $this->getSQLRelayCursor($sql, $array);
-        $iterator = new SQLRelayIterator($cur);
+        $iterator = new SqlRelayIterator($cur);
         return $iterator;
     }
 

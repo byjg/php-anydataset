@@ -51,10 +51,10 @@ class Oci8Iterator extends GenericIterator
             return (count($this->rowBuffer) > 0);
         }
 
-        $row = oci_fetch_array($this->cursor, OCI_ASSOC + OCI_RETURN_NULLS);
-        if (!empty($row)) {
-            $row = array_change_key_case($row, CASE_LOWER);
-            $singleRow = new SingleRow($row);
+        $rowArray = oci_fetch_array($this->cursor, OCI_ASSOC + OCI_RETURN_NULLS);
+        if (!empty($rowArray)) {
+            $rowArray = array_change_key_case($rowArray, CASE_LOWER);
+            $singleRow = new Row($rowArray);
 
             $this->currentRow++;
 
