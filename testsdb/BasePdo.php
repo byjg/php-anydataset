@@ -4,7 +4,7 @@ namespace Store;
 
 use ByJG\AnyDataset\DbDriverInterface;
 
-class BasePdoTest extends \PHPUnit_Framework_TestCase
+abstract class BasePdo extends \PHPUnit_Framework_TestCase
 {
 
     /**

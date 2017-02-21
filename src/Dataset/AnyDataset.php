@@ -123,14 +123,14 @@ class AnyDataset
      */
     public function xml()
     {
-        return $this->getDomObject()->saveXML();
+        return $this->getAsDom()->saveXML();
     }
 
     /**
      * Returns the AnyDataset XmlDocument representive object
      * @return \DOMDocument XmlDocument object
      */
-    public function getDomObject()
+    public function getAsDom()
     {
         $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset/>");
         $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
@@ -163,14 +163,13 @@ class AnyDataset
             throw new DatabaseException("No such file path to save anydataset");
         }
 
-        XmlUtil::saveXmlDocument($this->getDomObject(), $this->path);
+        XmlUtil::saveXmlDocument($this->getAsDom(), $this->path);
     }
 
     /**
      * Append one row to AnyDataset.
-
      *
-*@param Row $singleRow
+     * @param Row $singleRow
      * @return void
      */
     public function appendRow($singleRow = null)

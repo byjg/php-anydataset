@@ -4,9 +4,9 @@ namespace Store;
 
 use ByJG\AnyDataset\Factory;
 
-require_once 'BasePdoTest.php';
+require_once 'BasePdo.php';
 
-class PdoPostgresTest extends BasePdoTest
+class PdoPostgresTest extends BasePdo
 {
 
     protected function createInstance()

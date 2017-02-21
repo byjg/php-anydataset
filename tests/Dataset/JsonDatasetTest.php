@@ -141,5 +141,3 @@ class JsonDatasetTest extends PHPUnit_Framework_TestCase
         if ($count > 0) $this->assertEquals($sr->get("label"), $this->arrTest2[$count]["label"]);
     }
 }
-
-?>
