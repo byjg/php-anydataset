@@ -8,6 +8,14 @@ use ByJG\AnyDataset\Exception\NotAvailableException;
 class DbDblibFunctions extends DbBaseFunctions
 {
 
+    public function __construct()
+    {
+        $this->deliFieldLeft = '"';
+        $this->deliFieldRight = '"';
+        $this->deliTableLeft = '"';
+        $this->deliTableRight = '"';
+    }
+
     public function concat($s1, $s2 = null)
     {
         return implode(func_get_args(), ' + ');

@@ -134,4 +134,38 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
         $dbdataset->execute($sql, $param);
         return -1;
     }
+
+    protected $deliFieldLeft = '';
+    protected $deliFieldRight = '';
+    protected $deliTableLeft = '';
+    protected $deliTableRight = '';
+
+    /**
+     * @param array|string $field
+     * @return mixed
+     */
+    public function delimiterField($field)
+    {
+        $result = [];
+        foreach ((array)$field as $fld) {
+            $fldAr = explode('.', $fld);
+            $result[] = $this->deliFieldLeft
+                . implode($this->deliFieldRight . '.' . $this->deliFieldLeft, $fldAr)
+                . $this->deliFieldRight;
+        }
+
+        if (is_string($field)) {
+            return $result[0];
+        }
+
+        return $result;
+    }
+
+    public function delimiterTable($table)
+    {
+        $tableAr = explode('.', $table);
+        return $this->deliTableLeft
+            . implode($this->deliTableRight . '.' . $this->deliTableLeft, $tableAr)
+            . $this->deliTableRight;
+    }
 }

@@ -88,6 +88,28 @@ class DbPostgresFunctionsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("TO_CHAR(current_timestamp,'DD/MM/YY HH:MI')", $this->object->sqlDate('d/m/y h:i'));
     }
 
+    public function testDelimiterField()
+    {
+        $field = $this->object->delimiterField('field1');
+        $field2 = $this->object->delimiterField('table.field1');
+        $fieldAr = $this->object->delimiterField(['field2', 'field3']);
+        $fieldAr2 = $this->object->delimiterField(['table.field2', 'table.field3']);
+
+        $this->assertEquals('"field1"', $field);
+        $this->assertEquals('"table"."field1"', $field2);
+        $this->assertEquals(['"field2"', '"field3"'], $fieldAr);
+        $this->assertEquals(['"table"."field2"', '"table"."field3"'], $fieldAr2);
+    }
+
+    public function testDelimiterTable()
+    {
+        $table = $this->object->delimiterField('table');
+        $tableDb = $this->object->delimiterField('db.table');
+
+        $this->assertEquals('"table"', $table);
+        $this->assertEquals('"db"."table"', $tableDb);
+    }
+
     // public function testToDate()
     // {
     // }

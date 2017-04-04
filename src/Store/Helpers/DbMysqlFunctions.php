@@ -7,6 +7,14 @@ use ByJG\AnyDataset\DbDriverInterface;
 class DbMysqlFunctions extends DbBaseFunctions
 {
 
+    public function __construct()
+    {
+        $this->deliFieldLeft = '`';
+        $this->deliFieldRight = '`';
+        $this->deliTableLeft = '`';
+        $this->deliTableRight = '`';
+    }
+
     public function concat($str1, $str2 = null)
     {
         return "concat(" . implode(func_get_args(), ', ') . ")";

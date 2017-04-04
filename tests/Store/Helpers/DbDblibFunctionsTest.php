@@ -80,6 +80,30 @@ class DbDblibFunctionsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("FORMAT(column, 'MM ')", $this->object->sqlDate('M q', 'column'));
     }
 
+    public function testDelimiterField()
+    {
+        $field = $this->object->delimiterField('field1');
+        $field2 = $this->object->delimiterField('table.field1');
+        $fieldAr = $this->object->delimiterField(['field2', 'field3']);
+        $fieldAr2 = $this->object->delimiterField(['master.dbo.field2', 'table.field3']);
+
+        $this->assertEquals('"field1"', $field);
+        $this->assertEquals('"table"."field1"', $field2);
+        $this->assertEquals(['"field2"', '"field3"'], $fieldAr);
+        $this->assertEquals(['"master"."dbo"."field2"', '"table"."field3"'], $fieldAr2);
+    }
+
+    public function testDelimiterTable()
+    {
+        $table = $this->object->delimiterField('table');
+        $tableDb = $this->object->delimiterField('dbo.table');
+        $tableDb2 = $this->object->delimiterField('master.dbo.table');
+
+        $this->assertEquals('"table"', $table);
+        $this->assertEquals('"dbo"."table"', $tableDb);
+        $this->assertEquals('"master"."dbo"."table"', $tableDb2);
+    }
+
     // public function testToDate()
     // {
     // }

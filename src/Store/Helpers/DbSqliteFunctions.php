@@ -8,6 +8,14 @@ use ByJG\AnyDataset\Exception\NotImplementedException;
 class DbSqliteFunctions extends DbBaseFunctions
 {
 
+    public function __construct()
+    {
+        $this->deliFieldLeft = '`';
+        $this->deliFieldRight = '`';
+        $this->deliTableLeft = '`';
+        $this->deliTableRight = '`';
+    }
+
     /**
      * @param string $s1
      * @param null $s2

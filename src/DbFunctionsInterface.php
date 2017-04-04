@@ -82,4 +82,16 @@ interface DbFunctionsInterface
      * @return int
      */
     public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param);
+
+    /**
+     * @param string|array $field
+     * @return mixed
+     */
+    public function delimiterField($field);
+
+    /**
+     * @param string|array $table
+     * @return mixed
+     */
+    public function delimiterTable($table);
 }
