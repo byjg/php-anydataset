@@ -1,13 +1,16 @@
 <?php
 
-use ByJG\AnyDataset\Dataset\ArrayDataset;
-use ByJG\AnyDataset\IteratorInterface;
-use ByJG\AnyDataset\Dataset\Row;
+namespace ByJG\AnyDataset\Dataset;
 
-/**
- * NOTE: The class name must end with "Test" suffix.
- */
-class ArrayDatasetTest extends PHPUnit_Framework_TestCase
+use AnyDataSet\Tests\Sample\ModelGetter;
+use ByJG\AnyDataset\IteratorInterface;
+
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
 {
 
     protected $fieldNames;
@@ -231,9 +234,9 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
     public function testcreateFromModel2()
     {
         $model = array(
-            new AnyDataSet\Tests\Sample\ModelGetter(1, 'ProdA'),
-            new AnyDataSet\Tests\Sample\ModelGetter(2, 'ProdB'),
-            new AnyDataSet\Tests\Sample\ModelGetter(3, 'ProdC')
+            new ModelGetter(1, 'ProdA'),
+            new ModelGetter(2, 'ProdB'),
+            new ModelGetter(3, 'ProdC')
         );
 
         $arrayDataset = new ArrayDataset($model);
@@ -248,9 +251,9 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
     public function testnavigateFromModel2()
     {
         $model = array(
-            new AnyDataSet\Tests\Sample\ModelGetter(1, 'ProdA'),
-            new AnyDataSet\Tests\Sample\ModelGetter(2, 'ProdB'),
-            new AnyDataSet\Tests\Sample\ModelGetter(3, 'ProdC')
+            new ModelGetter(1, 'ProdA'),
+            new ModelGetter(2, 'ProdB'),
+            new ModelGetter(3, 'ProdC')
         );
 
         $arrayDataset = new ArrayDataset($model);
@@ -262,7 +265,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, "__id", 0);
             $this->assertField($sr, "__key", 0);
-            $this->assertField($sr, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
+            $this->assertField($sr, "__class", ModelGetter::class);
             $this->assertField($sr, "id", 1);
             $this->assertField($sr, "name", 'ProdA');
             $count++;
@@ -271,7 +274,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, "__id", 1);
             $this->assertField($sr, "__key", 1);
-            $this->assertField($sr, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
+            $this->assertField($sr, "__class", ModelGetter::class);
             $this->assertField($sr, "id", 2);
             $this->assertField($sr, "name", 'ProdB');
             $count++;
@@ -280,7 +283,7 @@ class ArrayDatasetTest extends PHPUnit_Framework_TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, "__id", 2);
             $this->assertField($sr, "__key", 2);
-            $this->assertField($sr, "__class", "AnyDataSet\Tests\Sample\ModelGetter");
+            $this->assertField($sr, "__class", ModelGetter::class);
             $this->assertField($sr, "id", 3);
             $this->assertField($sr, "name", 'ProdC');
             $count++;

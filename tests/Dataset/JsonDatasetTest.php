@@ -1,13 +1,17 @@
 <?php
 
+namespace ByJG\AnyDataset\Dataset;
+
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\JsonDataset;
 use ByJG\AnyDataset\Dataset\Row;
 
-/**
- * NOTE: The class name must end with "Test" suffix.
- */
-class JsonDatasetTest extends PHPUnit_Framework_TestCase
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+class JsonDatasetTest extends \PHPUnit\Framework\TestCase
 {
 
     const JSON_OK = '[{"name":"Joao","surname":"Magalhaes","age":"38"},{"name":"John","surname":"Doe","age":"20"},{"name":"Jane","surname":"Smith","age":"18"}]';

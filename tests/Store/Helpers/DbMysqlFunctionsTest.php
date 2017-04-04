@@ -9,7 +9,12 @@ namespace Database;
 
 use ByJG\AnyDataset\Store\Helpers\DbMysqlFunctions;
 
-class DbMysqlFunctionsTest extends \PHPUnit_Framework_TestCase
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+class DbMysqlFunctionsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DbMysqlFunctions
@@ -83,12 +88,11 @@ class DbMysqlFunctionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("DATE_FORMAT(column,'%b ')", $this->object->sqlDate('M q', 'column'));
     }
 
-    public function testToDate()
-    {
-    }
-
-    public function testFromDate()
-    {
-
-    }
+    // public function testToDate()
+    // {
+    // }
+    //
+    // public function testFromDate()
+    // {
+    // }
 }

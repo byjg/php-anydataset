@@ -1,14 +1,18 @@
 <?php
 
+namespace ByJG\AnyDataset\Dataset;
+
 use ByJG\AnyDataset\Dataset\GenericIterator;
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Dataset\TextFileDataset;
 
-/**
- * NOTE: The class name must end with "Test" suffix.
- */
-class TextFileDatasetTest extends PHPUnit_Framework_TestCase
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
 {
 
     protected static $fieldNames;

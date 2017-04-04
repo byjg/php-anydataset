@@ -20,7 +20,7 @@ class PdoDblibTest extends BasePdo
         $this->dbDriver->execute("CREATE TABLE Dogs (Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY, Breed VARCHAR(50), Name VARCHAR(50), Age INTEGER)");
     }
 
-    public function tearDown()
+    public function deleteDatabase()
     {
         $this->dbDriver->execute('drop table Dogs;');
     }

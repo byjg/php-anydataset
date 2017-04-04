@@ -20,13 +20,13 @@ class PdoSqliteTest extends BasePdo
         $this->dbDriver->execute("CREATE TABLE Dogs (Id INTEGER PRIMARY KEY, Breed VARCHAR(50), Name VARCHAR(50), Age INTEGER)");
     }
 
-    public function tearDown()
+    public function deleteDatabase()
     {
         unlink('/tmp/test.db');
     }
 
     public function testGetAllFields()
     {
-        // Ignore this test
+        $this->markTestSkipped('SqlLite does not have this method');
     }
 }

@@ -9,7 +9,12 @@ namespace Database;
 
 use ByJG\AnyDataset\Store\Helpers\DbPgsqlFunctions;
 
-class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+class DbPostgresFunctionsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DbPgsqlFunctions
@@ -83,12 +88,11 @@ class DbPostgresFunctionsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("TO_CHAR(current_timestamp,'DD/MM/YY HH:MI')", $this->object->sqlDate('d/m/y h:i'));
     }
 
-    public function testToDate()
-    {
-    }
-
-    public function testFromDate()
-    {
-
-    }
+    // public function testToDate()
+    // {
+    // }
+    //
+    // public function testFromDate()
+    // {
+    // }
 }

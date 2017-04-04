@@ -4,7 +4,12 @@ namespace Store;
 
 use ByJG\AnyDataset\DbDriverInterface;
 
-abstract class BasePdo extends \PHPUnit_Framework_TestCase
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+abstract class BasePdo extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -36,9 +41,13 @@ abstract class BasePdo extends \PHPUnit_Framework_TestCase
         }
     }
 
+    abstract protected function createDatabase();
+
+    abstract protected function deleteDatabase();
+
     public function tearDown()
     {
-        unlink('/tmp/test.db');
+        $this->deleteDatabase();
     }
 
     protected function allData()

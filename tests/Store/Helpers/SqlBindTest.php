@@ -7,12 +7,15 @@
 
 namespace Store;
 
-
 use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\Util\Uri;
 
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
 
-class SqlBindTest extends \PHPUnit_Framework_TestCase
+class SqlBindTest extends \PHPUnit\Framework\TestCase
 {
     public function getDataTest()
     {

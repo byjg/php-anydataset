@@ -4,7 +4,12 @@ namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\Serializer\SerializerObject;
 
-class ModelTest extends \PHPUnit_Framework_TestCase
+// backward compatibility
+if (!class_exists('\PHPUnit\Framework\TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}
+
+class ModelTest extends \PHPUnit\Framework\TestCase
 {
     public function testBindSingleRow()
     {
