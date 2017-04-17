@@ -29,4 +29,9 @@ class PdoPostgresTest extends BasePdo
     {
         $this->dbDriver->execute('drop table Dogs;');
     }
+
+    public function testMultipleRowset()
+    {
+        $this->markTestSkipped('SqlLite does not have this method');
+    }
 }

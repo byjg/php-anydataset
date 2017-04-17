@@ -20,6 +20,8 @@ abstract class DbPdoDriver implements DbDriverInterface
      */
     protected $instance = null;
 
+    protected $supportMultRowset = false;
+
     /**
      * @var Uri
      */
@@ -174,11 +176,13 @@ abstract class DbPdoDriver implements DbDriverInterface
         $stmt = $this->getDBStatement($sql, $array);
         $result = $stmt->execute();
 
-        // Check error
-        do {
-            // This loop is only to throw an error (if exists)
-            // in case of execute multiple queries
-        } while ($stmt->nextRowset());
+        if ($this->isSupportMultRowset()) {
+            // Check error
+            do {
+                // This loop is only to throw an error (if exists)
+                // in case of execute multiple queries
+            } while ($stmt->nextRowset());
+        }
 
         return $result;
     }
@@ -221,4 +225,21 @@ abstract class DbPdoDriver implements DbDriverInterface
     {
         return $this->connectionUri;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSupportMultRowset()
+    {
+        return $this->supportMultRowset;
+    }
+
+    /**
+     * @param bool $multipleRowSet
+     */
+    public function setSupportMultRowset($multipleRowSet)
+    {
+        $this->supportMultRowset = $multipleRowSet;
+    }
+
 }

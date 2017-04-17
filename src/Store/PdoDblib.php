@@ -7,6 +7,8 @@ class PdoDblib extends DbPdoDriver
 
     public function __construct($connUri)
     {
+        $this->setSupportMultRowset(true);
+
         parent::__construct($connUri, null, null);
 
         // Solve the error:

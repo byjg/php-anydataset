@@ -121,4 +121,24 @@ abstract class BasePdo extends \PHPUnit\Framework\TestCase
             $allFields
         );
     }
+
+    public function testMultipleRowset()
+    {
+        $sql = "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Cat', 'Doris', 7); " .
+            "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Dog', 'Lolla', 1); ";
+
+        $idInserted = $this->dbDriver->executeAndGetId($sql);
+
+        $this->assertEquals(5, $idInserted);
+
+        $this->assertEquals(
+            'Doris',
+            $this->dbDriver->getScalar('select name from Dogs where Id = :id', ['id' => 4])
+        );
+
+        $this->assertEquals(
+            'Lolla',
+            $this->dbDriver->getScalar('select name from Dogs where Id = :id', ['id' => 5])
+        );
+    }
 }

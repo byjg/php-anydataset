@@ -29,4 +29,9 @@ class PdoSqliteTest extends BasePdo
     {
         $this->markTestSkipped('SqlLite does not have this method');
     }
+
+    public function testMultipleRowset()
+    {
+        $this->markTestSkipped('SqlLite does not have this method');
+    }
 }
