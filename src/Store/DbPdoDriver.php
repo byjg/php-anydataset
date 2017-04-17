@@ -117,9 +117,9 @@ abstract class DbPdoDriver implements DbDriverInterface
         return $stmt;
     }
 
-    public function getIterator($sql, $array = null)
+    public function getIterator($sql, $params = null)
     {
-        $stmt = $this->getDBStatement($sql, $array);
+        $stmt = $this->getDBStatement($sql, $params);
         $stmt->execute();
         $iterator = new DbIterator($stmt);
         return $iterator;
@@ -241,5 +241,4 @@ abstract class DbPdoDriver implements DbDriverInterface
     {
         $this->supportMultRowset = $multipleRowSet;
     }
-
 }

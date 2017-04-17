@@ -124,6 +124,11 @@ abstract class BasePdo extends \PHPUnit\Framework\TestCase
 
     public function testMultipleRowset()
     {
+        if (!$this->dbDriver->isSupportMultRowset()) {
+            $this->markTestSkipped('This DbDriver does not have this method');
+            return;
+        }
+
         $sql = "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Cat', 'Doris', 7); " .
             "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Dog', 'Lolla', 1); ";
 

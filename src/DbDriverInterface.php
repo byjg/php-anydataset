@@ -10,10 +10,10 @@ interface DbDriverInterface
 
     /**
      * @param string $sql
-     * @param null $array
+     * @param array|null $params
      * @return GenericIterator
      */
-    public function getIterator($sql, $array = null);
+    public function getIterator($sql, $params = null);
 
     public function getScalar($sql, $array = null);
 
@@ -44,4 +44,8 @@ interface DbDriverInterface
     public function setAttribute($name, $value);
 
     public function getAttribute($name);
+
+    public function isSupportMultRowset();
+
+    public function setSupportMultRowset($multipleRowSet);
 }

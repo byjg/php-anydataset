@@ -76,9 +76,9 @@ class DbSqlRelayDriver implements DbDriverInterface
         return $cur;
     }
 
-    public function getIterator($sql, $array = null)
+    public function getIterator($sql, $params = null)
     {
-        $cur = $this->getSQLRelayCursor($sql, $array);
+        $cur = $this->getSQLRelayCursor($sql, $params);
         $iterator = new SqlRelayIterator($cur);
         return $iterator;
     }

@@ -18,14 +18,14 @@ class DbIterator extends GenericIterator
     /**
      * @var PDOStatement
      */
-    private $recordset;
+    private $statement;
 
     /**
      * @param PDOStatement $recordset
      */
     public function __construct($recordset)
     {
-        $this->recordset = $recordset;
+        $this->statement = $recordset;
         $this->rowBuffer = array();
     }
 
@@ -34,7 +34,7 @@ class DbIterator extends GenericIterator
      */
     public function count()
     {
-        return $this->recordset->rowCount();
+        return $this->statement->rowCount();
     }
 
     /**
@@ -46,11 +46,11 @@ class DbIterator extends GenericIterator
             return true;
         }
 
-        if (is_null($this->recordset)) {
+        if (is_null($this->statement)) {
             return (count($this->rowBuffer) > 0);
         }
 
-        $rowArray = $this->recordset->fetch(PDO::FETCH_ASSOC);
+        $rowArray = $this->statement->fetch(PDO::FETCH_ASSOC);
         if (!empty($rowArray)) {
             foreach ($rowArray as $key => $value) {
                 if (is_null($value)) {
@@ -73,8 +73,8 @@ class DbIterator extends GenericIterator
             return true;
         }
 
-        $this->recordset->closeCursor();
-        $this->recordset = null;
+        $this->statement->closeCursor();
+        $this->statement = null;
 
         return (count($this->rowBuffer) > 0);
     }
