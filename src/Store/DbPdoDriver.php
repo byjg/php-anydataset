@@ -173,6 +173,13 @@ abstract class DbPdoDriver implements DbDriverInterface
     {
         $stmt = $this->getDBStatement($sql, $array);
         $result = $stmt->execute();
+
+        // Check error
+        do {
+            // This loop is only to throw an error (if exists)
+            // in case of execute multiple queries
+        } while ($stmt->nextRowset());
+
         return $result;
     }
 
