@@ -99,6 +99,27 @@ class SqlBindTest extends \PHPUnit\Framework\TestCase
                 $paramIn,
                 $paramIn
             ],
+            [
+                new Uri('mysql://host'),
+                "insert into value (':name', 'a:surname', '[[age]]')",
+                "insert into value (':name', 'a:surname', '[[age]]')",
+                null,
+                []
+            ],
+            [
+                new Uri('mysql://host'),
+                "insert into value (':name', 'a:surname', '[[age]]')",
+                "insert into value (':name', 'a:surname', '[[age]]')",
+                $paramIn,
+                []
+            ],
+            [
+                new Uri('mysql://host'),
+                "insert into value (':na''me', 43, '[[ag''e]]')",
+                "insert into value (':na''me', 43, '[[ag''e]]')",
+                null,
+                []
+            ],
         ];
     }
 

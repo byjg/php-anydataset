@@ -43,13 +43,19 @@ class SqlBind
     public static function parseSQL(Uri $connData, $sql, $params = null)
     {
         $paramSubstName = SqlBind::getParamModel($connData);
+
+        $sqlAlter = preg_replace("~'.*?'~", "", $sql);
         preg_match_all(
             "/(?<deliStart>\\[\\[|:)(?<param>[\\w\\d]+)(?<deliEnd>\\]\\]|[^\\d\\w]|$)/",
-            $sql,
+            $sqlAlter,
             $matches
         );
 
         $usedParams = [];
+
+        if (is_null($params)) {
+            $params = [];
+        }
 
         foreach ($matches['param'] as $paramName) {
             if (!array_key_exists($paramName, $params)) {

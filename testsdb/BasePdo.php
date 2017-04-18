@@ -146,4 +146,15 @@ abstract class BasePdo extends \PHPUnit\Framework\TestCase
             $this->dbDriver->getScalar('select name from Dogs where Id = :id', ['id' => 5])
         );
     }
+
+    public function testParameterInsideQuotes()
+    {
+        $sql = "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Cat', 'a:Doris', 7); ";
+        $id = $this->dbDriver->executeAndGetId($sql);
+        $this->assertEquals(4, $id);
+
+        $sql = "select id from Dogs where name = 'a:Doris'";
+        $id = $this->dbDriver->getScalar($sql);
+        $this->assertEquals(4, $id);
+    }
 }
