@@ -117,4 +117,14 @@ class DbSqliteFunctionsTest extends \PHPUnit\Framework\TestCase
     // public function testFromDate()
     // {
     // }
+
+    /**
+     * @expectedException \ByJG\AnyDataset\Exception\NotAvailableException
+     */
+    public function testForUpdate()
+    {
+        $this->assertFalse($this->object->hasForUpdate());
+
+        $this->object->forUpdate('select * from table');
+    }
 }

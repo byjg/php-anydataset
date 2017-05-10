@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\DbDriverInterface;
+use ByJG\AnyDataset\Exception\NotAvailableException;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 
 class DbSqliteFunctions extends DbBaseFunctions
@@ -155,5 +156,15 @@ class DbSqliteFunctions extends DbBaseFunctions
     {
         parent::executeAndGetInsertedId($dbdataset, $sql, $param);
         return $dbdataset->getScalar("SELECT last_insert_rowid()");
+    }
+
+    public function forUpdate($sql)
+    {
+        throw new NotAvailableException('FOR UPDATE not available for SQLite');
+    }
+
+    public function hasForUpdate()
+    {
+        return false;
     }
 }

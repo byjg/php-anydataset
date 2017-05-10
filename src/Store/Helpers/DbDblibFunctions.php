@@ -154,4 +154,14 @@ class DbDblibFunctions extends DbBaseFunctions
 
         return $insertedId;
     }
+
+    public function forUpdate($sql)
+    {
+        throw new NotAvailableException('FOR UPDATE not available for Mssql/Dblib');
+    }
+
+    public function hasForUpdate()
+    {
+        return false;
+    }
 }

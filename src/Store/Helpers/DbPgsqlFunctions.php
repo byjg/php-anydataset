@@ -148,4 +148,9 @@ class DbPgsqlFunctions extends DbBaseFunctions
 
         return $idInserted;
     }
+
+    public function hasForUpdate()
+    {
+        return true;
+    }
 }

@@ -155,4 +155,9 @@ class DbMysqlFunctions extends DbBaseFunctions
 
         return $returnedId;
     }
+
+    public function hasForUpdate()
+    {
+        return true;
+    }
 }

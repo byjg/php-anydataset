@@ -117,4 +117,28 @@ class DbMysqlFunctionsTest extends \PHPUnit\Framework\TestCase
     // public function testFromDate()
     // {
     // }
+
+    public function testForUpdate()
+    {
+        $this->assertTrue($this->object->hasForUpdate());
+
+        $sql1 = 'select * from table';
+        $sql2 = 'select * from table for update';
+        $sql3 = 'select * from table for update ';
+
+        $this->assertEquals(
+            'select * from table FOR UPDATE ',
+            $this->object->forUpdate($sql1)
+        );
+
+        $this->assertEquals(
+            'select * from table for update',
+            $this->object->forUpdate($sql2)
+        );
+
+        $this->assertEquals(
+            'select * from table for update ',
+            $this->object->forUpdate($sql3)
+        );
+    }
 }

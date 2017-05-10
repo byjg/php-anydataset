@@ -31,6 +31,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
 
     /**
      * Given a SQL returns it with the proper LIMIT or equivalent method included
+     *
      * @param string $sql
      * @param int $start
      * @param int $qty
@@ -40,6 +41,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
 
     /**
      * Given a SQL returns it with the proper TOP or equivalent method included
+     *
      * @param string $sql
      * @param int $qty
      * @return string
@@ -48,6 +50,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
 
     /**
      * Return if the database provider have a top or similar function
+     *
      * @return bool
      */
     public function hasTop()
@@ -57,6 +60,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
 
     /**
      * Return if the database provider have a limit function
+     *
      * @return bool
      */
     public function hasLimit()
@@ -106,6 +110,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
     public function toDate($date, $dateFormat)
     {
         $dateTime = DateTime::createFromFormat($dateFormat, $date);
+
         return $dateTime->format(self::YMDH);
     }
 
@@ -119,11 +124,11 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
     public function fromDate($date, $dateFormat)
     {
         $dateTime = DateTime::createFromFormat(self::YMDH, $date);
+
         return $dateTime->format($dateFormat);
     }
 
     /**
-     *
      * @param DbDriverInterface $dbdataset
      * @param string $sql
      * @param array $param
@@ -132,6 +137,7 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
     public function executeAndGetInsertedId(DbDriverInterface $dbdataset, $sql, $param)
     {
         $dbdataset->execute($sql, $param);
+
         return -1;
     }
 
@@ -164,8 +170,20 @@ abstract class DbBaseFunctions implements DbFunctionsInterface
     public function delimiterTable($table)
     {
         $tableAr = explode('.', $table);
+
         return $this->deliTableLeft
             . implode($this->deliTableRight . '.' . $this->deliTableLeft, $tableAr)
             . $this->deliTableRight;
     }
+
+    public function forUpdate($sql)
+    {
+        if (!preg_match('#\bfor update\b#i', $sql)) {
+            $sql = $sql . " FOR UPDATE ";
+        }
+
+        return $sql;
+    }
+
+    abstract public function hasForUpdate();
 }

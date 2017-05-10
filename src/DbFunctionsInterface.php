@@ -94,4 +94,8 @@ interface DbFunctionsInterface
      * @return mixed
      */
     public function delimiterTable($table);
+
+    public function forUpdate($sql);
+
+    public function hasForUpdate();
 }
