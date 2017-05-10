@@ -34,6 +34,9 @@ interface DbDriverInterface
 
     public function rollbackTransaction();
 
+    /**
+     * @return \PDO
+     */
     public function getDbConnection();
 
     /**

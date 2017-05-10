@@ -151,7 +151,7 @@ abstract class DbPdoDriver implements DbDriverInterface
         $fieldLength = $statement->columnCount();
         for ($i = 0; $i < $fieldLength; $i++) {
             $fld = $statement->getColumnMeta($i);
-            $fields [] = strtolower($fld ["name"]);
+            $fields[] = strtolower($fld ["name"]);
         }
         return $fields;
     }
