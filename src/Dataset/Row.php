@@ -188,7 +188,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     public function getAsDom()
     {
         if (is_null($this->node)) {
-            $this->node = XmlUtil::createXmlDocumentFromStr("<row />");
+            $this->node = XmlUtil::createXmlDocumentFromStr("<row></row>");
             $root = $this->node->getElementsByTagName("row")->item(0);
             foreach ($this->row as $key => $value) {
                 if (!is_array($value)) {

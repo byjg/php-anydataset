@@ -132,7 +132,7 @@ class AnyDataset
      */
     public function getAsDom()
     {
-        $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset/>");
+        $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset></anydataset>");
         $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
         foreach ($this->collection as $sr) {
             $row = $sr->getAsDom();

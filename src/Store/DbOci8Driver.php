@@ -232,4 +232,14 @@ class DbOci8Driver implements DbDriverInterface
     {
         return $this->connectionUri;
     }
+
+    public function isSupportMultRowset()
+    {
+        throw new NotImplementedException('Method not implemented for OCI Driver');
+    }
+
+    public function setSupportMultRowset($multipleRowSet)
+    {
+        throw new NotImplementedException('Method not implemented for OCI Driver');
+    }
 }

@@ -148,4 +148,14 @@ class DbCached implements DbDriverInterface
     {
         return $this->dbDriver->getUri();
     }
+
+    public function isSupportMultRowset()
+    {
+        return $this->dbDriver->isSupportMultRowset();
+    }
+
+    public function setSupportMultRowset($multipleRowSet)
+    {
+        $this->dbDriver->setSupportMultRowset($multipleRowSet);
+    }
 }

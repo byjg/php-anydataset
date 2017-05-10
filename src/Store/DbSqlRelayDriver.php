@@ -198,4 +198,14 @@ class DbSqlRelayDriver implements DbDriverInterface
     {
         return $this->connectionUri;
     }
+
+    public function isSupportMultRowset()
+    {
+        throw new NotImplementedException('Method not implemented for SQL Relay Driver');
+    }
+
+    public function setSupportMultRowset($multipleRowSet)
+    {
+        throw new NotImplementedException('Method not implemented for SQL Relay Driver');
+    }
 }

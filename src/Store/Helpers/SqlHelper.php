@@ -95,7 +95,7 @@ class SqlHelper
      * Generic Function
      *
      * @param string $name
-     * @param string $valores
+     * @param string|array $valores
      * @param array $param
      * @param string $decimalpoint
      * @return string
@@ -141,7 +141,7 @@ class SqlHelper
      *
      * @param string $fieldName
      * @param string $relation
-     * @param array() $value
+     * @param array $value
      * @param &string $sql (Full SQL)
      * @param &string $param
      */
