@@ -1,6 +1,6 @@
 {
     "name": "byjg/anydataset",
-    "description": "A data abstraction layer in PHP to manipulate any set of data with a standardized interface from any data source.",
+    "description": "A data abstraction layer in PHP for access read and write Relational Databases, No Sql, Text, Xml, Json, SparQl and others",
     "authors": [
         {
             "name": "João Gilberto Magalhães",
