@@ -1,6 +1,6 @@
 {
     "name": "byjg/anydataset",
-    "description": "A data abstraction layer in PHP to manipulate any set of data with a standardized interface from any data source.",
+    "description": "A data abstraction layer in PHP for access read and write Relational Databases, No Sql, Text, Xml, Json, SparQl and others",
     "authors": [
         {
             "name": "João Gilberto Magalhães",
@@ -16,20 +16,23 @@
     "prefer-stable": true,
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "ext-json": "*",
         "byjg/xmlutil": "1.0.*",
         "byjg/sparqllib": "1.0.*",
-        "byjg/singleton-pattern": "1.0.*",
         "neitanod/forceutf8": "v2.0",
-        "monolog/monolog": "1.*",
-        "sheikhheera/iconfig": "1.0.*",
-        "byjg/cache-engine": "1.0.*",
-        "byjg/serializer": "1.0.*"
+        "psr/log": "1.0.*",
+        "psr/cache": "1.0.*",
+        "byjg/serializer": "1.0.*",
+        "byjg/uri": "1.0.*",
+        "aws/aws-sdk-php": "3.*"
     },
     "suggest": {
         "ext-curl": "*",
-        "ext-pdo_mysql": "*"
+        "ext-pdo_mysql": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-mongodb": "*",
+        "byjg/cache-engine": "1.0.*"
     },
     "license": "MIT"
 }

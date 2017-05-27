@@ -1,9 +1,17 @@
-TODO:
+The DbCached class implements the DbDriverInterface and it is a wrapper for a PSR-6 cache object.
 
-Using AnyDataset you can cache the query results from database easily using your [own cache strategy](https://github.com/byjg/xmlnuke/wiki/Create-your-own-cache-strategy). 
-(old version!)
+You can install any PSR-5 implementation. We suggested "byjg/cache"
+ 
+The basic usage is:
 
+```php
+<?php
 
+$dbDriver = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://root:password@192.168.1.181/test');
 
-XMLNuke have a CachedDBDataset class. The main purpose of this class is retrieve queries from the database and store it in 
-cache for an pre-defined time. 
+$dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, \ByJG\Cache\Psr6\Factory::createFilePool('prefix'), 600));
+
+$iterator = $dbCached->getIterator('select * from teste where a = :nome or a = :nome2', ['nome' => 'Joao', 'nome2' => 'Vieira']);
+```
+
+The result of this iterator will be cache for a 600 seconds.
