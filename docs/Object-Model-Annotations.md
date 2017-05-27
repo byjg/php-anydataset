@@ -1,5 +1,7 @@
 ## Basics
 
+*(this is not available right now)*
+
 You can transform an object into XML or JSON (see [Convert Object Model Into XML or JSON](Convert-Object-Model-Into-XML-or-JSON.md)). But you can have a fine control to modify the behaviour of the transformation by using code annotation.
 
 ## Class Annotations

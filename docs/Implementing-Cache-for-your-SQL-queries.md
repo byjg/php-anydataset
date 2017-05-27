@@ -9,7 +9,7 @@ The basic usage is:
 
 $dbDriver = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://root:password@192.168.1.181/test');
 
-$dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, \ByJG\Cache\Factory::createFilePool('prefix'), 600));
+$dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, \ByJG\Cache\Psr6\Factory::createFilePool('prefix'), 600));
 
 $iterator = $dbCached->getIterator('select * from teste where a = :nome or a = :nome2', ['nome' => 'Joao', 'nome2' => 'Vieira']);
 ```
