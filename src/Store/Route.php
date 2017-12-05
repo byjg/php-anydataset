@@ -7,6 +7,7 @@ use ByJG\AnyDataset\Dataset\ArrayDataset;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Exception\RouteNotFoundException;
 use ByJG\AnyDataset\Exception\RouteNotMatchedException;
+use ByJG\AnyDataset\Factory;
 use ByJG\Util\Uri;
 use DateInterval;
 use Psr\Cache\CacheItemPoolInterface;
@@ -35,7 +36,7 @@ class Route implements DbDriverInterface
 
     /**
      * @param string $routeName
-     * @param DbDriverInterface[]|DbDriverInterface $dbDriver
+     * @param DbDriverInterface[]|DbDriverInterface|string|string[] $dbDriver
      * @return \ByJG\AnyDataset\Store\Route
      */
     public function addDbDriverInterface($routeName, $dbDriver)
@@ -199,7 +200,12 @@ class Route implements DbDriverInterface
                 continue;
             }
 
-            return $this->dbDriverInterface[$routeName][rand(0, count($this->dbDriverInterface[$routeName])-1)];
+            $dbDriver = $this->dbDriverInterface[$routeName][rand(0, count($this->dbDriverInterface[$routeName])-1)];
+            if (is_string($dbDriver)) {
+                return Factory::getDbRelationalInstance($dbDriver);
+            }
+
+            return $dbDriver;
         }
 
         throw new RouteNotMatchedException('Route not matched');

@@ -27,7 +27,6 @@ class Factory
             $connectionString,
             array_merge(
                 [
-                    "sqlrelay" => $prefix . "DbSqlRelayDriver",
                     "oci8" => $prefix . "DbOci8Driver",
                     "dblib" => $prefix . "PdoDblib",
                     "mysql" => $prefix . "PdoMysql",

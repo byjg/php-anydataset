@@ -86,20 +86,6 @@ class SqlBindTest extends \PHPUnit\Framework\TestCase
                 []
             ],
             [
-                new Uri('sqlrelay://host'),
-                'insert into value ([[name]], [[surname]], [[age]])',
-                'insert into value (?, ?, ?)',
-                $paramIn,
-                $paramIn
-            ],
-            [
-                new Uri('sqlrelay://host'),
-                'insert into value (:name, :surname, :age)',
-                'insert into value (?, ?, ?)',
-                $paramIn,
-                $paramIn
-            ],
-            [
                 new Uri('mysql://host'),
                 "insert into value (':name', 'a:surname', '[[age]]')",
                 "insert into value (':name', 'a:surname', '[[age]]')",

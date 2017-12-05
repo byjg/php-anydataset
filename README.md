@@ -83,7 +83,6 @@ See below the current implemented drivers:
 | Sql Server    | dblib://username:password@hostname:port/database      | getDbRelationalInstance()  |
 | Oracle (OCI)  | oci://username:password@hostname:port/database        | getDbRelationalInstance()  |
 | Oracle (OCI8) | oci8://username:password@hostname:port/database       | getDbRelationalInstance()  |
-| Sql Relay     | sqlrelay://username:password@hostname:port/database   | getDbRelationalInstance()  |
 | MongoDB       | mongodb://username:passwortd@host:port/database       | getNoSqlInstance()         |
 | Amazon S3     | s3://key:secret@region/bucket                         | getKeyValueInstance()      |
 
@@ -124,14 +123,36 @@ $dbDriver->remove('key');
 
 ### Load balance and connection pooling 
 
-The API have support for connection load balancing, connection pooling and persistent connection with 
-[SQL Relay](http://sqlrelay.sourceforge.net/) library (requires install)
+The API have support for connection load balancing, connection pooling and persistent connection.
 
-You only need change your connection string to:
+There is the Route class an DbDriverInterface implementation with route capabilities. Basically you have to define 
+the routes and the system will choose the proper DbDriver based on your route definition.
 
-```
-sqlrelay://root:somepass@server/schema
-```
+Example:
+
+```php
+<?php
+$dbDriver = new \ByJG\AnyDataset\Store\Route();
+
+// Define the available connections (even different databases)
+$dbDriver
+    ->addDbDriverInterface('route1', 'sqlite:///tmp/a.db')
+    ->addDbDriverInterface('route2', 'sqlite:///tmp/b.db')
+    ->addDbDriverInterface('route3', 'sqlite:///tmp/c.db')
+;
+
+// Define the route
+$dbDriver
+    ->addRouteForWrite('route1')
+    ->addRouteForRead('route2', 'mytable')
+    ->addRouteForRead('route3')
+;
+
+// Query the database
+$iterator = $dbDriver->getIterator('select * from mytable'); // Will select route2
+$iterator = $dbDriver->getIterator('select * from othertable'); // Will select route3
+$dbDriver->execute('insert into table (a) values (1)'); // Will select route1;
+```  
 
 ### And more
 
