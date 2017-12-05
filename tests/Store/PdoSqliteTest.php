@@ -1,9 +1,4 @@
 <?php
-/**
- * User: jg
- * Date: 10/05/17
- * Time: 12:11
- */
 
 namespace Store;
 

@@ -64,7 +64,9 @@ implementation of PSR-6. We suggested you add "byjg/cache".
 <?php
 $dbDriver = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://username:password@host/database');
 $dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, $psrCacheEngine, 30);
-$iterator = $dbDriver->getIterator('select * from table where field = :param', ['param' => 'value']);
+
+// Use the DbCached instance instead the DbDriver
+$iterator = $dbCached->getIterator('select * from table where field = :param', ['param' => 'value']);
 ```
 
 ### Connection based on URI
