@@ -183,7 +183,9 @@ class Row extends BinderObject implements DumpToArrayInterface
 
     /**
      * Get the \DOMElement row objet
+     *
      * @return \DOMElement
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function getAsDom()
     {
@@ -219,7 +221,9 @@ class Row extends BinderObject implements DumpToArrayInterface
         if (is_array($this->row)) {
             return json_decode(json_encode($this->row));
         } else {
-            throw new UnexpectedValueException('I expected that getRawFormat is array() but ' . gettype($this->row) . ' was given');
+            throw new UnexpectedValueException(
+                'I expected that getRawFormat is array() but ' . gettype($this->row) . ' was given'
+            );
         }
     }
 
@@ -272,6 +276,4 @@ class Row extends BinderObject implements DumpToArrayInterface
     {
         $obj->set($propName, $value);
     }
-
-
 }

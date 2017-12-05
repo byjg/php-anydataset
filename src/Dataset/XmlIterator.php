@@ -80,20 +80,20 @@ class XmlIterator extends GenericIterator
 
         $node = $this->nodeList->item($this->current++);
 
-        $sr = new Row();
+        $row = new Row();
 
         foreach ($this->colNodes as $key => $colxpath) {
             $nodecol = XmlUtil::selectNodes($node, $colxpath, $this->registerNS);
             if (is_null($nodecol)) {
-                $sr->addField(strtolower($key), "");
+                $row->addField(strtolower($key), "");
             } else {
                 foreach ($nodecol as $col) {
-                    $sr->addField(strtolower($key), $col->nodeValue);
+                    $row->addField(strtolower($key), $col->nodeValue);
                 }
             }
         }
 
-        return $sr;
+        return $row;
     }
 
     public function key()

@@ -20,6 +20,14 @@ class JsonIterator extends GenericIterator
      */
     private $current = 0;
 
+    /**
+     * JsonIterator constructor.
+     *
+     * @param $jsonObject
+     * @param string $path
+     * @param bool $throwErr
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
+     */
     public function __construct($jsonObject, $path = "", $throwErr = false)
     {
         if (!is_array($jsonObject)) {

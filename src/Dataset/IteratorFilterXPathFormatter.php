@@ -24,41 +24,40 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
         $field = "field[@name='" . $name . "'] ";
         $value = " $str$value$str ";
 
-        $result = "";
-        switch ($relation) {
-            case Relation::EQUAL:
-                $result = $field . "=" . $value;
-                break;
+        $data = [
+            Relation::EQUAL => function ($field, $value) {
+                 return $field . "=" . $value;
+            },
 
-            case Relation::GREATER_THAN:
-                $result = $field . ">" . $value;
-                break;
+            Relation::GREATER_THAN => function ($field, $value) {
+                 return $field . ">" . $value;
+            },
 
-            case Relation::LESS_THAN:
-                $result = $field . "<" . $value;
-                break;
+            Relation::LESS_THAN => function ($field, $value) {
+                 return $field . "<" . $value;
+            },
 
-            case Relation::GREATER_OR_EQUAL_THAN:
-                $result = $field . ">=" . $value;
-                break;
+            Relation::GREATER_OR_EQUAL_THAN => function ($field, $value) {
+                 return $field . ">=" . $value;
+            },
 
-            case Relation::LESS_OR_EQUAL_THAN:
-                $result = $field . "<=" . $value;
-                break;
+            Relation::LESS_OR_EQUAL_THAN => function ($field, $value) {
+                 return $field . "<=" . $value;
+            },
 
-            case Relation::NOT_EQUAL:
-                $result = $field . "!=" . $value;
-                break;
+            Relation::NOT_EQUAL => function ($field, $value) {
+                 return $field . "!=" . $value;
+            },
 
-            case Relation::STARTS_WITH:
-                $result = " starts-with($field, $value) ";
-                break;
+            Relation::STARTS_WITH => function ($field, $value) {
+                 return " starts-with($field, $value) ";
+            },
 
-            case Relation::CONTAINS:
-                $result = " contains($field, $value) ";
-                break;
+            Relation::CONTAINS => function ($field, $value) {
+                 return " contains($field, $value) ";
+            },
+        ];
 
-        }
-        return $result;
+        return $data[$relation]($field, $value);
     }
 }

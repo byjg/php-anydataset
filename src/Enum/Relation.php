@@ -49,5 +49,4 @@ class Relation
      * "Contains" unary comparator
      */
     const CONTAINS = 7;
-
 }

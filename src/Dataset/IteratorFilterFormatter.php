@@ -35,5 +35,4 @@ abstract class IteratorFilterFormatter
 
         return $filter;
     }
-
 }

@@ -3,14 +3,10 @@
 namespace ByJG\AnyDataset\Store;
 
 use ByJG\AnyDataset\DbDriverInterface;
-use ByJG\AnyDataset\Dataset\ArrayDataset;
 use ByJG\AnyDataset\Exception\NotImplementedException;
 use ByJG\AnyDataset\Exception\RouteNotFoundException;
 use ByJG\AnyDataset\Exception\RouteNotMatchedException;
 use ByJG\AnyDataset\Factory;
-use ByJG\Util\Uri;
-use DateInterval;
-use Psr\Cache\CacheItemPoolInterface;
 
 class Route implements DbDriverInterface
 {
@@ -333,7 +329,7 @@ class Route implements DbDriverInterface
     }
 
     /**
-     * @return Uri
+     * @return void
      * @throws \ByJG\AnyDataset\Exception\NotImplementedException
      */
     public function getUri()

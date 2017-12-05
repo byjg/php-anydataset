@@ -57,9 +57,9 @@ class SparQLIterator extends GenericIterator
         }
 
         if ($row = $this->sparqlQuery->fetchArray()) {
-            $sr = new Row($row);
+            $row = new Row($row);
             $this->current++;
-            return $sr;
+            return $row;
         } else {
             throw new IteratorException("No more records. Unexpected behavior.");
         }

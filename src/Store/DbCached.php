@@ -41,7 +41,12 @@ class DbCached implements DbDriverInterface
         $this->timeToCache = $timeToCache;
     }
 
-
+    /**
+     * @param string $sql
+     * @param null $params
+     * @return \ByJG\AnyDataset\Dataset\GenericIterator
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function getIterator($sql, $params = null)
     {
         // Otherwise try to get from cache

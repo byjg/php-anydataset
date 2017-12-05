@@ -84,6 +84,12 @@ class DbOci8Driver implements DbDriverInterface
         $this->conn = null;
     }
 
+    /**
+     * @param $sql
+     * @param null $array
+     * @return resource
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
+     */
     protected function getOci8Cursor($sql, $array = null)
     {
         list($query, $array) = SqlBind::parseSQL($this->connectionUri, $sql, $array);
@@ -118,6 +124,7 @@ class DbOci8Driver implements DbDriverInterface
      * @param $sql
      * @param null $params
      * @return \ByJG\AnyDataset\Dataset\Oci8Iterator
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
      */
     public function getIterator($sql, $params = null)
     {
@@ -126,6 +133,12 @@ class DbOci8Driver implements DbDriverInterface
         return $iterator;
     }
 
+    /**
+     * @param $sql
+     * @param null $array
+     * @return null
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
+     */
     public function getScalar($sql, $array = null)
     {
         $cur = $this->getOci8Cursor($sql, $array);
@@ -142,6 +155,11 @@ class DbOci8Driver implements DbDriverInterface
         return $scalar;
     }
 
+    /**
+     * @param $tablename
+     * @return array
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
+     */
     public function getAllFields($tablename)
     {
         $cur = $this->getOci8Cursor(SqlHelper::createSafeSQL("select * from :table", array(':table' => $tablename)));
@@ -163,6 +181,9 @@ class DbOci8Driver implements DbDriverInterface
         $this->transaction = OCI_NO_AUTO_COMMIT;
     }
 
+    /**
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
+     */
     public function commitTransaction()
     {
         if ($this->transaction == OCI_COMMIT_ON_SUCCESS) {
@@ -178,6 +199,9 @@ class DbOci8Driver implements DbDriverInterface
         }
     }
 
+    /**
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
+     */
     public function rollbackTransaction()
     {
         if ($this->transaction == OCI_COMMIT_ON_SUCCESS) {
@@ -189,6 +213,12 @@ class DbOci8Driver implements DbDriverInterface
         oci_rollback($this->conn);
     }
 
+    /**
+     * @param $sql
+     * @param null $array
+     * @return bool
+     * @throws \ByJG\AnyDataset\Exception\DatabaseException
+     */
     public function execute($sql, $array = null)
     {
         $cur = $this->getOci8Cursor($sql, $array);
@@ -205,21 +235,39 @@ class DbOci8Driver implements DbDriverInterface
         return $this->conn;
     }
 
+    /**
+     * @param $name
+     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
+     */
     public function getAttribute($name)
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
+     */
     public function setAttribute($name, $value)
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
     }
 
+    /**
+     * @param $sql
+     * @param null $array
+     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
+     */
     public function executeAndGetId($sql, $array = null)
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
     }
 
+    /**
+     * @return \ByJG\AnyDataset\DbFunctionsInterface|void
+     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
+     */
     public function getDbHelper()
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
@@ -233,11 +281,18 @@ class DbOci8Driver implements DbDriverInterface
         return $this->connectionUri;
     }
 
+    /**
+     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
+     */
     public function isSupportMultRowset()
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');
     }
 
+    /**
+     * @param $multipleRowSet
+     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
+     */
     public function setSupportMultRowset($multipleRowSet)
     {
         throw new NotImplementedException('Method not implemented for OCI Driver');

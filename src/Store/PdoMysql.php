@@ -8,6 +8,12 @@ use PDO;
 class PdoMysql extends DbPdoDriver
 {
 
+    /**
+     * PdoMysql constructor.
+     *
+     * @param \ByJG\Util\Uri $connUri
+     * @throws \ByJG\AnyDataset\Exception\NotAvailableException
+     */
     public function __construct(Uri $connUri)
     {
         $preOptions = [

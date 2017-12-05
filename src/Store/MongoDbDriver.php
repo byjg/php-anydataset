@@ -96,6 +96,8 @@ class MongoDbDriver implements NoSqlInterface
      * @param $idDocument
      * @param null $collection
      * @return \ByJG\AnyDataset\NoSqlDocument|null
+     * @throws \Exception
+     * @throws \MongoDB\Driver\Exception\Exception
      */
     public function getDocumentById($idDocument, $collection = null)
     {
@@ -114,6 +116,8 @@ class MongoDbDriver implements NoSqlInterface
      * @param \ByJG\AnyDataset\Dataset\IteratorFilter $filter
      * @param null $collection
      * @return \ByJG\AnyDataset\NoSqlDocument[]|null
+     * @throws \Exception
+     * @throws \MongoDB\Driver\Exception\Exception
      */
     public function getDocuments(IteratorFilter $filter, $collection = null)
     {
@@ -161,40 +165,34 @@ class MongoDbDriver implements NoSqlInterface
                 throw new \InvalidArgumentException('MongoDBDriver does not support filtering the same field twice');
             }
 
-            switch ($relation) {
-                case Relation::EQUAL:
-                    $result[$name] = $value;
-                    break;
-
-                case Relation::GREATER_THAN:
-                    $result[$name] = [ '$gt' => $value ];
-                    break;
-
-                case Relation::LESS_THAN:
-                    $result[$name] = [ '$lt' => $value ];
-                    break;
-
-                case Relation::GREATER_OR_EQUAL_THAN:
-                    $result[$name] = [ '$gte' => $value ];
-                    break;
-
-                case Relation::LESS_OR_EQUAL_THAN:
-                    $result[$name] = [ '$lte' => $value ];
-                    break;
-
-                case Relation::NOT_EQUAL:
-                    $result[$name] = [ '$ne' => $value ];
-                    break;
-
-                case Relation::STARTS_WITH:
-                    $result[$name] = [ '$regex' => "^$value" ];
-                    break;
-
-                case Relation::CONTAINS:
-                    $result[$name] = [ '$regex' => "$value" ];
-                    break;
-
-            }
+            $data = [
+                Relation::EQUAL => function ($value) {
+                    return $value;
+                },
+                Relation::GREATER_THAN => function ($value) {
+                    return [ '$gt' => $value ];
+                },
+                Relation::LESS_THAN => function ($value) {
+                    return [ '$lt' => $value ];
+                },
+                Relation::GREATER_OR_EQUAL_THAN => function ($value) {
+                    return [ '$gte' => $value ];
+                },
+                Relation::LESS_OR_EQUAL_THAN => function ($value) {
+                    return [ '$lte' => $value ];
+                },
+                Relation::NOT_EQUAL => function ($value) {
+                    return [ '$ne' => $value ];
+                },
+                Relation::STARTS_WITH => function ($value) {
+                    return [ '$regex' => "^$value" ];
+                },
+                Relation::CONTAINS => function ($value) {
+                    return [ '$regex' => "$value" ];
+                },
+            ];
+            
+            $result[$name] = $data[$relation]($value);
         }
 
         return new Query($result);
@@ -225,6 +223,11 @@ class MongoDbDriver implements NoSqlInterface
         );
     }
 
+    /**
+     * @param \ByJG\AnyDataset\NoSqlDocument $document
+     * @return \ByJG\AnyDataset\NoSqlDocument
+     * @throws \Exception
+     */
     public function save(NoSqlDocument $document)
     {
         if (empty($document->getCollection())) {

@@ -16,8 +16,6 @@ class Factory
      * @param $connectionString
      * @param $schemesAlternative
      * @return \ByJG\AnyDataset\DbDriverInterface
-     * @throws \ByJG\AnyDataset\Exception\NotFoundException
-     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
      */
     public static function getDbRelationalInstance($connectionString, $schemesAlternative = null)
     {
