@@ -2,6 +2,8 @@ language: php
 php:
   - "7.1"
 
+sudo: required
+
 env:
   - MYSQL_PASSWORD=.
   - PSQL_PASSWORD=.
@@ -21,6 +23,7 @@ before_script:
   - node_modules/.bin/usdocker --refresh
   - pecl istall mongodb
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - sudo apt install libpq5 libpq-dev
   - pecl install pdo_pgsql
   - echo "extension = pdo_pgsql.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
