@@ -1,7 +1,11 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\Dataset\IteratorFilter;
+use ByJG\AnyDataset\Dataset\IteratorFilterSqlFormatter;
+use ByJG\AnyDataset\Dataset\IteratorFilterXPathFormatter;
+use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Enum\Relation;
 
 // backward compatibility

@@ -5,7 +5,7 @@
  * Time: 11:22
  */
 
-namespace Store;
+namespace Tests\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\Util\Uri;

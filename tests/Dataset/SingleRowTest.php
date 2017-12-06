@@ -1,9 +1,10 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
-use AnyDataSet\Tests\Sample\ModelGetter;
-use AnyDataSet\Tests\Sample\ModelPublic;
+use ByJG\AnyDataset\Dataset\Row;
+use Tests\AnyDataset\Sample\ModelGetter;
+use Tests\AnyDataset\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
 
 // backward compatibility
@@ -290,7 +291,7 @@ class SingleRowTest extends \PHPUnit\Framework\TestCase
 
     public function testConstructor_PropertyPattern()
     {
-        $model = new \AnyDataSet\Tests\Sample\ModelPropertyPattern();
+        $model = new \Tests\AnyDataset\Sample\ModelPropertyPattern();
         $model->setIdModel(10);
         $model->setClientName("Testing");
 

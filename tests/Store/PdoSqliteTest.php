@@ -1,6 +1,6 @@
 <?php
 
-namespace Store;
+namespace Tests\AnyDataset\Store;
 
 use ByJG\AnyDataset\Factory;
 use ByJG\AnyDataset\Store\Helpers\DbSqliteFunctions;

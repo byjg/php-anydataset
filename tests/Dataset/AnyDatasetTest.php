@@ -1,8 +1,10 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
 // backward compatibility
+use ByJG\AnyDataset\Dataset\AnyDataset;
+
 if (!class_exists('\PHPUnit\Framework\TestCase')) {
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
@@ -21,7 +23,7 @@ class AnyDatasetTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->object = new AnyDataset;
+        $this->object = new AnyDataset();
     }
 
     /**

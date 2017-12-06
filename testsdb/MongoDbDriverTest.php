@@ -1,6 +1,6 @@
 <?php
 
-namespace Store;
+namespace TestsDb\AnyDataset;
 
 use ByJG\AnyDataset\Dataset\IteratorFilter;
 use ByJG\AnyDataset\Enum\Relation;

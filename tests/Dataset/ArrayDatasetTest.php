@@ -1,9 +1,11 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
-use AnyDataSet\Tests\Sample\ModelGetter;
+use ByJG\AnyDataset\Dataset\ArrayDataset;
+use Tests\AnyDataset\Sample\ModelGetter;
 use ByJG\AnyDataset\IteratorInterface;
+use Tests\AnyDataset\Sample\ModelPublic;
 
 // backward compatibility
 if (!class_exists('\PHPUnit\Framework\TestCase')) {
@@ -173,9 +175,9 @@ class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
     public function testcreateFromModel1()
     {
         $model = array(
-            new \AnyDataSet\Tests\Sample\ModelPublic(1, 'ProdA'),
-            new \AnyDataSet\Tests\Sample\ModelPublic(2, 'ProdB'),
-            new \AnyDataSet\Tests\Sample\ModelPublic(3, 'ProdC')
+            new ModelPublic(1, 'ProdA'),
+            new ModelPublic(2, 'ProdB'),
+            new ModelPublic(3, 'ProdC')
         );
 
         $arrayDataset = new ArrayDataset($model);
@@ -190,9 +192,9 @@ class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
     public function testnavigateFromModel1()
     {
         $model = array(
-            new \AnyDataSet\Tests\Sample\ModelPublic(1, 'ProdA'),
-            new \AnyDataSet\Tests\Sample\ModelPublic(2, 'ProdB'),
-            new \AnyDataSet\Tests\Sample\ModelPublic(3, 'ProdC')
+            new ModelPublic(1, 'ProdA'),
+            new ModelPublic(2, 'ProdB'),
+            new ModelPublic(3, 'ProdC')
         );
 
         $arrayDataset = new ArrayDataset($model);
@@ -204,7 +206,7 @@ class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, "__id", 0);
             $this->assertField($sr, "__key", 0);
-            $this->assertField($sr, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
+            $this->assertField($sr, "__class", "Tests\\AnyDataset\\Sample\\ModelPublic");
             $this->assertField($sr, "id", 1);
             $this->assertField($sr, "name", 'ProdA');
             $count++;
@@ -213,7 +215,7 @@ class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, "__id", 1);
             $this->assertField($sr, "__key", 1);
-            $this->assertField($sr, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
+            $this->assertField($sr, "__class", "Tests\\AnyDataset\\Sample\\ModelPublic");
             $this->assertField($sr, "id", 2);
             $this->assertField($sr, "name", 'ProdB');
             $count++;
@@ -222,7 +224,7 @@ class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
             $sr = $arrayIterator->moveNext();
             $this->assertField($sr, "__id", 2);
             $this->assertField($sr, "__key", 2);
-            $this->assertField($sr, "__class", "AnyDataSet\\Tests\\Sample\\ModelPublic");
+            $this->assertField($sr, "__class", "Tests\\AnyDataset\\Sample\\ModelPublic");
             $this->assertField($sr, "id", 3);
             $this->assertField($sr, "name", 'ProdC');
             $count++;

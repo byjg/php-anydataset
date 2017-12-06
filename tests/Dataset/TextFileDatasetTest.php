@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Dataset\GenericIterator;
 use ByJG\AnyDataset\IteratorInterface;

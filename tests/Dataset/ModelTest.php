@@ -1,7 +1,8 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\Dataset\AnyDataset;
 use ByJG\Serializer\SerializerObject;
 
 // backward compatibility
@@ -17,7 +18,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
 
-        $object = new \AnyDataSet\Tests\Sample\SampleModel($sr->toArray());
+        $object = new \Tests\AnyDataset\Sample\SampleModel($sr->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -32,7 +33,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $sr->addField("name", "Testing");
         $anydata->appendRow($sr);
 
-        $object = new \AnyDataSet\Tests\Sample\SampleModel($anydata->getIterator()->moveNext()->toArray());
+        $object = new \Tests\AnyDataset\Sample\SampleModel($anydata->getIterator()->moveNext()->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -47,7 +48,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $anydata->addField('Id', 20);
         $anydata->addField('Name', 'Gilberto');
 
-        $object1 = new \AnyDataSet\Tests\Sample\SampleModel();
+        $object1 = new \Tests\AnyDataset\Sample\SampleModel();
         $object1->bind( $anydata->getIterator()->moveNext()->toArray() );
         $this->assertEquals(10, $object1->Id);
         $this->assertEquals('Joao', $object1->getName());
