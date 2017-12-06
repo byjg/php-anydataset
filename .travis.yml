@@ -19,7 +19,7 @@ before_install:
 #  - mysql -u root -e "CREATE USER 'root'@'mysql-container' IDENTIFIED BY 'password';"
 #  - mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'mysql-container';"
   - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password')"
-  - psql -c "ALTER USER 'postgres' WITH PASSWORD 'password';
+  - psql -c "ALTER USER 'postgres' WITH PASSWORD 'password'";
 
 
 install:
