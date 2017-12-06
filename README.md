@@ -200,5 +200,12 @@ phpunit testsdb/PdoDblibTest.php
 phpunit testsdb/MongoDbDriverTest.php 
 ```
 
+Optionally you can set the password for Mysql and PostgresSQL
+
+```bash
+export MYSQL_PASSWORD=newpassword    # use '.' if want have a null password
+export PSQL_PASSWORD=newpassword     # use '.' if want have a null password
+```
+
 ----
 [Open source ByJG](http://opensource.byjg.com)
