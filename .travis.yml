@@ -24,6 +24,7 @@ before_script:
 
 install:
   - composer install
+  - docker ps
 
 script: 
   - phpunit
