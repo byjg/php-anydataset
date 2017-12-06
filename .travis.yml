@@ -17,7 +17,8 @@ services:
 
 before_install:
   - mysql -u root -e "SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('')"
-  - mysql -u root -e "SET PASSWORD FOR 'root'@'mysql-container' = PASSWORD('')"
+  - mysql -u root -e "CREATE USER 'root'@'mysql-container' IDENTIFIED BY 'password';"
+  - mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'mysql-container';"
 
 install:
   - php -i
