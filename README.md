@@ -176,10 +176,21 @@ phpunit
 
 Run integration tests require you to have the databases up e run with the follow configuration
 
-- Server: XXXXX_container (where XXXX is the driver e.g. mysql)
-- Database: test
-- Username: root
-- password: password
+The easiest way to run the tests is:
+
+**Prepare the environment**
+
+```php
+npm i
+node_modules/.bin/usdocker --refresh
+node_modules/.bin/usdocker -v mssql up
+node_modules/.bin/usdocker -v mysql up
+node_modules/.bin/usdocker -v postgres up
+node_modules/.bin/usdocker -v mongodb up
+```
+
+**Run the tests**
+
 
 ```
 phpunit testsdb/PdoMySqlTest.php 

@@ -1,8 +1,10 @@
 language: php
 php:
   - "7.1"
-  - "7.0"
-  - "5.6"
+
+env:
+  - MYSQL_PASSWORD=.
+  - PSQL_PASSWORD=.
 
 addons:
   hosts:
@@ -17,10 +19,10 @@ services:
 before_script:
   - npm i
   - node_modules/.bin/usdocker --refresh
-  - node_modules/.bin/usdocker -v mysql up --dump
-  - node_modules/.bin/usdocker -v mongodb up
   - pecl istall mongodb
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl install pdo_pgsql
+  - echo "extension = pdo_pgsql.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
   - composer install
@@ -29,6 +31,6 @@ install:
 script: 
   - phpunit
   - phpunit testsdb/PdoSqliteTest.php
-  - phpunit testsdb/PdoMySqlTest.php
   - phpunit testsdb/MongoDbDriverTest.php
-
+  - phpunit testsdb/PdoMySqlTest.php
+  - phpunit testsdb/PdoPostgresTest.php
