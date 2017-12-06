@@ -20,11 +20,9 @@ before_script:
   - node_modules/.bin/usdocker --refresh
   - pecl istall
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sudo apt install php-pgsql
 
 install:
   - composer install
-  - docker ps
 
 script: 
   - phpunit
