@@ -15,6 +15,10 @@ addons:
 services:
   - docker
 
+before_install:
+  - mysql -u root -e "SET PASSWORD FOR 'root'@'127.0.0.1' = PASSWORD('')"
+  - mysql -u root -e "SET PASSWORD FOR 'root'@'mysql-container' = PASSWORD('')"
+
 install:
   - php -i
   - composer install
