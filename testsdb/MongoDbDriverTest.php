@@ -90,7 +90,7 @@ class MongoDbDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEmpty($data['_id']);
         $this->assertNotEmpty($data['created']);
         $this->assertNotEmpty($data['updated']);
-        $this->assertEquals($data['created'], $data['updated']);
+        $this->assertEquals($data['created']->toDatetime(), $data['updated']->toDatetime());
         unset($data['_id']);
         unset($data['created']);
         unset($data['updated']);
@@ -119,7 +119,7 @@ class MongoDbDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($data['_id'], $document[0]->getIdDocument());
         $this->assertNotEmpty($data['created']);
         $this->assertNotEmpty($data['updated']);
-        $this->assertNotEquals($data['created'], $data['updated']);
+        $this->assertNotEquals($data['created']->toDatetime(), $data['updated']->toDatetime());
         unset($data['_id']);
         unset($data['created']);
         unset($data['updated']);

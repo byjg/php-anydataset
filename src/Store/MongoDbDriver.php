@@ -21,14 +21,10 @@ use MongoDB\Driver\WriteConcern;
 
 class MongoDbDriver implements NoSqlInterface
 {
-    const MONGO_DOCUMENT = [
-        Binary::class,
-        Decimal128::class,
-        Javascript::class,
-        ObjectID::class,
-        Timestamp::class,
-        UTCDateTime::class,
-    ];
+    /**
+     * @var array
+     */
+    private $excludeMongoClass;
 
     /**
      *
@@ -55,6 +51,15 @@ class MongoDbDriver implements NoSqlInterface
     public function __construct(Uri $connUri)
     {
         $this->connectionUri = $connUri;
+        
+        $this->excludeMongoClass = [
+            Binary::class,
+            Decimal128::class,
+            Javascript::class,
+            ObjectID::class,
+            Timestamp::class,
+            UTCDateTime::class,
+        ];
 
         $hosts = $this->connectionUri->getHost();
         $port = $this->connectionUri->getPort() == '' ? 27017 : $this->connectionUri->getPort();
@@ -141,7 +146,7 @@ class MongoDbDriver implements NoSqlInterface
             $result[] = new NoSqlDocument(
                 $item->_id,
                 $collection,
-                BinderObject::toArrayFrom($item, false, self::MONGO_DOCUMENT)
+                BinderObject::toArrayFrom($item, false, $this->excludeMongoClass)
             );
         }
 
@@ -237,7 +242,7 @@ class MongoDbDriver implements NoSqlInterface
         $writeConcern = new WriteConcern(WriteConcern::MAJORITY, 100);
         $bulkWrite = new BulkWrite();
 
-        $data = BinderObject::toArrayFrom($document->getDocument(), false, self::MONGO_DOCUMENT);
+        $data = BinderObject::toArrayFrom($document->getDocument(), false, $this->excludeMongoClass);
 
         $idDocument = $document->getIdDocument();
         if (empty($idDocument)) {

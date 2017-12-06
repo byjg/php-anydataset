@@ -5,6 +5,13 @@ php:
   - "5.6"
   - "5.5"
 
+addons:
+  hosts:
+    - mysql-container
+    - postgres-container
+    - mongodb-container
+    - mssql-container
+
 services:
   - docker
 
@@ -12,6 +19,8 @@ before_script:
   - npm i
   - node_modules/.bin/usdocker --refresh
   - node_modules/.bin/usdocker mysql up
+  - node_modules/.bin/usdocker mongodb up
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 install:
   - composer install
@@ -20,4 +29,5 @@ script:
   - phpunit
   - phpunit testsdb/PdoSqliteTest.php
   - phpunit testsdb/PdoMySqlTest.php
+  - phpunit testsdb/MongoDbDriverTest.php
 
