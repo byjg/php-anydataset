@@ -20,7 +20,7 @@ before_script:
   - node_modules/.bin/usdocker --refresh
   - node_modules/.bin/usdocker mysql up
   - node_modules/.bin/usdocker mongodb up
-  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl istall mongodb
 
 install:
   - composer install
