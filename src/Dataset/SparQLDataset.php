@@ -39,7 +39,10 @@ class SparQLDataset
 
         if (function_exists('dba_open')) {
             foreach ($this->connection->capabilityCodes() as $code) {
-                $return[$code] = array($this->connection->supports($code), $this->connection->capabilityDescription($code));
+                $return[$code] = array(
+                    $this->connection->supports($code),
+                    $this->connection->capabilityDescription($code)
+                );
             }
         }
 

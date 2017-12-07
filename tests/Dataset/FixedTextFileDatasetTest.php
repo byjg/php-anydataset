@@ -1,8 +1,11 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
 // backward compatibility
+use ByJG\AnyDataset\Dataset\FixedTextFileDataset;
+use ByJG\AnyDataset\Enum\FixedTextDefinition;
+
 if (!class_exists('\PHPUnit\Framework\TestCase')) {
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
@@ -36,10 +39,10 @@ class FixedTextFileDatasetTest extends \PHPUnit\Framework\TestCase
     public function testGetIterator()
     {
         $fieldDefinition = [
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('id', 0, 3),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('name', 3, 7),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('enable', 10, 1, null, 'S|N'),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('code', 11, 4),
+            new FixedTextDefinition('id', 0, 3),
+            new FixedTextDefinition('name', 3, 7),
+            new FixedTextDefinition('enable', 10, 1, null, 'S|N'),
+            new FixedTextDefinition('code', 11, 4),
         ];
 
         $repository = new FixedTextFileDataset(__DIR__ . '/sample-fixed.txt', $fieldDefinition);
@@ -63,17 +66,17 @@ class FixedTextFileDatasetTest extends \PHPUnit\Framework\TestCase
     public function testGetIterator_SubTypes()
     {
         $fieldDefinition = [
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('id', 0, 3),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('name', 3, 7),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition('enable', 10, 1, null, 'S|N'),
-            new \ByJG\AnyDataset\Enum\FixedTextDefinition(
+            new FixedTextDefinition('id', 0, 3),
+            new FixedTextDefinition('name', 3, 7),
+            new FixedTextDefinition('enable', 10, 1, null, 'S|N'),
+            new FixedTextDefinition(
                 'code',
                 11,
                 4,
                 null,
                 [
-                    new \ByJG\AnyDataset\Enum\FixedTextDefinition('first', 0, 1),
-                    new \ByJG\AnyDataset\Enum\FixedTextDefinition('second', 1, 3),
+                    new FixedTextDefinition('first', 0, 1),
+                    new FixedTextDefinition('second', 1, 3),
                 ]
             ),
         ];

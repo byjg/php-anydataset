@@ -5,7 +5,7 @@
  * Time: 11:22
  */
 
-namespace Store;
+namespace Tests\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\Util\Uri;
@@ -84,20 +84,6 @@ class SqlBindTest extends \PHPUnit\Framework\TestCase
                 'select * from table where age = null and date = null',
                 $paramIn,
                 []
-            ],
-            [
-                new Uri('sqlrelay://host'),
-                'insert into value ([[name]], [[surname]], [[age]])',
-                'insert into value (?, ?, ?)',
-                $paramIn,
-                $paramIn
-            ],
-            [
-                new Uri('sqlrelay://host'),
-                'insert into value (:name, :surname, :age)',
-                'insert into value (?, ?, ?)',
-                $paramIn,
-                $paramIn
             ],
             [
                 new Uri('mysql://host'),

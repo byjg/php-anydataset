@@ -1,6 +1,6 @@
 <?php
 
-namespace AnyDataSet\Tests\Sample;
+namespace Tests\AnyDataset\Sample;
 
 /**
  * @Xmlnuke:NodeName ModelPropertyPattern

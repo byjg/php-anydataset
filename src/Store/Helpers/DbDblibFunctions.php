@@ -16,7 +16,7 @@ class DbDblibFunctions extends DbBaseFunctions
         $this->deliTableRight = '"';
     }
 
-    public function concat($s1, $s2 = null)
+    public function concat($str1, $str2 = null)
     {
         return implode(func_get_args(), ' + ');
     }
@@ -155,6 +155,11 @@ class DbDblibFunctions extends DbBaseFunctions
         return $insertedId;
     }
 
+    /**
+     * @param $sql
+     * @return string|void
+     * @throws \ByJG\AnyDataset\Exception\NotAvailableException
+     */
     public function forUpdate($sql)
     {
         throw new NotAvailableException('FOR UPDATE not available for Mssql/Dblib');

@@ -89,9 +89,9 @@ class Oci8Iterator extends GenericIterator
         if (!$this->hasNext()) {
             throw new IteratorException("No more records. Did you used hasNext() before moveNext()?");
         } else {
-            $sr = array_shift($this->rowBuffer);
+            $row = array_shift($this->rowBuffer);
             $this->moveNextRow++;
-            return $sr;
+            return $row;
         }
     }
 

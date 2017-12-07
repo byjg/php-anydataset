@@ -3,11 +3,39 @@ php:
   - "7.1"
   - "7.0"
   - "5.6"
-  - "5.5"
+
+
+addons:
+  hosts:
+    - mysql-container
+    - postgres-container
+    - mongodb-container
+    - mssql-container
+
+services:
+  - docker
+
+before_install:
+#  - mysql -u root -e "CREATE USER 'root'@'mysql-container' IDENTIFIED BY 'password';"
+#  - mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'mysql-container';"
+  - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password')"
+#  - psql -c "ALTER USER 'postgres' WITH PASSWORD 'password'";
+#  - sudo apt install php-sybase
+
 
 install:
+  - npm i
+  - node_modules/.bin/usdocker --refresh
+#  - node_modules/.bin/usdocker -v --no-link mssql up --dump
+  - node_modules/.bin/usdocker -v --no-link mongodb up --dump
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - php -i
   - composer install
 
 script: 
   - phpunit
-
+  - phpunit testsdb/PdoSqliteTest.php
+  - phpunit testsdb/MongoDbDriverTest.php
+  - phpunit testsdb/PdoMySqlTest.php
+#  - phpunit testsdb/PdoDblibTest.php
+#  - phpunit testsdb/PdoPostgresTest.php

@@ -1,7 +1,11 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\Dataset\IteratorFilter;
+use ByJG\AnyDataset\Dataset\IteratorFilterSqlFormatter;
+use ByJG\AnyDataset\Dataset\IteratorFilterXPathFormatter;
+use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Enum\Relation;
 
 // backward compatibility
@@ -48,9 +52,15 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
             $this->object->format(new IteratorFilterXPathFormatter())
         );
 
-        $this->object->addRelation('field2', Relation::EQUAL, 'test2');
+        $this->object->addRelation('field2', Relation::GREATER_OR_EQUAL_THAN, 'test2');
         $this->assertEquals(
-            "/anydataset/row[field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ]",
+            "/anydataset/row[field[@name='field'] = 'test'  and field[@name='field2'] >= 'test2' ]",
+            $this->object->format(new IteratorFilterXPathFormatter())
+        );
+
+        $this->object->addRelation('field3', Relation::CONTAINS, 'test3');
+        $this->assertEquals(
+            "/anydataset/row[field[@name='field'] = 'test'  and field[@name='field2'] >= 'test2'  and  contains(field[@name='field3'] ,  'test3' ) ]",
             $this->object->format(new IteratorFilterXPathFormatter())
         );
     }
@@ -78,7 +88,7 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['field' => 'test'], $params);
         $this->assertEquals('select * from tablename  where  field = [[field]]  ', $sql);
 
-        $this->object->addRelation('field2', Relation::EQUAL, 'test2');
+        $this->object->addRelation('field2', Relation::GREATER_OR_EQUAL_THAN, 'test2');
         $sql = $this->object->format(
             new IteratorFilterSqlFormatter(),
             'tablename',
@@ -86,7 +96,17 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
             $returnFields
         );
         $this->assertEquals(['field' => 'test', 'field2' => 'test2'], $params);
-        $this->assertEquals('select * from tablename  where  field = [[field]]  and  field2 = [[field2]]  ', $sql);
+        $this->assertEquals('select * from tablename  where  field = [[field]]  and  field2 >= [[field2]]  ', $sql);
+
+        $this->object->addRelation('field3', Relation::CONTAINS, 'test3');
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals(['field' => 'test', 'field2' => 'test2', 'field3' => '%test3%'], $params);
+        $this->assertEquals('select * from tablename  where  field = [[field]]  and  field2 >= [[field2]]  and  field3  like  [[field3]]  ', $sql);
     }
 
     public function testMatch()

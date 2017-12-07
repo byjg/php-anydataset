@@ -16,8 +16,6 @@ class Factory
      * @param $connectionString
      * @param $schemesAlternative
      * @return \ByJG\AnyDataset\DbDriverInterface
-     * @throws \ByJG\AnyDataset\Exception\NotFoundException
-     * @throws \ByJG\AnyDataset\Exception\NotImplementedException
      */
     public static function getDbRelationalInstance($connectionString, $schemesAlternative = null)
     {
@@ -27,7 +25,6 @@ class Factory
             $connectionString,
             array_merge(
                 [
-                    "sqlrelay" => $prefix . "DbSqlRelayDriver",
                     "oci8" => $prefix . "DbOci8Driver",
                     "dblib" => $prefix . "PdoDblib",
                     "mysql" => $prefix . "PdoMysql",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Store;
+namespace TestsDb\AnyDataset;
 
 use ByJG\AnyDataset\Factory;
 
@@ -11,12 +11,20 @@ class PdoPostgresTest extends BasePdo
 
     protected function createInstance()
     {
-        $this->dbDriver = Factory::getDbRelationalInstance('pgsql://postgres:password@postgres-container');
+        $password = getenv('PSQL_PASSWORD');
+        if (empty($password)) {
+            $password = 'password';
+        }
+        if ($password == '.') {
+            $password = "";
+        }
+
+        $this->dbDriver = Factory::getDbRelationalInstance("pgsql://postgres:$password@postgres-container");
         $exists = $this->dbDriver->getScalar('select count(1) from pg_catalog.pg_database where datname = \'test\'');
         if ($exists == 0) {
             $this->dbDriver->execute('CREATE DATABASE test');
         }
-        $this->dbDriver = Factory::getDbRelationalInstance('pgsql://postgres:password@postgres-container/test');
+        $this->dbDriver = Factory::getDbRelationalInstance("pgsql://postgres:$password@postgres-container/test");
     }
 
     protected function createDatabase()

@@ -28,15 +28,15 @@ class SocketIterator extends GenericIterator
 
         $header = true;
         while (!feof($this->handle) && $header) {
-            $x = fgets($this->handle);
-            $header = (trim($x) != "");
+            $line = fgets($this->handle);
+            $header = (trim($line) != "");
         }
 
         $linha = "";
         while (!feof($this->handle)) {
-            $x = fgets($this->handle, 4096);
-            if ((trim($x) != "") && (strpos($x, $this->colsep) > 0)) {
-                $linha .= $x;
+            $line = fgets($this->handle, 4096);
+            if ((trim($line) != "") && (strpos($line, $this->colsep) > 0)) {
+                $linha .= $line;
             }
         }
 
@@ -80,12 +80,12 @@ class SocketIterator extends GenericIterator
         $cols = preg_split("/" . $this->colsep . "/", $this->rows[$this->current]);
         $this->current++;
 
-        $sr = new Row();
+        $row = new Row();
         $cntFields = count($this->fields);
         for ($i = 0; $i < $cntFields; $i++) {
-            $sr->addField(strtolower($this->fields[$i]), $cols[$i]);
+            $row->addField(strtolower($this->fields[$i]), $cols[$i]);
         }
-        return $sr;
+        return $row;
     }
 
     public function key()

@@ -94,6 +94,12 @@ class FixedTextFileIterator extends GenericIterator
         return null;
     }
 
+    /**
+     * @param $buffer
+     * @param $fieldDefinition
+     * @return array
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
+     */
     protected function processBuffer($buffer, $fieldDefinition)
     {
         $cntDef = count($fieldDefinition);
@@ -117,7 +123,10 @@ class FixedTextFileIterator extends GenericIterator
             }
 
             if (is_array($fieldDef->subTypes)) {
-                $fields[$fieldDef->fieldName] = $this->processBuffer($fields[$fieldDef->fieldName], $fieldDef->subTypes);
+                $fields[$fieldDef->fieldName] = $this->processBuffer(
+                    $fields[$fieldDef->fieldName],
+                    $fieldDef->subTypes
+                );
             }
         }
 

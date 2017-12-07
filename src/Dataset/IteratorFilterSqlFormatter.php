@@ -40,46 +40,42 @@ class IteratorFilterSqlFormatter extends IteratorFilterFormatter
 
         $param[$paramName] = $value;
 
-        $result = "";
-        $field = " $name ";
-        $valueparam = " [[" . $paramName . "]] ";
-        switch ($relation) {
-            case Relation::EQUAL:
-                $result = $field . "=" . $valueparam;
-                break;
+        $data = [
+            Relation::EQUAL => function ($name, $paramName) {
+                return " $name = [[$paramName]] ";
+            },
 
-            case Relation::GREATER_THAN:
-                $result = $field . ">" . $valueparam;
-                break;
+            Relation::GREATER_THAN => function ($name, $paramName) {
+                return " $name > [[$paramName]] ";
+            },
 
-            case Relation::LESS_THAN:
-                $result = $field . "<" . $valueparam;
-                break;
+            Relation::LESS_THAN => function ($name, $paramName) {
+                return " $name < [[$paramName]] ";
+            },
 
-            case Relation::GREATER_OR_EQUAL_THAN:
-                $result = $field . ">=" . $valueparam;
-                break;
+            Relation::GREATER_OR_EQUAL_THAN => function ($name, $paramName) {
+                return " $name >= [[$paramName]] ";
+            },
 
-            case Relation::LESS_OR_EQUAL_THAN:
-                $result = $field . "<=" . $valueparam;
-                break;
+            Relation::LESS_OR_EQUAL_THAN => function ($name, $paramName) {
+                return " $name <= [[$paramName]] ";
+            },
 
-            case Relation::NOT_EQUAL:
-                $result = $field . "!=" . $valueparam;
-                break;
+            Relation::NOT_EQUAL => function ($name, $paramName) {
+                return " $name != [[$paramName]] ";
+            },
 
-            case Relation::STARTS_WITH:
+            Relation::STARTS_WITH => function ($name, $paramName) use (&$param, $value) {
                 $param[$paramName] = $value . "%";
-                $result = $field . " like " . $valueparam;
-                break;
+                return " $name  like  [[$paramName]] ";
+            },
 
-            case Relation::CONTAINS:
+            Relation::CONTAINS => function ($name, $paramName) use (&$param, $value) {
                 $param[$paramName] = "%" . $value . "%";
-                $result = $field . " like " . $valueparam;
-                break;
+                return " $name  like  [[$paramName]] ";
+            }
+        ];
 
-        }
-
-        return $result;
+        return $data[$relation]($name, $paramName);
     }
 }

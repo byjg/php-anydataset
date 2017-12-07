@@ -1,6 +1,6 @@
 <?php
 
-namespace Store;
+namespace TestsDb\AnyDataset;
 
 use ByJG\AnyDataset\Factory;
 
@@ -11,9 +11,17 @@ class PdoMySqlest extends BasePdo
 
     protected function createInstance()
     {
-        $this->dbDriver = Factory::getDbRelationalInstance('mysql://root:password@mysql-container');
+        $password = getenv('MYSQL_PASSWORD');
+        if (empty($password)) {
+            $password = 'password';
+        }
+        if ($password == '.') {
+            $password = "";
+        }
+
+        $this->dbDriver = Factory::getDbRelationalInstance("mysql://root:$password@mysql-container");
         $this->dbDriver->execute('CREATE DATABASE IF NOT EXISTS test');
-        $this->dbDriver = Factory::getDbRelationalInstance('mysql://root:password@mysql-container/test');
+        $this->dbDriver = Factory::getDbRelationalInstance("mysql://root:$password@mysql-container/test");
     }
 
     protected function createDatabase()

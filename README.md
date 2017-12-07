@@ -2,6 +2,7 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c/mini.png)](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/anydataset/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
 [![Build Status](https://travis-ci.org/byjg/anydataset.svg?branch=master)](https://travis-ci.org/byjg/anydataset)
+[![Code Coverage](https://scrutinizer-ci.com/g/byjg/anydataset/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
 
 ## Description
 
@@ -64,7 +65,9 @@ implementation of PSR-6. We suggested you add "byjg/cache".
 <?php
 $dbDriver = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://username:password@host/database');
 $dbCached = new \ByJG\AnyDataset\Store\DbCached($dbDriver, $psrCacheEngine, 30);
-$iterator = $dbDriver->getIterator('select * from table where field = :param', ['param' => 'value']);
+
+// Use the DbCached instance instead the DbDriver
+$iterator = $dbCached->getIterator('select * from table where field = :param', ['param' => 'value']);
 ```
 
 ### Connection based on URI
@@ -81,7 +84,6 @@ See below the current implemented drivers:
 | Sql Server    | dblib://username:password@hostname:port/database      | getDbRelationalInstance()  |
 | Oracle (OCI)  | oci://username:password@hostname:port/database        | getDbRelationalInstance()  |
 | Oracle (OCI8) | oci8://username:password@hostname:port/database       | getDbRelationalInstance()  |
-| Sql Relay     | sqlrelay://username:password@hostname:port/database   | getDbRelationalInstance()  |
 | MongoDB       | mongodb://username:passwortd@host:port/database       | getNoSqlInstance()         |
 | Amazon S3     | s3://key:secret@region/bucket                         | getKeyValueInstance()      |
 
@@ -122,14 +124,36 @@ $dbDriver->remove('key');
 
 ### Load balance and connection pooling 
 
-The API have support for connection load balancing, connection pooling and persistent connection with 
-[SQL Relay](http://sqlrelay.sourceforge.net/) library (requires install)
+The API have support for connection load balancing, connection pooling and persistent connection.
 
-You only need change your connection string to:
+There is the Route class an DbDriverInterface implementation with route capabilities. Basically you have to define 
+the routes and the system will choose the proper DbDriver based on your route definition.
 
-```
-sqlrelay://root:somepass@server/schema
-```
+Example:
+
+```php
+<?php
+$dbDriver = new \ByJG\AnyDataset\Store\Route();
+
+// Define the available connections (even different databases)
+$dbDriver
+    ->addDbDriverInterface('route1', 'sqlite:///tmp/a.db')
+    ->addDbDriverInterface('route2', 'sqlite:///tmp/b.db')
+    ->addDbDriverInterface('route3', 'sqlite:///tmp/c.db')
+;
+
+// Define the route
+$dbDriver
+    ->addRouteForWrite('route1')
+    ->addRouteForRead('route2', 'mytable')
+    ->addRouteForRead('route3')
+;
+
+// Query the database
+$iterator = $dbDriver->getIterator('select * from mytable'); // Will select route2
+$iterator = $dbDriver->getIterator('select * from othertable'); // Will select route3
+$dbDriver->execute('insert into table (a) values (1)'); // Will select route1;
+```  
 
 ### And more
 
@@ -152,10 +176,21 @@ phpunit
 
 Run integration tests require you to have the databases up e run with the follow configuration
 
-- Server: XXXXX_container (where XXXX is the driver e.g. mysql)
-- Database: test
-- Username: root
-- password: password
+The easiest way to run the tests is:
+
+**Prepare the environment**
+
+```php
+npm i
+node_modules/.bin/usdocker --refresh
+node_modules/.bin/usdocker -v --no-link mssql up
+node_modules/.bin/usdocker -v --no-link mysql up
+node_modules/.bin/usdocker -v --no-link postgres up
+node_modules/.bin/usdocker -v --no-link mongodb up
+```
+
+**Run the tests**
+
 
 ```
 phpunit testsdb/PdoMySqlTest.php 
@@ -163,6 +198,13 @@ phpunit testsdb/PdoSqliteTest.php
 phpunit testsdb/PdoPostgresTest.php 
 phpunit testsdb/PdoDblibTest.php 
 phpunit testsdb/MongoDbDriverTest.php 
+```
+
+Optionally you can set the password for Mysql and PostgresSQL
+
+```bash
+export MYSQL_PASSWORD=newpassword    # use '.' if want have a null password
+export PSQL_PASSWORD=newpassword     # use '.' if want have a null password
 ```
 
 ----

@@ -63,9 +63,9 @@ class AnyDataset
     private $path;
 
     /**
-     *
      * @param string $file
      * @throws InvalidArgumentException
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function __construct($file = null)
     {
@@ -90,7 +90,9 @@ class AnyDataset
 
     /**
      * Private method used to read and populate anydataset class from specified file
+     *
      * @param string $filepath Path and Filename to be read
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     private function createFrom($filepath)
     {
@@ -119,7 +121,9 @@ class AnyDataset
 
     /**
      * Returns the AnyDataset XML representative structure.
+     *
      * @return string XML String
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function xml()
     {
@@ -128,7 +132,9 @@ class AnyDataset
 
     /**
      * Returns the AnyDataset XmlDocument representive object
+     *
      * @return \DOMDocument XmlDocument object
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function getAsDom()
     {
@@ -145,9 +151,9 @@ class AnyDataset
     }
 
     /**
-     *
      * @param string $file
      * @throws DatabaseException
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function save($file = null)
     {

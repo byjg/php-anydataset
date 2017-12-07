@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\SparQLDataset;
@@ -16,8 +16,8 @@ class SparQLDatasetTest extends \PHPUnit\Framework\TestCase
     const SPARQL_URL = 'http://dbpedia.org/sparql';
 
     protected static $SPARQL_NS = [
-        'dbpedia-owl' => 'http://dbpedia.org/ontology/',
-        'dbpprop' => 'http://dbpedia.org/property/'
+        'dbo' => 'http://dbpedia.org/ontology/',
+        'dbp' => 'http://dbpedia.org/property/'
     ];
 
     // Run before each test case
@@ -71,10 +71,10 @@ class SparQLDatasetTest extends \PHPUnit\Framework\TestCase
             'SELECT  ?name ?meaning
                 WHERE 
                 {
-                    ?s a  dbpedia-owl:Name;
-                    dbpprop:name  ?name;
-                    dbpprop:meaning  ?meaning 
-                    . FILTER (str(?name) = "John")
+                    ?s a  dbo:Name;
+                    dbp:name  ?name;
+                    dbp:meaning  ?meaning 
+                    . FILTER (str(?name) = "Garrick")
                 }'
         );
 
@@ -83,9 +83,9 @@ class SparQLDatasetTest extends \PHPUnit\Framework\TestCase
 
         $sr = $iterator->moveNext();
 
-        $this->assertEquals($sr->get("name"), "John");
+        $this->assertEquals($sr->get("name"), "Garrick");
         $this->assertEquals($sr->get("name.type"), "literal");
-        $this->assertEquals($sr->get("meaning"), "Graced by Yahweh , Yahweh is gracious");
+        $this->assertEquals($sr->get("meaning"), "\"spear king\"");
         $this->assertEquals($sr->get("meaning.type"), "literal");
 
         $this->assertFalse($iterator->hasNext());

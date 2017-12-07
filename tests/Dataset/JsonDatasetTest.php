@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Dataset;
+namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\JsonDataset;

@@ -27,6 +27,14 @@ abstract class DbPdoDriver implements DbDriverInterface
      */
     protected $connectionUri;
 
+    /**
+     * DbPdoDriver constructor.
+     *
+     * @param \ByJG\Util\Uri $connUri
+     * @param null $preOptions
+     * @param null $postOptions
+     * @throws \ByJG\AnyDataset\Exception\NotAvailableException
+     */
     public function __construct(Uri $connUri, $preOptions = null, $postOptions = null)
     {
         $this->connectionUri = $connUri;

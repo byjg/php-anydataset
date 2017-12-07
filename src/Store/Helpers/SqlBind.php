@@ -24,10 +24,6 @@ class SqlBind
             return $connData->getQueryPart("parammodel");
         }
 
-        if ($connData->getScheme() == "sqlrelay") {
-            return "?";
-        }
-
         return ":_";
     }
 

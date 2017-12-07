@@ -5,7 +5,7 @@
  * Time: 22:54
  */
 
-namespace Database;
+namespace Tests\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\Store\Helpers\DbMysqlFunctions;
 

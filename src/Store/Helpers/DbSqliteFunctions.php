@@ -4,7 +4,6 @@ namespace ByJG\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\DbDriverInterface;
 use ByJG\AnyDataset\Exception\NotAvailableException;
-use ByJG\AnyDataset\Exception\NotImplementedException;
 
 class DbSqliteFunctions extends DbBaseFunctions
 {
@@ -18,11 +17,11 @@ class DbSqliteFunctions extends DbBaseFunctions
     }
 
     /**
-     * @param string $s1
-     * @param null $s2
+     * @param $str1
+     * @param null $str2
      * @return string
      */
-    public function concat($s1, $s2 = null)
+    public function concat($str1, $str2 = null)
     {
         return implode(func_get_args(), ' || ');
     }
@@ -86,7 +85,6 @@ class DbSqliteFunctions extends DbBaseFunctions
      * @param string $format
      * @param string|null$column
      * @return string
-     * @throws NotImplementedException
      * @example $db->getDbFunctions()->SQLDate("d/m/Y H:i", "dtcriacao")
      */
     public function sqlDate($format, $column = null)
@@ -158,6 +156,11 @@ class DbSqliteFunctions extends DbBaseFunctions
         return $dbdataset->getScalar("SELECT last_insert_rowid()");
     }
 
+    /**
+     * @param $sql
+     * @return string|void
+     * @throws \ByJG\AnyDataset\Exception\NotAvailableException
+     */
     public function forUpdate($sql)
     {
         throw new NotAvailableException('FOR UPDATE not available for SQLite');
