@@ -26,7 +26,7 @@ before_install:
 install:
   - npm i
   - node_modules/.bin/usdocker --refresh
-  - node_modules/.bin/usdocker -v mssql up --dump
+#  - node_modules/.bin/usdocker -v mssql up --dump
   - node_modules/.bin/usdocker -v mongodb up --dump
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - php -i
