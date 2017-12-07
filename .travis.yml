@@ -20,22 +20,22 @@ before_install:
 #  - mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'mysql-container';"
   - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password')"
 #  - psql -c "ALTER USER 'postgres' WITH PASSWORD 'password'";
-  - sudo apt install php-sybase
+#  - sudo apt install php-sybase
 
 
 install:
-  - php -i
-  - composer install
   - npm i
   - node_modules/.bin/usdocker --refresh
   - node_modules/.bin/usdocker -v mssql up --dump
   - node_modules/.bin/usdocker -v mongodb up --dump
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - php -i
+  - composer install
 
 script: 
   - phpunit
   - phpunit testsdb/PdoSqliteTest.php
   - phpunit testsdb/MongoDbDriverTest.php
   - phpunit testsdb/PdoMySqlTest.php
-  - phpunit testsdb/PdoDblibTest.php
+#  - phpunit testsdb/PdoDblibTest.php
 #  - phpunit testsdb/PdoPostgresTest.php
