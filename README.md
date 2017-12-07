@@ -183,10 +183,10 @@ The easiest way to run the tests is:
 ```php
 npm i
 node_modules/.bin/usdocker --refresh
-node_modules/.bin/usdocker -v mssql up
-node_modules/.bin/usdocker -v mysql up
-node_modules/.bin/usdocker -v postgres up
-node_modules/.bin/usdocker -v mongodb up
+node_modules/.bin/usdocker -v --no-link mssql up
+node_modules/.bin/usdocker -v --no-link mysql up
+node_modules/.bin/usdocker -v --no-link postgres up
+node_modules/.bin/usdocker -v --no-link mongodb up
 ```
 
 **Run the tests**
