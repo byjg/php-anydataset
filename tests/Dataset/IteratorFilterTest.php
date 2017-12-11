@@ -7,6 +7,7 @@ use ByJG\AnyDataset\Dataset\IteratorFilterSqlFormatter;
 use ByJG\AnyDataset\Dataset\IteratorFilterXPathFormatter;
 use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Enum\Relation;
+use Tests\AnyDataset\Sample\LiteralSample;
 
 // backward compatibility
 if (!class_exists('\PHPUnit\Framework\TestCase')) {
@@ -107,6 +108,42 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
         );
         $this->assertEquals(['field' => 'test', 'field2' => 'test2', 'field3' => '%test3%'], $params);
         $this->assertEquals('select * from tablename  where  field = [[field]]  and  field2 >= [[field2]]  and  field3  like  [[field3]]  ', $sql);
+    }
+
+    public function testSqlLiteral()
+    {
+        $literalObject = new LiteralSample(10);
+
+        $params = null;
+        $returnFields = '*';
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals([], $params);
+        $this->assertEquals('select * from tablename ', $sql);
+
+        $this->object->addRelation('field', Relation::GREATER_THAN, $literalObject);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals([], $params);
+        $this->assertEquals('select * from tablename  where  field > cast(\'10\' as integer)  ', $sql);
+
+        $this->object->addRelation('field2', Relation::LESS_THAN, 5);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals(['field2' => 5], $params);
+        $this->assertEquals('select * from tablename  where  field > cast(\'10\' as integer)  and  field2 < [[field2]]  ', $sql);
     }
 
     public function testMatch()
