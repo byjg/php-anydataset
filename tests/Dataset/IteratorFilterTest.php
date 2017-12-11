@@ -7,6 +7,7 @@ use ByJG\AnyDataset\Dataset\IteratorFilterSqlFormatter;
 use ByJG\AnyDataset\Dataset\IteratorFilterXPathFormatter;
 use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Enum\Relation;
+use Tests\AnyDataset\Sample\LiteralSample;
 
 // backward compatibility
 if (!class_exists('\PHPUnit\Framework\TestCase')) {
@@ -111,12 +112,7 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
 
     public function testSqlLiteral()
     {
-        $literalObject = new class() {
-            public function __toString()
-            {
-                return 'cast(\'10\' as integer)';
-            }
-        };
+        $literalObject = new LiteralSample(10);
 
         $params = null;
         $returnFields = '*';
