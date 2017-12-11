@@ -41,6 +41,7 @@ class IteratorFilterSqlFormatter extends IteratorFilterFormatter
             $param[$paramName] = trim($value);
             $result = "[[$paramName]]";
             if (is_object($value)) {
+                unset($param[$paramName]);
                 $result = $value->__toString();
             }
             return $result;

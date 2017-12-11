@@ -136,8 +136,18 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
             $params,
             $returnFields
         );
-        $this->assertEquals(['field' => $literalObject], $params);
+        $this->assertEquals([], $params);
         $this->assertEquals('select * from tablename  where  field > cast(\'10\' as integer)  ', $sql);
+
+        $this->object->addRelation('field2', Relation::LESS_THAN, 5);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals(['field2' => 5], $params);
+        $this->assertEquals('select * from tablename  where  field > cast(\'10\' as integer)  and  field2 < [[field2]]  ', $sql);
     }
 
     public function testMatch()
