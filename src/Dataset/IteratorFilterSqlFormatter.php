@@ -31,51 +31,57 @@ class IteratorFilterSqlFormatter extends IteratorFilterFormatter
 
     public function getRelation($name, $relation, $value, &$param)
     {
-        $value = trim($value);
         $paramName = $name;
         $counter = 0;
         while (array_key_exists($paramName, $param)) {
             $paramName = $name . ($counter++);
         }
 
-        $param[$paramName] = $value;
+        $paramStr = function (&$param, $paramName, $value) {
+            $param[$paramName] = trim($value);
+            $result = "[[$paramName]]";
+            if (is_object($value)) {
+                $result = $value->__toString();
+            }
+            return $result;
+        };
 
         $data = [
-            Relation::EQUAL => function ($name, $paramName) {
-                return " $name = [[$paramName]] ";
+            Relation::EQUAL => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                return " $name = " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::GREATER_THAN => function ($name, $paramName) {
-                return " $name > [[$paramName]] ";
+            Relation::GREATER_THAN => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                return " $name > " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::LESS_THAN => function ($name, $paramName) {
-                return " $name < [[$paramName]] ";
+            Relation::LESS_THAN => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                return " $name < " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::GREATER_OR_EQUAL_THAN => function ($name, $paramName) {
-                return " $name >= [[$paramName]] ";
+            Relation::GREATER_OR_EQUAL_THAN => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                return " $name >= " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::LESS_OR_EQUAL_THAN => function ($name, $paramName) {
-                return " $name <= [[$paramName]] ";
+            Relation::LESS_OR_EQUAL_THAN => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                return " $name <= " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::NOT_EQUAL => function ($name, $paramName) {
-                return " $name != [[$paramName]] ";
+            Relation::NOT_EQUAL => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                return " $name <> " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::STARTS_WITH => function ($name, $paramName) use (&$param, $value) {
-                $param[$paramName] = $value . "%";
-                return " $name  like  [[$paramName]] ";
+            Relation::STARTS_WITH => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                $value .= "%";
+                return " $name  like  " . $paramStr($param, $paramName, $value) . ' ';
             },
 
-            Relation::CONTAINS => function ($name, $paramName) use (&$param, $value) {
-                $param[$paramName] = "%" . $value . "%";
-                return " $name  like  [[$paramName]] ";
+            Relation::CONTAINS => function (&$param, $name, $paramName, $value) use ($paramStr) {
+                $value = "%" . $value . "%";
+                return " $name  like  " . $paramStr($param, $paramName, $value) . ' ';
             }
         ];
 
-        return $data[$relation]($name, $paramName);
+        return $data[$relation]($param, $name, $paramName, $value);
     }
 }

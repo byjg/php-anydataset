@@ -109,6 +109,37 @@ class IteratorFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('select * from tablename  where  field = [[field]]  and  field2 >= [[field2]]  and  field3  like  [[field3]]  ', $sql);
     }
 
+    public function testSqlLiteral()
+    {
+        $literalObject = new class() {
+            public function __toString()
+            {
+                return 'cast(\'10\' as integer)';
+            }
+        };
+
+        $params = null;
+        $returnFields = '*';
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals([], $params);
+        $this->assertEquals('select * from tablename ', $sql);
+
+        $this->object->addRelation('field', Relation::GREATER_THAN, $literalObject);
+        $sql = $this->object->format(
+            new IteratorFilterSqlFormatter(),
+            'tablename',
+            $params,
+            $returnFields
+        );
+        $this->assertEquals(['field' => $literalObject], $params);
+        $this->assertEquals('select * from tablename  where  field > cast(\'10\' as integer)  ', $sql);
+    }
+
     public function testMatch()
     {
 
