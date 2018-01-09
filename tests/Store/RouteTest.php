@@ -183,14 +183,4 @@ class RouteTest extends \PHPUnit\Framework\TestCase
         $this->object->addRouteForFilter('route3', 'id', '3');
         $this->object->matchRoute('SELECT field1, fields fRom othertable where id=31');
     }
-
-    public function testAddCustomRoute()
-    {
-
-    }
-
-    public function testMatchRoute()
-    {
-
-    }
 }

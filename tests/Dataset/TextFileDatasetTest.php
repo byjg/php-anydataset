@@ -21,7 +21,7 @@ class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
     protected static $fileName_MacClassic = "";
     protected static $fileName_BlankLine = "";
 
-    const RemoteURL = "http://www.xmlnuke.com/site/";
+    const REMOTEURL = "https://firebasestorage.googleapis.com/v0/b/testing-bb65f.appspot.com/o/anydataset%%2F%s?alt=media";
 
     public static function setUpBeforeClass()
     {
@@ -182,8 +182,11 @@ class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
 
     public function testnavigateTextIterator_Remote_Unix()
     {
-        $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_Unix), self::$fieldNames,
-            TextFileDataset::CSVFILE);
+        $txtFile = new TextFileDataset(
+            sprintf(self::REMOTEURL, basename(self::$fileName_Unix)),
+            self::$fieldNames,
+            TextFileDataset::CSVFILE
+        );
         $txtIterator = $txtFile->getIterator();
 
         $count = 0;
@@ -196,8 +199,11 @@ class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
 
     public function testnavigateTextIterator_Remote_Windows()
     {
-        $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_Windows), self::$fieldNames,
-            TextFileDataset::CSVFILE);
+        $txtFile = new TextFileDataset(
+            sprintf(self::REMOTEURL, basename(self::$fileName_Windows)),
+            self::$fieldNames,
+            TextFileDataset::CSVFILE
+        );
         $txtIterator = $txtFile->getIterator();
 
         $count = 0;
@@ -213,8 +219,11 @@ class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
      */
     public function testnavigateTextIterator_Remote_MacClassic()
     {
-        $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_MacClassic), self::$fieldNames,
-            TextFileDataset::CSVFILE);
+        $txtFile = new TextFileDataset(
+            sprintf(self::REMOTEURL, basename(self::$fileName_MacClassic)),
+            self::$fieldNames,
+            TextFileDataset::CSVFILE
+        );
         $txtIterator = $txtFile->getIterator();
 
         $count = 0;
@@ -227,8 +236,11 @@ class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
 
     public function testnavigateTextIterator_Remote_BlankLine()
     {
-        $txtFile = new TextFileDataset(self::RemoteURL . basename(self::$fileName_BlankLine), self::$fieldNames,
-            TextFileDataset::CSVFILE);
+        $txtFile = new TextFileDataset(
+            sprintf(self::REMOTEURL, basename(self::$fileName_BlankLine)),
+            self::$fieldNames,
+            TextFileDataset::CSVFILE
+        );
         $txtIterator = $txtFile->getIterator();
 
         $count = 0;
@@ -252,7 +264,7 @@ class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
      */
     public function testremoteFileNotFound()
     {
-        $txtFile = new TextFileDataset(self::RemoteURL . "notfound-test", self::$fieldNames, TextFileDataset::CSVFILE);
+        $txtFile = new TextFileDataset(self::REMOTEURL . "notfound-test", self::$fieldNames, TextFileDataset::CSVFILE);
         $txtFile->getIterator();
     }
 
