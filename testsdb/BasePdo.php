@@ -3,13 +3,9 @@
 namespace TestsDb\AnyDataset;
 
 use ByJG\AnyDataset\DbDriverInterface;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-abstract class BasePdo extends \PHPUnit\Framework\TestCase
+abstract class BasePdo extends TestCase
 {
 
     /**

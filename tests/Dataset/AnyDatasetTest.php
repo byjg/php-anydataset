@@ -2,14 +2,10 @@
 
 namespace Tests\AnyDataset\Dataset;
 
-// backward compatibility
 use ByJG\AnyDataset\Dataset\AnyDataset;
+use PHPUnit\Framework\TestCase;
 
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class AnyDatasetTest extends \PHPUnit\Framework\TestCase
+class AnyDatasetTest extends TestCase
 {
 
     /**

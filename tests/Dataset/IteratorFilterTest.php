@@ -7,14 +7,10 @@ use ByJG\AnyDataset\Dataset\IteratorFilterSqlFormatter;
 use ByJG\AnyDataset\Dataset\IteratorFilterXPathFormatter;
 use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Enum\Relation;
+use PHPUnit\Framework\TestCase;
 use Tests\AnyDataset\Sample\LiteralSample;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class IteratorFilterTest extends \PHPUnit\Framework\TestCase
+class IteratorFilterTest extends TestCase
 {
 
     /**

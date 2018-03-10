@@ -5,14 +5,13 @@ namespace Tests\AnyDataset\Store;
 use ByJG\AnyDataset\Factory;
 use ByJG\AnyDataset\Store\Helpers\DbSqliteFunctions;
 use ByJG\Util\Uri;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class PdoSqliteTest extends \PHPUnit\Framework\TestCase
+class PdoSqliteTest extends TestCase
 {
+    /**
+     * @var \ByJG\AnyDataset\DbDriverInterface
+     */
     protected $dbDriver;
 
     public function setUp()

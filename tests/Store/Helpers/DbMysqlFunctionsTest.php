@@ -1,20 +1,11 @@
 <?php
-/**
- * User: jg
- * Date: 28/11/16
- * Time: 22:54
- */
 
 namespace Tests\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\Store\Helpers\DbMysqlFunctions;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class DbMysqlFunctionsTest extends \PHPUnit\Framework\TestCase
+class DbMysqlFunctionsTest extends TestCase
 {
     /**
      * @var DbMysqlFunctions

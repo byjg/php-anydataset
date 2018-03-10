@@ -2,15 +2,11 @@
 
 namespace Tests\AnyDataset\Dataset;
 
-// backward compatibility
 use ByJG\AnyDataset\Dataset\FixedTextFileDataset;
 use ByJG\AnyDataset\Enum\FixedTextDefinition;
+use PHPUnit\Framework\TestCase;
 
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class FixedTextFileDatasetTest extends \PHPUnit\Framework\TestCase
+class FixedTextFileDatasetTest extends TestCase
 {
 
     /**

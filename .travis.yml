@@ -16,26 +16,24 @@ services:
   - docker
 
 before_install:
-#  - mysql -u root -e "CREATE USER 'root'@'mysql-container' IDENTIFIED BY 'password';"
-#  - mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'mysql-container';"
-  - mysql -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password')"
-#  - psql -c "ALTER USER 'postgres' WITH PASSWORD 'password'";
-#  - sudo apt install php-sybase
+  - sudo service mysql stop || echo "mysql not stopped"
+  - sudo service postgresql stop || echo "postgresql not stopped"
+  - node_modules/.bin/usdocker --refresh
+#  - node_modules/.bin/usdocker mssql up
+  - node_modules/.bin/usdocker --no-link postgres up
+  - node_modules/.bin/usdocker --no-link mysql up
+  - node_modules/.bin/usdocker --no-link mongodb up
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 
 install:
-  - npm i
-  - node_modules/.bin/usdocker --refresh
-#  - node_modules/.bin/usdocker -v --no-link mssql up --dump
-  - node_modules/.bin/usdocker -v --no-link mongodb up --dump
-  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - php -i
   - composer install
 
 script: 
-  - phpunit
-  - phpunit testsdb/PdoSqliteTest.php
-  - phpunit testsdb/MongoDbDriverTest.php
-  - phpunit testsdb/PdoMySqlTest.php
-#  - phpunit testsdb/PdoDblibTest.php
-#  - phpunit testsdb/PdoPostgresTest.php
+  - vendor/bin/phpunit
+  - vendor/bin/phpunit testsdb/PdoSqliteTest.php
+  - vendor/bin/phpunit testsdb/MongoDbDriverTest.php
+  - vendor/bin/phpunit testsdb/PdoMySqlTest.php
+  - vendor/bin/phpunit testsdb/PdoPostgresTest.php
+#  - vendor/bin/phpunit testsdb/PdoDblibTest.php

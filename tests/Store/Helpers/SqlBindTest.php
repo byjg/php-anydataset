@@ -1,21 +1,12 @@
 <?php
-/**
- * User: jg
- * Date: 16/02/17
- * Time: 11:22
- */
 
 namespace Tests\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\Store\Helpers\SqlBind;
 use ByJG\Util\Uri;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class SqlBindTest extends \PHPUnit\Framework\TestCase
+class SqlBindTest extends TestCase
 {
     public function getDataTest()
     {

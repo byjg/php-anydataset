@@ -46,7 +46,7 @@ class AnyDataset
     /**
      * Internal structure represent the current Row
      *
-*@var Row[]
+     * @var Row[]
      */
     private $collection;
 
@@ -345,14 +345,5 @@ class AnyDataset
             [ $key ],
             $this->quickSortExec($right, $field)
         );
-    }
-
-    /**
-     * @param $document
-     * @return array|string
-     */
-    public static function fixUTF8($document)
-    {
-        return Encoding::fixUTF8(Encoding::removeBOM($document), Encoding::ICONV_TRANSLIT);
     }
 }

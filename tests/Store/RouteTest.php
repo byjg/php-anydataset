@@ -4,13 +4,9 @@ namespace Tests\AnyDataset\Store;
 
 use ByJG\AnyDataset\Factory;
 use ByJG\AnyDataset\Store\Route;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class RouteTest extends \PHPUnit\Framework\TestCase
+class RouteTest extends TestCase
 {
     /**
      * @var Route

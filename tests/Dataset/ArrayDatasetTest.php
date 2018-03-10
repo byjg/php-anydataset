@@ -3,16 +3,12 @@
 namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Dataset\ArrayDataset;
+use PHPUnit\Framework\TestCase;
 use Tests\AnyDataset\Sample\ModelGetter;
 use ByJG\AnyDataset\IteratorInterface;
 use Tests\AnyDataset\Sample\ModelPublic;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class ArrayDatasetTest extends \PHPUnit\Framework\TestCase
+class ArrayDatasetTest extends TestCase
 {
 
     protected $fieldNames;

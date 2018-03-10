@@ -6,13 +6,9 @@ use ByJG\AnyDataset\Dataset\GenericIterator;
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Dataset\TextFileDataset;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class TextFileDatasetTest extends \PHPUnit\Framework\TestCase
+class TextFileDatasetTest extends TestCase
 {
 
     protected static $fieldNames;

@@ -1,18 +1,8 @@
 <?php
-/**
- * User: jg
- * Date: 28/11/16
- * Time: 22:54
- */
 
 namespace Tests\AnyDataset\Store\Helpers;
 
 use ByJG\AnyDataset\Store\Helpers\DbPgsqlFunctions;
-
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
 
 class DbPostgresFunctionsTest extends \PHPUnit\Framework\TestCase
 {

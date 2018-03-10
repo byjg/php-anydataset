@@ -4,13 +4,9 @@ namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\SparQLDataset;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class SparQLDatasetTest extends \PHPUnit\Framework\TestCase
+class SparQLDatasetTest extends TestCase
 {
 
     const SPARQL_URL = 'http://dbpedia.org/sparql';

@@ -7,13 +7,9 @@ use ByJG\AnyDataset\Enum\Relation;
 use ByJG\AnyDataset\Factory;
 use ByJG\AnyDataset\NoSqlDocument;
 use ByJG\AnyDataset\Store\MongoDbDriver;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class MongoDbDriverTest extends \PHPUnit\Framework\TestCase
+class MongoDbDriverTest extends TestCase
 {
     /**
      * @var MongoDbDriver

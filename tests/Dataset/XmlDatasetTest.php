@@ -5,13 +5,9 @@ namespace Tests\AnyDataset\Dataset;
 use ByJG\AnyDataset\IteratorInterface;
 use ByJG\AnyDataset\Dataset\Row;
 use ByJG\AnyDataset\Dataset\XmlDataset;
+use PHPUnit\Framework\TestCase;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class XmlDatasetTest extends \PHPUnit\Framework\TestCase
+class XmlDatasetTest extends TestCase
 {
 
     const XML_OK = '<?xml version="1.0" encoding="UTF-8"?>

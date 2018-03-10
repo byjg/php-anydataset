@@ -3,16 +3,12 @@
 namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Dataset\Row;
+use PHPUnit\Framework\TestCase;
 use Tests\AnyDataset\Sample\ModelGetter;
 use Tests\AnyDataset\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
 
-// backward compatibility
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
-}
-
-class SingleRowTest extends \PHPUnit\Framework\TestCase
+class SingleRowTest extends TestCase
 {
 
     /**

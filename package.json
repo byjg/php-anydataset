@@ -12,6 +12,6 @@
     "@usdocker/mssql": "^1.0.4",
     "@usdocker/mysql": "^1.0.8",
     "@usdocker/postgres": "^1.0.5",
-    "@usdocker/usdocker": "^1.1.0"
+    "@usdocker/usdocker": "^1.1.6"
   }
 }
