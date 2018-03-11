@@ -40,6 +40,7 @@ class Oci8Iterator extends GenericIterator
     /**
      * @access public
      * @return bool
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function hasNext()
     {
@@ -82,7 +83,8 @@ class Oci8Iterator extends GenericIterator
 
     /**
      * @return mixed
-     * @throws IteratorException
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function moveNext()
     {

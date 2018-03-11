@@ -55,6 +55,8 @@ class ArrayDatasetIterator extends GenericIterator
 
     /**
      * @return Row
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function moveNext()
     {

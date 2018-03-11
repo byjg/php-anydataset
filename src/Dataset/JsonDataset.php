@@ -56,6 +56,7 @@ class JsonDataset
      * @param string $path
      * @param bool $throwErr
      * @return GenericIterator
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
      */
     public function getIterator($path = "", $throwErr = false)
     {

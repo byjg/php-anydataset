@@ -18,6 +18,7 @@ services:
 before_install:
   - sudo service mysql stop || echo "mysql not stopped"
   - sudo service postgresql stop || echo "postgresql not stopped"
+  - npm install
   - node_modules/.bin/usdocker --refresh
 #  - node_modules/.bin/usdocker mssql up
   - node_modules/.bin/usdocker --no-link postgres up

@@ -20,7 +20,9 @@ class Row extends BinderObject implements DumpToArrayInterface
 
     /**
      * Row constructor
+     *
      * @param array()
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function __construct($instance = null)
     {

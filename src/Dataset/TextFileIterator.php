@@ -78,6 +78,7 @@ class TextFileIterator extends GenericIterator
     /**
      * @access public
      * @return Row
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function moveNext()
     {

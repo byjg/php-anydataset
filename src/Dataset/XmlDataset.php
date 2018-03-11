@@ -36,13 +36,12 @@ class XmlDataset
     protected $registerNS;
 
     /**
-     *
      * @param DOMDocument|string $xml
      * @param string $rowNode
      * @param string[] $colNode
      * @param array $registerNS
-     * @throws DatasetException
-     * @throws InvalidArgumentException
+     * @throws \ByJG\AnyDataset\Exception\DatasetException
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function __construct($xml, $rowNode, $colNode, $registerNS = null)
     {
@@ -72,6 +71,7 @@ class XmlDataset
     /**
      * @access public
      * @return GenericIterator
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function getIterator()
     {

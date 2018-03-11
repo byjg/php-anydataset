@@ -70,7 +70,9 @@ class XmlIterator extends GenericIterator
     /**
      * @access public
      * @return Row
-     * @throws IteratorException
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function moveNext()
     {

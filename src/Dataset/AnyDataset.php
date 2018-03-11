@@ -4,7 +4,6 @@ namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Exception\DatabaseException;
 use ByJG\Util\XmlUtil;
-use ForceUTF8\Encoding;
 use InvalidArgumentException;
 
 /**
@@ -64,7 +63,7 @@ class AnyDataset
 
     /**
      * @param string $file
-     * @throws InvalidArgumentException
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
     public function __construct($file = null)
@@ -92,6 +91,7 @@ class AnyDataset
      * Private method used to read and populate anydataset class from specified file
      *
      * @param string $filepath Path and Filename to be read
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
     private function createFrom($filepath)
@@ -177,6 +177,7 @@ class AnyDataset
      *
      * @param Row $singleRow
      * @return void
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function appendRow($singleRow = null)
     {
@@ -201,6 +202,7 @@ class AnyDataset
      * Enter description here...
      *
      * @param GenericIterator $iterator
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function import($iterator)
     {
@@ -211,8 +213,10 @@ class AnyDataset
 
     /**
      * Insert one row before specified position.
+     *
      * @param int $rowNumber
      * @param mixed $row
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function insertRowBefore($rowNumber, $row = null)
     {
@@ -258,9 +262,11 @@ class AnyDataset
 
     /**
      * Add a single string field to an existing row
+     *
      * @param string $name - Field name
      * @param string $value - Field value
      * @return void
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function addField($name, $value)
     {

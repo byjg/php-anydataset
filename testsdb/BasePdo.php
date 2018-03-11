@@ -153,4 +153,36 @@ abstract class BasePdo extends TestCase
         $id = $this->dbDriver->getScalar($sql);
         $this->assertEquals(4, $id);
     }
+
+    public function testInsertSpecialChars()
+    {
+        $this->dbDriver->execute(
+            "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Dog', '€ Sign Pètit Pannô', 6);"
+        );
+
+        $iterator = $this->dbDriver->getIterator('select Id, Breed, Name, Age from Dogs where id = 4');
+        $row = $iterator->toArray();
+
+        $this->assertEquals(4, $row[0]["id"]);
+        $this->assertEquals('Dog', $row[0]["breed"]);
+        $this->assertEquals('€ Sign Pètit Pannô', $row[0]["name"]);
+        $this->assertEquals(6, $row[0]["age"]);
+    }
+
+    public function testGetBuggyUT8()
+    {
+        $this->dbDriver->execute(
+            "INSERT INTO Dogs (Breed, Name, Age) VALUES ('Dog', 'FÃ©lix', 6);"
+        );
+
+        $iterator = $this->dbDriver->getIterator('select Id, Breed, Name, Age from Dogs where id = 4');
+        $row = $iterator->toArray();
+
+        $this->assertEquals(4, $row[0]["id"]);
+        $this->assertEquals('Dog', $row[0]["breed"]);
+        $this->assertEquals('FÃ©lix', $row[0]["name"]);
+        $this->assertEquals(6, $row[0]["age"]);
+    }
+
 }
+

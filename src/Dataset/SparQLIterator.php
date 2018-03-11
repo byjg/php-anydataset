@@ -48,7 +48,8 @@ class SparQLIterator extends GenericIterator
     /**
      * @access public
      * @return Row
-     * @throws IteratorException
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function moveNext()
     {

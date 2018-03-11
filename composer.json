@@ -25,7 +25,6 @@
     "ext-json": "*",
     "byjg/xmlutil": "1.0.*",
     "byjg/sparqllib": "1.0.*",
-    "neitanod/forceutf8": "v2.0",
     "psr/log": "1.0.*",
     "psr/cache": "1.0.*",
     "byjg/serializer": "1.0.*",

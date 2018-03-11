@@ -33,6 +33,10 @@ class SparQLDataset
         }
     }
 
+    /**
+     * @return array
+     * @throws \SparQL\Exception
+     */
     public function getCapabilities()
     {
         $return = array();
@@ -52,6 +56,8 @@ class SparQLDataset
     /**
      * @param string $sparql
      * @return GenericIterator
+     * @throws \SparQL\ConnectionException
+     * @throws \SparQL\Exception
      */
     public function getIterator($sparql)
     {

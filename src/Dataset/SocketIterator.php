@@ -74,6 +74,7 @@ class SocketIterator extends GenericIterator
     /**
      * @access public
      * @return Row
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function moveNext()
     {

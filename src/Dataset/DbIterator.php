@@ -3,7 +3,6 @@
 namespace ByJG\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Exception\IteratorException;
-use ForceUTF8\Encoding;
 use PDO;
 use PDOStatement;
 
@@ -39,6 +38,7 @@ class DbIterator extends GenericIterator
 
     /**
      * @return bool
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function hasNext()
     {
@@ -58,7 +58,7 @@ class DbIterator extends GenericIterator
                 } elseif (is_object($value)) {
                     $rowArray[$key] = "[OBJECT]";
                 } else {
-                    $rowArray[$key] = Encoding::toUTF8($value);
+                    $rowArray[$key] = $value;
                 }
             }
             $singleRow = new Row($rowArray);
@@ -81,7 +81,8 @@ class DbIterator extends GenericIterator
 
     /**
      * @return Row
-     * @throws IteratorException
+     * @throws \ByJG\AnyDataset\Exception\IteratorException
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function moveNext()
     {
