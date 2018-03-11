@@ -63,7 +63,6 @@ class FixedTextFileDataset
     /**
      * @return \ByJG\AnyDataset\Dataset\FixedTextFileIterator
      * @throws \ByJG\AnyDataset\Exception\DatasetException
-     * @throws \Exception
      * @return GenericIterator
      */
     protected function getIteratorHttp()
@@ -84,21 +83,19 @@ class FixedTextFileDataset
         $out .= "Host: " . $urlParts[2] . "\r\n";
         $out .= "Connection: Close\r\n\r\n";
 
-        fwrite($handle, $out);
-
         try {
-            return new FixedTextFileIterator($handle, $this->fieldDefinition);
-        } catch (Exception $ex) {
+            fwrite($handle, $out);
+        } catch (\Exception $ex) {
             fclose($handle);
-            throw $ex;
+            throw new DatasetException($ex->getMessage());
         }
+
+        return new FixedTextFileIterator($handle, $this->fieldDefinition);
     }
 
     /**
      * @return \ByJG\AnyDataset\Dataset\FixedTextFileIterator
      * @throws \ByJG\AnyDataset\Exception\DatasetException
-     * @throws \Exception
-     * @return GenericIterator
      */
     protected function getIteratorFile()
     {
@@ -107,11 +104,6 @@ class FixedTextFileDataset
             throw new DatasetException("TextFileDataset File open error");
         }
 
-        try {
-            return new FixedTextFileIterator($handle, $this->fieldDefinition);
-        } catch (Exception $ex) {
-            fclose($handle);
-            throw $ex;
-        }
+        return new FixedTextFileIterator($handle, $this->fieldDefinition);
     }
 }

@@ -101,8 +101,8 @@ class MongoDbDriver implements NoSqlInterface
      * @param $idDocument
      * @param null $collection
      * @return \ByJG\AnyDataset\NoSqlDocument|null
-     * @throws \Exception
      * @throws \MongoDB\Driver\Exception\Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function getDocumentById($idDocument, $collection = null)
     {
@@ -121,8 +121,8 @@ class MongoDbDriver implements NoSqlInterface
      * @param \ByJG\AnyDataset\Dataset\IteratorFilter $filter
      * @param null $collection
      * @return \ByJG\AnyDataset\NoSqlDocument[]|null
-     * @throws \Exception
      * @throws \MongoDB\Driver\Exception\Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function getDocuments(IteratorFilter $filter, $collection = null)
     {
@@ -231,7 +231,7 @@ class MongoDbDriver implements NoSqlInterface
     /**
      * @param \ByJG\AnyDataset\NoSqlDocument $document
      * @return \ByJG\AnyDataset\NoSqlDocument
-     * @throws \Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function save(NoSqlDocument $document)
     {
