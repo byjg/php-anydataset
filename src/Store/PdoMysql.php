@@ -25,6 +25,15 @@ class PdoMysql extends DbPdoDriver
             PDO::ATTR_EMULATE_PREPARES => true
         ];
 
+        $sslCa = $connUri->getQueryPart("ca");
+        $sslCert = $connUri->getQueryPart("cert");
+        $sslKey = $connUri->getQueryPart("key");
+        if (!empty($sslCa) && !empty($sslCert) && !empty($sslKey)) {
+            $preOptions[PDO::MYSQL_ATTR_SSL_KEY] = urldecode($sslKey);
+            $preOptions[PDO::MYSQL_ATTR_SSL_CERT] = urldecode($sslCert);
+            $preOptions[PDO::MYSQL_ATTR_SSL_CA] = urldecode($sslCa);
+        }
+
         $this->setSupportMultRowset(true);
 
         parent::__construct($connUri, $preOptions, $postOptions);
