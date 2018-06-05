@@ -8,6 +8,15 @@ use PDO;
 class PdoMysql extends DbPdoDriver
 {
 
+    protected $mysqlAttr = [
+        "ca" => PDO::MYSQL_ATTR_SSL_CA,
+        "capath" => PDO::MYSQL_ATTR_SSL_CAPATH,
+        "cert" => PDO::MYSQL_ATTR_SSL_CERT,
+        "key" => PDO::MYSQL_ATTR_SSL_KEY,
+        "cipher" => PDO::MYSQL_ATTR_SSL_CIPHER,
+        "verifyssl" => 1014 // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT (>=7.1)
+    ];
+
     /**
      * PdoMysql constructor.
      *
@@ -25,13 +34,13 @@ class PdoMysql extends DbPdoDriver
             PDO::ATTR_EMULATE_PREPARES => true
         ];
 
-        $sslCa = $connUri->getQueryPart("ca");
-        $sslCert = $connUri->getQueryPart("cert");
-        $sslKey = $connUri->getQueryPart("key");
-        if (!empty($sslCa) && !empty($sslCert) && !empty($sslKey)) {
-            $preOptions[PDO::MYSQL_ATTR_SSL_KEY] = urldecode($sslKey);
-            $preOptions[PDO::MYSQL_ATTR_SSL_CERT] = urldecode($sslCert);
-            $preOptions[PDO::MYSQL_ATTR_SSL_CA] = urldecode($sslCa);
+        if (!empty($connUri->getQuery())) {
+            foreach ($this->mysqlAttr as $key => $property) {
+                $value = $connUri->getQueryPart("key");
+                if (!empty($value)) {
+                    $preOptions[$property] = urldecode($value);
+                }
+            }
         }
 
         $this->setSupportMultRowset(true);
