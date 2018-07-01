@@ -36,9 +36,15 @@ class PdoMysql extends DbPdoDriver
 
         if (!empty($connUri->getQuery())) {
             foreach ($this->mysqlAttr as $key => $property) {
-                $value = $connUri->getQueryPart("key");
+                $value = $connUri->getQueryPart($key);
                 if (!empty($value)) {
-                    $preOptions[$property] = urldecode($value);
+                    $prepValue = urldecode($value);
+                    if ($prepValue === 'false') {
+                        $prepValue = false;
+                    } else if ($prepValue === 'true') {
+                        $prepValue = true;
+                    }
+                    $preOptions[$property] = $prepValue;
                 }
             }
         }
