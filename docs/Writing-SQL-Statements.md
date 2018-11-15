@@ -19,12 +19,12 @@ You can use the IteratorFilter object to make easier create SQL
 ```php
 <?php
 // Create the IteratorFilter instance
-$filter = new \ByJG\AnyDataset\Dataset\IteratorFilter();
-$filter->addRelation('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, 10);
+$filter = new \ByJG\AnyDataset\Core\IteratorFilter();
+$filter->addRelation('field', \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
 
 // Generate the SQL
 $param = [];
-$formatter = new \ByJG\AnyDataset\Dataset\IteratorFilterSqlFormatter();
+$formatter = new \ByJG\AnyDataset\Core\IteratorFilterSqlFormatter();
 $sql = $formatter->format(
     $filter->getRawFilters(),
     'mytable',
@@ -59,7 +59,7 @@ class MyLiteral
 $literal = new MyLiteral();
 
 // Using the IteratorFilter:
-$filter = new \ByJG\AnyDataset\Dataset\IteratorFilter();
-$filter->addRelation('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, $literal);
+$filter = new \ByJG\AnyDataset\Core\IteratorFilter();
+$filter->addRelation('field', \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, $literal);
 ```
 

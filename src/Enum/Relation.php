@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Enum;
+namespace ByJG\AnyDataset\Core\Enum;
 
 /**
  * Constants to represent relational operators.

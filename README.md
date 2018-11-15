@@ -32,10 +32,10 @@ The easiest way to work is to get an repository and get an iterator for navigate
 
 ```php
 <?php
-$repository = new \ByJG\AnyDataset\Dataset\TextFileDataset(
+$repository = new \ByJG\AnyDataset\Core\TextFileDataset(
     'myfile',
     ['field1', 'field2', 'field3'],
-    \ByJG\AnyDataset\Dataset\TextFileDataset::CSVFILE
+    \ByJG\AnyDataset\Core\TextFileDataset::CSVFILE
 );
 $iterator = $repository->getIterator();
 

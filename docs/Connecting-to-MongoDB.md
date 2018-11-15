@@ -89,8 +89,8 @@ foreach ($result as $document)
 ```php
 <?php
 
-$filter = new \ByJG\AnyDataset\Dataset\IteratorFilter();
-$filter->addRelation('field', \ByJG\AnyDataset\Enum\Relation::EQUAL, 'value');
+$filter = new \ByJG\AnyDataset\Core\IteratorFilter();
+$filter->addRelation('field', \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 'value');
 
 $result = $mongo->getDocuments($filter, 'mycollection');
 foreach ($result as $document)
