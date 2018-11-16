@@ -12,12 +12,6 @@
       "ByJG\\AnyDataset\\Core\\": "src/"
     }
   },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\AnyDataset\\": "tests/",
-      "TestsDb\\AnyDataset\\": "testsdb/"
-    }
-  },
   "prefer-stable": true,
   "minimum-stability": "dev",
   "require": {

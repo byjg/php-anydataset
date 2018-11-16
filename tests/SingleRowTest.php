@@ -8,6 +8,10 @@ use Tests\AnyDataset\Sample\ModelGetter;
 use Tests\AnyDataset\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
 
+require_once "Sample/ModelPublic.php";
+require_once "Sample/ModelGetter.php";
+require_once "Sample/ModelPropertyPattern.php";
+
 class SingleRowTest extends TestCase
 {
 

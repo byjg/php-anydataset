@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class AnyDatasetTest extends TestCase
 {
 
-    const SAMPLE_DIR = __DIR__ . "/../Sample/";
+    const SAMPLE_DIR = __DIR__ . "/Sample/";
     
     /**
      * @var AnyDataset
@@ -35,8 +35,6 @@ class AnyDatasetTest extends TestCase
 
     public function testConstructorString()
     {
-        print_r(self::SAMPLE_DIR . 'sample.anydata.xml');
-        
         $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
         $this->assertEquals(2, count($anydata->getIterator()->toArray()));
         $this->assertEquals([

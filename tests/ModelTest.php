@@ -6,6 +6,8 @@ use ByJG\AnyDataset\Core\AnyDataset;
 use ByJG\Serializer\SerializerObject;
 use PHPUnit\Framework\TestCase;
 
+require_once "Sample/SampleModel.php";
+
 class ModelTest extends TestCase
 {
     public function testBindSingleRow()
