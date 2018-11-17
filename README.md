@@ -60,6 +60,19 @@ $iterator = $dataset->getIterator();
 print_r($iterator->toArray());
 ```
 
+### Iterating with While
+
+```php
+<?php
+$iterator = $dataset->getIterator();
+while ($iterator->hasNext()) {
+    $row = $iterator->moveNext();
+    
+    print_r($row->get("field1"));
+}
+```
+
+
 ## Install
 
 Just type: `composer require "byjg/anydataset=4.0.*"`
