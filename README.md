@@ -1,4 +1,6 @@
 # AnyDataset
+
+[![Opensource ByJG](https://img.shields.io/badge/opensource-byjg.com-brightgreen.svg)](http://opensource.byjg.com)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c/mini.png)](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/anydataset/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
 [![Build Status](https://travis-ci.org/byjg/anydataset.svg?branch=master)](https://travis-ci.org/byjg/anydataset)
@@ -16,17 +18,18 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 
 ## Current Implementations
 
-* Array
-* Relational Databases (based on PDO - Sqlite, MySql, Postgres, Sql Server, Oracle, and others)
-* DBLib (SQL Server php native)
-* OCI8 (Oracle php native interface)
-* Text files (fixed and delimeted like CSV)
-* Json documents
-* Xml documents
-* Sockets
-* [MongoDB](docs/Connecting-to-MongoDB.md)
-* Amazon Aws S3
-* SparQL
+| Object                 | Data Source           | Read | Write | Reference               |
+| ---------------------- | --------------------- |:----:|:-----:| ----------------------- |
+| DbDriverInterface      | Relational DB         | yes  | yes   | [Github](https://github.com/byjg/anydataset-db) |
+| AnyDataSet             | Anydataset            | yes  | yes   | [Github](https://github.com/byjg/anydataset) |
+| ArrayDataSet           | Array                 | yes  | no    | [Github](https://github.com/byjg/anydataset-array) |
+| TextFileDataSet        | Delimited Fields      | yes  | no    | [Github](https://github.com/byjg/anydataset-text) |
+| FixedTextFileDataSet   | Fixed Size fields     | yes  | no    | [Github](https://github.com/byjg/anydataset-text) |
+| XmlDataSet             | Xml                   | yes  | no    | [Github](https://github.com/byjg/anydataset-xml) |
+| JSONDataSet            | Json                  | yes  | no    | [Github](https://github.com/byjg/anydataset-json) |
+| SparQLDataSet          | SparQl Repositories   | yes  | no    | |
+| NoSqlDocumentInterface | NoSql Document Based  | yes  | yes   | |
+| KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | |
 
 
 ## Examples
