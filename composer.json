@@ -19,6 +19,9 @@
     "byjg/xmlutil": "1.0.*",
     "byjg/serializer": "1.0.*"
   },
+  "suggest": {
+    "ext-dom": "*"
+  },
   "require-dev": {
     "phpunit/phpunit": ">5.7"
   },

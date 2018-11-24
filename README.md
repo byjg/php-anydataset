@@ -27,9 +27,9 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 | FixedTextFileDataSet   | Fixed Size fields     | yes  | no    | [Github](https://github.com/byjg/anydataset-text) |
 | XmlDataSet             | Xml                   | yes  | no    | [Github](https://github.com/byjg/anydataset-xml) |
 | JSONDataSet            | Json                  | yes  | no    | [Github](https://github.com/byjg/anydataset-json) |
-| SparQLDataSet          | SparQl Repositories   | yes  | no    | |
-| NoSqlDocumentInterface | NoSql Document Based  | yes  | yes   | |
-| KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | |
+| SparQLDataSet          | SparQl Repositories   | yes  | no    | [Github](https://github.com/byjg/anydataset-sparql) |
+| NoSqlDocumentInterface | NoSql Document Based  | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
+| KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
 
 
 ## Examples

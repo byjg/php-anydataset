@@ -2,7 +2,6 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use ByJG\AnyDataset\Core\IteratorInterface;
 use ByJG\Serializer\DumpToArrayInterface;
 use Iterator;
 
@@ -17,6 +16,10 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
 
     abstract public function key();
 
+    /**
+     * @return array
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     */
     public function toArray()
     {
         $retArray = [];
