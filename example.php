@@ -1,16 +1,17 @@
 <?php
 require "vendor/autoload.php";
 
-$db = \ByJG\AnyDataset\Factory::getDbRelationalInstance('mysql://root:aaaaaaa@localhost/development');
+$dataset = new \ByJG\AnyDataset\Core\AnyDataset("example");
 
-$iterator = $db->getIterator('select * from airports where idairports = [[idairports]]', ['idairports' => 898]);
-
-// Convert all iterator to Array
-print_r($iterator->toArray());
-
-// Iterate over all elements
-foreach ($iterator as $row)
-{
-    print_r($row->toArray());
+$iterator = $dataset->getIterator();
+foreach ($iterator as $row) {
+    print $row->toArray();
 }
+
+
+$filter = new \ByJG\AnyDataset\Core\IteratorFilter();
+$filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
+$iterator2 = $dataset->getIterator($filter);
+
+$iterator->toArray();
 

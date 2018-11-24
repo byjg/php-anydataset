@@ -1,8 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset;
-
-use ByJG\AnyDataset\Dataset\Row;
+namespace ByJG\AnyDataset\Core;
 
 interface IteratorInterface
 {

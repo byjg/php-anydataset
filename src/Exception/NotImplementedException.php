@@ -1,6 +1,6 @@
 <?php
 
-namespace ByJG\AnyDataset\Exception;
+namespace ByJG\AnyDataset\Core\Exception;
 
 class NotImplementedException extends \Exception
 {
