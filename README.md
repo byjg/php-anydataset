@@ -6,17 +6,18 @@
 [![Build Status](https://travis-ci.org/byjg/anydataset.svg?branch=master)](https://travis-ci.org/byjg/anydataset)
 [![Code Coverage](https://scrutinizer-ci.com/g/byjg/anydataset/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
 
-## Description
 
 Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP. 
 
-## Features
+# Features
 
 - Access different data sources using the same interface. 
 - Iterable results
 - Convert results to array
 
-## Current Implementations
+# Current Implementations
+
+{:.table}
 
 | Object                 | Data Source           | Read | Write | Reference               |
 | ---------------------- | --------------------- |:----:|:-----:| ----------------------- |
@@ -32,9 +33,9 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 | KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
 
 
-## Examples
+# Examples
 
-### Iterating with foreach 
+## Iterating with foreach 
 
 ```php
 <?php
@@ -46,7 +47,7 @@ foreach ($iterator as $row) {
 }
 ```
 
-### Filtering results
+## Filtering results
 
 ```php
 <?php
@@ -55,7 +56,7 @@ $filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
 $iterator2 = $dataset->getIterator($filter);
 ```
 
-### Conveting to Array
+## Conveting to Array
 
 ```php
 <?php
@@ -63,7 +64,7 @@ $iterator = $dataset->getIterator();
 print_r($iterator->toArray());
 ```
 
-### Iterating with While
+## Iterating with While
 
 ```php
 <?php
@@ -76,13 +77,11 @@ while ($iterator->hasNext()) {
 ```
 
 
-## Install
+# Install
 
 Just type: `composer require "byjg/anydataset=4.0.*"`
 
-#### Running Unit tests
-
-Running the Unit tests
+# Running Unit tests
 
 ```php
 vendor/bin/phpunit
