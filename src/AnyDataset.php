@@ -59,24 +59,29 @@ class AnyDataset
      * Path to anydataset file
      * @var string
      */
-    private $path;
+    private $filename;
 
     /**
-     * @param string $file
+     * @param string $filename
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
-    public function __construct($file = null)
+    public function __construct($filename = null)
     {
         $this->collection = array();
         $this->currentRow = -1;
 
-        $this->path = null;
-        $this->defineSavePath($file, function () {
-            if (!is_null($this->path)) {
-                $this->createFrom($this->path);
+        $this->filename = null;
+        $this->defineSavePath($filename, function () {
+            if (!is_null($this->filename)) {
+                $this->createFrom($this->filename);
             }
         });
+    }
+
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     private function defineSavePath($file, $closure)
@@ -86,11 +91,11 @@ class AnyDataset
                 throw new \InvalidArgumentException('I expected a string as a file name');
             }
 
-            $ext = pathinfo($file, PATHINFO_EXTEqNSION);
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
             if (empty($ext)) {
                 $file .= '.anydata.xml';
             }
-            $this->path = $file;
+            $this->filename = $file;
         }
 
         $closure();
@@ -160,18 +165,18 @@ class AnyDataset
     }
 
     /**
-     * @param string $file
+     * @param string $filename
      * @throws DatabaseException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
-    public function save($file = null)
+    public function save($filename = null)
     {
-        $this->defineSavePath($file, function () {
-            if (is_null($this->path)) {
+        $this->defineSavePath($filename, function () {
+            if (is_null($this->filename)) {
                 throw new DatabaseException("No such file path to save anydataset");
             }
 
-            XmlUtil::saveXmlDocument($this->getAsDom(), $this->path);
+            XmlUtil::saveXmlDocument($this->getAsDom(), $this->filename);
         });
     }
 
