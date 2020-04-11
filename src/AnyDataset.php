@@ -92,7 +92,7 @@ class AnyDataset
             }
 
             $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if (empty($ext)) {
+            if (empty($ext) && substr($file, 0, 6) !== "php://") {
                 $file .= '.anydata.xml';
             }
             $this->filename = $file;
