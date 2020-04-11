@@ -72,19 +72,28 @@ class AnyDataset
         $this->currentRow = -1;
 
         $this->path = null;
+        $this->defineSavePath($file, function () {
+            if (!is_null($this->path)) {
+                $this->createFrom($this->path);
+            }
+        });
+    }
+
+    private function defineSavePath($file, $closure)
+    {
         if (!is_null($file)) {
             if (!is_string($file)) {
                 throw new \InvalidArgumentException('I expected a string as a file name');
             }
 
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $ext = pathinfo($file, PATHINFO_EXTEqNSION);
             if (empty($ext)) {
                 $file .= '.anydata.xml';
             }
             $this->path = $file;
-
-            $this->createFrom($this->path);
         }
+
+        $closure();
     }
 
     /**
@@ -157,19 +166,13 @@ class AnyDataset
      */
     public function save($file = null)
     {
-        if (!is_null($file)) {
-            if (!is_string($file)) {
-                throw new InvalidArgumentException('Invalid file name');
+        $this->defineSavePath($file, function () {
+            if (is_null($this->path)) {
+                throw new DatabaseException("No such file path to save anydataset");
             }
 
-            $this->path = $file;
-        }
-
-        if (is_null($this->path)) {
-            throw new DatabaseException("No such file path to save anydataset");
-        }
-
-        XmlUtil::saveXmlDocument($this->getAsDom(), $this->path);
+            XmlUtil::saveXmlDocument($this->getAsDom(), $this->path);
+        });
     }
 
     /**
