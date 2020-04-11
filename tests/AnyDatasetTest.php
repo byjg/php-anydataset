@@ -60,6 +60,21 @@ class AnyDatasetTest extends TestCase
                 "field2" => "othervalue2",
             ],
             ], $anydata->getIterator()->toArray());
+
+        $anydataMem = new AnyDataset("php://memory");
+        $anydataMem->import($anydata->getIterator());
+        $this->assertEquals(2, count($anydataMem->getIterator()->toArray()));
+        $this->assertEquals([
+            [
+                "field1" => "value1",
+                "field2" => "value2",
+            ],
+            [
+                "field1" => "othervalue1",
+                "field2" => "othervalue2",
+            ],
+        ], $anydata->getIterator()->toArray());
+        $anydataMem->save();
     }
 
     public function testXML()
