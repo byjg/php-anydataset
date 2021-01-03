@@ -1,6 +1,8 @@
 # AnyDataset
 
-[![Opensource ByJG](https://img.shields.io/badge/opensource-byjg.com-brightgreen.svg)](http://opensource.byjg.com)
+[![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
+[![GitHub license](https://img.shields.io/github/license/byjg/anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
+[![GitHub release](https://img.shields.io/github/release/byjg/anydataset.svg)](https://github.com/byjg/anydataset/releases/)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c/mini.png)](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/anydataset/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
 [![Build Status](https://travis-ci.org/byjg/anydataset.svg?branch=master)](https://travis-ci.org/byjg/anydataset)
@@ -9,13 +11,13 @@
 
 Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP. 
 
-# Features
+## Features
 
 - Access different data sources using the same interface. 
 - Iterable results
 - Convert results to array
 
-# Current Implementations
+## Current Implementations
 
 {:.table}
 
@@ -33,9 +35,9 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 | KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
 
 
-# Examples
+## Examples
 
-## Iterating with foreach 
+### Iterating with foreach 
 
 ```php
 <?php
@@ -47,7 +49,7 @@ foreach ($iterator as $row) {
 }
 ```
 
-## Filtering results
+### Filtering results
 
 ```php
 <?php
@@ -56,7 +58,7 @@ $filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
 $iterator2 = $dataset->getIterator($filter);
 ```
 
-## Conveting to Array
+### Conveting to Array
 
 ```php
 <?php
@@ -64,7 +66,7 @@ $iterator = $dataset->getIterator();
 print_r($iterator->toArray());
 ```
 
-## Iterating with While
+### Iterating with While
 
 ```php
 <?php
@@ -77,11 +79,11 @@ while ($iterator->hasNext()) {
 ```
 
 
-# Install
+## Install
 
 Just type: `composer require "byjg/anydataset=4.0.*"`
 
-# Running Unit tests
+## Running Unit tests
 
 ```php
 vendor/bin/phpunit

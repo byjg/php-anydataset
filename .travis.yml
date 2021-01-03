@@ -12,3 +12,9 @@ install:
 
 script: 
   - vendor/bin/phpunit
+
+jobs:
+  include:
+    - stage: Documentation
+      install: skip
+      script: ./deploy.sh
