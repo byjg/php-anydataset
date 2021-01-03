@@ -1,6 +1,7 @@
 # AnyDataset
 
 [![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
+[![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/anydataset/)
 [![GitHub license](https://img.shields.io/github/license/byjg/anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
 [![GitHub release](https://img.shields.io/github/release/byjg/anydataset.svg)](https://github.com/byjg/anydataset/releases/)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c/mini.png)](https://insight.sensiolabs.com/projects/159bc0fe-42dd-4022-a3a2-67e871491d6c)
@@ -85,7 +86,7 @@ Just type: `composer require "byjg/anydataset=4.0.*"`
 
 ## Running Unit tests
 
-```php
+```bash
 vendor/bin/phpunit
 ```
 

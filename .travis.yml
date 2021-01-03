@@ -15,6 +15,7 @@ script:
 
 jobs:
   include:
-    - stage: Documentation
+    - stage: documentation
+      if: branch = master
       install: skip
-      script: ./deploy.sh
+      script: "curl https://opensource.byjg.com/add-doc.sh | bash /dev/stdin php anydataset"
