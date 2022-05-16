@@ -18,6 +18,8 @@ class Row extends BinderObject implements DumpToArrayInterface
     private $row = null;
     private $originalRow = null;
 
+    protected $fieldNameCaseSensitive = true;
+
     /**
      * Row constructor
      *
@@ -45,6 +47,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function addField($name, $value)
     {
+        $name = $this->getHydratedFieldName($name);
+
         if (!array_key_exists($name, $this->row)) {
             $this->row[$name] = $value;
         } elseif (is_array($this->row[$name])) {
@@ -62,6 +66,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function get($name)
     {
+        $name = $this->getHydratedFieldName($name);
+
         if (!array_key_exists($name, $this->row)) {
             return null;
         }
@@ -82,6 +88,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function getAsArray($fieldName)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         if (!array_key_exists($fieldName, $this->row)) {
             return [];
         }
@@ -111,6 +119,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function set($name, $value)
     {
+        $name = $this->getHydratedFieldName($name);
+
         if (!array_key_exists($name, $this->row)) {
             $this->addField($name, $value);
         } else {
@@ -126,6 +136,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function removeField($fieldName)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         if (array_key_exists($fieldName, $this->row)) {
             unset($this->row[$fieldName]);
             $this->informChanges();
@@ -140,6 +152,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function removeValue($fieldName, $value)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         $result = $this->row[$fieldName];
         if (!is_array($result)) {
             if ($value == $result) {
@@ -167,6 +181,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function replaceValue($fieldName, $oldvalue, $newvalue)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         $result = $this->row[$fieldName];
         if (!is_array($result)) {
             if ($oldvalue == $result) {
@@ -277,5 +293,44 @@ class Row extends BinderObject implements DumpToArrayInterface
     protected function setPropValue($obj, $propName, $value)
     {
         $obj->set($propName, $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function fieldExists($name)
+    {
+        return isset($this->row[$this->getHydratedFieldName($name)]);
+    }
+
+    /**
+     * @return void
+     */
+    public function enableFieldNameCaseSensitive() 
+    {
+        $this->row = array_change_key_case($this->row, CASE_LOWER);
+        $this->originalRow = array_change_key_case($this->originalRow, CASE_LOWER);
+        $this->fieldNameCaseSensitive = false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFieldNameCaseSensitive()
+    {
+        return $this->fieldNameCaseSensitive;
+    }
+
+    /**
+     * @params name Fieldname
+     * @return string
+     */
+    protected function getHydratedFieldName($name)
+    {
+        if (!$this->isFieldNameCaseSensitive()) {
+            return strtolower($name);
+        }
+
+        return $name;
     }
 }

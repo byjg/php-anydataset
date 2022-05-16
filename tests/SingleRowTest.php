@@ -303,4 +303,53 @@ class SingleRowTest extends TestCase
         $this->assertEquals(10, $sr->get("IdModel"));
         $this->assertEquals("Testing", $sr->get("ClientName"));
     }
+
+    public function testCaseSensitive_1()
+    {
+        $row = new Row([
+            "fieldA" => "test",
+            "fieldB" => "new test"
+        ]);
+
+        $this->assertTrue($row->isFieldNameCaseSensitive());
+
+        $this->assertEquals("test", $row->get("fieldA"));
+        $this->assertEquals("new test", $row->get("fieldB"));
+
+        $this->assertNull($row->get("fielda"));
+        $this->assertNull($row->get("fieldb"));
+
+        $row->enableFieldNameCaseSensitive();
+
+        $this->assertFalse($row->isFieldNameCaseSensitive());
+
+        $this->assertEquals("test", $row->get("fielda"));
+        $this->assertEquals("new test", $row->get("FiEldb"));
+    }
+
+    public function testCaseSensitive_2()
+    {
+        $row = new Row([
+            "fieldA" => "test",
+            "fieldB" => "new test"
+        ]);
+
+        $row->set("FIELDA", "a");
+        $this->assertEquals("test", $row->get("fieldA"));
+        $this->assertEquals("a", $row->get("FIELDA"));
+
+        $row->enableFieldNameCaseSensitive();
+        // When enable case insentive, the last field name overwrite the value
+        $this->assertEquals("a", $row->get("FieLda")); 
+        
+        $row->set("FIELDB", "new value");
+        $this->assertEquals("new value", $row->get("FieLdB")); 
+
+        $this->assertFalse($row->fieldExists("DelEteME")); 
+        $row->addField("DELETEME", "true");
+        $this->assertTrue($row->fieldExists("DelEteME")); 
+
+        $row->removeField("dELeTEme");
+        $this->assertFalse($row->fieldExists("DelEteME")); 
+    }
 }
