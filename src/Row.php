@@ -306,7 +306,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     /**
      * @return void
      */
-    public function enableFieldNameCaseSensitive() 
+    public function enableFieldNameCaseInSensitive() 
     {
         $this->row = array_change_key_case($this->row, CASE_LOWER);
         $this->originalRow = array_change_key_case($this->originalRow, CASE_LOWER);

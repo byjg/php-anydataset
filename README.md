@@ -8,12 +8,11 @@
 [![Build Status](https://travis-ci.com/byjg/anydataset.svg?branch=master)](https://travis-ci.com/byjg/anydataset)
 [![Code Coverage](https://scrutinizer-ci.com/g/byjg/anydataset/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
 
-
-Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP. 
+Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP.
 
 ## Features
 
-- Access different data sources using the same interface. 
+- Access different data sources using the same interface.
 - Iterable results
 - Convert results to array
 
@@ -34,10 +33,9 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 | NoSqlDocumentInterface | NoSql Document Based  | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
 | KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
 
-
 ## Examples
 
-### Iterating with foreach 
+### Iterating with foreach
 
 ```php
 <?php
@@ -58,7 +56,7 @@ $filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
 $iterator2 = $dataset->getIterator($filter);
 ```
 
-### Conveting to Array
+### Converting to Array
 
 ```php
 <?php
@@ -77,7 +75,6 @@ while ($iterator->hasNext()) {
     print_r($row->get("field1"));
 }
 ```
-
 
 ## Install
 

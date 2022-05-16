@@ -319,7 +319,7 @@ class SingleRowTest extends TestCase
         $this->assertNull($row->get("fielda"));
         $this->assertNull($row->get("fieldb"));
 
-        $row->enableFieldNameCaseSensitive();
+        $row->enableFieldNameCaseInSensitive();
 
         $this->assertFalse($row->isFieldNameCaseSensitive());
 
@@ -338,7 +338,7 @@ class SingleRowTest extends TestCase
         $this->assertEquals("test", $row->get("fieldA"));
         $this->assertEquals("a", $row->get("FIELDA"));
 
-        $row->enableFieldNameCaseSensitive();
+        $row->enableFieldNameCaseInSensitive();
         // When enable case insentive, the last field name overwrite the value
         $this->assertEquals("a", $row->get("FieLda")); 
         
