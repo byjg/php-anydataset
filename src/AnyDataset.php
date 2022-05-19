@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Exception\DatabaseException;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\Util\XmlUtil;
 use InvalidArgumentException;
 
@@ -141,27 +142,7 @@ class AnyDataset
      */
     public function xml()
     {
-        return $this->getAsDom()->saveXML();
-    }
-
-    /**
-     * Returns the AnyDataset XmlDocument representive object
-     *
-     * @return \DOMDocument XmlDocument object
-     * @throws \ByJG\Util\Exception\XmlUtilException
-     */
-    public function getAsDom()
-    {
-        $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset></anydataset>");
-        $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
-        foreach ($this->collection as $sr) {
-            $row = $sr->getAsDom();
-            $nodeRow = $row->getElementsByTagName("row")->item(0);
-            $newRow = XmlUtil::createChild($nodeRoot, "row");
-            XmlUtil::addNodeFromNode($newRow, $nodeRow);
-        }
-
-        return $anyDataSet;
+        return (new XmlFormatter($this))->toText();
     }
 
     /**
@@ -176,7 +157,7 @@ class AnyDataset
                 throw new DatabaseException("No such file path to save anydataset");
             }
 
-            XmlUtil::saveXmlDocument($this->getAsDom(), $this->filename);
+            (new XmlFormatter($this))->saveToFile($this->filename);
         });
     }
 

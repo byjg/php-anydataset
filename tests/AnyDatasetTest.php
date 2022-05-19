@@ -3,6 +3,8 @@
 namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Core\AnyDataset;
+use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use PHPUnit\Framework\TestCase;
 
 class AnyDatasetTest extends TestCase
@@ -93,6 +95,37 @@ class AnyDatasetTest extends TestCase
         $xmlDomValidate = \ByJG\Util\XmlUtil::createXmlDocumentFromStr($this->object->xml());
 
         $this->assertEquals($xmlDom, $xmlDomValidate);
+    }
+
+    public function testXMFormatter()
+    {
+        $this->object->appendRow();
+        $this->object->addField('field', 'value');
+
+        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
+                '<?xml version="1.0" encoding="utf-8"?>'
+                . '<anydataset>'
+                . '<row>'
+                . '<field name="field">value</field>'
+                . '</row>'
+                . '</anydataset>'
+        );
+
+        $formatter = new XmlFormatter($this->object);
+        $this->assertEquals($xmlDom, $formatter->raw());
+    }
+
+    public function testJsonFormatter()
+    {
+        $this->object->appendRow();
+        $this->object->addField('field', 'value');
+        $this->object->appendRow();
+        $this->object->addField('field', 'value2');
+
+        $jsonText = '[{"field":"value"},{"field":"value2"}]';
+
+        $formatter = new JsonFormatter($this->object);
+        $this->assertEquals($jsonText, $formatter->toText());
     }
 
     public function testSave()

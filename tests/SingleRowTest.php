@@ -2,11 +2,14 @@
 
 namespace Tests\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
 use PHPUnit\Framework\TestCase;
 use Tests\AnyDataset\Sample\ModelGetter;
 use Tests\AnyDataset\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
+use stdClass;
 
 require_once "Sample/ModelPublic.php";
 require_once "Sample/ModelGetter.php";
@@ -198,7 +201,24 @@ class SingleRowTest extends TestCase
             . "</row>"
         );
 
-        $this->assertEquals($dom, $this->object->getAsDom());
+        $formatter = (new XmlFormatter($this->object))->raw();
+
+        $this->assertEquals($dom, $formatter);
+    }
+
+    public function testGetJson()
+    {
+        $this->fill();
+
+        $json = new stdClass;
+        $json->field1 = [10, 20, 30];
+        $json->field2 = '40';
+
+        $formatter = new JsonFormatter($this->object);
+        $this->assertEquals($json, $formatter->raw());
+
+        $jsonText = '{"field1":["10","20","30"],"field2":"40"}';
+        $this->assertEquals($jsonText, $formatter->toText());
     }
 
     public function testGetOriginalRawFormat()
