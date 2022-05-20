@@ -111,7 +111,7 @@ class AnyDatasetTest extends TestCase
                 . '</anydataset>'
         );
 
-        $formatter = new XmlFormatter($this->object);
+        $formatter = new XmlFormatter($this->object->getIterator());
         $this->assertEquals($xmlDom, $formatter->raw());
     }
 
@@ -124,7 +124,7 @@ class AnyDatasetTest extends TestCase
 
         $jsonText = '[{"field":"value"},{"field":"value2"}]';
 
-        $formatter = new JsonFormatter($this->object);
+        $formatter = new JsonFormatter($this->object->getIterator());
         $this->assertEquals($jsonText, $formatter->toText());
     }
 

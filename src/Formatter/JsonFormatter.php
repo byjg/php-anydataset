@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Core\Formatter;
 
-use ByJG\AnyDataset\Core\AnyDataset;
+use ByJG\AnyDataset\Core\GenericIterator;
 
 class JsonFormatter extends BaseFormatter
 {
@@ -14,8 +14,8 @@ class JsonFormatter extends BaseFormatter
 
     public function toText()
     {
-        if ($this->object instanceof AnyDataset) {
-            return json_encode($this->object->getIterator()->toArray());
+        if ($this->object instanceof GenericIterator) {
+            return json_encode($this->object->toArray());
         }
         return json_encode($this->object->toArray());
     }

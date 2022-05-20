@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Core\Formatter;
 
-use ByJG\AnyDataset\Core\AnyDataset;
+use ByJG\AnyDataset\Core\GenericIterator;
 use ByJG\Util\XmlUtil;
 
 class XmlFormatter extends BaseFormatter
@@ -48,8 +48,8 @@ class XmlFormatter extends BaseFormatter
      */
     public function raw()
     {
-        if ($this->object instanceof AnyDataset) {
-            return $this->anydatasetXml($this->object->getIterator()->toArray());
+        if ($this->object instanceof GenericIterator) {
+            return $this->anydatasetXml($this->object->toArray());
         }
         return $this->rowXml($this->object->toArray());
     }

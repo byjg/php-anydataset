@@ -142,7 +142,7 @@ class AnyDataset
      */
     public function xml()
     {
-        return (new XmlFormatter($this))->toText();
+        return (new XmlFormatter($this->getIterator()))->toText();
     }
 
     /**
@@ -157,7 +157,7 @@ class AnyDataset
                 throw new DatabaseException("No such file path to save anydataset");
             }
 
-            (new XmlFormatter($this))->saveToFile($this->filename);
+            (new XmlFormatter($this->getIterator()))->saveToFile($this->filename);
         });
     }
 
