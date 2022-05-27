@@ -4,6 +4,8 @@ namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Core\AnyDataset;
 use ByJG\AnyDataset\Core\Enum\Relation;
+use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
 use PHPUnit\Framework\TestCase;
 
@@ -21,18 +23,9 @@ class AnyDatasetTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new AnyDataset();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-
     }
 
     public function testConstructorString()
@@ -95,6 +88,37 @@ class AnyDatasetTest extends TestCase
         $xmlDomValidate = \ByJG\Util\XmlUtil::createXmlDocumentFromStr($this->object->xml());
 
         $this->assertEquals($xmlDom, $xmlDomValidate);
+    }
+
+    public function testXMFormatter()
+    {
+        $this->object->appendRow();
+        $this->object->addField('field', 'value');
+
+        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
+                '<?xml version="1.0" encoding="utf-8"?>'
+                . '<anydataset>'
+                . '<row>'
+                . '<field name="field">value</field>'
+                . '</row>'
+                . '</anydataset>'
+        );
+
+        $formatter = new XmlFormatter($this->object->getIterator());
+        $this->assertEquals($xmlDom, $formatter->raw());
+    }
+
+    public function testJsonFormatter()
+    {
+        $this->object->appendRow();
+        $this->object->addField('field', 'value');
+        $this->object->appendRow();
+        $this->object->addField('field', 'value2');
+
+        $jsonText = '[{"field":"value"},{"field":"value2"}]';
+
+        $formatter = new JsonFormatter($this->object->getIterator());
+        $this->assertEquals($jsonText, $formatter->toText());
     }
 
     public function testSave()
@@ -240,7 +264,7 @@ class AnyDatasetTest extends TestCase
         // Read sample
         $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
 
-        $array = $anydata->getArray(null, 'field1');
+        $array = $anydata->getArray('field1');
 
         $this->assertEquals([
             'value1',

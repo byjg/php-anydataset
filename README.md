@@ -57,7 +57,7 @@ $filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
 $iterator2 = $dataset->getIterator($filter);
 ```
 
-### Conveting to Array
+### Converting to Array
 
 ```php
 <?php

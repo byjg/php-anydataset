@@ -2,11 +2,14 @@
 
 namespace Tests\AnyDataset\Dataset;
 
+use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
 use PHPUnit\Framework\TestCase;
 use Tests\AnyDataset\Sample\ModelGetter;
 use Tests\AnyDataset\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
+use stdClass;
 
 require_once "Sample/ModelPublic.php";
 require_once "Sample/ModelGetter.php";
@@ -24,7 +27,7 @@ class SingleRowTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new Row;
     }
@@ -36,15 +39,6 @@ class SingleRowTest extends TestCase
         $this->object->addField('field1', '30');
         $this->object->addField('field2', '40');
         $this->object->acceptChanges();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-        
     }
 
     public function testAddField()
@@ -198,7 +192,24 @@ class SingleRowTest extends TestCase
             . "</row>"
         );
 
-        $this->assertEquals($dom, $this->object->getAsDom());
+        $formatter = (new XmlFormatter($this->object))->raw();
+
+        $this->assertEquals($dom, $formatter);
+    }
+
+    public function testGetJson()
+    {
+        $this->fill();
+
+        $json = new stdClass;
+        $json->field1 = [10, 20, 30];
+        $json->field2 = '40';
+
+        $formatter = new JsonFormatter($this->object);
+        $this->assertEquals($json, $formatter->raw());
+
+        $jsonText = '{"field1":["10","20","30"],"field2":"40"}';
+        $this->assertEquals($jsonText, $formatter->toText());
     }
 
     public function testGetOriginalRawFormat()
@@ -267,7 +278,7 @@ class SingleRowTest extends TestCase
 
     public function testConstructor_stdClass()
     {
-        $model = new \stdClass();
+        $model = new stdClass();
         $model->Id = 10;
         $model->Name = "Testing";
 
@@ -302,5 +313,54 @@ class SingleRowTest extends TestCase
         // Because this, the field is Id_Model instead IdModel
         $this->assertEquals(10, $sr->get("IdModel"));
         $this->assertEquals("Testing", $sr->get("ClientName"));
+    }
+
+    public function testCaseSensitive_1()
+    {
+        $row = new Row([
+            "fieldA" => "test",
+            "fieldB" => "new test"
+        ]);
+
+        $this->assertTrue($row->isFieldNameCaseSensitive());
+
+        $this->assertEquals("test", $row->get("fieldA"));
+        $this->assertEquals("new test", $row->get("fieldB"));
+
+        $this->assertNull($row->get("fielda"));
+        $this->assertNull($row->get("fieldb"));
+
+        $row->enableFieldNameCaseInSensitive();
+
+        $this->assertFalse($row->isFieldNameCaseSensitive());
+
+        $this->assertEquals("test", $row->get("fielda"));
+        $this->assertEquals("new test", $row->get("FiEldb"));
+    }
+
+    public function testCaseSensitive_2()
+    {
+        $row = new Row([
+            "fieldA" => "test",
+            "fieldB" => "new test"
+        ]);
+
+        $row->set("FIELDA", "a");
+        $this->assertEquals("test", $row->get("fieldA"));
+        $this->assertEquals("a", $row->get("FIELDA"));
+
+        $row->enableFieldNameCaseInSensitive();
+        // When enable case insentive, the last field name overwrite the value
+        $this->assertEquals("a", $row->get("FieLda")); 
+        
+        $row->set("FIELDB", "new value");
+        $this->assertEquals("new value", $row->get("FieLdB")); 
+
+        $this->assertFalse($row->fieldExists("DelEteME")); 
+        $row->addField("DELETEME", "true");
+        $this->assertTrue($row->fieldExists("DelEteME")); 
+
+        $row->removeField("dELeTEme");
+        $this->assertFalse($row->fieldExists("DelEteME")); 
     }
 }

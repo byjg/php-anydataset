@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Exception\DatabaseException;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\Util\XmlUtil;
 use InvalidArgumentException;
 
@@ -141,27 +142,7 @@ class AnyDataset
      */
     public function xml()
     {
-        return $this->getAsDom()->saveXML();
-    }
-
-    /**
-     * Returns the AnyDataset XmlDocument representive object
-     *
-     * @return \DOMDocument XmlDocument object
-     * @throws \ByJG\Util\Exception\XmlUtilException
-     */
-    public function getAsDom()
-    {
-        $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset></anydataset>");
-        $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
-        foreach ($this->collection as $sr) {
-            $row = $sr->getAsDom();
-            $nodeRow = $row->getElementsByTagName("row")->item(0);
-            $newRow = XmlUtil::createChild($nodeRoot, "row");
-            XmlUtil::addNodeFromNode($newRow, $nodeRow);
-        }
-
-        return $anyDataSet;
+        return (new XmlFormatter($this->getIterator()))->toText();
     }
 
     /**
@@ -176,7 +157,7 @@ class AnyDataset
                 throw new DatabaseException("No such file path to save anydataset");
             }
 
-            XmlUtil::saveXmlDocument($this->getAsDom(), $this->filename);
+            (new XmlFormatter($this->getIterator()))->saveToFile($this->filename);
         });
     }
 
@@ -300,18 +281,19 @@ class AnyDataset
     }
 
     /**
-     * @desc
-     * @param IteratorFilter $itf
+     * Undocumented function
+     *
      * @param string $fieldName
+     * @param IteratorFilter $itf
      * @return array
      */
-    public function getArray($itf, $fieldName)
+    public function getArray($fieldName, $itf = null)
     {
         $iterator = $this->getIterator($itf);
         $result = array();
         while ($iterator->hasNext()) {
             $singleRow = $iterator->moveNext();
-            $result [] = $singleRow->get($fieldName);
+            $result[] = $singleRow->get($fieldName);
         }
         return $result;
     }

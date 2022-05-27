@@ -4,8 +4,6 @@ namespace ByJG\AnyDataset\Core;
 
 use ByJG\Serializer\BinderObject;
 use ByJG\Serializer\DumpToArrayInterface;
-use ByJG\Util\XmlUtil;
-use UnexpectedValueException;
 
 class Row extends BinderObject implements DumpToArrayInterface
 {
@@ -17,6 +15,8 @@ class Row extends BinderObject implements DumpToArrayInterface
     private $node = null;
     private $row = null;
     private $originalRow = null;
+
+    protected $fieldNameCaseSensitive = true;
 
     /**
      * Row constructor
@@ -43,6 +43,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function addField($name, $value)
     {
+        $name = $this->getHydratedFieldName($name);
+
         if (!array_key_exists($name, $this->row)) {
             $this->row[$name] = $value;
         } elseif (is_array($this->row[$name])) {
@@ -60,6 +62,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function get($name)
     {
+        $name = $this->getHydratedFieldName($name);
+
         if (!array_key_exists($name, $this->row)) {
             return null;
         }
@@ -80,6 +84,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function getAsArray($fieldName)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         if (!array_key_exists($fieldName, $this->row)) {
             return [];
         }
@@ -109,6 +115,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function set($name, $value)
     {
+        $name = $this->getHydratedFieldName($name);
+
         if (!array_key_exists($name, $this->row)) {
             $this->addField($name, $value);
         } else {
@@ -124,6 +132,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function removeField($fieldName)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         if (array_key_exists($fieldName, $this->row)) {
             unset($this->row[$fieldName]);
             $this->informChanges();
@@ -138,6 +148,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function removeValue($fieldName, $value)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         $result = $this->row[$fieldName];
         if (!is_array($result)) {
             if ($value == $result) {
@@ -165,6 +177,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      */
     public function replaceValue($fieldName, $oldvalue, $newvalue)
     {
+        $fieldName = $this->getHydratedFieldName($fieldName);
+
         $result = $this->row[$fieldName];
         if (!is_array($result)) {
             if ($oldvalue == $result) {
@@ -181,50 +195,9 @@ class Row extends BinderObject implements DumpToArrayInterface
         }
     }
 
-    /**
-     * Get the \DOMElement row objet
-     *
-     * @return \DOMElement
-     * @throws \ByJG\Util\Exception\XmlUtilException
-     */
-    public function getAsDom()
-    {
-        if (is_null($this->node)) {
-            $this->node = XmlUtil::createXmlDocumentFromStr("<row></row>");
-            $root = $this->node->getElementsByTagName("row")->item(0);
-            foreach ($this->row as $key => $value) {
-                if (!is_array($value)) {
-                    $field = XmlUtil::createChild($root, "field", $value);
-                    XmlUtil::addAttribute($field, "name", $key);
-                } else {
-                    foreach ($value as $valueItem) {
-                        $field = XmlUtil::createChild($root, "field", $valueItem);
-                        XmlUtil::addAttribute($field, "name", $key);
-                    }
-                }
-            }
-        }
-        return $this->node;
-    }
-
     public function toArray()
     {
         return $this->row;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getAsJSON()
-    {
-        if (is_array($this->row)) {
-            return json_decode(json_encode($this->row));
-        } else {
-            throw new UnexpectedValueException(
-                'I expected that getRawFormat is array() but ' . gettype($this->row) . ' was given'
-            );
-        }
     }
 
     /**
@@ -275,5 +248,44 @@ class Row extends BinderObject implements DumpToArrayInterface
     protected function setPropValue($obj, $propName, $value)
     {
         $obj->set($propName, $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function fieldExists($name)
+    {
+        return isset($this->row[$this->getHydratedFieldName($name)]);
+    }
+
+    /**
+     * @return void
+     */
+    public function enableFieldNameCaseInSensitive() 
+    {
+        $this->row = array_change_key_case($this->row, CASE_LOWER);
+        $this->originalRow = array_change_key_case($this->originalRow, CASE_LOWER);
+        $this->fieldNameCaseSensitive = false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFieldNameCaseSensitive()
+    {
+        return $this->fieldNameCaseSensitive;
+    }
+
+    /**
+     * @param string name
+     * @return string
+     */
+    protected function getHydratedFieldName($name)
+    {
+        if (!$this->isFieldNameCaseSensitive()) {
+            return strtolower($name);
+        }
+
+        return $name;
     }
 }
