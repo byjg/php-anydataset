@@ -53,7 +53,7 @@ class AnyIterator extends GenericIterator
     /**
      * Return the next row.
      *
-     * @return Row
+     * @return Row|null
      */
     public function moveNext()
     {

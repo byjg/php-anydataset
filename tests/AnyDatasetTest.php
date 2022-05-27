@@ -271,7 +271,7 @@ class AnyDatasetTest extends TestCase
         // Read sample
         $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
 
-        $array = $anydata->getArray(null, 'field1');
+        $array = $anydata->getArray('field1');
 
         $this->assertEquals([
             'value1',

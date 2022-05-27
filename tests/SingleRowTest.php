@@ -287,7 +287,7 @@ class SingleRowTest extends TestCase
 
     public function testConstructor_stdClass()
     {
-        $model = new \stdClass();
+        $model = new stdClass();
         $model->Id = 10;
         $model->Name = "Testing";
 

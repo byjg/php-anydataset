@@ -21,7 +21,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     /**
      * Row constructor
      *
-     * @param array()
+     * @param array|\stdClass|object $instance
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function __construct($instance = null)
@@ -279,7 +279,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     }
 
     /**
-     * @params name Fieldname
+     * @param string name
      * @return string
      */
     protected function getHydratedFieldName($name)

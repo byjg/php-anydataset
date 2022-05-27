@@ -24,7 +24,7 @@ class ModelTest extends TestCase
 
     public function testBindIterator()
     {
-        $anydata = new \ByJG\AnyDataset\Core\AnyDataset();
+        $anydata = new AnyDataset();
 
         $sr = new \ByJG\AnyDataset\Core\Row();
         $sr->addField("id", 10);
@@ -39,7 +39,7 @@ class ModelTest extends TestCase
 
     public function testBind_Iterator2()
     {
-        $anydata = new \ByJG\AnyDataset\Core\AnyDataset();
+        $anydata = new AnyDataset();
         $anydata->addField('Id', 10);
         $anydata->addField('Name', 'Joao');
         $anydata->appendRow();

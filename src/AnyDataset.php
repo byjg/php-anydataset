@@ -89,7 +89,7 @@ class AnyDataset
     {
         if (!is_null($file)) {
             if (!is_string($file)) {
-                throw new \InvalidArgumentException('I expected a string as a file name');
+                throw new InvalidArgumentException('I expected a string as a file name');
             }
 
             $ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -122,7 +122,7 @@ class AnyDataset
                 foreach ($fields as $field) {
                     $attr = $field->attributes->getNamedItem("name");
                     if (is_null($attr)) {
-                        throw new \InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
+                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
                     }
 
                     $sr->addField($attr->nodeValue, $field->nodeValue);
@@ -164,7 +164,7 @@ class AnyDataset
     /**
      * Append one row to AnyDataset.
      *
-     * @param Row $singleRow
+     * @param array|Row|object $singleRow
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
@@ -281,18 +281,19 @@ class AnyDataset
     }
 
     /**
-     * @desc
-     * @param IteratorFilter $itf
+     * Undocumented function
+     *
      * @param string $fieldName
+     * @param IteratorFilter $itf
      * @return array
      */
-    public function getArray($itf, $fieldName)
+    public function getArray($fieldName, $itf = null)
     {
         $iterator = $this->getIterator($itf);
         $result = array();
         while ($iterator->hasNext()) {
             $singleRow = $iterator->moveNext();
-            $result [] = $singleRow->get($fieldName);
+            $result[] = $singleRow->get($fieldName);
         }
         return $result;
     }
