@@ -5,9 +5,6 @@ namespace Tests\AnyDataset\Dataset;
 use ByJG\AnyDataset\Core\Row;
 use ByJG\AnyDataset\Core\RowValidator;
 use PHPUnit\Framework\TestCase;
-use Tests\AnyDataset\Sample\ModelGetter;
-use Tests\AnyDataset\Sample\ModelPublic;
-use ByJG\Util\XmlUtil;
 
 require_once "Sample/ModelPublic.php";
 require_once "Sample/ModelGetter.php";
@@ -26,7 +23,7 @@ class RowValidatorTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->row1 = new Row([
             "field1" => 10,

@@ -27,7 +27,7 @@ class SingleRowTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new Row;
     }
@@ -39,15 +39,6 @@ class SingleRowTest extends TestCase
         $this->object->addField('field1', '30');
         $this->object->addField('field2', '40');
         $this->object->acceptChanges();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-        
     }
 
     public function testAddField()
