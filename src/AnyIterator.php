@@ -25,7 +25,6 @@ class AnyIterator extends GenericIterator
      *
      * @param Row[] $list
      */
-
     public function __construct($list)
     {
         $this->curRow = 0;
@@ -66,5 +65,14 @@ class AnyIterator extends GenericIterator
     public function key()
     {
         return $this->curRow;
+    }
+
+    /**
+     * @param IteratorFilter $filter
+     * @return AnyIterator
+     */
+    public function withFilter(IteratorFilter $filter)
+    {
+        return new AnyIterator($filter->match($this->list));
     }
 }

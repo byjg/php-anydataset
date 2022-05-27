@@ -164,13 +164,13 @@ class AnyDataset
     /**
      * Append one row to AnyDataset.
      *
-     * @param array|Row|object $singleRow
+     * @param Row|array|\stdClass|object $singleRow
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function appendRow($singleRow = null)
+    public function appendRow($singleRow = [])
     {
-        if (!is_null($singleRow)) {
+        if (!empty($singleRow)) {
             if ($singleRow instanceof Row) {
                 $this->collection[] = $singleRow;
                 $singleRow->acceptChanges();

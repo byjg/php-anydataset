@@ -21,6 +21,14 @@ class IteratorFilter
     }
 
     /**
+     * @return IteratorFilter
+     */
+    public static function getInstance()
+    {
+        return new IteratorFilter();
+    }
+
+    /**
      * @param $array
      * @return Row[]
      */
@@ -119,42 +127,46 @@ class IteratorFilter
      * @param string $name Field name
      * @param int $relation Relation enum
      * @param string $value Field string value
-     * @return void
+     * @return IteratorFilter
      * @desc Add a single string comparison to filter.
      */
     public function addRelation($name, $relation, $value)
     {
         $this->filters[] = [" and ", $name, $relation, $value];
+        return $this;
     }
 
     /**
      * @param string $name Field name
      * @param int $relation Relation enum
      * @param string $value Field string value
-     * @return void
+     * @return IteratorFilter
      * @desc Add a single string comparison to filter. This comparison use the OR operator.
      */
     public function addRelationOr($name, $relation, $value)
     {
         $this->filters[] = [" or ", $name, $relation, $value];
+        return $this;
     }
 
     /**
      * Add a "("
-
+     * @return IteratorFilter
      */
     public function startGroup()
     {
         $this->filters[] = ["(", "", "", ""];
+        return $this;
     }
 
     /**
      * Add a ")"
-
+     * @return IteratorFilter
      */
     public function endGroup()
     {
         $this->filters[] = [")", "", "", ""];
+        return $this;
     }
 
     public function getRawFilters()

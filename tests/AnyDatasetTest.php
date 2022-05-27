@@ -3,8 +3,10 @@
 namespace Tests\AnyDataset\Dataset;
 
 use ByJG\AnyDataset\Core\AnyDataset;
+use ByJG\AnyDataset\Core\Enum\Relation;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
+use ByJG\AnyDataset\Core\IteratorFilter;
 use PHPUnit\Framework\TestCase;
 
 class AnyDatasetTest extends TestCase
@@ -301,5 +303,27 @@ class AnyDatasetTest extends TestCase
             ['name' => 'joao', 'age' => 41],
             ['name' => 'fernanda', 'age' => 45],
             ], $this->object->getIterator()->toArray());
+    }
+
+    public function testIteratorFilter()
+    {
+        $this->object->appendRow(['name' => 'joao', 'age' => 41]);
+        $this->object->appendRow(['name' => 'fernanda', 'age' => 45]);
+        $this->object->appendRow(['name' => 'jf', 'age' => 15]);
+        $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
+
+        $filter = IteratorFilter::getInstance()
+            ->addRelation("age", Relation::LESS_THAN, 40);
+
+        $this->assertEquals([
+            ['name' => 'jf', 'age' => 15],
+            ['name' => 'jg jr', 'age' => 4]
+        ], $this->object->getIterator($filter)->toArray());
+
+        $this->assertEquals([
+            ['name' => 'jf', 'age' => 15],
+            ['name' => 'jg jr', 'age' => 4]
+        ], $this->object->getIterator()->withFilter($filter)->toArray());
+
     }
 }

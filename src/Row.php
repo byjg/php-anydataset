@@ -20,15 +20,13 @@ class Row extends BinderObject implements DumpToArrayInterface
 
     /**
      * Row constructor
-     *
-     * @param array|\stdClass|object $instance
+     * 
+     * @param Row|array|\stdClass|object $instance
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function __construct($instance = null)
+    public function __construct($instance = [])
     {
-        if (is_null($instance)) {
-            $this->row = array();
-        } elseif (is_array($instance)) {
+        if (is_array($instance)) {
             $this->row = $instance;
         } else {
             $this->row = array();
