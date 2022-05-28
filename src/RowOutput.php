@@ -45,6 +45,8 @@ class RowOutput
             $rowParsed['{' . $key . '}'] = $value;
             unset($rowParsed[$key]);
         }
+        $rowParsed['{.}'] = $field;
+        $rowParsed['{}'] = $row->get($field);
 
         return strtr($pattern, $rowParsed);
     }

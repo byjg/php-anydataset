@@ -27,14 +27,14 @@ class RowOutputTest extends TestCase
 
         $formatter = RowOutput::getInstance()
             ->addFormat("field1", "Test {field1}")
-            ->addFormat("field2", "Showing {field2} and {field3}");
+            ->addFormat("field2", "{.}: Showing {} and {field3}");
 
         $this->assertEquals("Test 10", $formatter->print($row1, "field1"));
-        $this->assertEquals("Showing test and 20.3", $formatter->print($row1, "field2"));
+        $this->assertEquals("field2: Showing test and 20.3", $formatter->print($row1, "field2"));
         $this->assertEquals("20.30", $formatter->print($row1, "field3"));
 
         $this->assertEquals("Test 1", $formatter->print($row2, "field1"));
-        $this->assertEquals("Showing OK and 3", $formatter->print($row2, "field2"));
+        $this->assertEquals("field2: Showing OK and 3", $formatter->print($row2, "field2"));
         $this->assertEquals("3", $formatter->print($row2, "field3"));
     }
 
