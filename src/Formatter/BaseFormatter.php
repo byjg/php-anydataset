@@ -6,7 +6,7 @@ use ByJG\AnyDataset\Core\GenericIterator;
 use \ByJG\AnyDataset\Core\Row;
 use InvalidArgumentException;
 
-abstract class BaseFormatter
+abstract class BaseFormatter implements FormatterInterface
 {
     /**
      * @var GenericIterator|Row

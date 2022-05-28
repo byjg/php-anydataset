@@ -6,10 +6,6 @@ use ByJG\AnyDataset\Core\Row;
 use ByJG\AnyDataset\Core\RowValidator;
 use PHPUnit\Framework\TestCase;
 
-require_once "Sample/ModelPublic.php";
-require_once "Sample/ModelGetter.php";
-require_once "Sample/ModelPropertyPattern.php";
-
 class RowValidatorTest extends TestCase
 {
 

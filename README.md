@@ -77,7 +77,46 @@ while ($iterator->hasNext()) {
 }
 ```
 
-### Validate Field contents
+or
+
+```php
+foreach ($iterator as $row) {
+    print_r($row->get("field1"));
+}
+```
+
+## Additional Classes
+
+### RowOutpout - Format Field Output
+
+This class defines custom format for the field output.
+
+```php
+<?php
+$output = RowOutput::getInstance()
+    ->addFormat("field1", "Test {field1}")
+    ->addFormat("field2", "Showing {} and {field3}");
+    ->addCustomFormat("field3", function ($row, $field, $value) {
+        // return the formatted output. 
+        // $row: The row object with all values
+        // $field: The field has been processed
+        // $value: The field value
+    });
+
+// This will output the field1 formatted:
+echo $output->print($row, "field1");
+
+// This will apply the format defintion to all fields at once:
+$ouput->apply($row);
+```
+
+Notes about the format pattern:
+
+- `{}` represents the current value
+- `{.}` represents the field name
+- `{field_name}` return the value of $row->get(field_name)
+
+### RowValidator - Validate Field contents
 
 ```php
 <?php
@@ -91,6 +130,54 @@ $validator = RowValidator::getInstance()
     });
 
 $validator->validate($row) // Will return an array with the error messages. Empty array if not errors. 
+```
+
+## Formatters
+
+AnyDataset comes with an extensible set to format the AnyDataset. The interface is:
+
+```php
+namespace ByJG\AnyDataset\Core\Formatter;
+
+interface FormatterInterface 
+{
+    /**
+     * Return the object in your original format, normally as object
+     *
+     * @return mixed
+     */
+    public function raw();
+
+    /**
+     * Return the object transformed to string.
+     *
+     * @return string
+     */
+    public function toText();
+
+    /**
+     * Save the contents to a file
+     *
+     * @param string $filename
+     * @return void
+     */
+    public function saveToFile($filename);
+}
+```
+
+AnyDataset implements two formatters:
+
+- JsonFormatter
+- XmlFormatter
+
+Example:
+
+```php
+<?php
+$formatter = new XmlFormatter($anydataset->getIterator());
+$formatter->raw(); // Return a DOM object
+$formatter->toText(); // Return the XML as a text
+$formatter->saveToFile("/path/to/file.xml");  // Save the XML Text to a file. 
 ```
 
 ## Install
