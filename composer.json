@@ -1,12 +1,6 @@
 {
   "name": "byjg/anydataset",
   "description": "Anydataset is an agnostic data source abstraction layer in PHP. Core Module.",
-  "authors": [
-    {
-      "name": "João Gilberto Magalhães",
-      "email": "joao@byjg.com.br"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "ByJG\\AnyDataset\\Core\\": "src/"
