@@ -11,7 +11,7 @@
   "require": {
     "php": ">=5.6.0",
     "byjg/xmlutil": "1.0.*",
-    "byjg/serializer": "1.0.*"
+    "byjg/serializer": "dev-major_refactory"
   },
   "suggest": {
     "ext-dom": "*"

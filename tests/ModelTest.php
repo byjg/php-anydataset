@@ -47,7 +47,7 @@ class ModelTest extends TestCase
         $anydata->addField('Name', 'Gilberto');
 
         $object1 = new \Tests\AnyDataset\Sample\SampleModel();
-        $object1->bind( $anydata->getIterator()->moveNext()->toArray() );
+        $object1->bindFrom( $anydata->getIterator()->moveNext()->toArray() );
         $this->assertEquals(10, $object1->Id);
         $this->assertEquals('Joao', $object1->getName());
     }
@@ -65,7 +65,7 @@ class ModelTest extends TestCase
         $iterator = $model->getIterator();
 
         $object = new SerializerObject($iterator->toArray());
-        $result = $object->build();
+        $result = $object->serialize();
 
         $this->assertEquals(
             [

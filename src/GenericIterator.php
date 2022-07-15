@@ -2,10 +2,9 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use ByJG\Serializer\DumpToArrayInterface;
 use Iterator;
 
-abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArrayInterface
+abstract class GenericIterator implements IteratorInterface, Iterator
 {
 
     abstract public function hasNext();
@@ -21,15 +20,15 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
      * @return array
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function toArray()
+    public function toArray($fields = [])
     {
         $retArray = [];
 
         while ($this->hasNext()) {
             $singleRow = $this->moveNext();
-            $retArray[] = $singleRow->toArray();
+            $retArray[] = $singleRow->toArray($fields);
         }
-
+    
         return $retArray;
     }
     /* ------------------------------------- */

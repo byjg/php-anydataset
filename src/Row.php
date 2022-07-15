@@ -2,10 +2,9 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use ByJG\Serializer\BinderObject;
-use ByJG\Serializer\DumpToArrayInterface;
+use ByJG\Serializer\SerializerObject;
 
-class Row extends BinderObject implements DumpToArrayInterface
+class Row
 {
 
     /**
@@ -29,8 +28,7 @@ class Row extends BinderObject implements DumpToArrayInterface
         if (is_array($instance)) {
             $this->row = $instance;
         } else {
-            $this->row = array();
-            $this->bind($instance);
+            $this->row = SerializerObject::instance($instance)->serialize();
         }
 
         $this->acceptChanges();
@@ -195,9 +193,14 @@ class Row extends BinderObject implements DumpToArrayInterface
         }
     }
 
-    public function toArray()
+    public function toArray($fields = [])
     {
-        return $this->row;
+        if (empty($fields)) {
+            return $this->row;
+        }
+        
+        $fieldAssoc = array_combine($fields, array_fill(0, count($fields), null));
+        return array_intersect_key(array_merge($fieldAssoc, $this->row), $fieldAssoc);
     }
 
     /**

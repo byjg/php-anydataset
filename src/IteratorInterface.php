@@ -26,5 +26,5 @@ interface IteratorInterface
     /**
      * Get an array of the iterator
      */
-    public function toArray();
+    public function toArray($fields = []);
 }

@@ -317,4 +317,33 @@ class AnyDatasetTest extends TestCase
         ], $this->object->getIterator()->withFilter($filter)->toArray());
 
     }
+
+    public function testToArrayFields()
+    {
+        $anydataset = new AnyDataset();
+        $anydataset->appendRow([
+            "field1" => "value1",
+            "field2" => "value2",
+            "field3" => "value3",
+            "field4" => "value4",
+        ]);
+
+        $anydataset->appendRow([
+            "field1" => "1",
+            "field2" => "2",
+            "field4" => "4",
+        ]);
+
+        $iterator = $anydataset->getIterator()->toArray(["field1", "field3"]);
+        $this->assertEquals([
+            [
+                "field1" => "value1",
+                "field3" => "value3" 
+            ],
+            [
+                "field1" => "1",
+                "field3" => "" 
+            ],
+        ], $iterator);
+    }
 }

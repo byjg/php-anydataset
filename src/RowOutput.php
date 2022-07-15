@@ -31,11 +31,18 @@ class RowOutput
         }
     }
 
+    /**
+     * @return Row
+     */
     public function apply($row)
     {
-        foreach ($this->fieldList as $key => $value) {
-            $row->set($key, $this->print($row, $key));
+        $newRow = new Row();
+
+        foreach ($row->toArray() as $key => $value) {
+            $newRow->set($key, $this->print($row, $key));
         }
+
+        return $newRow;
     }
 
     protected function formatPattern($row, $field, $pattern)

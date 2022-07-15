@@ -80,11 +80,11 @@ class RowOutputTest extends TestCase
         $this->assertEquals("20.30", $row->get("field3"));
         $this->assertEquals("2021-11-20", $row->get("field4"));
 
-        $formatter->apply($row);
+        $newRow = $formatter->apply($row);
     
-        $this->assertEquals("Value: 10", $row->get("field1"));
-        $this->assertEquals("test", $row->get("field2"));
-        $this->assertEquals("field3 x 3 = 60.9", $row->get("field3"));
-        $this->assertEquals("2021-11-20", $row->get("field4"));
+        $this->assertEquals("Value: 10", $newRow->get("field1"));
+        $this->assertEquals("test", $newRow->get("field2"));
+        $this->assertEquals("field3 x 3 = 60.9", $newRow->get("field3"));
+        $this->assertEquals("2021-11-20", $newRow->get("field4"));
     }
 }
