@@ -14,6 +14,7 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
 
     abstract public function count();
 
+    #[\ReturnTypeWillChange]
     abstract public function key();
 
     /**
@@ -38,21 +39,25 @@ abstract class GenericIterator implements IteratorInterface, Iterator, DumpToArr
     /**
      * @return Row
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->moveNext();
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         // There is no necessary
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         // There is no necessary
     }
 
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->hasNext();

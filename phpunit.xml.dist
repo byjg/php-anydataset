@@ -11,6 +11,7 @@ and open the template in the editor.
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
+         convertDeprecationsToExceptions="true"
          stopOnFailure="false">
 
     <php>
