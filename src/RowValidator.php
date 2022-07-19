@@ -5,6 +5,9 @@ use Closure;
 
 class RowValidator
 {
+    /**
+     * @var array
+     */
     protected $fieldValidator = [];
 
     const REQUIRED="required";
@@ -12,6 +15,12 @@ class RowValidator
     const REGEX="regex";
     const CUSTOM="custom";
 
+    /**
+     * @param string|array $fieldList
+     * @param string $property
+     * @param mixed $value
+     * @return void
+     */
     protected function setProperty($fieldList, $property, $value)
     {
         foreach ((array)$fieldList as $field) {
@@ -22,11 +31,20 @@ class RowValidator
         }
     }
 
+    /**
+     * @return RowValidator
+     */
     public static function getInstance()
     {
         return new RowValidator();
     }
 
+    /**
+     * Return an empty array if no errors found, otherwise and array with the errors
+     *
+     * @param Row $row
+     * @return array
+     */
     public function validate(Row $row)
     {
         $errors = [];
@@ -39,6 +57,14 @@ class RowValidator
         return array_values(array_filter($errors, function($value) { return !empty($value); }));
     }
 
+    /**
+     * Return null if the value is not empty, otherwise a string with the error message
+     *
+     * @param string $field
+     * @param array $properties
+     * @param mixed $value
+     * @return string|null
+     */
     protected function checkRequired($field, $properties, $value)
     {
         if (isset($properties[self::REQUIRED]) && $properties[self::REQUIRED] && empty($value)) {
@@ -47,6 +73,14 @@ class RowValidator
         return null;
     }
 
+    /**
+     * Return null if the value is numeric, otherwise a string with the error message
+     *
+     * @param string $field
+     * @param array $properties
+     * @param mixed $value
+     * @return string|null
+     */
     protected function checkNumber($field, $properties, $value)
     {
         if (isset($properties[self::NUMBER]) && $properties[self::NUMBER] && !is_numeric($value)) {
@@ -55,6 +89,14 @@ class RowValidator
         return null;
     }
 
+    /**
+     * Return null if the value matches with the regular expression, otherwise a string with the error message
+     *
+     * @param string $field
+     * @param array $properties
+     * @param mixed $value
+     * @return string|null
+     */
     protected function checkRegex($field, $properties, $value)
     {
         if (isset($properties[self::REGEX]) && !empty($properties[self::REGEX]) && !preg_match($properties[self::REGEX], $value)) {
@@ -63,6 +105,14 @@ class RowValidator
         return null;
     }
 
+    /**
+     * Return null if the closure returns null, otherwise the value returned by the Closure
+     *
+     * @param string $field
+     * @param array $properties
+     * @param mixed $value
+     * @return string|null
+     */
     protected function checkCustom($field, $properties, $value)
     {
         $result = null;
@@ -72,29 +122,51 @@ class RowValidator
         return empty($result) ? null : $result;
     }
 
+    /**
+     * @param string $field
+     * @return RowValidator
+     */
     public function requiredField($field)
     {
         return $this->requiredFields([$field]);
     }
 
+    /**
+     * @param array $fieldList
+     * @return RowValidator
+     */
     public function requiredFields($fieldList)
     {
         $this->setProperty($fieldList, self::REQUIRED, true);
         return $this;
     }
 
+    /**
+     * @param array $fieldList
+     * @return RowValidator
+     */
     public function numericFields($fieldList)
     {
         $this->setProperty($fieldList, self::NUMBER, true);
         return $this;
     }
 
+     /**
+     * @param array|string $field
+     * @param string $regEx
+     * @return RowValidator
+     */
     public function regexValidation($field, $regEx)
     {
         $this->setProperty($field, self::REGEX, $regEx);
         return $this;
     }
 
+    /**
+     * @param array|string $field
+     * @param Closure $closure
+     * @return RowValidator
+     */
     public function customValidation($field, $closure)
     {
         $this->setProperty($field, self::CUSTOM, $closure);

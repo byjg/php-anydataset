@@ -32,8 +32,7 @@ class AnyIterator extends GenericIterator
     }
 
     /**
-     * How many elements have
-     * @return int
+     * @inheritDoc
      */
     public function count()
     {
@@ -41,8 +40,7 @@ class AnyIterator extends GenericIterator
     }
 
     /**
-     * Ask the Iterator is exists more rows. Use before moveNext method.
-     * @return bool True if exist more rows, otherwise false
+     * @inheritDoc
      */
     public function hasNext()
     {
@@ -50,9 +48,7 @@ class AnyIterator extends GenericIterator
     }
 
     /**
-     * Return the next row.
-     *
-     * @return Row|null
+     * @inheritDoc
      */
     public function moveNext()
     {
@@ -62,6 +58,9 @@ class AnyIterator extends GenericIterator
         return $this->list[$this->curRow++];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function key()
     {
         return $this->curRow;

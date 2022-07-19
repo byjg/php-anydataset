@@ -13,7 +13,7 @@ class IteratorFilter
     private $filters;
 
     /**
-     * @desc IteratorFilter Constructor
+     * IteratorFilter Constructor
      */
     public function __construct()
     {
@@ -29,7 +29,7 @@ class IteratorFilter
     }
 
     /**
-     * @param $array
+     * @param array $array
      * @return Row[]
      */
     public function match($array)
@@ -45,6 +45,15 @@ class IteratorFilter
         return $returnArray;
     }
 
+    /**
+     * Get the filter
+     *
+     * @param IteratorFilterFormatter $formatter
+     * @param string $tableName
+     * @param array $params
+     * @param string $returnFields
+     * @return string
+     */
     public function format(IteratorFilterFormatter $formatter, $tableName = null, &$params = [], $returnFields = "*")
     {
         return $formatter->format($this->filters, $tableName, $params, $returnFields);
@@ -53,7 +62,7 @@ class IteratorFilter
 
     /**
      * @param Row $singleRow
-     * @return string
+     * @return bool
      */
     private function evalString(Row $singleRow)
     {
@@ -65,7 +74,7 @@ class IteratorFilter
 
         foreach ($this->filters as $filter) {
             if (($filter[0] == ")") || ($filter[0] == " or ")) {
-                $finalResult |= $result[$pos];
+                $finalResult = $finalResult || $result[$pos];
                 $result[++$pos] = true;
             }
 
@@ -73,52 +82,46 @@ class IteratorFilter
             $relation = $filter[2];
             $value = $filter[3];
 
-            $field = $singleRow->get($name);
-
-            if (!is_array($field)) {
-                $field = [$field];
-            }
-
-            $data = [
-                Relation::EQUAL => function ($valueparam, $value) {
-                    return ($valueparam == $value);
-                },
-
-                Relation::GREATER_THAN => function ($valueparam, $value) {
-                    return ($valueparam > $value);
-                },
-
-                Relation::LESS_THAN => function ($valueparam, $value) {
-                    return ($valueparam < $value);
-                },
-
-                Relation::GREATER_OR_EQUAL_THAN => function ($valueparam, $value) {
-                    return ($valueparam >= $value);
-                },
-
-                Relation::LESS_OR_EQUAL_THAN => function ($valueparam, $value) {
-                    return ($valueparam <= $value);
-                },
-
-                Relation::NOT_EQUAL => function ($valueparam, $value) {
-                    return ($valueparam != $value);
-                },
-
-                Relation::STARTS_WITH => function ($valueparam, $value) {
-                    return (strpos($valueparam, $value) === 0);
-                },
-
-                Relation::CONTAINS => function ($valueparam, $value) {
-                    return (strpos($valueparam, $value) !== false);
-                },
-            ];
+            $field = [$singleRow->get($name)];
 
             foreach ($field as $valueparam) {
-                $result[$pos] &= $data[$relation]($valueparam, $value);
+                switch ($relation) {
+                    case Relation::EQUAL:
+                        $result[$pos] = $result[$pos] && ($valueparam == $value);
+                        break;
+
+                    case Relation::GREATER_THAN:
+                        $result[$pos] = $result[$pos] && ($valueparam > $value);
+                        break;
+
+                    case Relation::LESS_THAN:
+                        $result[$pos] = $result[$pos] && ($valueparam < $value);
+                        break;
+
+                    case Relation::GREATER_OR_EQUAL_THAN:
+                        $result[$pos] = $result[$pos] && ($valueparam >= $value);
+                        break;
+
+                    case Relation::LESS_OR_EQUAL_THAN:
+                        $result[$pos] = $result[$pos] && ($valueparam <= $value);
+                        break;
+
+                    case Relation::NOT_EQUAL:
+                        $result[$pos] = $result[$pos] && ($valueparam != $value);
+                        break;
+
+                    case Relation::STARTS_WITH:
+                        $result[$pos] = $result[$pos] && (strpos(is_null($valueparam) ? "" : $valueparam, $value) === 0);
+                        break;
+
+                    default: // Relation::CONTAINS:
+                        $result[$pos] = $result[$pos] && (strpos(is_null($valueparam) ? "" : $valueparam, $value) !== false);
+                        break;
+                }
             }
         }
 
-        $finalResult |= $result[$pos];
+        $finalResult = $finalResult || $result[$pos];
 
         return $finalResult;
     }
@@ -169,6 +172,9 @@ class IteratorFilter
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getRawFilters()
     {
         return $this->filters;

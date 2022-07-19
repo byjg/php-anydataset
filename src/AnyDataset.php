@@ -58,12 +58,12 @@ class AnyDataset
 
     /**
      * Path to anydataset file
-     * @var string
+     * @var string|null
      */
     private $filename;
 
     /**
-     * @param string $filename
+     * @param null|string $filename
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
@@ -80,18 +80,23 @@ class AnyDataset
         });
     }
 
+    /**
+     * @return string|null
+     */
     public function getFilename()
     {
         return $this->filename;
     }
 
+    /**
+     *
+     * @param string|null $file
+     * @param mixed $closure
+     * @return void
+     */
     private function defineSavePath($file, $closure)
     {
         if (!is_null($file)) {
-            if (!is_string($file)) {
-                throw new InvalidArgumentException('I expected a string as a file name');
-            }
-
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             if (empty($ext) && substr($file, 0, 6) !== "php://") {
                 $file .= '.anydata.xml';
@@ -106,6 +111,7 @@ class AnyDataset
      * Private method used to read and populate anydataset class from specified file
      *
      * @param string $filepath Path and Filename to be read
+     * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
@@ -121,7 +127,7 @@ class AnyDataset
                 $fields = $row->getElementsByTagName("field");
                 foreach ($fields as $field) {
                     $attr = $field->attributes->getNamedItem("name");
-                    if (is_null($attr)) {
+                    if (is_null($attr) || is_null($attr->nodeValue)) {
                         throw new InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
                     }
 
@@ -146,7 +152,8 @@ class AnyDataset
     }
 
     /**
-     * @param string $filename
+     * @param string|null $filename
+     * @return void
      * @throws DatabaseException
      * @throws \ByJG\Util\Exception\XmlUtilException
      */
@@ -164,7 +171,7 @@ class AnyDataset
     /**
      * Append one row to AnyDataset.
      *
-     * @param Row|array|\stdClass|object $singleRow
+     * @param Row|array|\stdClass|object|null $singleRow
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
@@ -191,6 +198,7 @@ class AnyDataset
      * Enter description here...
      *
      * @param GenericIterator $iterator
+     * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function import($iterator)
@@ -204,10 +212,11 @@ class AnyDataset
      * Insert one row before specified position.
      *
      * @param int $rowNumber
-     * @param mixed $row
+     * @param Row|array|\stdClass|object $row
+     * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function insertRowBefore($rowNumber, $row = null)
+    public function insertRowBefore($rowNumber, $row)
     {
         if ($rowNumber > count($this->collection)) {
             $this->appendRow($row);
@@ -216,7 +225,14 @@ class AnyDataset
             if (!($row instanceof Row)) {
                 $singleRow = new Row($row);
             }
+
+            /**
+             * @psalm-suppress InvalidPropertyAssignmentValue
+             */
             array_splice($this->collection, $rowNumber, 0, '');
+            /**
+             * @psalm-suppress InvalidPropertyAssignmentValue
+             */
             $this->collection[$rowNumber] = $singleRow;
         }
     }
@@ -224,6 +240,7 @@ class AnyDataset
     /**
      *
      * @param mixed $row
+     * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
     public function removeRow($row = null)
@@ -291,8 +308,7 @@ class AnyDataset
     {
         $iterator = $this->getIterator($itf);
         $result = array();
-        while ($iterator->hasNext()) {
-            $singleRow = $iterator->moveNext();
+        foreach ($iterator as $singleRow) {
             $result[] = $singleRow->get($fieldName);
         }
         return $result;
@@ -310,13 +326,11 @@ class AnyDataset
         }
 
         $this->collection = $this->quickSortExec($this->collection, $field);
-
-        return;
     }
 
     /**
      * @param Row[] $seq
-     * @param $field
+     * @param string $field
      * @return array
      */
     protected function quickSortExec($seq, $field)

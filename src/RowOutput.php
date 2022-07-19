@@ -8,13 +8,24 @@ class RowOutput
     const FORMAT = 'format';
     const CUSTOM = 'custom';
 
+    /**
+     * @var array
+     */
     protected $fieldList = [];
 
+    /**
+     * @return RowOutput
+     */
     public static function getInstance()
     {
         return new RowOutput();
     }
 
+    /**
+     * @param Row $row
+     * @param string $field
+     * @return mixed
+     */
     public function print($row, $field)
     {
         if (!isset($this->fieldList[$field])) {
@@ -23,21 +34,25 @@ class RowOutput
 
         $data = $this->fieldList[$field];
 
-        switch ($data[0]) {
-            case self::FORMAT:
-                return $this->formatPattern($row, $field, $data[1]);
-            case self::CUSTOM:
-                return $this->formatCustom($row, $field, $data[1]);
+        if ($data[0] == self::CUSTOM) {
+            return $this->formatCustom($row, $field, $data[1]);
         }
+
+        // self::FORMAT:
+        return $this->formatPattern($row, $field, $data[1]);
     }
 
     /**
+     * @param Row $row
      * @return Row
      */
     public function apply($row)
     {
         $newRow = new Row();
 
+        /**
+         * @psalm-suppress UnusedForeachValue
+         */
         foreach ($row->toArray() as $key => $value) {
             $newRow->set($key, $this->print($row, $key));
         }
@@ -45,6 +60,12 @@ class RowOutput
         return $newRow;
     }
 
+    /**
+     * @param Row $row
+     * @param string $field
+     * @param string $pattern
+     * @return string
+     */
     protected function formatPattern($row, $field, $pattern)
     {
         $rowParsed = $row->toArray();
@@ -58,6 +79,12 @@ class RowOutput
         return strtr($pattern, $rowParsed);
     }
 
+    /**
+     * @param Row $row
+     * @param string $field
+     * @param mixed $closure
+     * @return string
+     */
     protected function formatCustom($row, $field, $closure)
     {
         return $closure($row, $field, $row->get($field));
@@ -75,8 +102,6 @@ class RowOutput
     }
 
     /**
-     * Undocumented function
-     *
      * @param string $field
      * @param Closure $closure
      * @return RowOutput

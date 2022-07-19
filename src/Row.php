@@ -8,13 +8,18 @@ class Row
 {
 
     /**
-     * \DOMNode represents a Row
-     * @var \DOMElement
+     * @var array
      */
-    private $node = null;
-    private $row = null;
-    private $originalRow = null;
+    private $row = [];
 
+    /**
+     * @var array
+     */
+    private $originalRow = [];
+
+    /**
+     * @var boolean
+     */
     protected $fieldNameCaseSensitive = true;
 
     /**
@@ -37,7 +42,8 @@ class Row
     /**
      * Add a string field to row
      * @param string $name
-     * @param string $value
+     * @param string|array|null $value
+     * @return void
      */
     public function addField($name, $value)
     {
@@ -50,12 +56,11 @@ class Row
         } else {
             $this->row[$name] = array($this->row[$name], $value);
         }
-        $this->informChanges();
     }
 
     /**
      * @param string $name - Field name
-     * @return string
+     * @return null|string
      * @desc et the string value from a field name
      */
     public function get($name)
@@ -110,6 +115,7 @@ class Row
      * Set a string value to existing field name
      * @param string $name
      * @param string $value
+     * @return void
      */
     public function set($name, $value)
     {
@@ -120,13 +126,13 @@ class Row
         } else {
             $this->row[$name] = $value;
         }
-        $this->informChanges();
     }
 
     /**
      * Remove specified field name from row.
      *
      * @param string $fieldName
+     * @return null
      */
     public function removeField($fieldName)
     {
@@ -134,7 +140,6 @@ class Row
 
         if (array_key_exists($fieldName, $this->row)) {
             unset($this->row[$fieldName]);
-            $this->informChanges();
         }
     }
 
@@ -142,7 +147,8 @@ class Row
      * Remove specified field name with specified value name from row.
      *
      * @param string $fieldName
-     * @param $value
+     * @param mixed $value
+     * @return void
      */
     public function removeValue($fieldName, $value)
     {
@@ -152,14 +158,12 @@ class Row
         if (!is_array($result)) {
             if ($value == $result) {
                 unset($this->row[$fieldName]);
-                $this->informChanges();
             }
         } else {
             $qty = count($result);
             for ($i = 0; $i < $qty; $i++) {
                 if ($result[$i] == $value) {
                     unset($result[$i]);
-                    $this->informChanges();
                 }
             }
             $this->row[$fieldName] = array_values($result);
@@ -172,6 +176,7 @@ class Row
      * @param String $fieldName
      * @param String $oldvalue
      * @param String $newvalue
+     * @return void
      */
     public function replaceValue($fieldName, $oldvalue, $newvalue)
     {
@@ -181,18 +186,20 @@ class Row
         if (!is_array($result)) {
             if ($oldvalue == $result) {
                 $this->row[$fieldName] = $newvalue;
-                $this->informChanges();
             }
         } else {
             for ($i = count($result) - 1; $i >= 0; $i--) {
                 if ($result[$i] == $oldvalue) {
                     $this->row[$fieldName][$i] = $newvalue;
-                    $this->informChanges();
                 }
             }
         }
     }
 
+    /**
+     * @param array|null $fields
+     * @return array
+     */
     public function toArray($fields = [])
     {
         if (empty($fields)) {
@@ -221,7 +228,7 @@ class Row
     }
 
     /**
-     *
+     * @return void
      */
     public function acceptChanges()
     {
@@ -229,16 +236,11 @@ class Row
     }
 
     /**
-     *
+     * @return void
      */
     public function rejectChanges()
     {
         $this->row = $this->originalRow;
-    }
-
-    protected function informChanges()
-    {
-        $this->node = null;
     }
 
     /**
@@ -247,6 +249,7 @@ class Row
      * @param Row $obj
      * @param string $propName
      * @param string $value
+     * @return void
      */
     protected function setPropValue($obj, $propName, $value)
     {
@@ -254,6 +257,7 @@ class Row
     }
 
     /**
+     * @param string $name
      * @return bool
      */
     public function fieldExists($name)
@@ -280,7 +284,7 @@ class Row
     }
 
     /**
-     * @param string name
+     * @param string $name
      * @return string
      */
     protected function getHydratedFieldName($name)

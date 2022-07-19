@@ -4,9 +4,17 @@ namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
 use ByJG\Util\XmlUtil;
+use DOMDocument;
+use DOMNode;
 
 class XmlFormatter extends BaseFormatter
 {
+    /**
+     * Return a DOMNode representing AnyDataset
+     *
+     * @param array $collection
+     * @return DOMNode
+     */
     protected function anydatasetXml($collection)
     {
         $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset></anydataset>");
@@ -21,6 +29,10 @@ class XmlFormatter extends BaseFormatter
         return $anyDataSet;
     }
 
+    /**
+     * @param array $row
+     * @return DOMDocument
+     */
     protected function rowXml($row)
     {
         $node = XmlUtil::createXmlDocumentFromStr("<row></row>");
@@ -41,10 +53,7 @@ class XmlFormatter extends BaseFormatter
 
 
     /**
-     * Returns the AnyDataset XmlDocument representive object
-     *
-     * @return \DOMDocument XmlDocument object
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @inheritDoc
      */
     public function raw()
     {
@@ -54,7 +63,9 @@ class XmlFormatter extends BaseFormatter
         return $this->rowXml($this->object->toArray());
     }
 
-
+    /**
+     * @inheritDoc
+     */
     public function toText()
     {
         return $this->raw()->saveXML();
