@@ -1,5 +1,20 @@
 tasks:
   - init: |
-      echo 'Build composer'
+      echo "No special initialization"
     command: |
       composer install
+
+image:
+  file: .gitpod/Dockerfile
+
+vscode:
+  extensions:
+    - ikappas.composer
+    - felixfbecker.php-debug
+    - neilbrayfield.php-docblocker
+    - bmewburn.vscode-intelephense-client
+    - getpsalm.psalm-vscode-plugin
+    - SonarSource.sonarlint-vscode
+    - recca0120.vscode-phpunit
+    - hbenl.vscode-test-explorer
+    - hbenl.test-adapter-converter
