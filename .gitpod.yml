@@ -10,11 +10,11 @@ image:
 vscode:
   extensions:
     - ikappas.composer
+    - hbenl.test-adapter-converter
+    - hbenl.vscode-test-explorer
     - felixfbecker.php-debug
     - neilbrayfield.php-docblocker
     - bmewburn.vscode-intelephense-client
     - getpsalm.psalm-vscode-plugin
     - SonarSource.sonarlint-vscode
     - recca0120.vscode-phpunit
-    - hbenl.vscode-test-explorer
-    - hbenl.test-adapter-converter
