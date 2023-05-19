@@ -8,8 +8,6 @@ on:
   pull_request:
     branches:
       - master
-  schedule:
-    - cron: "0 8 * * 1"
 
 jobs:
   Build:
@@ -18,15 +16,13 @@ jobs:
     strategy:
       matrix:
         php-version:
+          - "8.2"
           - "8.1"
           - "8.0"
           - "7.4"
-          - "7.3"
-          - "7.2"
-          - "7.1"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: composer install
       - run: ./vendor/bin/phpunit
       - run: ./vendor/bin/psalm
@@ -38,5 +34,5 @@ jobs:
     env:
       DOC_GITHUB_TOKEN: '${{ secrets.DOC_TOKEN }}'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: curl https://opensource.byjg.com/add-doc.sh | bash /dev/stdin php anydataset

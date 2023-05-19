@@ -9,9 +9,9 @@
   "prefer-stable": true,
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.6.0",
-    "byjg/xmlutil": "1.0.*",
-    "byjg/serializer": "dev-major_refactory"
+    "php": ">=7.4",
+    "byjg/xmlutil": "5.0.0.x-dev",
+    "byjg/serializer": "5.0.0.x-dev"
   },
   "suggest": {
     "ext-dom": "*"
