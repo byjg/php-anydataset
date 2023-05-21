@@ -10,8 +10,8 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=5.6.0",
-    "byjg/xmlutil": "1.0.*",
-    "byjg/serializer": "dev-major_refactory"
+    "byjg/xmlutil": "4.9.*",
+    "byjg/serializer": "4.9.*"
   },
   "suggest": {
     "ext-dom": "*"
