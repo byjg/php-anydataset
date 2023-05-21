@@ -6,58 +6,64 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 
 class IteratorFilterXPathFormatter extends IteratorFilterFormatter
 {
-    public function format($filters, $tableName = null, &$params = [], $returnFields = "*")
-    {
-        $param = "";
-        $xpathFilter = $this->getFilter($filters, $param);
+     /**
+      * @inheritDoc
+      */
+     public function format($filters, $tableName = null, &$params = [], $returnFields = "*")
+     {
+          $param = [];
+          $xpathFilter = $this->getFilter($filters, $param);
 
-        if ($xpathFilter == "") {
-            return "/anydataset/row";
-        }
+          if ($xpathFilter == "") {
+               return "/anydataset/row";
+          }
 
-        return "/anydataset/row[" . $xpathFilter . "]";
-    }
+          return "/anydataset/row[" . $xpathFilter . "]";
+     }
 
-    public function getRelation($name, $relation, $value, &$param)
-    {
-        $str = is_numeric($value) ? "" : "'";
-        $field = "field[@name='" . $name . "'] ";
-        $value = " $str$value$str ";
+     /**
+      * @inheritDoc
+      */
+     public function getRelation($name, $relation, $value, &$param)
+     {
+          $str = is_numeric($value) ? "" : "'";
+          $field = "field[@name='" . $name . "'] ";
+          $value = " $str$value$str ";
 
-        $data = [
-            Relation::EQUAL => function ($field, $value) {
-                 return $field . "=" . $value;
-            },
+          switch ($relation) {
+               case Relation::EQUAL:
+                    $return = $field . "=" . $value;
+                    break;
 
-            Relation::GREATER_THAN => function ($field, $value) {
-                 return $field . ">" . $value;
-            },
+               case Relation::GREATER_THAN:
+                    $return = $field . ">" . $value;
+                    break;
 
-            Relation::LESS_THAN => function ($field, $value) {
-                 return $field . "<" . $value;
-            },
+               case Relation::LESS_THAN:
+                    $return = $field . "<" . $value;
+                    break;
 
-            Relation::GREATER_OR_EQUAL_THAN => function ($field, $value) {
-                 return $field . ">=" . $value;
-            },
+               case Relation::GREATER_OR_EQUAL_THAN:
+                    $return = $field . ">=" . $value;
+                    break;
 
-            Relation::LESS_OR_EQUAL_THAN => function ($field, $value) {
-                 return $field . "<=" . $value;
-            },
+               case Relation::LESS_OR_EQUAL_THAN:
+                    $return = $field . "<=" . $value;
+                    break;
 
-            Relation::NOT_EQUAL => function ($field, $value) {
-                 return $field . "!=" . $value;
-            },
+               case Relation::NOT_EQUAL:
+                    $return = $field . "!=" . $value;
+                    break;
 
-            Relation::STARTS_WITH => function ($field, $value) {
-                 return " starts-with($field, $value) ";
-            },
+               case Relation::STARTS_WITH:
+                    $return = " starts-with($field, $value) ";
+                    break;
 
-            Relation::CONTAINS => function ($field, $value) {
-                 return " contains($field, $value) ";
-            },
-        ];
+               default: // Relation::CONTAINS:
+                    $return = " contains($field, $value) ";
+                    break;
+          }
 
-        return $data[$relation]($field, $value);
-    }
+          return $return;
+     }
 }

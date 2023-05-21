@@ -15,7 +15,7 @@ require_once "Sample/ModelPublic.php";
 require_once "Sample/ModelGetter.php";
 require_once "Sample/ModelPropertyPattern.php";
 
-class SingleRowTest extends TestCase
+class RowTest extends TestCase
 {
 
     /**
@@ -362,5 +362,21 @@ class SingleRowTest extends TestCase
 
         $row->removeField("dELeTEme");
         $this->assertFalse($row->fieldExists("DelEteME")); 
+    }
+
+    public function testToArrayFields()
+    {
+        $row = new Row([
+            "field1" => "value1",
+            "field2" => "value2",
+            "field3" => "value3",
+            "field4" => "value4",
+        ]);
+
+        $iterator = $row->toArray(["field1", "field3"]);
+        $this->assertEquals([
+            "field1" => "value1",
+            "field3" => "value3" 
+        ], $iterator);
     }
 }

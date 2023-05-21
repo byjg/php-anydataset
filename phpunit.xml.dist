@@ -7,10 +7,12 @@ and open the template in the editor.
 
 <!-- see http://www.phpunit.de/wiki/Documentation -->
 <phpunit bootstrap="./vendor/autoload.php"
-         colors="false"
+         colors="true"
+         testdox="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
+         convertDeprecationsToExceptions="true"
          stopOnFailure="false">
 
     <php>
@@ -24,11 +26,11 @@ and open the template in the editor.
             <directory>./src</directory>
         </whitelist>
     </filter>
-    
+
     <testsuites>
         <testsuite name="Test Suite">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
-    
+
 </phpunit>

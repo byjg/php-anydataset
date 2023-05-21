@@ -2,20 +2,24 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use ByJG\Serializer\BinderObject;
-use ByJG\Serializer\DumpToArrayInterface;
+use ByJG\Serializer\SerializerObject;
 
-class Row extends BinderObject implements DumpToArrayInterface
+class Row
 {
 
     /**
-     * \DOMNode represents a Row
-     * @var \DOMElement
+     * @var array
      */
-    private $node = null;
-    private $row = null;
-    private $originalRow = null;
+    private $row = [];
 
+    /**
+     * @var array
+     */
+    private $originalRow = [];
+
+    /**
+     * @var boolean
+     */
     protected $fieldNameCaseSensitive = true;
 
     /**
@@ -29,8 +33,7 @@ class Row extends BinderObject implements DumpToArrayInterface
         if (is_array($instance)) {
             $this->row = $instance;
         } else {
-            $this->row = array();
-            $this->bind($instance);
+            $this->row = SerializerObject::instance($instance)->serialize();
         }
 
         $this->acceptChanges();
@@ -39,7 +42,8 @@ class Row extends BinderObject implements DumpToArrayInterface
     /**
      * Add a string field to row
      * @param string $name
-     * @param string $value
+     * @param string|array|null $value
+     * @return void
      */
     public function addField($name, $value)
     {
@@ -52,12 +56,11 @@ class Row extends BinderObject implements DumpToArrayInterface
         } else {
             $this->row[$name] = array($this->row[$name], $value);
         }
-        $this->informChanges();
     }
 
     /**
      * @param string $name - Field name
-     * @return string
+     * @return null|string
      * @desc et the string value from a field name
      */
     public function get($name)
@@ -112,6 +115,7 @@ class Row extends BinderObject implements DumpToArrayInterface
      * Set a string value to existing field name
      * @param string $name
      * @param string $value
+     * @return void
      */
     public function set($name, $value)
     {
@@ -122,13 +126,13 @@ class Row extends BinderObject implements DumpToArrayInterface
         } else {
             $this->row[$name] = $value;
         }
-        $this->informChanges();
     }
 
     /**
      * Remove specified field name from row.
      *
      * @param string $fieldName
+     * @return null
      */
     public function removeField($fieldName)
     {
@@ -136,7 +140,6 @@ class Row extends BinderObject implements DumpToArrayInterface
 
         if (array_key_exists($fieldName, $this->row)) {
             unset($this->row[$fieldName]);
-            $this->informChanges();
         }
     }
 
@@ -144,7 +147,8 @@ class Row extends BinderObject implements DumpToArrayInterface
      * Remove specified field name with specified value name from row.
      *
      * @param string $fieldName
-     * @param $value
+     * @param mixed $value
+     * @return void
      */
     public function removeValue($fieldName, $value)
     {
@@ -154,14 +158,12 @@ class Row extends BinderObject implements DumpToArrayInterface
         if (!is_array($result)) {
             if ($value == $result) {
                 unset($this->row[$fieldName]);
-                $this->informChanges();
             }
         } else {
             $qty = count($result);
             for ($i = 0; $i < $qty; $i++) {
                 if ($result[$i] == $value) {
                     unset($result[$i]);
-                    $this->informChanges();
                 }
             }
             $this->row[$fieldName] = array_values($result);
@@ -174,6 +176,7 @@ class Row extends BinderObject implements DumpToArrayInterface
      * @param String $fieldName
      * @param String $oldvalue
      * @param String $newvalue
+     * @return void
      */
     public function replaceValue($fieldName, $oldvalue, $newvalue)
     {
@@ -183,21 +186,28 @@ class Row extends BinderObject implements DumpToArrayInterface
         if (!is_array($result)) {
             if ($oldvalue == $result) {
                 $this->row[$fieldName] = $newvalue;
-                $this->informChanges();
             }
         } else {
             for ($i = count($result) - 1; $i >= 0; $i--) {
                 if ($result[$i] == $oldvalue) {
                     $this->row[$fieldName][$i] = $newvalue;
-                    $this->informChanges();
                 }
             }
         }
     }
 
-    public function toArray()
+    /**
+     * @param array|null $fields
+     * @return array
+     */
+    public function toArray($fields = [])
     {
-        return $this->row;
+        if (empty($fields)) {
+            return $this->row;
+        }
+        
+        $fieldAssoc = array_combine($fields, array_fill(0, count($fields), null));
+        return array_intersect_key(array_merge($fieldAssoc, $this->row), $fieldAssoc);
     }
 
     /**
@@ -218,7 +228,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     }
 
     /**
-     *
+     * @return void
      */
     public function acceptChanges()
     {
@@ -226,16 +236,11 @@ class Row extends BinderObject implements DumpToArrayInterface
     }
 
     /**
-     *
+     * @return void
      */
     public function rejectChanges()
     {
         $this->row = $this->originalRow;
-    }
-
-    protected function informChanges()
-    {
-        $this->node = null;
     }
 
     /**
@@ -244,6 +249,7 @@ class Row extends BinderObject implements DumpToArrayInterface
      * @param Row $obj
      * @param string $propName
      * @param string $value
+     * @return void
      */
     protected function setPropValue($obj, $propName, $value)
     {
@@ -251,6 +257,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     }
 
     /**
+     * @param string $name
      * @return bool
      */
     public function fieldExists($name)
@@ -277,7 +284,7 @@ class Row extends BinderObject implements DumpToArrayInterface
     }
 
     /**
-     * @param string name
+     * @param string $name
      * @return string
      */
     protected function getHydratedFieldName($name)

@@ -5,10 +5,35 @@ namespace ByJG\AnyDataset\Core;
 abstract class IteratorFilterFormatter
 {
 
+    /**
+     * Get Relation
+     *
+     * @param string $name
+     * @param string $relation
+     * @param string $value
+     * @param array $param
+     * @return string
+     */
     abstract public function getRelation($name, $relation, $value, &$param);
 
+    /**
+     * Get formatted field
+     *
+     * @param array $filters
+     * @param string $tableName
+     * @param array $params
+     * @param string $returnFields
+     * @return string
+     */
     abstract public function format($filters, $tableName = null, &$params = [], $returnFields = "*");
 
+    /**
+     * Get Filter 
+     *
+     * @param array $filters
+     * @param array $param
+     * @return string
+     */
     public function getFilter($filters, &$param)
     {
         $filter = "";

@@ -13,10 +13,19 @@ abstract class BaseFormatter implements FormatterInterface
      */
     protected $object;
 
+    /**
+     * @inheritDoc
+     */
     abstract public function raw();
 
+    /**
+     * @inheritDoc
+     */
     abstract public function toText();
 
+    /**
+     * @inheritDoc
+     */
     public function saveToFile($filename)
     {
         if (empty($filename)) {
@@ -26,7 +35,7 @@ abstract class BaseFormatter implements FormatterInterface
     }
 
     /**
-     * $object AnyDataset|Row
+     * @param GenericIterator|Row $object
      */
     public function __construct($object)
     {

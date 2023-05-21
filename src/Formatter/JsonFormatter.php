@@ -6,12 +6,17 @@ use ByJG\AnyDataset\Core\GenericIterator;
 
 class JsonFormatter extends BaseFormatter
 {
+    /**
+     * @inheritDoc
+     */
     public function raw()
     {
         return json_decode($this->toText());
     }
 
-
+    /**
+     * @inheritDoc
+     */
     public function toText()
     {
         if ($this->object instanceof GenericIterator) {
