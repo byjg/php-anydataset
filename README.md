@@ -194,8 +194,8 @@ vendor/bin/phpunit
 
 ```mermaid
 flowchart TD
-    AnyDataset --> Serializer
-    AnyDataset --> XMLUtil
+    byjg/anydataset --> byjg/serializer
+    byjg/anydataset --> byjg/xmlutil
 ```
 
 ----
