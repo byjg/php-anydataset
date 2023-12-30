@@ -190,5 +190,13 @@ Just type: `composer require "byjg/anydataset=4.1.*"`
 vendor/bin/phpunit
 ```
 
+## Dependencies
+
+```mermaid
+flowchart TD
+    AnyDataset --> Serializer
+    AnyDataset --> XMLUtil
+```
+
 ----
 [Open source ByJG](http://opensource.byjg.com)
