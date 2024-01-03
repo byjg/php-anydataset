@@ -6,8 +6,6 @@
 [![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/php-anydataset/)
 [![GitHub license](https://img.shields.io/github/license/byjg/anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
 [![GitHub release](https://img.shields.io/github/release/byjg/anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/php-anydataset/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/php-anydataset/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/byjg/php-anydataset/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/byjg/php-anydataset/?branch=master)
 
 Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP.
 
