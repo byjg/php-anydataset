@@ -10,14 +10,14 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.4",
-    "byjg/xmlutil": "5.0.0.x-dev",
-    "byjg/serializer": "5.0.0.x-dev"
+    "byjg/xmlutil": "4.9.*",
+    "byjg/serializer": "4.9.*"
   },
   "suggest": {
     "ext-dom": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "5.7.*|7.4.*|^9.5",
+    "phpunit/phpunit": "^9.6",
     "vimeo/psalm": "^4.24"
   },
   "license": "MIT"

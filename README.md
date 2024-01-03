@@ -192,5 +192,13 @@ composer require "byjg/anydataset=5.0.*"
 vendor/bin/phpunit
 ```
 
+## Dependencies
+
+```mermaid
+flowchart TD
+    byjg/anydataset --> byjg/serializer
+    byjg/anydataset --> byjg/xmlutil
+```
+
 ----
 [Open source ByJG](http://opensource.byjg.com)
