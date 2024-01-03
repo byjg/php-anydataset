@@ -28,7 +28,7 @@ abstract class IteratorFilterFormatter
     abstract public function format($filters, $tableName = null, &$params = [], $returnFields = "*");
 
     /**
-     * Get Filter 
+     * Get Filter
      *
      * @param array $filters
      * @param array $param

@@ -1,13 +1,13 @@
 # AnyDataset
 
 [![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
-[![Build Status](https://github.com/byjg/anydataset/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/byjg/anydataset/actions/workflows/phpunit.yml)
+[![Build Status](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml)
 [![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
-[![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/anydataset/)
+[![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/php-anydataset/)
 [![GitHub license](https://img.shields.io/github/license/byjg/anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
-[![GitHub release](https://img.shields.io/github/release/byjg/anydataset.svg)](https://github.com/byjg/anydataset/releases/)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/anydataset/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/byjg/anydataset/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/byjg/anydataset/?branch=master)
+[![GitHub release](https://img.shields.io/github/release/byjg/anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/php-anydataset/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/php-anydataset/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/byjg/php-anydataset/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/byjg/php-anydataset/?branch=master)
 
 Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP.
 
@@ -21,18 +21,18 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 
 {:.table}
 
-| Object                 | Data Source           | Read | Write | Reference               |
-| ---------------------- | --------------------- |:----:|:-----:| ----------------------- |
-| DbDriverInterface      | Relational DB         | yes  | yes   | [Github](https://github.com/byjg/anydataset-db) |
-| AnyDataSet             | Anydataset            | yes  | yes   | [Github](https://github.com/byjg/anydataset) |
-| ArrayDataSet           | Array                 | yes  | no    | [Github](https://github.com/byjg/anydataset-array) |
-| TextFileDataSet        | Delimited Fields      | yes  | no    | [Github](https://github.com/byjg/anydataset-text) |
-| FixedTextFileDataSet   | Fixed Size fields     | yes  | no    | [Github](https://github.com/byjg/anydataset-text) |
-| XmlDataSet             | Xml                   | yes  | no    | [Github](https://github.com/byjg/anydataset-xml) |
-| JSONDataSet            | Json                  | yes  | no    | [Github](https://github.com/byjg/anydataset-json) |
-| SparQLDataSet          | SparQl Repositories   | yes  | no    | [Github](https://github.com/byjg/anydataset-sparql) |
-| NoSqlDocumentInterface | NoSql Document Based  | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
-| KeyValueInterface      | NoSql Key/Value Based | yes  | yes   | [Github](https://github.com/byjg/anydataset-nosql) |
+| Object                 | Data Source           | Read | Write | Reference                                           |
+|------------------------|-----------------------|:----:|:-----:|-----------------------------------------------------|
+| DbDriverInterface      | Relational DB         | yes  |  yes  | [Github](https://github.com/byjg/anydataset-db)     |
+| AnyDataSet             | Anydataset            | yes  |  yes  | [Github](https://github.com/byjg/anydataset)        |
+| ArrayDataSet           | Array                 | yes  |  no   | [Github](https://github.com/byjg/anydataset-array)  |
+| TextFileDataSet        | Delimited Fields      | yes  |  no   | [Github](https://github.com/byjg/anydataset-text)   |
+| FixedTextFileDataSet   | Fixed Size fields     | yes  |  no   | [Github](https://github.com/byjg/anydataset-text)   |
+| XmlDataSet             | Xml                   | yes  |  no   | [Github](https://github.com/byjg/anydataset-xml)    |
+| JSONDataSet            | Json                  | yes  |  no   | [Github](https://github.com/byjg/anydataset-json)   |
+| SparQLDataSet          | SparQl Repositories   | yes  |  no   | [Github](https://github.com/byjg/anydataset-sparql) |
+| NoSqlDocumentInterface | NoSql Document Based  | yes  |  yes  | [Github](https://github.com/byjg/anydataset-nosql)  |
+| KeyValueInterface      | NoSql Key/Value Based | yes  |  yes  | [Github](https://github.com/byjg/anydataset-nosql)  |
 
 ## Examples
 
@@ -72,7 +72,7 @@ print_r($iterator->toArray());
 $iterator = $dataset->getIterator();
 while ($iterator->hasNext()) {
     $row = $iterator->moveNext();
-    
+
     print_r($row->get("field1"));
 }
 ```
@@ -97,7 +97,7 @@ $output = RowOutput::getInstance()
     ->addFormat("field1", "Test {field1}")
     ->addFormat("field2", "Showing {} and {field3}");
     ->addCustomFormat("field3", function ($row, $field, $value) {
-        // return the formatted output. 
+        // return the formatted output.
         // $row: The row object with all values
         // $field: The field has been processed
         // $value: The field value
@@ -126,10 +126,10 @@ $validator = RowValidator::getInstance()
     ->regexValidation("field4", '/\d{4}-\d{2}-\d{2}/')
     ->customValidation("field3", function($value) {
         // Return any string containing the error message if validation FAILS
-        // otherwise, just return null and the valition will pass. 
+        // otherwise, just return null and the valition will pass.
     });
 
-$validator->validate($row) // Will return an array with the error messages. Empty array if not errors. 
+$validator->validate($row) // Will return an array with the error messages. Empty array if not errors.
 ```
 
 ## Formatters
@@ -139,7 +139,7 @@ AnyDataset comes with an extensible set to format the AnyDataset. The interface 
 ```php
 namespace ByJG\AnyDataset\Core\Formatter;
 
-interface FormatterInterface 
+interface FormatterInterface
 {
     /**
      * Return the object in your original format, normally as object
@@ -177,12 +177,14 @@ Example:
 $formatter = new XmlFormatter($anydataset->getIterator());
 $formatter->raw(); // Return a DOM object
 $formatter->toText(); // Return the XML as a text
-$formatter->saveToFile("/path/to/file.xml");  // Save the XML Text to a file. 
+$formatter->saveToFile("/path/to/file.xml");  // Save the XML Text to a file.
 ```
 
 ## Install
 
-Just type: `composer require "byjg/anydataset=4.1.*"`
+```bash
+composer require "byjg/anydataset"
+```
 
 ## Running Unit tests
 
