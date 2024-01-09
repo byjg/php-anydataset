@@ -6,12 +6,17 @@
       "ByJG\\AnyDataset\\Core\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "prefer-stable": true,
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.4",
-    "byjg/xmlutil": "4.9.*",
-    "byjg/serializer": "4.9.*"
+    "php": ">=8.1",
+    "byjg/xmlutil": "^5.0",
+    "byjg/serializer": "^5.0"
   },
   "suggest": {
     "ext-dom": "*"
