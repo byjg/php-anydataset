@@ -1,19 +1,16 @@
 <?php
 
-namespace Tests\AnyDataset\Dataset;
+namespace Tests;
 
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
 use PHPUnit\Framework\TestCase;
-use Tests\AnyDataset\Sample\ModelGetter;
-use Tests\AnyDataset\Sample\ModelPublic;
 use ByJG\Util\XmlUtil;
 use stdClass;
-
-require_once "Sample/ModelPublic.php";
-require_once "Sample/ModelGetter.php";
-require_once "Sample/ModelPropertyPattern.php";
+use Tests\Sample\ModelGetter;
+use Tests\Sample\ModelPropertyPattern;
+use Tests\Sample\ModelPublic;
 
 class RowTest extends TestCase
 {
@@ -302,7 +299,7 @@ class RowTest extends TestCase
 
     public function testConstructor_PropertyPattern()
     {
-        $model = new \Tests\AnyDataset\Sample\ModelPropertyPattern();
+        $model = new ModelPropertyPattern();
         $model->setIdModel(10);
         $model->setClientName("Testing");
 

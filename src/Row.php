@@ -2,7 +2,7 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use ByJG\Serializer\SerializerObject;
+use ByJG\Serializer\Serialize;
 
 class Row
 {
@@ -33,7 +33,7 @@ class Row
         if (is_array($instance)) {
             $this->row = $instance;
         } else {
-            $this->row = SerializerObject::instance($instance)->serialize();
+            $this->row = Serialize::from($instance)->toArray();
         }
 
         $this->acceptChanges();
