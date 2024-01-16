@@ -17,8 +17,6 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 
 ## Current Implementations
 
-{:.table}
-
 | Object                 | Data Source           | Read | Write | Reference                                           |
 |------------------------|-----------------------|:----:|:-----:|-----------------------------------------------------|
 | DbDriverInterface      | Relational DB         | yes  |  yes  | [Github](https://github.com/byjg/anydataset-db)     |
