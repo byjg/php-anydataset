@@ -114,6 +114,14 @@ class IteratorFilter
                         $result[$pos] = $result[$pos] && (strpos(is_null($valueparam) ? "" : $valueparam, $value) === 0);
                         break;
 
+                    case Relation::IN:
+                        $result[$pos] = $result[$pos] && in_array($valueparam, $value);
+                        break;
+
+                    case Relation::NOT_IN:
+                        $result[$pos] = $result[$pos] && !in_array($valueparam, $value);
+                        break;
+
                     default: // Relation::CONTAINS:
                         $result[$pos] = $result[$pos] && (strpos(is_null($valueparam) ? "" : $valueparam, $value) !== false);
                         break;
@@ -129,7 +137,7 @@ class IteratorFilter
     /**
      * @param string $name Field name
      * @param int $relation Relation enum
-     * @param string $value Field string value
+     * @param string|array $value Field string value
      * @return IteratorFilter
      * @desc Add a single string comparison to filter.
      */

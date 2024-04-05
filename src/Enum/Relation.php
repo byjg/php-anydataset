@@ -49,4 +49,14 @@ class Relation
      * "Contains" unary comparator
      */
     const CONTAINS = 7;
+
+    /**
+     * "In" unary comparator
+     */
+    const IN = 8;
+
+    /**
+     * "Not In" unary comparator
+     */
+    const NOT_IN = 9;
 }

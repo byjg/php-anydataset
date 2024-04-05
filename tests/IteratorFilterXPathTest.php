@@ -8,7 +8,7 @@ use ByJG\AnyDataset\Core\Row;
 use ByJG\AnyDataset\Core\Enum\Relation;
 use PHPUnit\Framework\TestCase;
 
-class IteratorFilterTest extends TestCase
+class IteratorFilterXPathTest extends TestCase
 {
 
     /**
@@ -51,47 +51,6 @@ class IteratorFilterTest extends TestCase
         );
     }
 
-    public function testMatch()
-    {
-
-        $collection = [
-            $row1 = new Row(
-                [
-                    'field' => 'value1',
-                    'field2' => 'value2'
-                ]
-            ),
-            $row2 = new Row(
-                [
-                    'field' => 'other1',
-                    'field2' => 'other2'
-                ]
-            ),
-            $row3 = new Row(
-                [
-                    'field' => 'last1',
-                    'field2' => 'last2'
-                ]
-            )
-        ];
-
-        $this->assertEquals($collection, $this->object->match($collection));
-
-        $this->object->addRelation('field2', Relation::EQUAL, 'other2');
-        $this->assertEquals([ $row2], $this->object->match($collection));
-
-        $this->object->addRelationOr('field', Relation::EQUAL, 'last1');
-        $this->assertEquals([ $row2, $row3], $this->object->match($collection));
-
-
-        //------------------------
-
-        $this->object = new IteratorFilter();
-        $this->object->addRelation('field', Relation::EQUAL, 'last1');
-        $this->object->addRelation('field2', Relation::EQUAL, 'last2');
-        $this->assertEquals([ $row3], $this->object->match($collection));
-    }
-
     public function testAddRelationOr()
     {
         $this->object->addRelation('field', Relation::EQUAL, 'test');
@@ -113,5 +72,19 @@ class IteratorFilterTest extends TestCase
             "/anydataset/row[ ( field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ) or field[@name='field3'] = 'test3' ]",
             $this->object->format(new IteratorFilterXPathFormatter())
         );
+    }
+
+    public function testIn()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->object->addRelation('field', Relation::IN, ['test', 'test2']);
+        $this->object->format(new IteratorFilterXPathFormatter());
+    }
+
+    public function testNotIn()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->object->addRelation('field', Relation::NOT_IN, ['test', 'test2']);
+        $this->object->format(new IteratorFilterXPathFormatter());
     }
 }

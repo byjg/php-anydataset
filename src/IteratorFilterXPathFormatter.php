@@ -28,7 +28,9 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      {
           $str = is_numeric($value) ? "" : "'";
           $field = "field[@name='" . $name . "'] ";
-          $value = " $str$value$str ";
+          if (is_string($value)) {
+              $value = " $str$value$str ";
+          }
 
           switch ($relation) {
                case Relation::EQUAL:
@@ -58,6 +60,12 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
                case Relation::STARTS_WITH:
                     $return = " starts-with($field, $value) ";
                     break;
+
+                case Relation::IN:
+                    throw new \InvalidArgumentException('XPath does not support IN');
+
+                case Relation::NOT_IN:
+                    throw new \InvalidArgumentException('XPath does not support NOT IN');
 
                default: // Relation::CONTAINS:
                     $return = " contains($field, $value) ";
