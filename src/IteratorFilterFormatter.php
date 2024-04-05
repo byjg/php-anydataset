@@ -10,7 +10,7 @@ abstract class IteratorFilterFormatter
      *
      * @param string $name
      * @param string $relation
-     * @param string $value
+     * @param string|array $value
      * @param array $param
      * @return string
      */
