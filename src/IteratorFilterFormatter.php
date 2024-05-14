@@ -14,7 +14,7 @@ abstract class IteratorFilterFormatter
      * @param array $param
      * @return string
      */
-    abstract public function getRelation(string $name, string $relation, array|string $value, array &$param): string;
+    abstract public function getRelation(string $name, string $relation, mixed $value, array &$param): string;
 
     /**
      * Get formatted field

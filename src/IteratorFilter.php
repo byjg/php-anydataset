@@ -112,7 +112,7 @@ class IteratorFilter
      * @return static
      * @desc Add a single string comparison to filter.
      */
-    public function addRelation(string $name, int $relation, array|string $value): static
+    public function addRelation(string $name, int $relation, mixed $value): static
     {
         $this->filters[] = [" and ", $name, $relation, $value];
         return $this;
@@ -125,7 +125,7 @@ class IteratorFilter
      * @return static
      * @desc Add a single string comparison to filter. This comparison use the OR operator.
      */
-    public function addRelationOr(string $name, int $relation, array|string $value): static
+    public function addRelationOr(string $name, int $relation, mixed $value): static
     {
         $this->filters[] = [" or ", $name, $relation, $value];
         return $this;

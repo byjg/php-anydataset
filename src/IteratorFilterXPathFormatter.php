@@ -24,7 +24,7 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      /**
       * @inheritDoc
       */
-    public function getRelation(string $name, string $relation, array|string $value, array &$param): string
+    public function getRelation(string $name, string $relation, mixed $value, array &$param): string
     {
           $str = is_numeric($value) ? "" : "'";
           $field = "field[@name='" . $name . "'] ";
