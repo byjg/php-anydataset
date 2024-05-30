@@ -134,18 +134,26 @@ class RowTest extends TestCase
     {
         $this->fill();
 
+        $this->assertEquals(["field1" => [10, 20, 30], "field2" => 40], $this->object->toArray());
+
         $this->object->removeField('field1');
         $this->assertEquals(null, $this->object->get('field1'));
         $this->assertEquals(40, $this->object->get('field2'));
+
+        $this->assertEquals(["field2" => 40], $this->object->toArray());
     }
 
     public function testRemoveFieldName2()
     {
         $this->fill();
 
+        $this->assertEquals(["field1" => [10, 20, 30], "field2" => 40], $this->object->toArray());
+
         $this->object->removeField('field2');
         $this->assertEquals(10, $this->object->get('field1'));
         $this->assertEquals(null, $this->object->get('field2'));
+
+        $this->assertEquals(["field1" => [10, 20, 30]], $this->object->toArray());
     }
 
     public function testRemoveFieldNameValue()
