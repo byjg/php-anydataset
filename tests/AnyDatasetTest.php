@@ -7,7 +7,7 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
-use ByJG\Util\XmlDocument;
+use ByJG\XmlUtil\XmlDocument;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Util\Xml;
 

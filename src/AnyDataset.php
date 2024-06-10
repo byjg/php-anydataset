@@ -4,8 +4,8 @@ namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Exception\DatabaseException;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
-use ByJG\Util\File;
-use ByJG\Util\XmlDocument;
+use ByJG\XmlUtil\File;
+use ByJG\XmlUtil\XmlDocument;
 use InvalidArgumentException;
 
 /**
@@ -62,7 +62,7 @@ class AnyDataset
     /**
      * @param null|string $filename
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
     public function __construct($filename = null)
     {
@@ -110,7 +110,7 @@ class AnyDataset
      * @param string $filepath Path and Filename to be read
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
     private function createFromFile()
     {
@@ -141,7 +141,7 @@ class AnyDataset
      * Returns the AnyDataset XML representative structure.
      *
      * @return string XML String
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
     public function xml()
     {
@@ -152,7 +152,7 @@ class AnyDataset
      * @param string|null $filename
      * @return void
      * @throws DatabaseException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
     public function save($filename = null)
     {

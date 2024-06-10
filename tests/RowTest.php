@@ -5,7 +5,7 @@ namespace Tests;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
-use ByJG\Util\XmlDocument;
+use ByJG\XmlUtil\XmlDocument;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Tests\Sample\ModelGetter;

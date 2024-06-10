@@ -3,7 +3,7 @@
 namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
-use ByJG\Util\XmlDocument;
+use ByJG\XmlUtil\XmlDocument;
 
 class XmlFormatter extends BaseFormatter
 {
