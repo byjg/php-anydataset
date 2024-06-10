@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AnyDataset\Dataset;
+namespace Tests;
 
 use ByJG\AnyDataset\Core\Row;
 use ByJG\AnyDataset\Core\RowValidator;

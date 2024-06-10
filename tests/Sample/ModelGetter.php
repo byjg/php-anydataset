@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AnyDataset\Sample;
+namespace Tests\Sample;
 
 use ByJG\Serializer\BaseModel;
 

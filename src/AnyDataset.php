@@ -4,7 +4,10 @@ namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Exception\DatabaseException;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
-use ByJG\Util\XmlUtil;
+use ByJG\XmlUtil\File;
+use ByJG\XmlUtil\XmlDocument;
+use ByJG\XmlUtil\XmlNode;
+use DOMElement;
 use InvalidArgumentException;
 
 /**
@@ -56,26 +59,22 @@ class AnyDataset
      */
     private $currentRow;
 
-    /**
-     * Path to anydataset file
-     * @var string|null
-     */
-    private $filename;
+    private ?File $file;
 
     /**
      * @param null|string $filename
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
     public function __construct($filename = null)
     {
         $this->collection = array();
         $this->currentRow = -1;
 
-        $this->filename = null;
+        $this->file = null;
         $this->defineSavePath($filename, function () {
-            if (!is_null($this->filename)) {
-                $this->createFrom($this->filename);
+            if (!is_null($this->file)) {
+                $this->createFromFile();
             }
         });
     }
@@ -85,23 +84,23 @@ class AnyDataset
      */
     public function getFilename()
     {
-        return $this->filename;
+        return $this->file->getFilename();
     }
 
     /**
      *
-     * @param string|null $file
+     * @param string|null $filename
      * @param mixed $closure
      * @return void
      */
-    private function defineSavePath($file, $closure)
+    private function defineSavePath($filename, $closure)
     {
-        if (!is_null($file)) {
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if (empty($ext) && substr($file, 0, 6) !== "php://") {
-                $file .= '.anydata.xml';
+        if (!is_null($filename)) {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if (empty($ext) && substr($filename, 0, 6) !== "php://") {
+                $filename .= '.anydata.xml';
             }
-            $this->filename = $file;
+            $this->file = new File($filename, allowNotFound: true);
         }
 
         $closure();
@@ -113,25 +112,24 @@ class AnyDataset
      * @param string $filepath Path and Filename to be read
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
-    private function createFrom($filepath)
+    private function createFromFile()
     {
-        if (file_exists($filepath)) {
-            $anyDataSet = XmlUtil::createXmlDocumentFromFile($filepath);
+        if (file_exists($this->getFilename())) {
+            $anyDataSet = new XmlDocument($this->file);
             $this->collection = array();
 
-            $rows = $anyDataSet->getElementsByTagName("row");
+            $rows = $anyDataSet->selectNodes("row");
             foreach ($rows as $row) {
                 $sr = new Row();
-                $fields = $row->getElementsByTagName("field");
+                $fields = XmlNode::instance($row)->selectNodes("field");
+                /** @var DOMElement $field */
                 foreach ($fields as $field) {
-                    $attr = $field->attributes->getNamedItem("name");
-                    if (is_null($attr) || is_null($attr->nodeValue)) {
-                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
+                    if (!$field->hasAttribute("name")) {
+                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($this->getFilename()));
                     }
-
-                    $sr->addField($attr->nodeValue, $field->nodeValue);
+                    $sr->addField($field->getAttribute("name"), $field->nodeValue);
                 }
                 $sr->acceptChanges();
                 $this->collection[] = $sr;
@@ -144,9 +142,8 @@ class AnyDataset
      * Returns the AnyDataset XML representative structure.
      *
      * @return string XML String
-     * @throws \ByJG\Util\Exception\XmlUtilException
      */
-    public function xml()
+    public function xml(): string
     {
         return (new XmlFormatter($this->getIterator()))->toText();
     }
@@ -155,16 +152,16 @@ class AnyDataset
      * @param string|null $filename
      * @return void
      * @throws DatabaseException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
     public function save($filename = null)
     {
-        $this->defineSavePath($filename, function () {
-            if (is_null($this->filename)) {
+        $this->defineSavePath($filename, function () use ($filename){
+            if (is_null($this->file)) {
                 throw new DatabaseException("No such file path to save anydataset");
             }
 
-            (new XmlFormatter($this->getIterator()))->saveToFile($this->filename);
+            (new XmlFormatter($this->getIterator()))->saveToFile($this->file->getFilename());
         });
     }
 
