@@ -6,6 +6,8 @@ use ByJG\AnyDataset\Core\Exception\DatabaseException;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\XmlUtil\File;
 use ByJG\XmlUtil\XmlDocument;
+use ByJG\XmlUtil\XmlNode;
+use DOMElement;
 use InvalidArgumentException;
 
 /**
@@ -121,14 +123,13 @@ class AnyDataset
             $rows = $anyDataSet->selectNodes("row");
             foreach ($rows as $row) {
                 $sr = new Row();
-                $fields = $row->getElementsByTagName("field");
+                $fields = XmlNode::instance($row)->selectNodes("field");
+                /** @var DOMElement $field */
                 foreach ($fields as $field) {
-                    $attr = $field->attributes->getNamedItem("name");
-                    if (is_null($attr) || is_null($attr->nodeValue)) {
+                    if (!$field->hasAttribute("name")) {
                         throw new InvalidArgumentException('Malformed anydataset file ' . basename($this->getFilename()));
                     }
-
-                    $sr->addField($attr->nodeValue, $field->nodeValue);
+                    $sr->addField($field->getAttribute("name"), $field->nodeValue);
                 }
                 $sr->acceptChanges();
                 $this->collection[] = $sr;
@@ -141,9 +142,8 @@ class AnyDataset
      * Returns the AnyDataset XML representative structure.
      *
      * @return string XML String
-     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
      */
-    public function xml()
+    public function xml(): string
     {
         return (new XmlFormatter($this->getIterator()))->toText();
     }
