@@ -5,8 +5,8 @@ namespace Tests;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
+use ByJG\Util\XmlDocument;
 use PHPUnit\Framework\TestCase;
-use ByJG\Util\XmlUtil;
 use stdClass;
 use Tests\Sample\ModelGetter;
 use Tests\Sample\ModelPropertyPattern;
@@ -180,7 +180,7 @@ class RowTest extends TestCase
     {
         $this->fill();
 
-        $dom = XmlUtil::CreateXmlDocumentFromStr(
+        $dom = new XmlDocument(
             "<row>"
             . "<field name='field1'>10</field>"
             . "<field name='field1'>20</field>"
@@ -191,7 +191,7 @@ class RowTest extends TestCase
 
         $formatter = (new XmlFormatter($this->object))->raw();
 
-        $this->assertEquals($dom, $formatter);
+        $this->assertEquals($dom->DOMNode(), $formatter);
     }
 
     public function testGetJson()

@@ -7,7 +7,9 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
+use ByJG\Util\XmlDocument;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Util\Xml;
 
 class AnyDatasetTest extends TestCase
 {
@@ -77,7 +79,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow();
         $this->object->addField('field', 'value');
 
-        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
+        $xmlDom = new XmlDocument(
                 '<?xml version="1.0" encoding="utf-8"?>'
                 . '<anydataset>'
                 . '<row>'
@@ -85,7 +87,7 @@ class AnyDatasetTest extends TestCase
                 . '</row>'
                 . '</anydataset>'
         );
-        $xmlDomValidate = \ByJG\Util\XmlUtil::createXmlDocumentFromStr($this->object->xml());
+        $xmlDomValidate = new XmlDocument($this->object->xml());
 
         $this->assertEquals($xmlDom, $xmlDomValidate);
     }
@@ -95,7 +97,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow();
         $this->object->addField('field', 'value');
 
-        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
+        $xmlDom = new XmlDocument(
                 '<?xml version="1.0" encoding="utf-8"?>'
                 . '<anydataset>'
                 . '<row>'
@@ -105,7 +107,7 @@ class AnyDatasetTest extends TestCase
         );
 
         $formatter = new XmlFormatter($this->object->getIterator());
-        $this->assertEquals($xmlDom, $formatter->raw());
+        $this->assertEquals($xmlDom->DOMNode(), $formatter->raw());
     }
 
     public function testJsonFormatter()
