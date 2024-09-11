@@ -1,11 +1,19 @@
 tasks:
-  - init: |
-      echo "No special initialization"
+  - name: Run Composer
     command: |
       composer install
 
-image:
-  file: .gitpod/Dockerfile
+image: byjg/gitpod-image:latest
+
+jetbrains:
+  phpstorm:
+    vmoptions: '-Xmx4g'
+  plugins:
+    - com.github.copilot
+    - com.intellij.kubernetes
+    - com.intellij.mermaid
+    - ru.adelf.idea.dotenv
+    - org.toml.lang
 
 vscode:
   extensions:
