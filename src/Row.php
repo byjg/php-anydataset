@@ -10,25 +10,24 @@ class Row
     /**
      * @var array
      */
-    private $row = [];
+    private array $row = [];
 
     /**
      * @var array
      */
-    private $originalRow = [];
+    private array $originalRow = [];
 
     /**
      * @var boolean
      */
-    protected $fieldNameCaseSensitive = true;
+    protected bool $fieldNameCaseSensitive = true;
 
     /**
      * Row constructor
-     * 
-     * @param Row|array|\stdClass|object $instance
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     *
+     * @param object|array $instance
      */
-    public function __construct($instance = [])
+    public function __construct(object|array $instance = [])
     {
         if (is_array($instance)) {
             $this->row = $instance;
@@ -42,10 +41,10 @@ class Row
     /**
      * Add a string field to row
      * @param string $name
-     * @param string|array|null $value
+     * @param array|string|null $value
      * @return void
      */
-    public function addField($name, $value)
+    public function addField(string $name, array|string|null $value): void
     {
         $name = $this->getHydratedFieldName($name);
 
@@ -60,10 +59,10 @@ class Row
 
     /**
      * @param string $name - Field name
-     * @return null|string
+     * @return mixed
      * @desc et the string value from a field name
      */
-    public function get($name)
+    public function get(string $name): mixed
     {
         $name = $this->getHydratedFieldName($name);
 
@@ -85,7 +84,7 @@ class Row
      * @param string $fieldName
      * @return array
      */
-    public function getAsArray($fieldName)
+    public function getAsArray(string $fieldName): array
     {
         $fieldName = $this->getHydratedFieldName($fieldName);
 
@@ -106,7 +105,7 @@ class Row
      * Return all Field Names from current Row
      * @return array
      */
-    public function getFieldNames()
+    public function getFieldNames(): array
     {
         return array_keys($this->row);
     }
@@ -117,7 +116,7 @@ class Row
      * @param string $value
      * @return void
      */
-    public function set($name, $value)
+    public function set(string $name, mixed $value): void
     {
         $name = $this->getHydratedFieldName($name);
 
@@ -132,9 +131,8 @@ class Row
      * Remove specified field name from row.
      *
      * @param string $fieldName
-     * @return null
      */
-    public function removeField($fieldName)
+    public function removeField(string $fieldName): void
     {
         $fieldName = $this->getHydratedFieldName($fieldName);
 
@@ -150,7 +148,7 @@ class Row
      * @param mixed $value
      * @return void
      */
-    public function removeValue($fieldName, $value)
+    public function removeValue(string $fieldName, mixed $value): void
     {
         $fieldName = $this->getHydratedFieldName($fieldName);
 
@@ -173,12 +171,11 @@ class Row
     /**
      * Update a specific field and specific value with new value
      *
-     * @param String $fieldName
-     * @param String $oldvalue
-     * @param String $newvalue
-     * @return void
+     * @param string $fieldName
+     * @param mixed $oldvalue
+     * @param mixed $newvalue
      */
-    public function replaceValue($fieldName, $oldvalue, $newvalue)
+    public function replaceValue(string $fieldName, mixed $oldvalue, mixed $newvalue): void
     {
         $fieldName = $this->getHydratedFieldName($fieldName);
 
@@ -200,7 +197,7 @@ class Row
      * @param array|null $fields
      * @return array
      */
-    public function toArray($fields = [])
+    public function toArray(?array $fields = []): array
     {
         if (empty($fields)) {
             return $this->row;
@@ -213,7 +210,7 @@ class Row
     /**
      * @return array
      */
-    public function getAsRaw()
+    public function getAsRaw(): array
     {
         return $this->originalRow;
     }
@@ -222,7 +219,7 @@ class Row
      *
      * @return bool
      */
-    public function hasChanges()
+    public function hasChanges(): bool
     {
         return ($this->row != $this->originalRow);
     }
@@ -230,7 +227,7 @@ class Row
     /**
      * @return void
      */
-    public function acceptChanges()
+    public function acceptChanges(): void
     {
         $this->originalRow = $this->row;
     }
@@ -238,7 +235,7 @@ class Row
     /**
      * @return void
      */
-    public function rejectChanges()
+    public function rejectChanges(): void
     {
         $this->row = $this->originalRow;
     }
@@ -248,10 +245,10 @@ class Row
      *
      * @param Row $obj
      * @param string $propName
-     * @param string $value
+     * @param mixed $value
      * @return void
      */
-    protected function setPropValue($obj, $propName, $value)
+    protected function setPropValue(Row $obj, string $propName, mixed $value): void
     {
         $obj->set($propName, $value);
     }
@@ -260,7 +257,7 @@ class Row
      * @param string $name
      * @return bool
      */
-    public function fieldExists($name)
+    public function fieldExists(string $name): bool
     {
         return isset($this->row[$this->getHydratedFieldName($name)]);
     }
@@ -268,7 +265,7 @@ class Row
     /**
      * @return void
      */
-    public function enableFieldNameCaseInSensitive() 
+    public function enableFieldNameCaseInSensitive(): void
     {
         $this->row = array_change_key_case($this->row, CASE_LOWER);
         $this->originalRow = array_change_key_case($this->originalRow, CASE_LOWER);
@@ -278,7 +275,7 @@ class Row
     /**
      * @return bool
      */
-    public function isFieldNameCaseSensitive()
+    public function isFieldNameCaseSensitive(): bool
     {
         return $this->fieldNameCaseSensitive;
     }
@@ -287,7 +284,7 @@ class Row
      * @param string $name
      * @return string
      */
-    protected function getHydratedFieldName($name)
+    protected function getHydratedFieldName(string $name): string
     {
         if (!$this->isFieldNameCaseSensitive()) {
             return strtolower($name);

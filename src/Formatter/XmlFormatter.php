@@ -4,6 +4,7 @@ namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
 use ByJG\XmlUtil\XmlDocument;
+use ByJG\XmlUtil\XmlNode;
 
 class XmlFormatter extends BaseFormatter
 {
@@ -11,9 +12,9 @@ class XmlFormatter extends BaseFormatter
      * Return a DOMNode representing AnyDataset
      *
      * @param array $collection
-     * @return XmlDocument
+     * @return XmlNode
      */
-    protected function anydatasetXml($collection)
+    protected function anydatasetXml(array $collection): XmlNode
     {
         $anyDataSet = new XmlDocument("<anydataset></anydataset>");
         foreach ($collection as $sr) {
@@ -25,9 +26,9 @@ class XmlFormatter extends BaseFormatter
 
     /**
      * @param array $row
-     * @return XmlDocument
+     * @return XmlNode
      */
-    protected function rowXml($row, XmlDocument $parentDocument = null)
+    protected function rowXml(array $row, XmlDocument $parentDocument = null): XmlNode
     {
         if (!empty($parentDocument)) {
             $node = $parentDocument->appendChild('row');
@@ -47,7 +48,7 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
-    public function raw()
+    public function raw(): mixed
     {
         if ($this->object instanceof GenericIterator) {
             return $this->anydatasetXml($this->object->toArray())->DOMDocument();
@@ -58,7 +59,7 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
-    public function toText()
+    public function toText(): string
     {
         return $this->raw()->saveXML();
     }

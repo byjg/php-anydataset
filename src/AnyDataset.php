@@ -4,9 +4,12 @@ namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Exception\DatabaseException;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
+use ByJG\XmlUtil\Exception\FileException;
+use ByJG\XmlUtil\Exception\XmlUtilException;
 use ByJG\XmlUtil\File;
 use ByJG\XmlUtil\XmlDocument;
 use ByJG\XmlUtil\XmlNode;
+use Closure;
 use DOMElement;
 use InvalidArgumentException;
 
@@ -51,22 +54,22 @@ class AnyDataset
      *
      * @var Row[]
      */
-    private $collection;
+    private array $collection;
 
     /**
      * Current node anydataset works
      * @var int
      */
-    private $currentRow;
+    private int $currentRow;
 
     private ?File $file;
 
     /**
-     * @param null|string $filename
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
+     * @param string|null $filename
+     * @throws FileException
+     * @throws XmlUtilException
      */
-    public function __construct($filename = null)
+    public function __construct(?string $filename = null)
     {
         $this->collection = array();
         $this->currentRow = -1;
@@ -82,7 +85,7 @@ class AnyDataset
     /**
      * @return string|null
      */
-    public function getFilename()
+    public function getFilename(): ?string
     {
         return $this->file->getFilename();
     }
@@ -92,12 +95,13 @@ class AnyDataset
      * @param string|null $filename
      * @param mixed $closure
      * @return void
+     * @throws FileException
      */
-    private function defineSavePath($filename, $closure)
+    private function defineSavePath(?string $filename, Closure $closure): void
     {
         if (!is_null($filename)) {
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            if (empty($ext) && substr($filename, 0, 6) !== "php://") {
+            if (empty($ext) && !str_starts_with($filename, "php://")) {
                 $filename .= '.anydata.xml';
             }
             $this->file = new File($filename, allowNotFound: true);
@@ -109,12 +113,10 @@ class AnyDataset
     /**
      * Private method used to read and populate anydataset class from specified file
      *
-     * @param string $filepath Path and Filename to be read
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
+     * @throws XmlUtilException
      */
-    private function createFromFile()
+    private function createFromFile(): void
     {
         if (file_exists($this->getFilename())) {
             $anyDataSet = new XmlDocument($this->file);
@@ -152,9 +154,9 @@ class AnyDataset
      * @param string|null $filename
      * @return void
      * @throws DatabaseException
-     * @throws \ByJG\XmlUtil\Exception\XmlUtilException
+     * @throws FileException
      */
-    public function save($filename = null)
+    public function save(?string $filename = null): void
     {
         $this->defineSavePath($filename, function () use ($filename){
             if (is_null($this->file)) {
@@ -168,11 +170,10 @@ class AnyDataset
     /**
      * Append one row to AnyDataset.
      *
-     * @param Row|array|\stdClass|object|null $singleRow
+     * @param Row|array $singleRow
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function appendRow($singleRow = [])
+    public function appendRow(Row|array $singleRow = []): void
     {
         if (!empty($singleRow)) {
             if ($singleRow instanceof Row) {
@@ -196,9 +197,8 @@ class AnyDataset
      *
      * @param GenericIterator $iterator
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function import($iterator)
+    public function import(GenericIterator $iterator): void
     {
         foreach ($iterator as $singleRow) {
             $this->appendRow($singleRow);
@@ -209,11 +209,9 @@ class AnyDataset
      * Insert one row before specified position.
      *
      * @param int $rowNumber
-     * @param Row|array|\stdClass|object $row
-     * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @param Row|array $row
      */
-    public function insertRowBefore($rowNumber, $row)
+    public function insertRowBefore(int $rowNumber, Row|array $row): void
     {
         if ($rowNumber > count($this->collection)) {
             $this->appendRow($row);
@@ -236,11 +234,11 @@ class AnyDataset
 
     /**
      *
-     * @param mixed $row
+     * @param int|Row|null $row
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function removeRow($row = null)
+    public function removeRow(int|Row $row = null): void
     {
         if (is_null($row)) {
             $row = $this->currentRow;
@@ -270,9 +268,8 @@ class AnyDataset
      * @param string $name - Field name
      * @param string $value - Field value
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function addField($name, $value)
+    public function addField(string $name, mixed $value): void
     {
         if ($this->currentRow < 0) {
             $this->appendRow();
@@ -282,10 +279,10 @@ class AnyDataset
 
     /**
      * Get an Iterator filtered by an IteratorFilter
-     * @param IteratorFilter $itf
-     * @return GenericIterator
+     * @param IteratorFilter|null $itf
+     * @return GenericIterator|AnyIterator
      */
-    public function getIterator(IteratorFilter $itf = null)
+    public function getIterator(IteratorFilter $itf = null): GenericIterator|AnyIterator
     {
         if (is_null($itf)) {
             return new AnyIterator($this->collection);
@@ -298,10 +295,10 @@ class AnyDataset
      * Undocumented function
      *
      * @param string $fieldName
-     * @param IteratorFilter $itf
+     * @param IteratorFilter|null $itf
      * @return array
      */
-    public function getArray($fieldName, $itf = null)
+    public function getArray(string $fieldName, IteratorFilter $itf = null): array
     {
         $iterator = $this->getIterator($itf);
         $result = array();
@@ -316,7 +313,7 @@ class AnyDataset
      * @param string $field
      * @return void
      */
-    public function sort($field)
+    public function sort(string $field): void
     {
         if (count($this->collection) == 0) {
             return;
@@ -330,7 +327,7 @@ class AnyDataset
      * @param string $field
      * @return array
      */
-    protected function quickSortExec($seq, $field)
+    protected function quickSortExec(array $seq, string $field): array
     {
         if (!count($seq)) {
             return $seq;
