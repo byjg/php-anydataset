@@ -175,20 +175,13 @@ class AnyDataset
      */
     public function appendRow(Row|array $singleRow = []): void
     {
-        if (!empty($singleRow)) {
-            if ($singleRow instanceof Row) {
-                $this->collection[] = $singleRow;
-                $singleRow->acceptChanges();
-            } elseif (is_array($singleRow)) {
-                $this->collection[] = new Row($singleRow);
-            } else {
-                throw new InvalidArgumentException("You must pass an array or a Row object");
-            }
-        } else {
+        if (empty($singleRow)) {
             $singleRow = new Row();
-            $this->collection[] = $singleRow;
-            $singleRow->acceptChanges();
+        } elseif (is_array($singleRow)) {
+            $singleRow = new Row($singleRow);
         }
+
+        $this->collection[] = $singleRow;
         $this->currentRow = count($this->collection) - 1;
     }
 

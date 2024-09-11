@@ -93,7 +93,7 @@ class RowOutput
     /**
      * @param string $field
      * @param string $pattern
-     * @return RowOutput
+     * @return static
      */
     public function addFormat(string $field, string $pattern): static
     {
@@ -104,7 +104,7 @@ class RowOutput
     /**
      * @param string $field
      * @param Closure $closure
-     * @return RowOutput
+     * @return static
      */
     public function addCustomFormat(string $field, Closure $closure): static
     {
