@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset\Core;
 
+use ByJG\AnyDataset\Core\Enum\Relation;
+
 abstract class IteratorFilterFormatter
 {
 
@@ -9,12 +11,12 @@ abstract class IteratorFilterFormatter
      * Get Relation
      *
      * @param string $name
-     * @param string $relation
+     * @param Relation $relation
      * @param array|string $value
      * @param array $param
      * @return string
      */
-    abstract public function getRelation(string $name, string $relation, mixed $value, array &$param): string;
+    abstract public function getRelation(string $name, Relation $relation, mixed $value, array &$param): string;
 
     /**
      * Get formatted field

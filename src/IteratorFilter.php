@@ -107,12 +107,12 @@ class IteratorFilter
 
     /**
      * @param string $name Field name
-     * @param int $relation Relation enum
-     * @param array|string $value Field string value
+     * @param Relation $relation Relation enum
+     * @param mixed $value Field string value
      * @return static
      * @desc Add a single string comparison to filter.
      */
-    public function addRelation(string $name, int $relation, mixed $value): static
+    public function addRelation(string $name, Relation $relation, mixed $value): static
     {
         $this->filters[] = [" and ", $name, $relation, $value];
         return $this;
@@ -120,12 +120,12 @@ class IteratorFilter
 
     /**
      * @param string $name Field name
-     * @param int $relation Relation enum
-     * @param array|string $value Field string value
+     * @param Relation $relation Relation enum
+     * @param mixed $value Field string value
      * @return static
      * @desc Add a single string comparison to filter. This comparison use the OR operator.
      */
-    public function addRelationOr(string $name, int $relation, mixed $value): static
+    public function addRelationOr(string $name, Relation $relation, mixed $value): static
     {
         $this->filters[] = [" or ", $name, $relation, $value];
         return $this;
