@@ -9,7 +9,6 @@ use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
 use ByJG\XmlUtil\XmlDocument;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Util\Xml;
 
 class AnyDatasetTest extends TestCase
 {
@@ -306,7 +305,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
 
         $filter = IteratorFilter::getInstance()
-            ->addRelation("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LESS_THAN, 40);
 
         $this->assertEquals([
             ['name' => 'jf', 'age' => 15],
