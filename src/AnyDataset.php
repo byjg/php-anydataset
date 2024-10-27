@@ -238,8 +238,9 @@ class AnyDataset
         }
         if ($row instanceof Row) {
             $iPos = 0;
+            $rowArr = $row->toArray();
             foreach ($this->collection as $sr) {
-                if ($sr->toArray() == $row->toArray()) {
+                if ($sr->toArray() == $rowArr) {
                     $this->removeRow($iPos);
                     break;
                 }
