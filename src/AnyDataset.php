@@ -4,7 +4,13 @@ namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Exception\DatabaseException;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
-use ByJG\Util\XmlUtil;
+use ByJG\XmlUtil\Exception\FileException;
+use ByJG\XmlUtil\Exception\XmlUtilException;
+use ByJG\XmlUtil\File;
+use ByJG\XmlUtil\XmlDocument;
+use ByJG\XmlUtil\XmlNode;
+use Closure;
+use DOMElement;
 use InvalidArgumentException;
 
 /**
@@ -48,34 +54,30 @@ class AnyDataset
      *
      * @var Row[]
      */
-    private $collection;
+    private array $collection;
 
     /**
      * Current node anydataset works
      * @var int
      */
-    private $currentRow;
+    private int $currentRow;
+
+    private ?File $file;
 
     /**
-     * Path to anydataset file
-     * @var string|null
+     * @param string|null $filename
+     * @throws FileException
+     * @throws XmlUtilException
      */
-    private $filename;
-
-    /**
-     * @param null|string $filename
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\Util\Exception\XmlUtilException
-     */
-    public function __construct($filename = null)
+    public function __construct(?string $filename = null)
     {
         $this->collection = array();
         $this->currentRow = -1;
 
-        $this->filename = null;
+        $this->file = null;
         $this->defineSavePath($filename, function () {
-            if (!is_null($this->filename)) {
-                $this->createFrom($this->filename);
+            if (!is_null($this->file)) {
+                $this->createFromFile();
             }
         });
     }
@@ -83,25 +85,26 @@ class AnyDataset
     /**
      * @return string|null
      */
-    public function getFilename()
+    public function getFilename(): ?string
     {
-        return $this->filename;
+        return $this->file->getFilename();
     }
 
     /**
      *
-     * @param string|null $file
+     * @param string|null $filename
      * @param mixed $closure
      * @return void
+     * @throws FileException
      */
-    private function defineSavePath($file, $closure)
+    private function defineSavePath(?string $filename, Closure $closure): void
     {
-        if (!is_null($file)) {
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if (empty($ext) && substr($file, 0, 6) !== "php://") {
-                $file .= '.anydata.xml';
+        if (!is_null($filename)) {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if (empty($ext) && !str_starts_with($filename, "php://")) {
+                $filename .= '.anydata.xml';
             }
-            $this->filename = $file;
+            $this->file = new File($filename, allowNotFound: true);
         }
 
         $closure();
@@ -110,28 +113,25 @@ class AnyDataset
     /**
      * Private method used to read and populate anydataset class from specified file
      *
-     * @param string $filepath Path and Filename to be read
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws XmlUtilException
      */
-    private function createFrom($filepath)
+    private function createFromFile(): void
     {
-        if (file_exists($filepath)) {
-            $anyDataSet = XmlUtil::createXmlDocumentFromFile($filepath);
+        if (file_exists($this->getFilename())) {
+            $anyDataSet = new XmlDocument($this->file);
             $this->collection = array();
 
-            $rows = $anyDataSet->getElementsByTagName("row");
+            $rows = $anyDataSet->selectNodes("row");
             foreach ($rows as $row) {
                 $sr = new Row();
-                $fields = $row->getElementsByTagName("field");
+                $fields = XmlNode::instance($row)->selectNodes("field");
+                /** @var DOMElement $field */
                 foreach ($fields as $field) {
-                    $attr = $field->attributes->getNamedItem("name");
-                    if (is_null($attr) || is_null($attr->nodeValue)) {
-                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($filepath));
+                    if (!$field->hasAttribute("name")) {
+                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($this->getFilename()));
                     }
-
-                    $sr->addField($attr->nodeValue, $field->nodeValue);
+                    $sr->addField($field->getAttribute("name"), $field->nodeValue);
                 }
                 $sr->acceptChanges();
                 $this->collection[] = $sr;
@@ -144,9 +144,8 @@ class AnyDataset
      * Returns the AnyDataset XML representative structure.
      *
      * @return string XML String
-     * @throws \ByJG\Util\Exception\XmlUtilException
      */
-    public function xml()
+    public function xml(): string
     {
         return (new XmlFormatter($this->getIterator()))->toText();
     }
@@ -155,42 +154,34 @@ class AnyDataset
      * @param string|null $filename
      * @return void
      * @throws DatabaseException
-     * @throws \ByJG\Util\Exception\XmlUtilException
+     * @throws FileException
      */
-    public function save($filename = null)
+    public function save(?string $filename = null): void
     {
-        $this->defineSavePath($filename, function () {
-            if (is_null($this->filename)) {
+        $this->defineSavePath($filename, function () use ($filename){
+            if (is_null($this->file)) {
                 throw new DatabaseException("No such file path to save anydataset");
             }
 
-            (new XmlFormatter($this->getIterator()))->saveToFile($this->filename);
+            (new XmlFormatter($this->getIterator()))->saveToFile($this->file->getFilename());
         });
     }
 
     /**
      * Append one row to AnyDataset.
      *
-     * @param Row|array|\stdClass|object|null $singleRow
+     * @param Row|array $singleRow
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function appendRow($singleRow = [])
+    public function appendRow(Row|array $singleRow = []): void
     {
-        if (!empty($singleRow)) {
-            if ($singleRow instanceof Row) {
-                $this->collection[] = $singleRow;
-                $singleRow->acceptChanges();
-            } elseif (is_array($singleRow)) {
-                $this->collection[] = new Row($singleRow);
-            } else {
-                throw new InvalidArgumentException("You must pass an array or a Row object");
-            }
-        } else {
+        if (empty($singleRow)) {
             $singleRow = new Row();
-            $this->collection[] = $singleRow;
-            $singleRow->acceptChanges();
+        } elseif (is_array($singleRow)) {
+            $singleRow = new Row($singleRow);
         }
+
+        $this->collection[] = $singleRow;
         $this->currentRow = count($this->collection) - 1;
     }
 
@@ -199,9 +190,8 @@ class AnyDataset
      *
      * @param GenericIterator $iterator
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function import($iterator)
+    public function import(GenericIterator $iterator): void
     {
         foreach ($iterator as $singleRow) {
             $this->appendRow($singleRow);
@@ -212,11 +202,9 @@ class AnyDataset
      * Insert one row before specified position.
      *
      * @param int $rowNumber
-     * @param Row|array|\stdClass|object $row
-     * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @param Row|array $row
      */
-    public function insertRowBefore($rowNumber, $row)
+    public function insertRowBefore(int $rowNumber, Row|array $row): void
     {
         if ($rowNumber > count($this->collection)) {
             $this->appendRow($row);
@@ -239,19 +227,20 @@ class AnyDataset
 
     /**
      *
-     * @param mixed $row
+     * @param int|Row|null $row
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function removeRow($row = null)
+    public function removeRow(int|Row $row = null): void
     {
         if (is_null($row)) {
             $row = $this->currentRow;
         }
         if ($row instanceof Row) {
             $iPos = 0;
+            $rowArr = $row->toArray();
             foreach ($this->collection as $sr) {
-                if ($sr->toArray() == $row->toArray()) {
+                if ($sr->toArray() == $rowArr) {
                     $this->removeRow($iPos);
                     break;
                 }
@@ -273,9 +262,8 @@ class AnyDataset
      * @param string $name - Field name
      * @param string $value - Field value
      * @return void
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function addField($name, $value)
+    public function addField(string $name, mixed $value): void
     {
         if ($this->currentRow < 0) {
             $this->appendRow();
@@ -285,10 +273,10 @@ class AnyDataset
 
     /**
      * Get an Iterator filtered by an IteratorFilter
-     * @param IteratorFilter $itf
-     * @return GenericIterator
+     * @param IteratorFilter|null $itf
+     * @return GenericIterator|AnyIterator
      */
-    public function getIterator(IteratorFilter $itf = null)
+    public function getIterator(IteratorFilter $itf = null): GenericIterator|AnyIterator
     {
         if (is_null($itf)) {
             return new AnyIterator($this->collection);
@@ -301,10 +289,10 @@ class AnyDataset
      * Undocumented function
      *
      * @param string $fieldName
-     * @param IteratorFilter $itf
+     * @param IteratorFilter|null $itf
      * @return array
      */
-    public function getArray($fieldName, $itf = null)
+    public function getArray(string $fieldName, IteratorFilter $itf = null): array
     {
         $iterator = $this->getIterator($itf);
         $result = array();
@@ -319,7 +307,7 @@ class AnyDataset
      * @param string $field
      * @return void
      */
-    public function sort($field)
+    public function sort(string $field): void
     {
         if (count($this->collection) == 0) {
             return;
@@ -333,7 +321,7 @@ class AnyDataset
      * @param string $field
      * @return array
      */
-    protected function quickSortExec($seq, $field)
+    protected function quickSortExec(array $seq, string $field): array
     {
         if (!count($seq)) {
             return $seq;

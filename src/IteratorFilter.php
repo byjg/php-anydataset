@@ -10,7 +10,7 @@ class IteratorFilter
     /**
      * @var array
      */
-    private $filters;
+    private array $filters;
 
     /**
      * IteratorFilter Constructor
@@ -23,7 +23,7 @@ class IteratorFilter
     /**
      * @return IteratorFilter
      */
-    public static function getInstance()
+    public static function getInstance(): IteratorFilter
     {
         return new IteratorFilter();
     }
@@ -32,7 +32,7 @@ class IteratorFilter
      * @param array $array
      * @return Row[]
      */
-    public function match($array)
+    public function match(array $array): array
     {
         $returnArray = [];
 
@@ -49,12 +49,12 @@ class IteratorFilter
      * Get the filter
      *
      * @param IteratorFilterFormatter $formatter
-     * @param string $tableName
+     * @param string|null $tableName
      * @param array $params
      * @param string $returnFields
      * @return string
      */
-    public function format(IteratorFilterFormatter $formatter, $tableName = null, &$params = [], $returnFields = "*")
+    public function format(IteratorFilterFormatter $formatter, string $tableName = null, array &$params = [], string $returnFields = "*"): string
     {
         return $formatter->format($this->filters, $tableName, $params, $returnFields);
     }
@@ -64,7 +64,7 @@ class IteratorFilter
      * @param Row $singleRow
      * @return bool
      */
-    private function evalString(Row $singleRow)
+    private function evalString(Row $singleRow): bool
     {
         $result = [];
         $finalResult = false;
@@ -85,47 +85,18 @@ class IteratorFilter
             $field = [$singleRow->get($name)];
 
             foreach ($field as $valueparam) {
-                switch ($relation) {
-                    case Relation::EQUAL:
-                        $result[$pos] = $result[$pos] && ($valueparam == $value);
-                        break;
-
-                    case Relation::GREATER_THAN:
-                        $result[$pos] = $result[$pos] && ($valueparam > $value);
-                        break;
-
-                    case Relation::LESS_THAN:
-                        $result[$pos] = $result[$pos] && ($valueparam < $value);
-                        break;
-
-                    case Relation::GREATER_OR_EQUAL_THAN:
-                        $result[$pos] = $result[$pos] && ($valueparam >= $value);
-                        break;
-
-                    case Relation::LESS_OR_EQUAL_THAN:
-                        $result[$pos] = $result[$pos] && ($valueparam <= $value);
-                        break;
-
-                    case Relation::NOT_EQUAL:
-                        $result[$pos] = $result[$pos] && ($valueparam != $value);
-                        break;
-
-                    case Relation::STARTS_WITH:
-                        $result[$pos] = $result[$pos] && (strpos(is_null($valueparam) ? "" : $valueparam, $value) === 0);
-                        break;
-
-                    case Relation::IN:
-                        $result[$pos] = $result[$pos] && in_array($valueparam, $value);
-                        break;
-
-                    case Relation::NOT_IN:
-                        $result[$pos] = $result[$pos] && !in_array($valueparam, $value);
-                        break;
-
-                    default: // Relation::CONTAINS:
-                        $result[$pos] = $result[$pos] && (strpos(is_null($valueparam) ? "" : $valueparam, $value) !== false);
-                        break;
-                }
+                $result[$pos] = match ($relation) {
+                    Relation::EQUAL => $result[$pos] && ($valueparam == $value),
+                    Relation::GREATER_THAN => $result[$pos] && ($valueparam > $value),
+                    Relation::LESS_THAN => $result[$pos] && ($valueparam < $value),
+                    Relation::GREATER_OR_EQUAL_THAN => $result[$pos] && ($valueparam >= $value),
+                    Relation::LESS_OR_EQUAL_THAN => $result[$pos] && ($valueparam <= $value),
+                    Relation::NOT_EQUAL => $result[$pos] && ($valueparam != $value),
+                    Relation::STARTS_WITH => $result[$pos] && (str_starts_with(is_null($valueparam) ? "" : $valueparam, $value)),
+                    Relation::IN => $result[$pos] && in_array($valueparam, $value),
+                    Relation::NOT_IN => $result[$pos] && !in_array($valueparam, $value),
+                    default => $result[$pos] && (str_contains(is_null($valueparam) ? "" : $valueparam, $value)),
+                };
             }
         }
 
@@ -136,12 +107,25 @@ class IteratorFilter
 
     /**
      * @param string $name Field name
-     * @param int $relation Relation enum
-     * @param string|array $value Field string value
-     * @return IteratorFilter
+     * @param Relation $relation Relation enum
+     * @param mixed $value Field string value
+     * @return static
+     * @desc Add a single string comparison to filter.
+     * @deprecated use and() instead
+     */
+    public function addRelation(string $name, Relation $relation, mixed $value): static
+    {
+        return $this->and($name, $relation, $value);
+    }
+
+    /**
+     * @param string $name Field name
+     * @param Relation $relation Relation enum
+     * @param mixed $value Field string value
+     * @return static
      * @desc Add a single string comparison to filter.
      */
-    public function addRelation($name, $relation, $value)
+    public function and(string $name, Relation $relation, mixed $value): static
     {
         $this->filters[] = [" and ", $name, $relation, $value];
         return $this;
@@ -149,12 +133,25 @@ class IteratorFilter
 
     /**
      * @param string $name Field name
-     * @param int $relation Relation enum
-     * @param string $value Field string value
-     * @return IteratorFilter
+     * @param Relation $relation Relation enum
+     * @param mixed $value Field string value
+     * @return static
+     * @desc Add a single string comparison to filter. This comparison use the OR operator.
+     * @deprecated use or() instead
+     */
+    public function addRelationOr(string $name, Relation $relation, mixed $value): static
+    {
+        return $this->or($name, $relation, $value);
+    }
+
+    /**
+     * @param string $name Field name
+     * @param Relation $relation Relation enum
+     * @param mixed $value Field string value
+     * @return static
      * @desc Add a single string comparison to filter. This comparison use the OR operator.
      */
-    public function addRelationOr($name, $relation, $value)
+    public function or(string $name, Relation $relation, mixed $value): static
     {
         $this->filters[] = [" or ", $name, $relation, $value];
         return $this;
@@ -162,9 +159,9 @@ class IteratorFilter
 
     /**
      * Add a "("
-     * @return IteratorFilter
+     * @return static
      */
-    public function startGroup()
+    public function startGroup(): static
     {
         $this->filters[] = ["(", "", "", ""];
         return $this;
@@ -172,9 +169,9 @@ class IteratorFilter
 
     /**
      * Add a ")"
-     * @return IteratorFilter
+     * @return static
      */
-    public function endGroup()
+    public function endGroup(): static
     {
         $this->filters[] = [")", "", "", ""];
         return $this;
@@ -183,7 +180,7 @@ class IteratorFilter
     /**
      * @return array
      */
-    public function getRawFilters()
+    public function getRawFilters(): array
     {
         return $this->filters;
     }

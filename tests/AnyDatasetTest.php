@@ -1,12 +1,13 @@
 <?php
 
-namespace Tests\AnyDataset\Dataset;
+namespace Tests;
 
 use ByJG\AnyDataset\Core\AnyDataset;
 use ByJG\AnyDataset\Core\Enum\Relation;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
+use ByJG\XmlUtil\XmlDocument;
 use PHPUnit\Framework\TestCase;
 
 class AnyDatasetTest extends TestCase
@@ -77,7 +78,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow();
         $this->object->addField('field', 'value');
 
-        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
+        $xmlDom = new XmlDocument(
                 '<?xml version="1.0" encoding="utf-8"?>'
                 . '<anydataset>'
                 . '<row>'
@@ -85,7 +86,7 @@ class AnyDatasetTest extends TestCase
                 . '</row>'
                 . '</anydataset>'
         );
-        $xmlDomValidate = \ByJG\Util\XmlUtil::createXmlDocumentFromStr($this->object->xml());
+        $xmlDomValidate = new XmlDocument($this->object->xml());
 
         $this->assertEquals($xmlDom, $xmlDomValidate);
     }
@@ -95,7 +96,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow();
         $this->object->addField('field', 'value');
 
-        $xmlDom = \ByJG\Util\XmlUtil::createXmlDocumentFromStr(
+        $xmlDom = new XmlDocument(
                 '<?xml version="1.0" encoding="utf-8"?>'
                 . '<anydataset>'
                 . '<row>'
@@ -105,7 +106,7 @@ class AnyDatasetTest extends TestCase
         );
 
         $formatter = new XmlFormatter($this->object->getIterator());
-        $this->assertEquals($xmlDom, $formatter->raw());
+        $this->assertEquals($xmlDom->DOMNode(), $formatter->raw());
     }
 
     public function testJsonFormatter()
@@ -304,7 +305,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
 
         $filter = IteratorFilter::getInstance()
-            ->addRelation("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LESS_THAN, 40);
 
         $this->assertEquals([
             ['name' => 'jf', 'age' => 15],

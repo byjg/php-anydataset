@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\AnyDataset\Dataset;
+namespace Tests;
 
 use ByJG\AnyDataset\Core\AnyDataset;
-use ByJG\Serializer\SerializerObject;
+use ByJG\Serializer\Serialize;
 use PHPUnit\Framework\TestCase;
-
-require_once "Sample/SampleModel.php";
+use Tests\Sample\SampleModel;
 
 class ModelTest extends TestCase
 {
@@ -16,7 +15,7 @@ class ModelTest extends TestCase
         $sr->addField("id", 10);
         $sr->addField("name", "Testing");
 
-        $object = new \Tests\AnyDataset\Sample\SampleModel($sr->toArray());
+        $object = new SampleModel($sr->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -31,7 +30,7 @@ class ModelTest extends TestCase
         $sr->addField("name", "Testing");
         $anydata->appendRow($sr);
 
-        $object = new \Tests\AnyDataset\Sample\SampleModel($anydata->getIterator()->moveNext()->toArray());
+        $object = new SampleModel($anydata->getIterator()->moveNext()->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -46,8 +45,8 @@ class ModelTest extends TestCase
         $anydata->addField('Id', 20);
         $anydata->addField('Name', 'Gilberto');
 
-        $object1 = new \Tests\AnyDataset\Sample\SampleModel();
-        $object1->bindFrom( $anydata->getIterator()->moveNext()->toArray() );
+        $object1 = new SampleModel();
+        $object1->copyFrom( $anydata->getIterator()->moveNext()->toArray() );
         $this->assertEquals(10, $object1->Id);
         $this->assertEquals('Joao', $object1->getName());
     }
@@ -64,8 +63,8 @@ class ModelTest extends TestCase
 
         $iterator = $model->getIterator();
 
-        $object = new SerializerObject($iterator->toArray());
-        $result = $object->serialize();
+        $object = Serialize::from($iterator->toArray());
+        $result = $object->toArray();
 
         $this->assertEquals(
             [

@@ -9,8 +9,8 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      /**
       * @inheritDoc
       */
-     public function format($filters, $tableName = null, &$params = [], $returnFields = "*")
-     {
+    public function format(array $filters, string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    {
           $param = [];
           $xpathFilter = $this->getFilter($filters, $param);
 
@@ -19,13 +19,13 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
           }
 
           return "/anydataset/row[" . $xpathFilter . "]";
-     }
+    }
 
      /**
       * @inheritDoc
       */
-     public function getRelation($name, $relation, $value, &$param)
-     {
+    public function getRelation(string $name, Relation $relation, mixed $value, array &$param): string
+    {
           $str = is_numeric($value) ? "" : "'";
           $field = "field[@name='" . $name . "'] ";
           if (is_string($value)) {

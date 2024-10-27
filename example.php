@@ -10,7 +10,7 @@ foreach ($iterator as $row) {
 
 
 $filter = new \ByJG\AnyDataset\Core\IteratorFilter();
-$filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
+$filter->and("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
 $iterator2 = $dataset->getIterator($filter);
 
 $iterator->toArray();

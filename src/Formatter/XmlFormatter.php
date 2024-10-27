@@ -3,9 +3,8 @@
 namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
-use ByJG\Util\XmlUtil;
-use DOMDocument;
-use DOMNode;
+use ByJG\XmlUtil\XmlDocument;
+use ByJG\XmlUtil\XmlNode;
 
 class XmlFormatter extends BaseFormatter
 {
@@ -13,17 +12,13 @@ class XmlFormatter extends BaseFormatter
      * Return a DOMNode representing AnyDataset
      *
      * @param array $collection
-     * @return DOMNode
+     * @return XmlNode
      */
-    protected function anydatasetXml($collection)
+    protected function anydatasetXml(array $collection): XmlNode
     {
-        $anyDataSet = XmlUtil::createXmlDocumentFromStr("<anydataset></anydataset>");
-        $nodeRoot = $anyDataSet->getElementsByTagName("anydataset")->item(0);
+        $anyDataSet = new XmlDocument("<anydataset></anydataset>");
         foreach ($collection as $sr) {
-            $row = $this->rowXml($sr);
-            $nodeRow = $row->getElementsByTagName("row")->item(0);
-            $newRow = XmlUtil::createChild($nodeRoot, "row");
-            XmlUtil::addNodeFromNode($newRow, $nodeRow);
+            $this->rowXml($sr, $anyDataSet);
         }
 
         return $anyDataSet;
@@ -31,21 +26,19 @@ class XmlFormatter extends BaseFormatter
 
     /**
      * @param array $row
-     * @return DOMDocument
+     * @return XmlNode
      */
-    protected function rowXml($row)
+    protected function rowXml(array $row, XmlDocument $parentDocument = null): XmlNode
     {
-        $node = XmlUtil::createXmlDocumentFromStr("<row></row>");
-        $root = $node->getElementsByTagName("row")->item(0);
+        if (!empty($parentDocument)) {
+            $node = $parentDocument->appendChild('row');
+        } else {
+            $node = new XmlDocument("<row></row>");
+        }
         foreach ($row as $key => $value) {
-            if (!is_array($value)) {
-                $field = XmlUtil::createChild($root, "field", $value);
-                XmlUtil::addAttribute($field, "name", $key);
-            } else {
-                foreach ($value as $valueItem) {
-                    $field = XmlUtil::createChild($root, "field", $valueItem);
-                    XmlUtil::addAttribute($field, "name", $key);
-                }
+            foreach ((array)$value as $valueItem) {
+                $field = $node->appendChild("field", $valueItem);
+                $field->addAttribute("name", $key);
             }
         }
         return $node;
@@ -55,18 +48,18 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
-    public function raw()
+    public function raw(): mixed
     {
         if ($this->object instanceof GenericIterator) {
-            return $this->anydatasetXml($this->object->toArray());
+            return $this->anydatasetXml($this->object->toArray())->DOMDocument();
         }
-        return $this->rowXml($this->object->toArray());
+        return $this->rowXml($this->object->toArray())->DOMNode();
     }
 
     /**
      * @inheritDoc
      */
-    public function toText()
+    public function toText(): string
     {
         return $this->raw()->saveXML();
     }

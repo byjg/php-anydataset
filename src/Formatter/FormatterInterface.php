@@ -9,14 +9,14 @@ interface FormatterInterface
      *
      * @return mixed
      */
-    public function raw();
+    public function raw(): mixed;
 
     /**
      * Return the object transformed to string.
      *
      * @return string
      */
-    public function toText();
+    public function toText(): string;
 
     /**
      * Save the contents to a file
@@ -24,5 +24,5 @@ interface FormatterInterface
      * @param string $filename
      * @return void
      */
-    public function saveToFile($filename);
+    public function saveToFile(string $filename): void;
 }

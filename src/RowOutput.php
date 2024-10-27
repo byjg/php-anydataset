@@ -11,12 +11,12 @@ class RowOutput
     /**
      * @var array
      */
-    protected $fieldList = [];
+    protected array $fieldList = [];
 
     /**
      * @return RowOutput
      */
-    public static function getInstance()
+    public static function getInstance(): RowOutput
     {
         return new RowOutput();
     }
@@ -26,7 +26,7 @@ class RowOutput
      * @param string $field
      * @return mixed
      */
-    public function print($row, $field)
+    public function print(Row $row, string $field): mixed
     {
         if (!isset($this->fieldList[$field])) {
             return $row->get($field);
@@ -46,7 +46,7 @@ class RowOutput
      * @param Row $row
      * @return Row
      */
-    public function apply($row)
+    public function apply(Row $row): Row
     {
         $newRow = new Row();
 
@@ -66,7 +66,7 @@ class RowOutput
      * @param string $pattern
      * @return string
      */
-    protected function formatPattern($row, $field, $pattern)
+    protected function formatPattern(Row $row, string $field, string $pattern): string
     {
         $rowParsed = $row->toArray();
         foreach ($rowParsed as $key => $value) {
@@ -85,7 +85,7 @@ class RowOutput
      * @param mixed $closure
      * @return string
      */
-    protected function formatCustom($row, $field, $closure)
+    protected function formatCustom(Row $row, string $field, Closure $closure): string
     {
         return $closure($row, $field, $row->get($field));
     }
@@ -93,9 +93,9 @@ class RowOutput
     /**
      * @param string $field
      * @param string $pattern
-     * @return RowOutput
+     * @return static
      */
-    public function addFormat($field, $pattern)
+    public function addFormat(string $field, string $pattern): static
     {
         $this->fieldList[$field] = [ self::FORMAT,  $pattern ];
         return $this;
@@ -104,9 +104,9 @@ class RowOutput
     /**
      * @param string $field
      * @param Closure $closure
-     * @return RowOutput
+     * @return static
      */
-    public function addCustomFormat($field, Closure $closure)
+    public function addCustomFormat(string $field, Closure $closure): static
     {
         $this->fieldList[$field] = [ self::CUSTOM, $closure ];
         return $this;

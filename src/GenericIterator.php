@@ -10,17 +10,17 @@ abstract class GenericIterator implements IteratorInterface, Iterator
     /**
      * @inheritDoc
      */
-    abstract public function hasNext();
+    abstract public function hasNext(): bool;
 
     /**
      * @inheritDoc
      */
-    abstract public function moveNext();
+    abstract public function moveNext(): Row|null;
 
     /**
      * @inheritDoc
      */
-    abstract public function count();
+    abstract public function count(): int;
 
     /**
      * @inheritDoc
@@ -30,9 +30,10 @@ abstract class GenericIterator implements IteratorInterface, Iterator
 
     /**
      * @inheritDoc
-     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @param array $fields
+     * @return array
      */
-    public function toArray($fields = [])
+    public function toArray(array $fields = []): array
     {
         $retArray = [];
 
