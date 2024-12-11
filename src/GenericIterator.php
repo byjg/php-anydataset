@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Core;
 
 use Iterator;
+use ReturnTypeWillChange;
 
 abstract class GenericIterator implements IteratorInterface, Iterator
 {
@@ -15,18 +16,12 @@ abstract class GenericIterator implements IteratorInterface, Iterator
     /**
      * @inheritDoc
      */
-    abstract public function moveNext(): Row|null;
+    abstract public function moveNext(): RowInterface|null;
 
     /**
      * @inheritDoc
      */
     abstract public function count(): int;
-
-    /**
-     * @inheritDoc
-     */
-    #[\ReturnTypeWillChange]
-    abstract public function key();
 
     /**
      * @inheritDoc
@@ -44,42 +39,45 @@ abstract class GenericIterator implements IteratorInterface, Iterator
         return $retArray;
     }
 
-    /* ------------------------------------- */
-    /* PHP 5 Specific functions for Iterator */
-    /* ------------------------------------- */
+    /* --------------------------------------------- */
+    /* PHP Specific functions for Iterator interface */
+    /* --------------------------------------------- */
+
+    /**
+     * @inheritDoc
+     */
+    #[ReturnTypeWillChange]
+    abstract public function key(): mixed;
 
     /**
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    #[ReturnTypeWillChange]
+    abstract public function current(): mixed;
+
+    /**
+     * @inheritDoc
+     */
+    #[ReturnTypeWillChange]
+    public function rewind(): void
     {
-        return $this->moveNext();
+        // Do nothing
     }
 
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function rewind()
+    #[ReturnTypeWillChange]
+    public function next(): void
     {
-        // There is no necessary
+        $this->moveNext();
     }
 
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function next()
-    {
-        // There is no necessary
-    }
-
-    /**
-     * @inheritDoc
-     */
-    #[\ReturnTypeWillChange]
-    public function valid()
+    #[ReturnTypeWillChange]
+    public function valid(): bool
     {
         return $this->hasNext();
     }

@@ -15,9 +15,9 @@ interface IteratorInterface
     /**
      * Get the next record.Return a Row object
      * 
-     * @return Row|null
+     * @return RowInterface|null
      */
-    public function moveNext(): Row|null;
+    public function moveNext(): RowInterface|null;
 
     /**
      * Get the record count. Some implementations may have return -1.

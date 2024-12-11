@@ -62,13 +62,12 @@ class IteratorFilterXPathTest extends TestCase
 
     public function testGroup()
     {
-        $this->object->startGroup();
-        $this->object->and('field', Relation::EQUAL, 'test');
+        $this->object->startGroup('field', Relation::EQUAL, 'test');
         $this->object->and('field2', Relation::EQUAL, 'test2');
         $this->object->endGroup();
         $this->object->or('field3', Relation::EQUAL, 'test3');
         $this->assertEquals(
-            "/anydataset/row[ ( field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ) or field[@name='field3'] = 'test3' ]",
+            "/anydataset/row[(field[@name='field'] = 'test'  and field[@name='field2'] = 'test2' ) or field[@name='field3'] = 'test3' ]",
             $this->object->format(new IteratorFilterXPathFormatter())
         );
     }

@@ -3,15 +3,15 @@
 namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
-use ByJG\AnyDataset\Core\Row;
+use ByJG\AnyDataset\Core\RowInterface;
 use InvalidArgumentException;
 
 abstract class BaseFormatter implements FormatterInterface
 {
     /**
-     * @var GenericIterator|Row
+     * @var GenericIterator|RowInterface
      */
-    protected Row|GenericIterator $object;
+    protected RowInterface|GenericIterator $object;
 
     /**
      * @inheritDoc
@@ -35,13 +35,10 @@ abstract class BaseFormatter implements FormatterInterface
     }
 
     /**
-     * @param GenericIterator|Row $object
+     * @param GenericIterator|RowInterface $object
      */
-    public function __construct(GenericIterator|Row $object)
+    public function __construct(GenericIterator|RowInterface $object)
     {
-        if (!($object instanceof GenericIterator) && !($object instanceof Row)) {
-            throw new InvalidArgumentException("Constructor must have a GenericIterator or Row instance in the argument");
-        }
         $this->object = $object;
     }
 }

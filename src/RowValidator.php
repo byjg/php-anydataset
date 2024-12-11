@@ -8,7 +8,7 @@ class RowValidator
     /**
      * @var array
      */
-    protected $fieldValidator = [];
+    protected array $fieldValidator = [];
 
     const REQUIRED="required";
     const NUMBER="number";
@@ -16,17 +16,14 @@ class RowValidator
     const CUSTOM="custom";
 
     /**
-     * @param string|array $fieldList
+     * @param array|string $fieldList
      * @param string $property
      * @param mixed $value
      * @return void
      */
-    protected function setProperty($fieldList, $property, $value)
+    protected function setProperty(array|string $fieldList, string $property, mixed $value)
     {
         foreach ((array)$fieldList as $field) {
-            if (!isset($this->fieldValidator[$field])) {
-                $this->fieldValidator[$field] = [];
-            }
             $this->fieldValidator[$field] = [ $property => $value ];
         }
     }

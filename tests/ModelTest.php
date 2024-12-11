@@ -3,6 +3,7 @@
 namespace Tests;
 
 use ByJG\AnyDataset\Core\AnyDataset;
+use ByJG\AnyDataset\Core\Row;
 use ByJG\Serializer\Serialize;
 use PHPUnit\Framework\TestCase;
 use Tests\Sample\SampleModel;
@@ -11,9 +12,9 @@ class ModelTest extends TestCase
 {
     public function testBindSingleRow()
     {
-        $sr = new \ByJG\AnyDataset\Core\Row();
-        $sr->addField("id", 10);
-        $sr->addField("name", "Testing");
+        $sr = new Row();
+        $sr->set("id", 10);
+        $sr->set("name", "Testing");
 
         $object = new SampleModel($sr->toArray());
 
@@ -25,9 +26,9 @@ class ModelTest extends TestCase
     {
         $anydata = new AnyDataset();
 
-        $sr = new \ByJG\AnyDataset\Core\Row();
-        $sr->addField("id", 10);
-        $sr->addField("name", "Testing");
+        $sr = new Row();
+        $sr->set("id", 10);
+        $sr->set("name", "Testing");
         $anydata->appendRow($sr);
 
         $object = new SampleModel($anydata->getIterator()->moveNext()->toArray());
