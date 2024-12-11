@@ -28,7 +28,7 @@ class IteratorFilterAnydatasetTest extends TestCase
     public function testMatch()
     {
         $collection = [
-            $row1 = new Row(
+            $row1 = Row::factory(
                 [
                     'id'   => 1,
                     'field' => 'value1',
@@ -36,7 +36,7 @@ class IteratorFilterAnydatasetTest extends TestCase
                     'val' => 50,
                 ]
             ),
-            $row2 = new Row(
+            $row2 = Row::factory(
                 [
                     'id'   => 2,
                     'field' => 'other1',
@@ -44,7 +44,7 @@ class IteratorFilterAnydatasetTest extends TestCase
                     'val' => 80,
                 ]
             ),
-            $row3 = new Row(
+            $row3 = Row::factory(
                 [
                     'id'   => 3,
                     'field' => 'last1',
@@ -52,7 +52,7 @@ class IteratorFilterAnydatasetTest extends TestCase
                     'val' => 30,
                 ]
             ),
-            $row4 = new Row(
+            $row4 = Row::factory(
                 [
                     'id'   => 4,
                     'field' => 'xy',
@@ -123,12 +123,28 @@ class IteratorFilterAnydatasetTest extends TestCase
         $this->object->and('val', Relation::NOT_IN, [10, 30, 50]);
         $this->assertEquals([$row2], $this->object->match($collection));
 
-        // Test Group
+        // Test Group 1
         $this->object = new IteratorFilter();
         $this->object->startGroup('id', Relation::EQUAL, 1);
         $this->object->or('id', Relation::EQUAL, 3);
         $this->object->endGroup();
         $this->assertEquals([$row1, $row3], $this->object->match($collection));
+
+        // Test Group 2
+        $this->object = new IteratorFilter();
+        $this->object->startGroup('id', Relation::EQUAL, 1);
+        $this->object->or('id', Relation::EQUAL, 3);
+        $this->object->endGroup();
+        $this->object->and('field2', Relation::EQUAL, 'last2');
+        $this->assertEquals([$row3], $this->object->match($collection));
+
+        // Test Group 3
+        $this->object = new IteratorFilter();
+        $this->object->and('field2', Relation::EQUAL, 'last2');
+        $this->object->startGroup('id', Relation::EQUAL, 1);
+        $this->object->or('id', Relation::EQUAL, 3);
+        $this->object->endGroup();
+        $this->assertEquals([$row3], $this->object->match($collection));
     }
 
     public function testGetIterator()
@@ -226,14 +242,28 @@ class IteratorFilterAnydatasetTest extends TestCase
         $this->object->and('val', Relation::NOT_IN, [10, 30, 50]);
         $this->assertEquals([$row2], $anydataset->getIterator($this->object)->toArray());
 
-        // Test Group
+        // Test Group 1
         $this->object = new IteratorFilter();
         $this->object->startGroup('id', Relation::EQUAL, 1);
         $this->object->or('id', Relation::EQUAL, 3);
         $this->object->endGroup();
         $this->assertEquals([$row1, $row3], $anydataset->getIterator($this->object)->toArray());
 
+        // Test Group 2
+        $this->object = new IteratorFilter();
+        $this->object->startGroup('id', Relation::EQUAL, 1);
+        $this->object->or('id', Relation::EQUAL, 3);
+        $this->object->endGroup();
+        $this->object->and('field2', Relation::EQUAL, 'last2');
+        $this->assertEquals([$row3], $anydataset->getIterator($this->object)->toArray());
 
+        // Test Group 3
+        $this->object = new IteratorFilter();
+        $this->object->and('field2', Relation::EQUAL, 'last2');
+        $this->object->startGroup('id', Relation::EQUAL, 1);
+        $this->object->or('id', Relation::EQUAL, 3);
+        $this->object->endGroup();
+        $this->assertEquals([$row3], $anydataset->getIterator($this->object)->toArray());
     }
 
 }

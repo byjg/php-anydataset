@@ -49,7 +49,7 @@ class IteratorFilter
         return $returnArray;
     }
 
-    protected function evaluateFilter(RowInterface $row, array $filterList): bool
+    protected function evaluateFilter(RowInterface $row, array $filterList, ?string $previousOperator = null): bool
     {
         $result = true;
         $position = 0;
@@ -62,11 +62,15 @@ class IteratorFilter
 
 
             if ($operator == ")") {
-                $result = $this->evaluateFilter($row, $subList);
+                $result = $this->evaluateFilter($row, $subList, $previousOperator);
                 $subList = [];
                 continue;
             } elseif ($operator == "(") {
-                $filter[0] = " and ";
+                $filter[0] = $previousOperator ?? " and ";
+                $previousOperator = $filter[0];
+                if ($previousOperator == " and " && $result === false) {
+                    return false;
+                }
                 $subList[] = $filter;
                 continue;
             } elseif (count($subList) > 0) {
@@ -129,6 +133,7 @@ class IteratorFilter
                 throw new \InvalidArgumentException("Invalid operator: $operator");
             }
 
+            $previousOperator = $operator;
             $position++;
         }
 
