@@ -34,27 +34,105 @@ class IteratorFilter
      */
     public function match(array $array): array
     {
-        $returnArray = [];
-        $filterList = $this->format(new IteratorFilterFormatter());
-
-        if (empty($filterList)) {
+        if (count($this->filters) === 0) {
             return $array;
         }
 
+        $returnArray = [];
         foreach ($array as $sr) {
-            $rowArr = $sr->toArray();
-            $rowEval = [];
-            foreach ($rowArr as $key => $value) {
-                $rowEval["%$key"] = is_numeric($value) ? $value : "'$value'";
-            }
-
-            $result = eval("return " . strtr($filterList, $rowEval) . ";");
+            $result = $this->evaluateFilter($sr, $this->filters);
             if ($result) {
                 $returnArray[] = $sr;
             }
         }
 
         return $returnArray;
+    }
+
+    protected function evaluateFilter(RowInterface $row, array $filterList): bool
+    {
+        $result = true;
+        $position = 0;
+        $subList = [];
+        foreach ($filterList as $filter) {
+            $operator = $filter[0];
+            $field = $filter[1];
+            $relation = $filter[2];
+            $value = $filter[3];
+
+
+            if ($operator == ")") {
+                $result = $this->evaluateFilter($row, $subList);
+                $subList = [];
+                continue;
+            } elseif ($operator == "(") {
+                $filter[0] = " and ";
+                $subList[] = $filter;
+                continue;
+            } elseif (count($subList) > 0) {
+                $subList[] = $filter;
+                continue;
+            }
+
+            switch ($relation) {
+                case Relation::EQUAL:
+                    $localEval = $row->get($field) == $value;
+                    break;
+
+                case Relation::GREATER_THAN:
+                    $localEval = $row->get($field) > $value;
+                    break;
+
+                case Relation::LESS_THAN:
+                    $localEval = $row->get($field) < $value;
+                    break;
+
+                case Relation::GREATER_OR_EQUAL_THAN:
+                    $localEval = $row->get($field) >= $value;
+                    break;
+
+                case Relation::LESS_OR_EQUAL_THAN:
+                    $localEval = $row->get($field) <= $value;
+                    break;
+
+                case Relation::NOT_EQUAL:
+                    $localEval = $row->get($field) != $value;
+                    break;
+
+                case Relation::STARTS_WITH:
+                    $localEval = str_starts_with($row->get($field), $value);
+                    break;
+
+                case Relation::IN:
+                    $localEval = in_array($row->get($field), $value);
+                    break;
+
+                case Relation::NOT_IN:
+                    $localEval = !in_array($row->get($field), $value);
+                    break;
+
+                default: // Relation::CONTAINS:
+                    $localEval = str_contains($row->get($field), $value);
+                    break;
+            }
+
+            if ($position == 0) {
+                $result = $localEval;
+            } elseif ($operator == " and ") {
+                $result = $result && $localEval;
+                if (!$result) {
+                    break;
+                }
+            } elseif ($operator == " or ") {
+                $result = $result || $localEval;
+            } else {
+                throw new \InvalidArgumentException("Invalid operator: $operator");
+            }
+
+            $position++;
+        }
+
+        return $result;
     }
 
     /**
