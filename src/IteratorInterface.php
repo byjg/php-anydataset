@@ -20,13 +20,6 @@ interface IteratorInterface
     public function moveNext(): RowInterface|null;
 
     /**
-     * Get the record count. Some implementations may have return -1.
-     *
-     * @return int
-     */
-    public function count(): int;
-
-    /**
      * Get an array of the iterator
      * 
      * @param array $fields

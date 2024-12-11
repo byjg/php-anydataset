@@ -164,16 +164,16 @@ class AnyDatasetTest extends TestCase
 
     public function testAppendRow()
     {
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(0, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([], $qtd->toArray());
 
         $this->object->appendRow();
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(1, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([[]], $qtd->toArray());
 
         $this->object->appendRow();
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(2, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([[], []], $qtd->toArray());
     }
 
     public function testImport()
@@ -256,20 +256,23 @@ class AnyDatasetTest extends TestCase
 
     public function testAddField()
     {
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(0, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([], $qtd->toArray());
 
         $this->object->appendRow();
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(1, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([[]], $qtd->toArray());
 
         $this->object->addField('newfield', 'value');
 
-        $this->assertEquals([
+        $this->assertEquals(
             [
-                "newfield" => "value",
+                [
+                    "newfield" => "value",
+                ],
             ],
-            ], $this->object->getIterator()->toArray());
+            $this->object->getIterator()->toArray()
+        );
     }
 
     public function testGetArray()

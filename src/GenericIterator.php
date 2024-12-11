@@ -23,11 +23,6 @@ abstract class GenericIterator implements IteratorInterface, Iterator
 
     /**
      * @inheritDoc
-     */
-    abstract public function count(): int;
-
-    /**
-     * @inheritDoc
      * @param array $fields
      * @return array
      */

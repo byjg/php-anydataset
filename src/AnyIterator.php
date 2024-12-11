@@ -36,17 +36,9 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
-    public function count(): int
-    {
-        return count($this->list);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function hasNext(): bool
     {
-        return ($this->curRow < $this->count());
+        return ($this->curRow < count($this->list));
     }
 
     /**
