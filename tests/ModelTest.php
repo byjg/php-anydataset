@@ -47,7 +47,7 @@ class ModelTest extends TestCase
         $anydata->addField('Name', 'Gilberto');
 
         $object1 = new SampleModel();
-        $object1->copyFrom( $anydata->getIterator()->moveNext()->toArray() );
+        $object1->copyFrom($anydata->getIterator()->moveNext()->toArray());
         $this->assertEquals(10, $object1->Id);
         $this->assertEquals('Joao', $object1->getName());
     }

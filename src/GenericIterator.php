@@ -5,6 +5,9 @@ namespace ByJG\AnyDataset\Core;
 use Iterator;
 use ReturnTypeWillChange;
 
+/**
+ * @psalm-suppress MissingTemplateParam
+ */
 abstract class GenericIterator implements IteratorInterface, Iterator
 {
 

@@ -77,13 +77,4 @@ class AnyIterator extends GenericIterator
     {
         return $this->list[$this->curRow] ?? null;
     }
-
-    /**
-     * @param IteratorFilter $filter
-     * @return AnyIterator
-     */
-    public function withFilter(IteratorFilter $filter): AnyIterator
-    {
-        return new AnyIterator($filter->match($this->list));
-    }
 }

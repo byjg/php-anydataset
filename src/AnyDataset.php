@@ -146,9 +146,9 @@ class AnyDataset
     /**
      * Returns the AnyDataset XML representative structure.
      *
-     * @return string XML String
+     * @return string|false XML String
      */
-    public function xml(): string
+    public function xml(): string|false
     {
         return (new XmlFormatter($this->getIterator()))->toText();
     }
@@ -261,7 +261,7 @@ class AnyDataset
      * Add a single string field to an existing row
      *
      * @param string $name - Field name
-     * @param string $value - Field value
+     * @param mixed $value - Field value
      * @return void
      */
     public function addField(string $name, mixed $value): void

@@ -59,7 +59,7 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
-    public function toText(): string
+    public function toText(): string|false
     {
         return $this->raw()->saveXML();
     }

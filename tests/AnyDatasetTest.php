@@ -327,7 +327,7 @@ class AnyDatasetTest extends TestCase
         $this->assertEquals([
             ['name' => 'jf', 'age' => 15],
             ['name' => 'jg jr', 'age' => 4]
-        ], $this->object->getIterator()->withFilter($filter)->toArray());
+        ], $this->object->getIterator($filter)->toArray());
 
     }
 

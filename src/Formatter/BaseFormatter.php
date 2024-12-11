@@ -21,7 +21,7 @@ abstract class BaseFormatter implements FormatterInterface
     /**
      * @inheritDoc
      */
-    abstract public function toText(): string;
+    abstract public function toText(): string|false;
 
     /**
      * @inheritDoc
