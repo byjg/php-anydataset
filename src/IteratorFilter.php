@@ -149,7 +149,7 @@ class IteratorFilter
      * @param string $returnFields
      * @return string
      */
-    public function format(IteratorFilterFormatter $formatter, string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    public function format(IteratorFilterFormatter $formatter, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
     {
         return $formatter->format($this->filters, $tableName, $params, $returnFields);
     }

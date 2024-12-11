@@ -9,7 +9,7 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      /**
       * @inheritDoc
       */
-    public function format(array $filters, string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    public function format(array $filters, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
     {
           $param = [];
           $xpathFilter = $this->getFilter($filters, $param);

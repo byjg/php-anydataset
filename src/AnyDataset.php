@@ -232,7 +232,7 @@ class AnyDataset
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function removeRow(int|RowInterface $row = null): void
+    public function removeRow(int|RowInterface|null $row = null): void
     {
         if (is_null($row)) {
             $row = $this->currentRow;
@@ -277,7 +277,7 @@ class AnyDataset
      * @param IteratorFilter|null $itf
      * @return GenericIterator|AnyIterator
      */
-    public function getIterator(IteratorFilter $itf = null): GenericIterator|AnyIterator
+    public function getIterator(?IteratorFilter $itf = null): GenericIterator|AnyIterator
     {
         if (is_null($itf)) {
             return new AnyIterator($this->collection);
@@ -293,7 +293,7 @@ class AnyDataset
      * @param IteratorFilter|null $itf
      * @return array
      */
-    public function getArray(string $fieldName, IteratorFilter $itf = null): array
+    public function getArray(string $fieldName, ?IteratorFilter $itf = null): array
     {
         $iterator = $this->getIterator($itf);
         $result = array();
