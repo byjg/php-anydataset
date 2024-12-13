@@ -3,30 +3,24 @@
 namespace ByJG\AnyDataset\Core;
 
 use Iterator;
+use ReturnTypeWillChange;
 
+/**
+ * @psalm-suppress MissingTemplateParam
+ */
 abstract class GenericIterator implements IteratorInterface, Iterator
 {
+    public function hasNext(): bool
+    {
+        return $this->valid();
+    }
 
-    /**
-     * @inheritDoc
-     */
-    abstract public function hasNext(): bool;
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function moveNext(): Row|null;
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function count(): int;
-
-    /**
-     * @inheritDoc
-     */
-    #[\ReturnTypeWillChange]
-    abstract public function key();
+    public function moveNext(): RowInterface|null
+    {
+        $row = $this->current();
+        $this->next();
+        return $row;
+    }
 
     /**
      * @inheritDoc
@@ -44,43 +38,40 @@ abstract class GenericIterator implements IteratorInterface, Iterator
         return $retArray;
     }
 
-    /* ------------------------------------- */
-    /* PHP 5 Specific functions for Iterator */
-    /* ------------------------------------- */
+    /* --------------------------------------------- */
+    /* PHP Specific functions for Iterator interface */
+    /* --------------------------------------------- */
+
+    /**
+     * @inheritDoc
+     */
+    #[ReturnTypeWillChange]
+    abstract public function key(): mixed;
 
     /**
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    #[ReturnTypeWillChange]
+    abstract public function current(): mixed;
+
+    /**
+     * @inheritDoc
+     */
+    #[ReturnTypeWillChange]
+    public function rewind(): void
     {
-        return $this->moveNext();
+        // Do nothing
     }
 
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function rewind()
-    {
-        // There is no necessary
-    }
+    #[ReturnTypeWillChange]
+    abstract public function next(): void;
 
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function next()
-    {
-        // There is no necessary
-    }
-
-    /**
-     * @inheritDoc
-     */
-    #[\ReturnTypeWillChange]
-    public function valid()
-    {
-        return $this->hasNext();
-    }
+    #[ReturnTypeWillChange]
+    abstract public function valid(): bool;
 }

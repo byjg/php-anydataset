@@ -28,7 +28,7 @@ class XmlFormatter extends BaseFormatter
      * @param array $row
      * @return XmlNode
      */
-    protected function rowXml(array $row, XmlDocument $parentDocument = null): XmlNode
+    protected function rowXml(array $row, ?XmlDocument $parentDocument = null): XmlNode
     {
         if (!empty($parentDocument)) {
             $node = $parentDocument->appendChild('row');
@@ -59,7 +59,7 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
-    public function toText(): string
+    public function toText(): string|false
     {
         return $this->raw()->saveXML();
     }

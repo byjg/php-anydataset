@@ -7,8 +7,11 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
+use ByJG\XmlUtil\Exception\FileException;
+use ByJG\XmlUtil\Exception\XmlUtilException;
 use ByJG\XmlUtil\XmlDocument;
 use PHPUnit\Framework\TestCase;
+use Tests\Sample\ModelPublic;
 
 class AnyDatasetTest extends TestCase
 {
@@ -57,8 +60,7 @@ class AnyDatasetTest extends TestCase
             ],
             ], $anydata->getIterator()->toArray());
 
-        $anydataMem = new AnyDataset("php://memory");
-        $anydataMem->import($anydata->getIterator());
+        $anydataMem = new AnyDataset(self::SAMPLE_DIR . 'sample.anydata.xml');
         $this->assertEquals(2, count($anydataMem->getIterator()->toArray()));
         $this->assertEquals([
             [
@@ -70,7 +72,17 @@ class AnyDatasetTest extends TestCase
                 "field2" => "othervalue2",
             ],
         ], $anydata->getIterator()->toArray());
-        $anydataMem->save();
+
+        try {
+            $anydataMem->save("/tmp/sample");
+            $this->assertFileExists("/tmp/sample.anydata.xml");
+            $this->assertEquals(
+                preg_replace("/(\n|\\s\\s)/", "", file_get_contents(self::SAMPLE_DIR . 'sample.anydata.xml')),
+                str_replace("\n", "", file_get_contents("/tmp/sample.anydata.xml"))
+            );
+        } finally {
+            unlink("/tmp/sample.anydata.xml");
+        }
     }
 
     public function testXML()
@@ -152,16 +164,16 @@ class AnyDatasetTest extends TestCase
 
     public function testAppendRow()
     {
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(0, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([], $qtd->toArray());
 
         $this->object->appendRow();
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(1, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([[]], $qtd->toArray());
 
         $this->object->appendRow();
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(2, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([[], []], $qtd->toArray());
     }
 
     public function testImport()
@@ -244,20 +256,23 @@ class AnyDatasetTest extends TestCase
 
     public function testAddField()
     {
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(0, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([], $qtd->toArray());
 
         $this->object->appendRow();
-        $qtd = $this->object->getIterator()->count();
-        $this->assertEquals(1, $qtd);
+        $qtd = $this->object->getIterator();
+        $this->assertEquals([[]], $qtd->toArray());
 
         $this->object->addField('newfield', 'value');
 
-        $this->assertEquals([
+        $this->assertEquals(
             [
-                "newfield" => "value",
+                [
+                    "newfield" => "value",
+                ],
             ],
-            ], $this->object->getIterator()->toArray());
+            $this->object->getIterator()->toArray()
+        );
     }
 
     public function testGetArray()
@@ -315,7 +330,7 @@ class AnyDatasetTest extends TestCase
         $this->assertEquals([
             ['name' => 'jf', 'age' => 15],
             ['name' => 'jg jr', 'age' => 4]
-        ], $this->object->getIterator()->withFilter($filter)->toArray());
+        ], $this->object->getIterator($filter)->toArray());
 
     }
 
@@ -343,8 +358,109 @@ class AnyDatasetTest extends TestCase
             ],
             [
                 "field1" => "1",
-                "field3" => "" 
             ],
         ], $iterator);
+    }
+
+    /**
+     * @throws FileException
+     * @throws XmlUtilException
+     */
+    public function testFromArray()
+    {
+        $array = [
+            [
+                "field1" => "value1",
+                "field2" => "value2",
+                "field3" => "value3",
+                "field4" => "value4",
+            ],
+            [
+                "field1" => "1",
+                "field2" => "2",
+                "field4" => "4",
+            ],
+        ];
+
+        $anydataset = new AnyDataset($array);
+
+        $iterator = $anydataset->getIterator()->toArray();
+        $this->assertEquals($array, $iterator);
+    }
+
+    /**
+     * @throws FileException
+     * @throws XmlUtilException
+     */
+    public function testFromArray2()
+    {
+        $array = [
+            [
+                "field1" => "value1",
+                "field2" => "value2",
+            ],
+            new ModelPublic("value1", "value2"),
+        ];
+
+        $anydataset = new AnyDataset($array);
+
+        $expected = [
+            [
+                "field1" => "value1",
+                "field2" => "value2",
+            ],
+            [
+                "Id" => "value1",
+                "Name" => "value2",
+            ],
+        ];
+
+        $iterator = $anydataset->getIterator()->toArray();
+        $this->assertEquals($expected, $iterator);
+
+        $iterator = $anydataset->getIterator();
+        $this->assertIsArray($iterator->moveNext()->entity());
+        $this->assertInstanceOf(ModelPublic::class, $iterator->moveNext()->entity());
+        $this->assertFalse($iterator->hasNext());
+    }
+
+    public function testIterator()
+    {
+        $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
+        $expected = [
+            [
+                "field1" => "value1",
+                "field2" => "value2",
+            ],
+            [
+                "field1" => "othervalue1",
+                "field2" => "othervalue2",
+            ],
+        ];
+
+        // Iterator PHP
+        $iterator = $anydata->getIterator();
+        $result = [];
+        while ($iterator->valid())
+        {
+            $result[] = $iterator->current()->toArray();
+            $iterator->next();
+        }
+        $this->assertEquals($expected, $result);
+
+        // Iterator foreach
+        $result = [];
+        foreach ($anydata->getIterator() as $row) {
+            $result[] = $row->toArray();
+        }
+        $this->assertEquals($expected, $result);
+
+        // Iterator GenericIterator
+        $result = [];
+        $iterator = $anydata->getIterator();
+        while ($iterator->hasNext()) {
+            $result[] = $iterator->moveNext()->toArray();
+        }
+        $this->assertEquals($expected, $result);
     }
 }

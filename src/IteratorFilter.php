@@ -34,15 +34,110 @@ class IteratorFilter
      */
     public function match(array $array): array
     {
-        $returnArray = [];
+        if (count($this->filters) === 0) {
+            return $array;
+        }
 
+        $returnArray = [];
         foreach ($array as $sr) {
-            if ($this->evalString($sr)) {
+            $result = $this->evaluateFilter($sr, $this->filters);
+            if ($result) {
                 $returnArray[] = $sr;
             }
         }
 
         return $returnArray;
+    }
+
+    protected function evaluateFilter(RowInterface $row, array $filterList, ?string $previousOperator = null): bool
+    {
+        $result = true;
+        $position = 0;
+        $subList = [];
+        foreach ($filterList as $filter) {
+            $operator = $filter[0];
+            $field = $filter[1];
+            $relation = $filter[2];
+            $value = $filter[3];
+
+
+            if ($operator == ")") {
+                $result = $this->evaluateFilter($row, $subList, $previousOperator);
+                $subList = [];
+                continue;
+            } elseif ($operator == "(") {
+                $filter[0] = $previousOperator ?? " and ";
+                $previousOperator = $filter[0];
+                if ($previousOperator == " and " && $result === false) {
+                    return false;
+                }
+                $subList[] = $filter;
+                continue;
+            } elseif (count($subList) > 0) {
+                $subList[] = $filter;
+                continue;
+            }
+
+            switch ($relation) {
+                case Relation::EQUAL:
+                    $localEval = $row->get($field) == $value;
+                    break;
+
+                case Relation::GREATER_THAN:
+                    $localEval = $row->get($field) > $value;
+                    break;
+
+                case Relation::LESS_THAN:
+                    $localEval = $row->get($field) < $value;
+                    break;
+
+                case Relation::GREATER_OR_EQUAL_THAN:
+                    $localEval = $row->get($field) >= $value;
+                    break;
+
+                case Relation::LESS_OR_EQUAL_THAN:
+                    $localEval = $row->get($field) <= $value;
+                    break;
+
+                case Relation::NOT_EQUAL:
+                    $localEval = $row->get($field) != $value;
+                    break;
+
+                case Relation::STARTS_WITH:
+                    $localEval = str_starts_with($row->get($field), $value);
+                    break;
+
+                case Relation::IN:
+                    $localEval = in_array($row->get($field), $value);
+                    break;
+
+                case Relation::NOT_IN:
+                    $localEval = !in_array($row->get($field), $value);
+                    break;
+
+                default: // Relation::CONTAINS:
+                    $localEval = str_contains($row->get($field), $value);
+                    break;
+            }
+
+            if ($position == 0) {
+                $result = $localEval;
+            } elseif ($operator == " and ") {
+                $result = $result && $localEval;
+                if (!$result) {
+                    break;
+                }
+            } elseif ($operator == " or ") {
+                $result = $result || $localEval;
+            } else {
+                throw new \InvalidArgumentException("Invalid operator: $operator");
+            }
+
+            $previousOperator = $operator;
+            $position++;
+        }
+
+        return $result;
     }
 
     /**
@@ -54,55 +149,9 @@ class IteratorFilter
      * @param string $returnFields
      * @return string
      */
-    public function format(IteratorFilterFormatter $formatter, string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    public function format(IteratorFilterFormatter $formatter, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
     {
         return $formatter->format($this->filters, $tableName, $params, $returnFields);
-    }
-
-
-    /**
-     * @param Row $singleRow
-     * @return bool
-     */
-    private function evalString(Row $singleRow): bool
-    {
-        $result = [];
-        $finalResult = false;
-        $pos = 0;
-
-        $result[0] = true;
-
-        foreach ($this->filters as $filter) {
-            if (($filter[0] == ")") || ($filter[0] == " or ")) {
-                $finalResult = $finalResult || $result[$pos];
-                $result[++$pos] = true;
-            }
-
-            $name = $filter[1];
-            $relation = $filter[2];
-            $value = $filter[3];
-
-            $field = [$singleRow->get($name)];
-
-            foreach ($field as $valueparam) {
-                $result[$pos] = match ($relation) {
-                    Relation::EQUAL => $result[$pos] && ($valueparam == $value),
-                    Relation::GREATER_THAN => $result[$pos] && ($valueparam > $value),
-                    Relation::LESS_THAN => $result[$pos] && ($valueparam < $value),
-                    Relation::GREATER_OR_EQUAL_THAN => $result[$pos] && ($valueparam >= $value),
-                    Relation::LESS_OR_EQUAL_THAN => $result[$pos] && ($valueparam <= $value),
-                    Relation::NOT_EQUAL => $result[$pos] && ($valueparam != $value),
-                    Relation::STARTS_WITH => $result[$pos] && (str_starts_with(is_null($valueparam) ? "" : $valueparam, $value)),
-                    Relation::IN => $result[$pos] && in_array($valueparam, $value),
-                    Relation::NOT_IN => $result[$pos] && !in_array($valueparam, $value),
-                    default => $result[$pos] && (str_contains(is_null($valueparam) ? "" : $valueparam, $value)),
-                };
-            }
-        }
-
-        $finalResult = $finalResult || $result[$pos];
-
-        return $finalResult;
     }
 
     /**
@@ -161,9 +210,9 @@ class IteratorFilter
      * Add a "("
      * @return static
      */
-    public function startGroup(): static
+    public function startGroup(string $name, Relation $relation, mixed $value): static
     {
-        $this->filters[] = ["(", "", "", ""];
+        $this->filters[] = ["(", $name, $relation, $value];
         return $this;
     }
 

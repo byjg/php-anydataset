@@ -52,7 +52,7 @@ class AnyDataset
     /**
      * Internal structure represent the current Row
      *
-     * @var Row[]
+     * @var RowInterface[]
      */
     private array $collection;
 
@@ -65,16 +65,20 @@ class AnyDataset
     private ?File $file;
 
     /**
-     * @param string|null $filename
+     * @param string|array|null $filename
      * @throws FileException
      * @throws XmlUtilException
      */
-    public function __construct(?string $filename = null)
+    public function __construct(string|array|null $filename = null)
     {
-        $this->collection = array();
-        $this->currentRow = -1;
-
         $this->file = null;
+        $this->currentRow = -1;
+        $this->collection = [];
+        if (is_array($filename)) {
+            $this->collection = array_map(fn($row) => Row::factory($row), $filename);
+            return;
+        }
+
         $this->defineSavePath($filename, function () {
             if (!is_null($this->file)) {
                 $this->createFromFile();
@@ -114,7 +118,7 @@ class AnyDataset
      * Private method used to read and populate anydataset class from specified file
      *
      * @return void
-     * @throws XmlUtilException
+     * @throws XmlUtilException|FileException
      */
     private function createFromFile(): void
     {
@@ -124,16 +128,15 @@ class AnyDataset
 
             $rows = $anyDataSet->selectNodes("row");
             foreach ($rows as $row) {
-                $sr = new Row();
+                $sr = Row::factory();
                 $fields = XmlNode::instance($row)->selectNodes("field");
                 /** @var DOMElement $field */
                 foreach ($fields as $field) {
                     if (!$field->hasAttribute("name")) {
                         throw new InvalidArgumentException('Malformed anydataset file ' . basename($this->getFilename()));
                     }
-                    $sr->addField($field->getAttribute("name"), $field->nodeValue);
+                    $sr->set($field->getAttribute("name"), $field->nodeValue);
                 }
-                $sr->acceptChanges();
                 $this->collection[] = $sr;
             }
             $this->currentRow = count($this->collection) - 1;
@@ -143,9 +146,9 @@ class AnyDataset
     /**
      * Returns the AnyDataset XML representative structure.
      *
-     * @return string XML String
+     * @return string|false XML String
      */
-    public function xml(): string
+    public function xml(): string|false
     {
         return (new XmlFormatter($this->getIterator()))->toText();
     }
@@ -170,15 +173,13 @@ class AnyDataset
     /**
      * Append one row to AnyDataset.
      *
-     * @param Row|array $singleRow
+     * @param array|object $singleRow
      * @return void
      */
-    public function appendRow(Row|array $singleRow = []): void
+    public function appendRow(array|object $singleRow = []): void
     {
-        if (empty($singleRow)) {
-            $singleRow = new Row();
-        } elseif (is_array($singleRow)) {
-            $singleRow = new Row($singleRow);
+        if (!($singleRow instanceof RowInterface)) {
+            $singleRow = Row::factory($singleRow);
         }
 
         $this->collection[] = $singleRow;
@@ -202,16 +203,16 @@ class AnyDataset
      * Insert one row before specified position.
      *
      * @param int $rowNumber
-     * @param Row|array $row
+     * @param array|object $row
      */
-    public function insertRowBefore(int $rowNumber, Row|array $row): void
+    public function insertRowBefore(int $rowNumber, array|object $row): void
     {
         if ($rowNumber > count($this->collection)) {
             $this->appendRow($row);
         } else {
             $singleRow = $row;
-            if (!($row instanceof Row)) {
-                $singleRow = new Row($row);
+            if (!($row instanceof RowInterface)) {
+                $singleRow = Row::factory($row);
             }
 
             /**
@@ -227,16 +228,16 @@ class AnyDataset
 
     /**
      *
-     * @param int|Row|null $row
+     * @param int|RowInterface|null $row
      * @return void
      * @throws \ByJG\Serializer\Exception\InvalidArgumentException
      */
-    public function removeRow(int|Row $row = null): void
+    public function removeRow(int|RowInterface|null $row = null): void
     {
         if (is_null($row)) {
             $row = $this->currentRow;
         }
-        if ($row instanceof Row) {
+        if ($row instanceof RowInterface) {
             $iPos = 0;
             $rowArr = $row->toArray();
             foreach ($this->collection as $sr) {
@@ -260,7 +261,7 @@ class AnyDataset
      * Add a single string field to an existing row
      *
      * @param string $name - Field name
-     * @param string $value - Field value
+     * @param mixed $value - Field value
      * @return void
      */
     public function addField(string $name, mixed $value): void
@@ -268,7 +269,7 @@ class AnyDataset
         if ($this->currentRow < 0) {
             $this->appendRow();
         }
-        $this->collection[$this->currentRow]->addField($name, $value);
+        $this->collection[$this->currentRow]->set($name, $value);
     }
 
     /**
@@ -276,7 +277,7 @@ class AnyDataset
      * @param IteratorFilter|null $itf
      * @return GenericIterator|AnyIterator
      */
-    public function getIterator(IteratorFilter $itf = null): GenericIterator|AnyIterator
+    public function getIterator(?IteratorFilter $itf = null): GenericIterator|AnyIterator
     {
         if (is_null($itf)) {
             return new AnyIterator($this->collection);
@@ -292,7 +293,7 @@ class AnyDataset
      * @param IteratorFilter|null $itf
      * @return array
      */
-    public function getArray(string $fieldName, IteratorFilter $itf = null): array
+    public function getArray(string $fieldName, ?IteratorFilter $itf = null): array
     {
         $iterator = $this->getIterator($itf);
         $result = array();
@@ -317,7 +318,7 @@ class AnyDataset
     }
 
     /**
-     * @param Row[] $seq
+     * @param RowInterface[] $seq
      * @param string $field
      * @return array
      */

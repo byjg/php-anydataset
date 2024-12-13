@@ -7,20 +7,79 @@
 [![GitHub license](https://img.shields.io/github/license/byjg/anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
 [![GitHub release](https://img.shields.io/github/release/byjg/anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
 
-Anydataset Core Module. Anydataset is an agnostic data source abstraction layer in PHP.
+AnyDataset is a data source abstraction layer for PHP. It provides a simple and consistent interface 
+to access different data sources.
 
-## Features
+It is part of the [Anydataset project](https://packagist.org/providers/byjg/anydataset-implementation), 
+an agnostic data source abstraction layer for PHP.
+
+## Main Features
 
 - Access different data sources using the same interface.
 - Iterable results
 - Convert results to array
+- Format output
+- Validate fields
+
+## AnyDataset core
+
+The AnyDataset core provides the minimum classes and interfaces to allow you to use the AnyDataset project and create 
+your own implementation.
+
+### How it works?
+
+1. Create a database object
+2. Get an iterator
+3. Iterate over the results
+
+```php
+<?php
+# Create a dataset
+$dataset = new \ByJG\AnyDataset\Core\AnyDataset("example");
+
+# Get an iterator
+$iterator = $dataset->getIterator();
+```
+
+Iterating over the results:
+
+**for...each**
+```php
+foreach ($iterator as $row) {
+    print $row->toArray();
+}
+```
+
+**while**
+```php
+// This one uses the PHP original implementation
+while ($iterator->valid()) {
+    $row = $iterator->current();
+    print $row->toArray();
+    $iterator->next();
+}
+```
+
+**while (implementation 2)**
+    
+```php
+while ($iterator->hasNext()) {
+    // This returns the current row and move the pointer to the next
+    print $iterator->moveNext()->toArray();
+}
+```
+
+**toArray**
+```php
+print_r($iterator->toArray());
+```
 
 ## Current Implementations
 
 | Object                 | Data Source           | Read | Write | Reference                                           |
 |------------------------|-----------------------|:----:|:-----:|-----------------------------------------------------|
-| DbDriverInterface      | Relational DB         | yes  |  yes  | [Github](https://github.com/byjg/anydataset-db)     |
 | AnyDataSet             | Anydataset            | yes  |  yes  | [Github](https://github.com/byjg/anydataset)        |
+| DbDriverInterface      | Relational DB         | yes  |  yes  | [Github](https://github.com/byjg/anydataset-db)     |
 | ArrayDataSet           | Array                 | yes  |  no   | [Github](https://github.com/byjg/anydataset-array)  |
 | TextFileDataSet        | Delimited Fields      | yes  |  no   | [Github](https://github.com/byjg/anydataset-text)   |
 | FixedTextFileDataSet   | Fixed Size fields     | yes  |  no   | [Github](https://github.com/byjg/anydataset-text)   |
@@ -30,19 +89,7 @@ Anydataset Core Module. Anydataset is an agnostic data source abstraction layer 
 | NoSqlDocumentInterface | NoSql Document Based  | yes  |  yes  | [Github](https://github.com/byjg/anydataset-nosql)  |
 | KeyValueInterface      | NoSql Key/Value Based | yes  |  yes  | [Github](https://github.com/byjg/anydataset-nosql)  |
 
-## Examples
 
-### Iterating with foreach
-
-```php
-<?php
-$dataset = new \ByJG\AnyDataset\Core\AnyDataset("example");
-
-$iterator = $dataset->getIterator();
-foreach ($iterator as $row) {
-    print $row->toArray();
-}
-```
 
 ### Filtering results
 
@@ -66,10 +113,11 @@ print_r($iterator->toArray());
 ```php
 <?php
 $iterator = $dataset->getIterator();
-while ($iterator->hasNext()) {
-    $row = $iterator->moveNext();
+while ($iterator->valid()) {
+    $row = $iterator->current();
 
     print_r($row->get("field1"));
+    $iterator->next();
 }
 ```
 
@@ -81,52 +129,16 @@ foreach ($iterator as $row) {
 }
 ```
 
+## Topics
+
+- [The Row object](docs/row.md)
+- [Filtering the results](docs/iteratorfilter.md)
+- [Format the output](docs/rowoutput.md)
+- [Validate the fields](docs/rowvalidator.md)
+- [Populate the fields](docs/populate.md)
+
 ## Additional Classes
 
-### RowOutpout - Format Field Output
-
-This class defines custom format for the field output.
-
-```php
-<?php
-$output = RowOutput::getInstance()
-    ->addFormat("field1", "Test {field1}")
-    ->addFormat("field2", "Showing {} and {field3}");
-    ->addCustomFormat("field3", function ($row, $field, $value) {
-        // return the formatted output.
-        // $row: The row object with all values
-        // $field: The field has been processed
-        // $value: The field value
-    });
-
-// This will output the field1 formatted:
-echo $output->print($row, "field1");
-
-// This will apply the format defintion to all fields at once:
-$ouput->apply($row);
-```
-
-Notes about the format pattern:
-
-- `{}` represents the current value
-- `{.}` represents the field name
-- `{field_name}` return the value of $row->get(field_name)
-
-### RowValidator - Validate Field contents
-
-```php
-<?php
-$validator = RowValidator::getInstance()
-    ->requiredFields(["field1", "field2"])
-    ->numericFields(['field1', 'field3'])
-    ->regexValidation("field4", '/\d{4}-\d{2}-\d{2}/')
-    ->customValidation("field3", function($value) {
-        // Return any string containing the error message if validation FAILS
-        // otherwise, just return null and the valition will pass.
-    });
-
-$validator->validate($row) // Will return an array with the error messages. Empty array if not errors.
-```
 
 ## Formatters
 
