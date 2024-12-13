@@ -423,4 +423,44 @@ class AnyDatasetTest extends TestCase
         $this->assertInstanceOf(ModelPublic::class, $iterator->moveNext()->entity());
         $this->assertFalse($iterator->hasNext());
     }
+
+    public function testIterator()
+    {
+        $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
+        $expected = [
+            [
+                "field1" => "value1",
+                "field2" => "value2",
+            ],
+            [
+                "field1" => "othervalue1",
+                "field2" => "othervalue2",
+            ],
+        ];
+
+        // Iterator PHP
+        $iterator = $anydata->getIterator();
+        $result = [];
+        while ($iterator->valid())
+        {
+            $result[] = $iterator->current()->toArray();
+            $iterator->next();
+        }
+        $this->assertEquals($expected, $result);
+
+        // Iterator foreach
+        $result = [];
+        foreach ($anydata->getIterator() as $row) {
+            $result[] = $row->toArray();
+        }
+        $this->assertEquals($expected, $result);
+
+        // Iterator GenericIterator
+        $result = [];
+        $iterator = $anydata->getIterator();
+        while ($iterator->hasNext()) {
+            $result[] = $iterator->moveNext()->toArray();
+        }
+        $this->assertEquals($expected, $result);
+    }
 }

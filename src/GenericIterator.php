@@ -10,16 +10,17 @@ use ReturnTypeWillChange;
  */
 abstract class GenericIterator implements IteratorInterface, Iterator
 {
+    public function hasNext(): bool
+    {
+        return $this->valid();
+    }
 
-    /**
-     * @inheritDoc
-     */
-    abstract public function hasNext(): bool;
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function moveNext(): RowInterface|null;
+    public function moveNext(): RowInterface|null
+    {
+        $row = $this->current();
+        $this->next();
+        return $row;
+    }
 
     /**
      * @inheritDoc
@@ -66,17 +67,11 @@ abstract class GenericIterator implements IteratorInterface, Iterator
      * @inheritDoc
      */
     #[ReturnTypeWillChange]
-    public function next(): void
-    {
-        $this->moveNext();
-    }
+    abstract public function next(): void;
 
     /**
      * @inheritDoc
      */
     #[ReturnTypeWillChange]
-    public function valid(): bool
-    {
-        return $this->hasNext();
-    }
+    abstract public function valid(): bool;
 }

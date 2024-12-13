@@ -52,9 +52,20 @@ foreach ($iterator as $row) {
 
 **while**
 ```php
-while ($iterator->hasNext()) {
-    $row = $iterator->moveNext();
+// This one uses the PHP original implementation
+while ($iterator->valid()) {
+    $row = $iterator->current();
     print $row->toArray();
+    $iterator->next();
+}
+```
+
+**while (implementation 2)**
+    
+```php
+while ($iterator->hasNext()) {
+    // This returns the current row and move the pointer to the next
+    print $iterator->moveNext()->toArray();
 }
 ```
 
@@ -102,10 +113,11 @@ print_r($iterator->toArray());
 ```php
 <?php
 $iterator = $dataset->getIterator();
-while ($iterator->hasNext()) {
-    $row = $iterator->moveNext();
+while ($iterator->valid()) {
+    $row = $iterator->current();
 
     print_r($row->get("field1"));
+    $iterator->next();
 }
 ```
 

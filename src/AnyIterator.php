@@ -36,25 +36,6 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
-    public function hasNext(): bool
-    {
-        return ($this->curRow < count($this->list));
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function moveNext(): RowInterface|null
-    {
-        if (!$this->hasNext()) {
-            return null;
-        }
-        return $this->list[$this->curRow++];
-    }
-
-    /**
-     * @inheritDoc
-     */
     #[ReturnTypeWillChange]
     public function key(): mixed
     {
@@ -68,5 +49,17 @@ class AnyIterator extends GenericIterator
     public function current(): mixed
     {
         return $this->list[$this->curRow] ?? null;
+    }
+
+    #[ReturnTypeWillChange]
+    public function next(): void
+    {
+        $this->curRow++;
+    }
+
+    #[ReturnTypeWillChange]
+    public function valid(): bool
+    {
+        return ($this->curRow < count($this->list));
     }
 }

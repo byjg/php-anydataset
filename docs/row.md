@@ -33,10 +33,11 @@ The `Row` object implements the following methods:
 $dataset = new AnyDataset($data);
 $iterator = $dataset->getIterator();
 
-while ($iterator->hasNext()) {
-    $row = $iterator->moveNext();
+while ($iterator->valid()) {
+    $row = $iterator->current();
 
     echo $row->get("field1");
+    $iterator->next();
 }
 ```
 

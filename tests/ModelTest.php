@@ -31,7 +31,7 @@ class ModelTest extends TestCase
         $sr->set("name", "Testing");
         $anydata->appendRow($sr);
 
-        $object = new SampleModel($anydata->getIterator()->moveNext()->toArray());
+        $object = new SampleModel($anydata->getIterator()->current()->toArray());
 
         $this->assertEquals(10, $object->Id);
         $this->assertEquals("Testing", $object->getName());
@@ -47,7 +47,7 @@ class ModelTest extends TestCase
         $anydata->addField('Name', 'Gilberto');
 
         $object1 = new SampleModel();
-        $object1->copyFrom($anydata->getIterator()->moveNext()->toArray());
+        $object1->copyFrom($anydata->getIterator()->current()->toArray());
         $this->assertEquals(10, $object1->Id);
         $this->assertEquals('Joao', $object1->getName());
     }
