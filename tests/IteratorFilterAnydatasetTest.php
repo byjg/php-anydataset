@@ -60,6 +60,15 @@ class IteratorFilterAnydatasetTest extends TestCase
                     'val' => 10,
                 ]
             ),
+
+            $row5 = new Row(
+                [
+                    'id'   => 5,
+                    'field' => 'ab',
+                    'field2' => 'ba',
+                    'val' => null,
+                ]
+            ),
         ];
 
         $this->assertEquals($collection, $this->object->match($collection));
@@ -86,7 +95,7 @@ class IteratorFilterAnydatasetTest extends TestCase
         // Test Less Than
         $this->object = new IteratorFilter();
         $this->object->and('val', Relation::LESS_THAN, 50);
-        $this->assertEquals([$row3, $row4], $this->object->match($collection));
+        $this->assertEquals([$row3, $row4, $row5], $this->object->match($collection));
 
         // Test Greater or Equal Than
         $this->object = new IteratorFilter();
@@ -96,12 +105,12 @@ class IteratorFilterAnydatasetTest extends TestCase
         // Test Less or Equal Than
         $this->object = new IteratorFilter();
         $this->object->and('val', Relation::LESS_OR_EQUAL_THAN, 50);
-        $this->assertEquals([$row1, $row3, $row4], $this->object->match($collection));
+        $this->assertEquals([$row1, $row3, $row4, $row5], $this->object->match($collection));
 
         // Test Not Equal
         $this->object = new IteratorFilter();
         $this->object->and('val', Relation::NOT_EQUAL, 50);
-        $this->assertEquals([$row2, $row3, $row4], $this->object->match($collection));
+        $this->assertEquals([$row2, $row3, $row4, $row5], $this->object->match($collection));
 
         // Test Starts With
         $this->object = new IteratorFilter();
@@ -121,7 +130,17 @@ class IteratorFilterAnydatasetTest extends TestCase
         // Test Not In
         $this->object = new IteratorFilter();
         $this->object->and('val', Relation::NOT_IN, [10, 30, 50]);
-        $this->assertEquals([$row2], $this->object->match($collection));
+        $this->assertEquals([$row2, $row5], $this->object->match($collection));
+
+        // Test Is Null
+        $this->object = new IteratorFilter();
+        $this->object->and('val', Relation::IS_NULL);
+        $this->assertEquals([$row5], $this->object->match($collection));
+
+        // Test Is Not Null
+        $this->object = new IteratorFilter();
+        $this->object->and('val', Relation::IS_NOT_NULL);
+        $this->assertEquals([$row1, $row2, $row3, $row4], $this->object->match($collection));
     }
 
 
