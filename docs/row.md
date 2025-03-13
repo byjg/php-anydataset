@@ -23,7 +23,7 @@ The `Row` object implements the following methods:
 | `set($field, $value, $append)`          | Set the value of the field. If append == true, it will add the value to the current field |
 | `unset($field)`                         | Remove the field from the row.                                                            |
 | `replace($field, $oldValue, $newValue)` | Replace the value of the field. If $oldValue is not set, nothing is changed.              |
-| `toArray($fields)`                      | Convert the row to an array.                                                              |
+| `toArray($fields = null)`               | Convert the row to an array. If $fields is provided, only those fields will be returned.  |
 | `entity()`                              | Return the entity object used to store the row contents.                                  |
 
 ## Example
@@ -45,24 +45,43 @@ while ($iterator->valid()) {
 
 The `RowInterface` has two implementations:
 
-- `RowArray` - The default implementation
-- `RowObject` - An implementation that uses an object to store the values
+- `RowArray` - Uses an array to store the values
+- `RowObject` - Uses an object to store the values
 
-When we iterate over a dataset, we receive a `Row` object. 
-The `Row` object decides how to store/get the values.
+The `Row` class acts as a factory and wrapper for these implementations. When you create a `Row` object, it internally decides which implementation to use based on the data type provided.
 
 ### RowArray
 
-This is the default implementation. It uses an array to store the values.
+This is the default implementation when you provide an array. It uses an array to store the values.
 
-### RowObject
-
-This implementation uses an object to store the values. Some datasets, like the `AnyDatasetDb` dataset, can return a `RowObject` instead of a `RowArray`.
-It doesn't change anything in the way you access the values, but it can be useful if you need to use the `entity()` method.
+Key features:
+- Supports appending values to existing fields (turning them into arrays)
+- Supports unsetting specific values from array fields
+- Supports replacing specific values in array fields
 
 ```php
 <?php
+$row = new Row(['id' => 1, 'name' => 'John']);
+// or
+$row = new RowArray(['id' => 1, 'name' => 'John']);
 
+$row->get('id'); // 1
+$row->set('name', 'Mary'); // Changes name to Mary
+$row->set('tags', 'php', true); // Creates tags field with 'php'
+$row->set('tags', 'database', true); // Appends 'database' to tags, making it an array
+```
+
+### RowObject
+
+This implementation is used when you provide an object. It uses the object's properties and getter/setter methods to access values.
+
+Key features:
+- Automatically uses getter/setter methods if they exist (e.g., `getName()`, `setName()`)
+- Falls back to direct property access if methods don't exist
+- Does not support appending, unsetting specific values, or replacing specific values
+
+```php
+<?php
 class Model
 {
     private int $id;
@@ -97,18 +116,33 @@ class Model
 
 $model = new Model(id: 1, name: 'John');
 
+$row = new Row($model);
+// or
 $row = new RowObject($model);
 
-$row->get('id'); // 1
-$row->get('name'); // John
-$row->entity(); // $model
+$row->get('id'); // 1 (calls getId() method)
+$row->get('name'); // John (calls getName() method)
+$row->entity(); // Returns the original $model object
 
-$row->set('name', 'Mary');
+$row->set('name', 'Mary'); // Calls setName('Mary')
 $row->get('name'); // Mary
 $row->entity()->getName(); // Mary
 
-$row->entity()->setId('20');
+$row->entity()->setId(20);
 $row->get('id'); // 20
+```
+
+## Factory Method
+
+The `Row` class provides a static factory method to create the appropriate implementation:
+
+```php
+<?php
+// Creates a RowArray
+$rowArray = Row::factory(['id' => 1, 'name' => 'John']);
+
+// Creates a RowObject
+$rowObject = Row::factory($model);
 ```
 
 
