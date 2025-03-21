@@ -24,8 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: composer install
-      - run: ./vendor/bin/phpunit
       - run: ./vendor/bin/psalm
+      - run: ./vendor/bin/phpunit
 
   Documentation:
     if: github.ref == 'refs/heads/master'
