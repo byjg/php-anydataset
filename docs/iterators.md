@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 2
 ---
 
 # Iterators
@@ -15,8 +15,19 @@ The base interface for all iterators in AnyDataset:
 ```php
 interface IteratorInterface
 {
+    /**
+     * Check if exists more records.
+     */
     public function hasNext(): bool;
+    
+    /**
+     * Get the next record. Return a Row object.
+     */
     public function moveNext(): RowInterface|null;
+    
+    /**
+     * Get an array representation of the iterator.
+     */
     public function toArray(array $fields = []): array;
 }
 ```

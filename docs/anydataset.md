@@ -21,14 +21,16 @@ use ByJG\AnyDataset\Core\AnyDataset;
 // Empty dataset
 $dataset = new AnyDataset();
 
-// From an array
+// From an array of associative arrays
 $data = [
     ['id' => 1, 'name' => 'John'],
     ['id' => 2, 'name' => 'Mary']
 ];
 $dataset = new AnyDataset($data);
 
-// From an XML file
+// From an XML file (with .anydata.xml extension automatically added if not specified)
+$dataset = new AnyDataset('data');
+// Or with full extension
 $dataset = new AnyDataset('data.anydata.xml');
 ```
 
@@ -47,6 +49,10 @@ $dataset->appendRow(['id' => 1, 'name' => 'John']);
 
 // Insert a row at a specific position
 $dataset->insertRowBefore(0, ['id' => 2, 'name' => 'Mary']);
+
+// Import rows from an iterator
+$otherDataset = new AnyDataset($someData);
+$dataset->import($otherDataset->getIterator());
 ```
 
 ### Removing Rows
@@ -66,6 +72,22 @@ $dataset->removeRow(0); // Removes John
 // Remove by Row object
 $row = new Row(['id' => 2, 'name' => 'Mary']);
 $dataset->removeRow($row); // Removes Mary
+
+// Remove current row (last one added or accessed)
+$dataset->removeRow();
+```
+
+### Adding Fields to Current Row
+
+```php
+<?php
+use ByJG\AnyDataset\Core\AnyDataset;
+
+$dataset = new AnyDataset();
+$dataset->appendRow(['id' => 1, 'name' => 'John']);
+
+// Add a field to the current row
+$dataset->addField('email', 'john@example.com');
 ```
 
 ### Sorting
@@ -92,8 +114,11 @@ use ByJG\AnyDataset\Core\AnyDataset;
 $dataset = new AnyDataset();
 $dataset->appendRow(['id' => 1, 'name' => 'John']);
 
-// Save to a file
-$dataset->save('data.anydata.xml');
+// Save to the file specified in constructor
+$dataset->save();
+
+// Or save to a different file
+$dataset->save('new_data.anydata.xml');
 ```
 
 ## Iterating Through Data

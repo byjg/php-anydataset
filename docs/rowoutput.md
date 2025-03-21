@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # RowOutput - Format Field Values
@@ -43,13 +43,13 @@ When using the `addFormat` method, you can use the following placeholders in you
 
 The `RowOutput` class provides the following methods:
 
-| Method                                             | Description                                                                       |
-|----------------------------------------------------|-----------------------------------------------------------------------------------|
-| `getInstance()`                                    | Static factory method to create a new RowOutput instance.                         |
-| `print(RowInterface $row, string $field)`          | Returns the formatted value for a specific field.                                 |
-| `apply(RowInterface $row)`                         | Returns a new Row object with all fields formatted according to defined patterns. |
-| `addFormat(string $field, string $pattern)`        | Adds a pattern-based format for a specific field.                                 |
-| `addCustomFormat(string $field, Closure $closure)` | Adds a custom formatting function for a specific field.                           |
+| Method                                                     | Description                                                                       |
+|------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| `getInstance()`                                            | Static factory method to create a new RowOutput instance.                         |
+| `print(RowInterface $row, string $field): mixed`           | Returns the formatted value for a specific field.                                 |
+| `apply(RowInterface $row): RowInterface`                   | Returns a new Row object with all fields formatted according to defined patterns. |
+| `addFormat(string $field, string $pattern): static`        | Adds a pattern-based format for a specific field.                                 |
+| `addCustomFormat(string $field, Closure $closure): static` | Adds a custom formatting function for a specific field.                           |
 
 ## Examples
 

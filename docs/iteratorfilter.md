@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Filtering Results
@@ -40,6 +40,8 @@ The `IteratorFilter` class supports the following relations from the `Relation` 
 | `Relation::STARTS_WITH`           | Field starts with the value                 |
 | `Relation::IN`                    | Field value is in the provided array        |
 | `Relation::NOT_IN`                | Field value is not in the provided array    |
+| `Relation::IS_NULL`               | Field value is null                         |
+| `Relation::IS_NOT_NULL`           | Field value is not null                     |
 
 ## Filter Methods
 
@@ -47,12 +49,14 @@ The `IteratorFilter` class provides the following methods:
 
 | Method                                                                                                 | Description                                                      |
 |--------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| `and(string $name, Relation $relation, mixed $value)`                                                  | Adds an AND condition to the filter                              |
+| `and(string $name, Relation $relation, mixed $value = null)`                                           | Adds an AND condition to the filter                              |
 | `or(string $name, Relation $relation, mixed $value)`                                                   | Adds an OR condition to the filter                               |
 | `startGroup(string $name, Relation $relation, mixed $value)`                                           | Starts a group of conditions with the first condition            |
 | `endGroup()`                                                                                           | Ends a group of conditions                                       |
 | `match(array $array)`                                                                                  | Applies the filter to an array of rows and returns matching rows |
 | `format(IteratorFilterFormatter $formatter, ?string $tableName, array &$params, string $returnFields)` | Formats the filter for use with a specific formatter (e.g., SQL) |
+| `addRelation(string $name, Relation $relation, mixed $value)`                                          | Alias for `and()` (deprecated)                                   |
+| `addRelationOr(string $name, Relation $relation, mixed $value)`                                        | Alias for `or()` (deprecated)                                    |
 
 ## Complex Conditions with AND / OR
 
@@ -90,6 +94,20 @@ $filter->endGroup();
 $filter->and('field2', Relation::EQUAL, 20);
 
 $iterator = $dataset->getIterator($filter);
+```
+
+### Example: NULL Checking
+
+To filter for rows where a field is null or not null:
+
+```php
+<?php
+$filter = new IteratorFilter();
+// Find rows where email is null
+$filter->and('email', Relation::IS_NULL);
+
+// Or find rows where email is not null
+$filter->and('email', Relation::IS_NOT_NULL);
 ```
 
 ## Using with Different Formatters

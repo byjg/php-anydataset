@@ -1,7 +1,6 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
-
 
 # Row Validator - Validate Field contents
 
@@ -28,13 +27,13 @@ $validator->validate($row); // Will return an array with the error messages. Emp
 
 The `RowValidator` class provides the following validation methods:
 
-| Method                                | Description                                                                                                |
-|---------------------------------------|------------------------------------------------------------------------------------------------------------|
-| `requiredField($field)`               | Validates that the specified field is not empty.                                                           |
-| `requiredFields($fieldList)`          | Validates that all fields in the array are not empty.                                                      |
-| `numericFields($fieldList)`           | Validates that all fields in the array contain numeric values.                                             |
-| `regexValidation($field, $regex)`     | Validates that the field value matches the specified regular expression.                                   |
-| `customValidation($field, $closure)`  | Applies a custom validation function to the field. The function should return an error message or null.    |
+| Method                                                                   | Description                                                                                             |
+|--------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| `requiredField(string $field): RowValidator`                             | Validates that the specified field is not empty.                                                        |
+| `requiredFields(array $fieldList): RowValidator`                         | Validates that all fields in the array are not empty.                                                   |
+| `numericFields(array $fieldList): RowValidator`                          | Validates that all fields in the array contain numeric values.                                          |
+| `regexValidation(string\|array $field, string $regex): RowValidator`     |  Validates that the field value matches the specified regular expression.                               |
+| `customValidation(string\|array $field, Closure $closure): RowValidator` | Applies a custom validation function to the field. The function should return an error message or null. |
 
 ## Validation Process
 
