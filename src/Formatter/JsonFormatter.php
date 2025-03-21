@@ -9,6 +9,7 @@ class JsonFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function raw(): mixed
     {
         return json_decode($this->toText());
@@ -17,6 +18,7 @@ class JsonFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function toText(): string|false
     {
         if ($this->object instanceof GenericIterator) {

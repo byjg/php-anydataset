@@ -10,11 +10,13 @@ use ReturnTypeWillChange;
  */
 abstract class GenericIterator implements IteratorInterface, Iterator
 {
+    #[\Override]
     public function hasNext(): bool
     {
         return $this->valid();
     }
 
+    #[\Override]
     public function moveNext(): RowInterface|null
     {
         $row = $this->current();
@@ -27,6 +29,7 @@ abstract class GenericIterator implements IteratorInterface, Iterator
      * @param array $fields
      * @return array
      */
+    #[\Override]
     public function toArray(array $fields = []): array
     {
         $retArray = [];
@@ -45,18 +48,21 @@ abstract class GenericIterator implements IteratorInterface, Iterator
     /**
      * @inheritDoc
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     abstract public function key(): mixed;
 
     /**
      * @return mixed
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     abstract public function current(): mixed;
 
     /**
      * @inheritDoc
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     public function rewind(): void
     {
@@ -66,12 +72,14 @@ abstract class GenericIterator implements IteratorInterface, Iterator
     /**
      * @inheritDoc
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     abstract public function next(): void;
 
     /**
      * @inheritDoc
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     abstract public function valid(): bool;
 }

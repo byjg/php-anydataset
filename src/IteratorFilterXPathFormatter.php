@@ -9,6 +9,7 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      /**
       * @inheritDoc
       */
+    #[\Override]
     public function format(array $filters, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
     {
           $param = [];
@@ -24,6 +25,7 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      /**
       * @inheritDoc
       */
+    #[\Override]
     public function getRelation(string $name, Relation $relation, mixed $value, array &$param): string
     {
           $str = is_numeric($value) ? "" : "'";

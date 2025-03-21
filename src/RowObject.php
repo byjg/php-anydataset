@@ -17,6 +17,7 @@ class RowObject implements RowInterface
     }
 
 
+    #[\Override]
     public function get(string $name): mixed
     {
         if (property_exists($this->entity, $name)) {
@@ -31,6 +32,7 @@ class RowObject implements RowInterface
         return null;
     }
 
+    #[\Override]
     public function set(string $name, mixed $value, bool $append = false): void
     {
         if ($append) {
@@ -51,16 +53,19 @@ class RowObject implements RowInterface
         throw new \InvalidArgumentException("Field '$name' not found");
     }
 
+    #[\Override]
     public function unset(string $name, mixed $value = null): void
     {
         throw new \InvalidArgumentException("Unset is not supported for object");
     }
 
+    #[\Override]
     public function replace(string $name, mixed $oldValue, mixed $newValue): void
     {
         throw new \InvalidArgumentException("Replace is not supported for object");
     }
 
+    #[\Override]
     public function toArray(?array $fields = []): array
     {
         $result = Serialize::from($this->entity)->toArray();
@@ -76,6 +81,7 @@ class RowObject implements RowInterface
         return $retArray;
     }
 
+    #[\Override]
     public function entity(): mixed
     {
         return $this->entity;

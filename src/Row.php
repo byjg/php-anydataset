@@ -22,31 +22,37 @@ class Row implements RowInterface
         return new RowObject($instance);
     }
 
+    #[\Override]
     public function get(string $name): mixed
     {
         return $this->entity->get($name);
     }
 
+    #[\Override]
     public function set(string $name, mixed $value, bool $append = false): void
     {
         $this->entity->set($name, $value, $append);
     }
 
+    #[\Override]
     public function unset(string $name, mixed $value = null): void
     {
         $this->entity->unset($name, $value);
     }
 
+    #[\Override]
     public function replace(string $name, mixed $oldValue, mixed $newValue): void
     {
         $this->entity->replace($name, $oldValue, $newValue);
     }
 
+    #[\Override]
     public function toArray(?array $fields = []): array
     {
         return $this->entity->toArray($fields);
     }
 
+    #[\Override]
     public function entity(): mixed
     {
         return $this->entity->entity();

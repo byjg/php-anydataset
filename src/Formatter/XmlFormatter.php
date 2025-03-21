@@ -48,6 +48,7 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function raw(): mixed
     {
         if ($this->object instanceof GenericIterator) {
@@ -59,6 +60,7 @@ class XmlFormatter extends BaseFormatter
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function toText(): string|false
     {
         return $this->raw()->saveXML();

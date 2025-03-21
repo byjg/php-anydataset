@@ -16,16 +16,19 @@ abstract class BaseFormatter implements FormatterInterface
     /**
      * @inheritDoc
      */
+    #[\Override]
     abstract public function raw(): mixed;
 
     /**
      * @inheritDoc
      */
+    #[\Override]
     abstract public function toText(): string|false;
 
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function saveToFile(string $filename): void
     {
         if (empty($filename)) {

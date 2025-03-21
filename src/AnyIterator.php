@@ -36,6 +36,7 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     public function key(): mixed
     {
@@ -45,18 +46,21 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
+    #[\Override]
     #[ReturnTypeWillChange]
     public function current(): mixed
     {
         return $this->list[$this->curRow] ?? null;
     }
 
+    #[\Override]
     #[ReturnTypeWillChange]
     public function next(): void
     {
         $this->curRow++;
     }
 
+    #[\Override]
     #[ReturnTypeWillChange]
     public function valid(): bool
     {
