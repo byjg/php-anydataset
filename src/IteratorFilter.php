@@ -6,6 +6,21 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 
 class IteratorFilter
 {
+    /**
+     * Filter array structure constants
+     */
+    private const OPERATOR = 0;
+    private const FIELD = 1;
+    private const RELATION = 2;
+    private const VALUE = 3;
+    
+    /**
+     * Logical operators
+     */
+    private const AND_OPERATOR = " and ";
+    private const OR_OPERATOR = " or ";
+    private const OPEN_GROUP = "(";
+    private const CLOSE_GROUP = ")";
 
     /**
      * @var array
@@ -39,105 +54,13 @@ class IteratorFilter
         }
 
         $returnArray = [];
-        foreach ($array as $sr) {
-            $result = $this->evaluateFilter($sr, $this->filters);
-            if ($result) {
-                $returnArray[] = $sr;
+        foreach ($array as $row) {
+            if ($this->evaluateRow($row)) {
+                $returnArray[] = $row;
             }
         }
 
         return $returnArray;
-    }
-
-    protected function evaluateFilter(RowInterface $row, array $filterList, ?string $previousOperator = null): bool
-    {
-        $result = true;
-        $position = 0;
-        $subList = [];
-        foreach ($filterList as $filter) {
-            $operator = $filter[0];
-            $field = $filter[1];
-            $relation = $filter[2];
-            $value = $filter[3];
-
-
-            if ($operator == ")") {
-                $result = $this->evaluateFilter($row, $subList, $previousOperator);
-                $subList = [];
-                continue;
-            } elseif ($operator == "(") {
-                $filter[0] = $previousOperator ?? " and ";
-                $previousOperator = $filter[0];
-                if ($previousOperator == " and " && $result === false) {
-                    return false;
-                }
-                $subList[] = $filter;
-                continue;
-            } elseif (count($subList) > 0) {
-                $subList[] = $filter;
-                continue;
-            }
-
-            switch ($relation) {
-                case Relation::EQUAL:
-                    $localEval = $row->get($field) == $value;
-                    break;
-
-                case Relation::GREATER_THAN:
-                    $localEval = $row->get($field) > $value;
-                    break;
-
-                case Relation::LESS_THAN:
-                    $localEval = $row->get($field) < $value;
-                    break;
-
-                case Relation::GREATER_OR_EQUAL_THAN:
-                    $localEval = $row->get($field) >= $value;
-                    break;
-
-                case Relation::LESS_OR_EQUAL_THAN:
-                    $localEval = $row->get($field) <= $value;
-                    break;
-
-                case Relation::NOT_EQUAL:
-                    $localEval = $row->get($field) != $value;
-                    break;
-
-                case Relation::STARTS_WITH:
-                    $localEval = str_starts_with($row->get($field), $value);
-                    break;
-
-                case Relation::IN:
-                    $localEval = in_array($row->get($field), $value);
-                    break;
-
-                case Relation::NOT_IN:
-                    $localEval = !in_array($row->get($field), $value);
-                    break;
-
-                default: // Relation::CONTAINS:
-                    $localEval = str_contains($row->get($field), $value);
-                    break;
-            }
-
-            if ($position == 0) {
-                $result = $localEval;
-            } elseif ($operator == " and ") {
-                $result = $result && $localEval;
-                if (!$result) {
-                    break;
-                }
-            } elseif ($operator == " or ") {
-                $result = $result || $localEval;
-            } else {
-                throw new \InvalidArgumentException("Invalid operator: $operator");
-            }
-
-            $previousOperator = $operator;
-            $position++;
-        }
-
-        return $result;
     }
 
     /**
@@ -152,6 +75,148 @@ class IteratorFilter
     public function format(IteratorFilterFormatter $formatter, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
     {
         return $formatter->format($this->filters, $tableName, $params, $returnFields);
+    }
+
+
+    /**
+     * @param RowInterface $row
+     * @return bool
+     */
+    private function evaluateRow(RowInterface $row): bool
+    {
+        return $this->evaluateFilterRecursive($row, $this->filters);
+    }
+
+    /**
+     * Recursively evaluates a list of filters against a given row
+     *
+     * @param RowInterface $row The row to evaluate
+     * @param array $filterList List of filters in the format [operator, field, relation, value]
+     * @param string|null $previousOperator The previous logical operator (and/or)
+     * @return bool Whether the row matches the filter criteria
+     */
+    private function evaluateFilterRecursive(RowInterface $row, array $filterList, ?string $previousOperator = null): bool
+    {
+        // If no filters, return true (matches everything)
+        if (empty($filterList)) {
+            return true;
+        }
+
+        $result = true;
+        $position = 0;
+        $subList = [];
+
+        foreach ($filterList as $filter) {
+            $operator = $filter[self::OPERATOR];
+            $field = $filter[self::FIELD];
+            $relation = $filter[self::RELATION];
+            $value = $filter[self::VALUE];
+
+            // Handle closing parenthesis - evaluate the sublist
+            if ($operator == self::CLOSE_GROUP) {
+                $result = $this->evaluateFilterRecursive($row, $subList, $previousOperator);
+                $subList = [];
+                continue;
+            } 
+            
+            // Handle opening parenthesis - start collecting a sublist
+            if ($operator == self::OPEN_GROUP) {
+                $filter[self::OPERATOR] = $previousOperator ?? self::AND_OPERATOR;
+                $previousOperator = $filter[self::OPERATOR];
+                
+                // Short-circuit for AND conditions
+                if ($previousOperator == self::AND_OPERATOR && $result === false) {
+                    return false;
+                }
+                
+                $subList[] = $filter;
+                continue;
+            } 
+            
+            // Add to sublist if we're in a grouped expression
+            if (count($subList) > 0) {
+                $subList[] = $filter;
+                continue;
+            }
+
+            // Evaluate the current condition
+            $fieldValue = $this->getFieldValue($row, $field);
+            $localEval = $this->evaluateCondition($row, $field, $relation, $value, $fieldValue);
+
+            // First condition sets the initial result
+            if ($position == 0) {
+                $result = $localEval;
+            } 
+            // AND operator
+            elseif ($operator == self::AND_OPERATOR) {
+                $result = $result && $localEval;
+                
+                // Short-circuit for AND conditions
+                if (!$result) {
+                    break;
+                }
+            } 
+            // OR operator 
+            elseif ($operator == self::OR_OPERATOR) {
+                $result = $result || $localEval;
+            } 
+            // Invalid operator
+            else {
+                throw new \InvalidArgumentException("Invalid operator: $operator");
+            }
+
+            $previousOperator = $operator;
+            $position++;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Evaluates a single condition based on the relation type
+     *
+     * @param RowInterface $row The row being evaluated
+     * @param string $field The field name
+     * @param Relation $relation The relation type
+     * @param mixed $value The value to compare against
+     * @param mixed $fieldValue The field value (pre-processed)
+     * @return bool Whether the condition is true
+     */
+    private function evaluateCondition(RowInterface $row, string $field, Relation $relation, mixed $value, mixed $fieldValue): bool
+    {
+        return match ($relation) {
+            Relation::EQUAL => $fieldValue == $value,
+            Relation::GREATER_THAN => $fieldValue > $value,
+            Relation::LESS_THAN => $fieldValue < $value,
+            Relation::GREATER_OR_EQUAL_THAN => $fieldValue >= $value,
+            Relation::LESS_OR_EQUAL_THAN => $fieldValue <= $value,
+            Relation::NOT_EQUAL => $fieldValue != $value,
+            Relation::STARTS_WITH => str_starts_with($fieldValue, $value),
+            Relation::IN => in_array($fieldValue, $value),
+            Relation::NOT_IN => !in_array($fieldValue, $value),
+            Relation::IS_NULL => is_null($row->get($field)),
+            Relation::IS_NOT_NULL => !is_null($row->get($field)),
+            default => str_contains($fieldValue, $value),
+        };
+    }
+
+    /**
+     * Get field value and handle nulls for string operations
+     * 
+     * @param RowInterface $row
+     * @param string $field
+     * @return mixed
+     */
+    private function getFieldValue(RowInterface $row, string $field): mixed
+    {
+        $value = $row->get($field);
+        
+        // For string operations, we convert null to empty string
+        if (is_null($value)) {
+            return "";
+        }
+        
+        return $value;
     }
 
     /**
@@ -174,9 +239,9 @@ class IteratorFilter
      * @return static
      * @desc Add a single string comparison to filter.
      */
-    public function and(string $name, Relation $relation, mixed $value): static
+    public function and(string $name, Relation $relation, mixed $value = null): static
     {
-        $this->filters[] = [" and ", $name, $relation, $value];
+        $this->filters[] = [self::AND_OPERATOR, $name, $relation, $value];
         return $this;
     }
 
@@ -202,7 +267,7 @@ class IteratorFilter
      */
     public function or(string $name, Relation $relation, mixed $value): static
     {
-        $this->filters[] = [" or ", $name, $relation, $value];
+        $this->filters[] = [self::OR_OPERATOR, $name, $relation, $value];
         return $this;
     }
 
@@ -212,7 +277,7 @@ class IteratorFilter
      */
     public function startGroup(string $name, Relation $relation, mixed $value): static
     {
-        $this->filters[] = ["(", $name, $relation, $value];
+        $this->filters[] = [self::OPEN_GROUP, $name, $relation, $value];
         return $this;
     }
 
@@ -222,7 +287,7 @@ class IteratorFilter
      */
     public function endGroup(): static
     {
-        $this->filters[] = [")", "", "", ""];
+        $this->filters[] = [self::CLOSE_GROUP, "", "", ""];
         return $this;
     }
 

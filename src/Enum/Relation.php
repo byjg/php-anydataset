@@ -19,4 +19,6 @@ enum Relation
     case CONTAINS;
     case IN;
     case NOT_IN;
+    case IS_NULL;
+    case IS_NOT_NULL;
 }
