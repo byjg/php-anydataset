@@ -4,6 +4,9 @@ namespace ByJG\AnyDataset\Core;
 
 use Iterator;
 
+/**
+ * @extends Iterator<int|string, mixed>
+ */
 interface IteratorInterface extends Iterator
 {
     /**
