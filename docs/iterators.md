@@ -13,18 +13,8 @@ AnyDataset provides several iterator classes and interfaces to help you navigate
 The base interface for all iterators in AnyDataset:
 
 ```php
-interface IteratorInterface
+interface IteratorInterface extends Iterator
 {
-    /**
-     * Check if exists more records.
-     */
-    public function hasNext(): bool;
-    
-    /**
-     * Get the next record. Return a Row object.
-     */
-    public function moveNext(): RowInterface|null;
-    
     /**
      * Get an array representation of the iterator.
      */
@@ -39,10 +29,8 @@ interface IteratorInterface
 An abstract base class that implements both `IteratorInterface` and PHP's `Iterator` interface:
 
 ```php
-abstract class GenericIterator implements IteratorInterface, Iterator
+abstract class GenericIterator implements IteratorInterface
 {
-    public function hasNext(): bool;
-    public function moveNext(): RowInterface|null;
     public function toArray(array $fields = []): array;
     
     // Abstract methods that must be implemented by subclasses
@@ -135,20 +123,3 @@ $allData = $iterator->toArray();
 // Get only specific fields
 $namesAndAges = $iterator->toArray(['name', 'age']);
 ```
-
-### Using hasNext() and moveNext()
-
-For more control over iteration:
-
-```php
-<?php
-use ByJG\AnyDataset\Core\AnyDataset;
-
-$dataset = new AnyDataset($data);
-$iterator = $dataset->getIterator();
-
-while ($iterator->hasNext()) {
-    $row = $iterator->moveNext();
-    echo $row->get('name') . "\n";
-}
-``` 

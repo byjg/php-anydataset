@@ -2,28 +2,13 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use Iterator;
 use ReturnTypeWillChange;
 
 /**
  * @psalm-suppress MissingTemplateParam
  */
-abstract class GenericIterator implements IteratorInterface, Iterator
+abstract class GenericIterator implements IteratorInterface
 {
-    #[\Override]
-    public function hasNext(): bool
-    {
-        return $this->valid();
-    }
-
-    #[\Override]
-    public function moveNext(): RowInterface|null
-    {
-        $row = $this->current();
-        $this->next();
-        return $row;
-    }
-
     /**
      * @inheritDoc
      * @param array $fields

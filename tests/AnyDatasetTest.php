@@ -420,9 +420,16 @@ class AnyDatasetTest extends TestCase
         $this->assertEquals($expected, $iterator);
 
         $iterator = $anydataset->getIterator();
-        $this->assertIsArray($iterator->moveNext()->entity());
-        $this->assertInstanceOf(ModelPublic::class, $iterator->moveNext()->entity());
-        $this->assertFalse($iterator->hasNext());
+        $this->assertTrue($iterator->valid());
+        $this->assertIsArray($iterator->current()->entity());
+
+        $iterator->next();
+        $this->assertTrue($iterator->valid());
+        $this->assertInstanceOf(ModelPublic::class, $iterator->current()->entity());
+
+        $iterator->next();
+        $this->assertFalse($iterator->valid());
+        $this->assertNull($iterator->current());
     }
 
     public function testIterator()
@@ -459,8 +466,9 @@ class AnyDatasetTest extends TestCase
         // Iterator GenericIterator
         $result = [];
         $iterator = $anydata->getIterator();
-        while ($iterator->hasNext()) {
-            $result[] = $iterator->moveNext()->toArray();
+        while ($iterator->valid()) {
+            $result[] = $iterator->current()->toArray();
+            $iterator->next();
         }
         $this->assertEquals($expected, $result);
     }

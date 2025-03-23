@@ -2,23 +2,10 @@
 
 namespace ByJG\AnyDataset\Core;
 
-interface IteratorInterface
+use Iterator;
+
+interface IteratorInterface extends Iterator
 {
-
-    /**
-     * Check if exists more records.
-     * 
-     * @return bool Return True if is possible get one or more records.
-     */
-    public function hasNext(): bool;
-
-    /**
-     * Get the next record.Return a Row object
-     * 
-     * @return RowInterface|null
-     */
-    public function moveNext(): RowInterface|null;
-
     /**
      * Get an array of the iterator
      * 
