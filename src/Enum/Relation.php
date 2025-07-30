@@ -7,16 +7,17 @@ namespace ByJG\AnyDataset\Core\Enum;
  *
  * Use this in AddRelation method.
  */
-enum Relation
+enum Relation: string
 {
-    case EQUAL;
-    case LESS_THAN;
-    case GREATER_THAN;
-    case LESS_OR_EQUAL_THAN;
-    case GREATER_OR_EQUAL_THAN;
-    case NOT_EQUAL;
-    case STARTS_WITH;
-    case CONTAINS;
-    case IN;
-    case NOT_IN;
+    case EQUAL = '=';
+    case LESS_THAN = '<';
+    case GREATER_THAN = '>';
+    case LESS_OR_EQUAL_THAN = '<=';
+    case GREATER_OR_EQUAL_THAN = '>=';
+    case NOT_EQUAL = '<>';
+    case STARTS_WITH = 'STARTS WITH';
+    case CONTAINS = 'CONTAINS';
+    case IN = 'IN';
+    case NOT_IN = 'NOT IN';
+
 }
