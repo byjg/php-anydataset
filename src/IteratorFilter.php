@@ -95,6 +95,8 @@ class IteratorFilter
                     Relation::STARTS_WITH => $result[$pos] && (str_starts_with(is_null($valueparam) ? "" : $valueparam, $value)),
                     Relation::IN => $result[$pos] && in_array($valueparam, $value),
                     Relation::NOT_IN => $result[$pos] && !in_array($valueparam, $value),
+                    Relation::IS_NULL => $result[$pos] && is_null($valueparam),
+                    Relation::IS_NOT_NULL => $result[$pos] && !is_null($valueparam),
                     default => $result[$pos] && (str_contains(is_null($valueparam) ? "" : $valueparam, $value)),
                 };
             }
@@ -125,7 +127,7 @@ class IteratorFilter
      * @return static
      * @desc Add a single string comparison to filter.
      */
-    public function and(string $name, Relation $relation, mixed $value): static
+    public function and(string $name, Relation $relation, mixed $value = null): static
     {
         $this->filters[] = [" and ", $name, $relation, $value];
         return $this;
