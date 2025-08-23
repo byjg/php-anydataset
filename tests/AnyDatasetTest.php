@@ -11,6 +11,7 @@ use ByJG\XmlUtil\Exception\FileException;
 use ByJG\XmlUtil\Exception\XmlUtilException;
 use ByJG\XmlUtil\XmlDocument;
 use PHPUnit\Framework\TestCase;
+use Tests\Sample\ModelGetter;
 use Tests\Sample\ModelPublic;
 
 class AnyDatasetTest extends TestCase
@@ -21,7 +22,7 @@ class AnyDatasetTest extends TestCase
     /**
      * @var AnyDataset
      */
-    protected $object;
+    protected AnyDataset $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -36,7 +37,8 @@ class AnyDatasetTest extends TestCase
     public function testConstructorString()
     {
         $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
-        $this->assertEquals(2, count($anydata->getIterator()->toArray()));
+        $anydata->appendRow(new ModelGetter(1, "Name"));
+        $this->assertEquals(3, count($anydata->getIterator()->toArray()));
         $this->assertEquals([
             [
                 "field1" => "value1",
@@ -46,10 +48,14 @@ class AnyDatasetTest extends TestCase
                 "field1" => "othervalue1",
                 "field2" => "othervalue2",
             ],
-            ], $anydata->getIterator()->toArray());
+            [
+                "Id" => 1,
+                "Name" => "Name",
+            ]], $anydata->getIterator()->toArray());
 
         $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample.anydata.xml');
-        $this->assertEquals(2, count($anydata->getIterator()->toArray()));
+        $anydata->appendRow(new ModelGetter(1, "Name"));
+        $this->assertEquals(3, count($anydata->getIterator()->toArray()));
         $this->assertEquals([
             [
                 "field1" => "value1",
@@ -59,7 +65,8 @@ class AnyDatasetTest extends TestCase
                 "field1" => "othervalue1",
                 "field2" => "othervalue2",
             ],
-            ], $anydata->getIterator()->toArray());
+            new ModelGetter(1, "Name"),
+            ], $anydata->getIterator()->toEntities());
 
         $anydataMem = new AnyDataset(self::SAMPLE_DIR . 'sample.anydata.xml');
         $this->assertEquals(2, count($anydataMem->getIterator()->toArray()));
@@ -72,7 +79,7 @@ class AnyDatasetTest extends TestCase
                 "field1" => "othervalue1",
                 "field2" => "othervalue2",
             ],
-        ], $anydata->getIterator()->toArray());
+        ], $anydataMem->getIterator()->toArray());
 
         try {
             $anydataMem->save("/tmp/sample");

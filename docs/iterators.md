@@ -123,3 +123,16 @@ $allData = $iterator->toArray();
 // Get only specific fields
 $namesAndAges = $iterator->toArray(['name', 'age']);
 ```
+
+### Getting the underlying entities (objects)
+
+If your rows were created from objects (models), you can retrieve those original entities:
+
+```php
+<?php
+use ByJG\AnyDataset\Core\AnyDataset;
+
+$dataset = new AnyDataset($data);
+$iterator = $dataset->getIterator();
+$entities = $iterator->toEntities();
+```

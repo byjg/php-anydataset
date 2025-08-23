@@ -26,6 +26,20 @@ abstract class GenericIterator implements IteratorInterface
         return $retArray;
     }
 
+    /**
+     * Return the underlying entities for each row in the iterator.
+     */
+    public function toEntities(): array
+    {
+        $retArray = [];
+
+        foreach ($this as $singleRow) {
+            $retArray[] = $singleRow->entity();
+        }
+
+        return $retArray;
+    }
+
     /* --------------------------------------------- */
     /* PHP Specific functions for Iterator interface */
     /* --------------------------------------------- */
