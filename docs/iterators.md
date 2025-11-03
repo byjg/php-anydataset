@@ -1,5 +1,6 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
+sidebar_label: Iterators
 ---
 
 # Iterators
@@ -109,6 +110,10 @@ foreach ($iterator as $row) {
 ### Converting to Array
 
 You can convert an iterator to an array:
+
+:::tip
+Use `toArray()` with specific field names to extract only the data you need, reducing memory usage for large datasets.
+:::
 
 ```php
 <?php

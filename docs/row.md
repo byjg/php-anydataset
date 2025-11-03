@@ -1,5 +1,6 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
+sidebar_label: Row Object
 ---
 
 # The Row object
@@ -48,7 +49,9 @@ The `RowInterface` has two implementations:
 - `RowArray` - Uses an array to store the values
 - `RowObject` - Uses an object to store the values
 
+:::info
 The `Row` class acts as a factory and wrapper for these implementations. When you create a `Row` object, it internally decides which implementation to use based on the data type provided.
+:::
 
 ### RowArray
 

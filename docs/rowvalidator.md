@@ -1,5 +1,6 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
+sidebar_label: Field Validation
 ---
 
 # Row Validator - Validate Field contents
@@ -42,6 +43,10 @@ When you call the `validate()` method, the validator checks all the defined vali
 1. For each field with validations defined, it runs all applicable validation checks
 2. If a validation fails, an error message is added to the result array
 3. The method returns an array of error messages (empty if all validations pass)
+
+:::tip
+Custom validation functions should return `null` for successful validation or a string error message for failures. This allows you to provide specific, user-friendly error messages.
+:::
 
 ## Example with Multiple Validations
 

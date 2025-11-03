@@ -1,5 +1,6 @@
 ---
-sidebar_position: 0
+sidebar_position: 1
+sidebar_label: AnyDataset Overview
 ---
 
 # AnyDataset Overview
@@ -9,6 +10,10 @@ The `AnyDataset` class is the core component of the AnyDataset library. It provi
 ## Introduction
 
 AnyDataset is designed to be a flexible data container that can be populated from various sources and manipulated in a consistent way. It stores data as rows, where each row contains fields with values.
+
+:::tip
+AnyDataset automatically handles the `.anydata.xml` extension when loading files - you can specify just the filename without the extension!
+:::
 
 ## Creating an AnyDataset
 

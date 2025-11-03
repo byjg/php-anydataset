@@ -1,5 +1,6 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
+sidebar_label: Filtering Results
 ---
 
 # Filtering Results
@@ -23,6 +24,10 @@ $iterator = $dataset->getIterator($filter);
 
 // This will return an iterator with only the rows where the field is equal to 10
 ```
+
+:::info
+The `IteratorFilter` class is a standard feature across all AnyDataset implementations, making it easy to filter data from any source (databases, XML, JSON, arrays, etc.) using the same interface.
+:::
 
 ## Available Relations
 
@@ -112,7 +117,7 @@ $filter->and('email', Relation::IS_NOT_NULL);
 
 ## Using with Different Formatters
 
-The `IteratorFilter` can be used with different formatters to generate SQL, XPath, or other query formats:
+The `IteratorFilter` can be used with different formatters to generate XPath or other query formats:
 
 ```php
 <?php
@@ -121,15 +126,14 @@ $filter = new IteratorFilter();
 $filter->and('name', Relation::CONTAINS, 'John');
 $filter->and('age', Relation::GREATER_THAN, 30);
 
-// Format for SQL
+// Format for XPath (useful when working with XML datasets)
 $params = [];
-$sql = $filter->format(new SqlFormatter(), 'users', $params, 'id, name, age');
-// Result: "SELECT id, name, age FROM users WHERE name LIKE ? AND age > ?"
-// $params will contain ['%John%', 30]
+$xpath = $filter->format(new IteratorFilterXPathFormatter(), null, $params);
+// Result: "/anydataset/row[contains(field[@name='name'], 'John') and field[@name='age'] > '30']"
 
-// Format for XPath
-$xpath = $filter->format(new XPathFormatter(), null, $params);
-// Result: "//row[contains(field[@name='name'], 'John') and field[@name='age'] > '30']"
+// The base IteratorFilterFormatter can be used for custom formatting
+$formatted = $filter->format(new IteratorFilterFormatter(), null, $params);
+// Result: "str_contains(%name, 'John') and %age > 30"
 ```
 
 ## Static Factory Method

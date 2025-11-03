@@ -28,5 +28,9 @@
   "provide": {
     "byjg/anydataset-implementation": "1.0"
   },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "psalm": "vendor/bin/psalm"
+  },
   "license": "MIT"
 }
