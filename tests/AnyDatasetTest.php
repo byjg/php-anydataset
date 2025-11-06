@@ -4,6 +4,7 @@ namespace Tests;
 
 use ByJG\AnyDataset\Core\AnyDataset;
 use ByJG\AnyDataset\Core\Enum\Relation;
+use ByJG\AnyDataset\Core\Exception\NotFoundException;
 use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\IteratorFilter;
@@ -478,5 +479,151 @@ class AnyDatasetTest extends TestCase
             $iterator->next();
         }
         $this->assertEquals($expected, $result);
+    }
+
+    public function testFirst()
+    {
+        // Test with data
+        $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
+        $first = $anydata->getIterator()->first();
+
+        $this->assertEquals([
+            "field1" => "value1",
+            "field2" => "value2",
+        ], $first);
+
+        // Test with empty dataset
+        $emptyData = new AnyDataset();
+        $first = $emptyData->getIterator()->first();
+
+        $this->assertNull($first);
+    }
+
+    public function testFirstWithFilter()
+    {
+        $this->object->appendRow(['name' => 'joao', 'age' => 41]);
+        $this->object->appendRow(['name' => 'fernanda', 'age' => 45]);
+        $this->object->appendRow(['name' => 'jf', 'age' => 15]);
+        $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
+
+        $filter = IteratorFilter::getInstance()
+            ->and("age", Relation::LESS_THAN, 40);
+
+        $first = $this->object->getIterator($filter)->first();
+
+        $this->assertEquals(['name' => 'jf', 'age' => 15], $first);
+    }
+
+    public function testFirstOrFail()
+    {
+        // Test with data
+        $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
+        $first = $anydata->getIterator()->firstOrFail();
+
+        $this->assertEquals([
+            "field1" => "value1",
+            "field2" => "value2",
+        ], $first);
+
+        // Test with empty dataset should throw exception
+        $emptyData = new AnyDataset();
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage("No results found in iterator");
+        $emptyData->getIterator()->firstOrFail();
+    }
+
+    public function testExists()
+    {
+        // Test with data
+        $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
+        $exists = $anydata->getIterator()->exists();
+
+        $this->assertTrue($exists);
+
+        // Test with empty dataset
+        $emptyData = new AnyDataset();
+        $exists = $emptyData->getIterator()->exists();
+
+        $this->assertFalse($exists);
+    }
+
+    public function testExistsWithFilter()
+    {
+        $this->object->appendRow(['name' => 'joao', 'age' => 41]);
+        $this->object->appendRow(['name' => 'fernanda', 'age' => 45]);
+
+        $filter1 = IteratorFilter::getInstance()
+            ->and("age", Relation::LESS_THAN, 40);
+
+        $this->assertFalse($this->object->getIterator($filter1)->exists());
+
+        $filter2 = IteratorFilter::getInstance()
+            ->and("age", Relation::GREATER_THAN, 40);
+
+        $this->assertTrue($this->object->getIterator($filter2)->exists());
+    }
+
+    public function testExistsOrFail()
+    {
+        // Test with data
+        $anydata = new AnyDataset(self::SAMPLE_DIR . 'sample');
+        $result = $anydata->getIterator()->existsOrFail();
+
+        $this->assertTrue($result);
+
+        // Test with empty dataset should throw exception
+        $emptyData = new AnyDataset();
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage("Iterator is empty");
+        $emptyData->getIterator()->existsOrFail();
+    }
+
+    public function testFirstWithObject()
+    {
+        $this->object->appendRow(new ModelPublic(1, "John"));
+        $this->object->appendRow(new ModelPublic(2, "Jane"));
+
+        $first = $this->object->getIterator()->first();
+
+        $this->assertInstanceOf(ModelPublic::class, $first);
+        $this->assertEquals(1, $first->Id);
+        $this->assertEquals("John", $first->Name);
+    }
+
+    public function testFirstOrFailWithObject()
+    {
+        // Test with empty dataset should throw exception
+        $emptyData = new AnyDataset();
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage("No results found in iterator");
+        $emptyData->getIterator()->firstOrFail();
+    }
+
+    public function testExistsWithObject()
+    {
+        $this->object->appendRow(new ModelPublic(1, "John"));
+
+        $exists = $this->object->getIterator()->exists();
+
+        $this->assertTrue($exists);
+    }
+
+    public function testFirstWithMixedArrayAndObject()
+    {
+        $this->object->appendRow(['field1' => 'value1']);
+        $this->object->appendRow(new ModelPublic(1, "John"));
+
+        // First should return the array
+        $first = $this->object->getIterator()->first();
+        $this->assertIsArray($first);
+        $this->assertEquals(['field1' => 'value1'], $first);
+
+        // Apply filter to get the object
+        $filter = IteratorFilter::getInstance()
+            ->and("Name", Relation::EQUAL, "John");
+
+        $firstFiltered = $this->object->getIterator($filter)->first();
+        $this->assertInstanceOf(ModelPublic::class, $firstFiltered);
+        $this->assertEquals("John", $firstFiltered->Name);
     }
 }

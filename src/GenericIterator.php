@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Core;
 
+use ByJG\AnyDataset\Core\Exception\NotFoundException;
 use ReturnTypeWillChange;
 
 /**
@@ -29,6 +30,7 @@ abstract class GenericIterator implements IteratorInterface
     /**
      * Return the underlying entities for each row in the iterator.
      */
+    #[\Override]
     public function toEntities(): array
     {
         $retArray = [];
@@ -38,6 +40,54 @@ abstract class GenericIterator implements IteratorInterface
         }
 
         return $retArray;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function first(): mixed
+    {
+        $this->rewind();
+        if (!$this->valid()) {
+            return null;
+        }
+        return $this->current()->entity();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function firstOrFail(): mixed
+    {
+        $this->rewind();
+        if (!$this->valid()) {
+            throw new NotFoundException("No results found in iterator");
+        }
+        return $this->current()->entity();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function exists(): bool
+    {
+        $this->rewind();
+        return $this->valid();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function existsOrFail(): bool
+    {
+        if (!$this->exists()) {
+            throw new NotFoundException("Iterator is empty");
+        }
+        return true;
     }
 
     /* --------------------------------------------- */
