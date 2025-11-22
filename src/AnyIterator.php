@@ -25,7 +25,7 @@ class AnyIterator extends GenericIterator
     /**
      * Iterator constructor
      *
-     * @param Row[] $list
+     * @param RowInterface[] $list
      */
     public function __construct(array $list)
     {

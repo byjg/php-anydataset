@@ -12,7 +12,11 @@ class JsonFormatter extends BaseFormatter
     #[\Override]
     public function raw(): mixed
     {
-        return json_decode($this->toText());
+        $text = $this->toText();
+        if ($text === false) {
+            return false;
+        }
+        return json_decode($text);
     }
 
     /**

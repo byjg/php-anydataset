@@ -32,9 +32,13 @@ abstract class BaseFormatter implements FormatterInterface
     public function saveToFile(string $filename): void
     {
         if (empty($filename)) {
-            throw new InvalidArgumentException("Filename cannot be empty"); 
+            throw new InvalidArgumentException("Filename cannot be empty");
         }
-        file_put_contents($filename, $this->toText());
+        $text = $this->toText();
+        if ($text === false) {
+            throw new InvalidArgumentException("Unable to convert to text");
+        }
+        file_put_contents($filename, $text);
     }
 
     /**

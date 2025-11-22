@@ -91,7 +91,7 @@ class AnyDataset
      */
     public function getFilename(): ?string
     {
-        return $this->file->getFilename();
+        return $this->file?->getFilename();
     }
 
     /**
@@ -122,7 +122,8 @@ class AnyDataset
      */
     private function createFromFile(): void
     {
-        if (file_exists($this->getFilename())) {
+        $filename = $this->getFilename();
+        if ($filename !== null && file_exists($filename)) {
             $anyDataSet = new XmlDocument($this->file);
             $this->collection = array();
 
@@ -133,7 +134,7 @@ class AnyDataset
                 /** @var DOMElement $field */
                 foreach ($fields as $field) {
                     if (!$field->hasAttribute("name")) {
-                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($this->getFilename()));
+                        throw new InvalidArgumentException('Malformed anydataset file ' . basename($filename));
                     }
                     $sr->set($field->getAttribute("name"), $field->nodeValue);
                 }

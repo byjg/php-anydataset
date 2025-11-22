@@ -1,6 +1,6 @@
 {
   "name": "byjg/anydataset",
-  "description": "Anydataset is an agnostic data source abstraction layer in PHP. Core Module.",
+  "description": "AnyDataset is a powerful data source abstraction layer for PHP that provides a simple and consistent interface to access different data sources. With AnyDataset, you can work with various data formats and storage systems using the same programming interface.",
   "autoload": {
     "psr-4": {
       "ByJG\\AnyDataset\\Core\\": "src/"
@@ -14,7 +14,7 @@
   "prefer-stable": true,
   "minimum-stability": "dev",
   "require": {
-    "php": ">=8.1 <8.5",
+    "php": ">=8.3 <8.6",
     "ext-dom": "*",
     "byjg/xmlutil": "^6.0",
     "byjg/serializer": "^6.0"
@@ -23,14 +23,14 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^10.5|^11.5",
-    "vimeo/psalm": "^5.9|^6.2"
+    "vimeo/psalm": "^5.9|^6.13"
   },
   "provide": {
     "byjg/anydataset-implementation": "1.0"
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
-    "psalm": "vendor/bin/psalm"
+    "psalm": "vendor/bin/psalm --threads=1"
   },
   "license": "MIT"
 }

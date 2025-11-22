@@ -28,6 +28,10 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
     #[\Override]
     public function getRelation(string $name, Relation $relation, mixed $value, array &$param): string
     {
+          if (is_array($value)) {
+               throw new \InvalidArgumentException('XPath does not support array values');
+          }
+
           $str = is_numeric($value) ? "" : "'";
           $field = "field[@name='" . $name . "'] ";
           if (is_string($value)) {

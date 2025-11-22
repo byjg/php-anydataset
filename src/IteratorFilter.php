@@ -45,7 +45,7 @@ class IteratorFilter
 
     /**
      * @param array $array
-     * @return Row[]
+     * @return RowInterface[]
      */
     public function match(array $array): array
     {
