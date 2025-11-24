@@ -11,6 +11,7 @@ use ByJG\AnyDataset\Core\IteratorFilter;
 use ByJG\XmlUtil\Exception\FileException;
 use ByJG\XmlUtil\Exception\XmlUtilException;
 use ByJG\XmlUtil\XmlDocument;
+use Override;
 use PHPUnit\Framework\TestCase;
 use Tests\Sample\ModelGetter;
 use Tests\Sample\ModelPublic;
@@ -29,7 +30,7 @@ class AnyDatasetTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $this->object = new AnyDataset();
@@ -82,15 +83,18 @@ class AnyDatasetTest extends TestCase
             ],
         ], $anydataMem->getIterator()->toArray());
 
+        $fileName = "/tmp/sample";
+        $fullFileName = $fileName . ".anydata.xml";
+
         try {
-            $anydataMem->save("/tmp/sample");
-            $this->assertFileExists("/tmp/sample.anydata.xml");
+            $anydataMem->save($fileName);
+            $this->assertFileExists($fullFileName);
             $this->assertEquals(
                 preg_replace("/(\n|\\s\\s)/", "", file_get_contents(self::SAMPLE_DIR . 'sample.anydata.xml')),
-                str_replace("\n", "", file_get_contents("/tmp/sample.anydata.xml"))
+                str_replace("\n", "", file_get_contents($fullFileName))
             );
         } finally {
-            unlink("/tmp/sample.anydata.xml");
+            unlink($fullFileName);
         }
     }
 

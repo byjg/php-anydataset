@@ -6,6 +6,7 @@ use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
 use ByJG\XmlUtil\XmlDocument;
+use Override;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Tests\Sample\ModelGetter;
@@ -14,6 +15,8 @@ use Tests\Sample\ModelPublic;
 
 class RowTest extends TestCase
 {
+
+    const NAME = 'New Name';
 
     /**
      * @var Row
@@ -24,7 +27,7 @@ class RowTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $this->object = new Row();
@@ -229,12 +232,12 @@ class RowTest extends TestCase
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
 
         $sr->set("Id", 20);
-        $sr->set("Name", "New Name");
+        $sr->set("Name", self::NAME);
 
         $this->assertEquals(20, $sr->get("Id"));
-        $this->assertEquals("New Name", $sr->get("Name"));
-        $this->assertEquals(['Id' => 20, 'Name' => 'New Name'], $sr->toArray());
-        $this->assertEquals(new ModelPublic(20, "New Name"), $sr->entity());
+        $this->assertEquals(self::NAME, $sr->get("Name"));
+        $this->assertEquals(['Id' => 20, 'Name' => self::NAME], $sr->toArray());
+        $this->assertEquals(new ModelPublic(20, self::NAME), $sr->entity());
     }
 
     public function testConstructor_ModelGetter()
@@ -248,12 +251,12 @@ class RowTest extends TestCase
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
 
         $sr->set("Id", 20);
-        $sr->set("Name", "New Name");
+        $sr->set("Name", self::NAME);
 
         $this->assertEquals(20, $sr->get("Id"));
-        $this->assertEquals("New Name", $sr->get("Name"));
-        $this->assertEquals(['Id' => 20, 'Name' => 'New Name'], $sr->toArray());
-        $this->assertEquals(new ModelGetter(20, "New Name"), $sr->entity());
+        $this->assertEquals(self::NAME, $sr->get("Name"));
+        $this->assertEquals(['Id' => 20, 'Name' => self::NAME], $sr->toArray());
+        $this->assertEquals(new ModelGetter(20, self::NAME), $sr->entity());
     }
 
     public function testConstructor_stdClass()
@@ -269,12 +272,12 @@ class RowTest extends TestCase
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
 
         $sr->set("Id", 20);
-        $sr->set("Name", "New Name");
+        $sr->set("Name", self::NAME);
 
         $this->assertEquals(20, $sr->get("Id"));
-        $this->assertEquals("New Name", $sr->get("Name"));
-        $this->assertEquals(['Id' => 20, 'Name' => 'New Name'], $sr->toArray());
-        $this->assertEquals((object) ['Id' => 20, 'Name' => 'New Name'], $sr->entity());
+        $this->assertEquals(self::NAME, $sr->get("Name"));
+        $this->assertEquals(['Id' => 20, 'Name' => self::NAME], $sr->toArray());
+        $this->assertEquals((object) ['Id' => 20, 'Name' => self::NAME], $sr->entity());
     }
 
     public function testConstructor_Array()
@@ -304,15 +307,15 @@ class RowTest extends TestCase
         $this->assertEquals(['IdModel' => 10, 'ClientName' => 'Testing'], $sr->toArray());
 
         $sr->set("IdModel", 20);
-        $sr->set("ClientName", "New Name");
+        $sr->set("ClientName", self::NAME);
 
         $this->assertEquals(20, $sr->get("IdModel"));
-        $this->assertEquals("New Name", $sr->get("ClientName"));
-        $this->assertEquals(['IdModel' => 20, 'ClientName' => 'New Name'], $sr->toArray());
+        $this->assertEquals(self::NAME, $sr->get("ClientName"));
+        $this->assertEquals(['IdModel' => 20, 'ClientName' => self::NAME], $sr->toArray());
 
         $expected = new ModelPropertyPattern();
         $expected->setIdModel(20);
-        $expected->setClientName("New Name");
+        $expected->setClientName(self::NAME);
         $this->assertEquals($expected, $sr->entity());
     }
 
