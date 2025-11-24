@@ -12,13 +12,14 @@ class RowValidatorTest extends TestCase
     /**
      * @var Row
      */
-    protected $row1;
-    protected $row2;
+    protected Row $row1;
+    protected Row $row2;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
+    #[\Override]
     protected function setUp(): void
     {
         $this->row1 = new Row([
@@ -68,6 +69,7 @@ class RowValidatorTest extends TestCase
                 if ($value != 10) {
                     return "Value should be 10, but $value was found.";
                 }
+                return null;
             });
 
         $this->assertSame([], $validator->validate($this->row1));

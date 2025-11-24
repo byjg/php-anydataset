@@ -2,10 +2,12 @@
 
 namespace Tests\Sample;
 
+use ByJG\Serializer\BaseModel;
+
 /**
  * @Xmlnuke:NodeName ModelPropertyPattern
  */
-class ModelPropertyPattern extends \ByJG\Serializer\BaseModel
+class ModelPropertyPattern extends BaseModel
 {
 
     protected $_Id_Model = "";

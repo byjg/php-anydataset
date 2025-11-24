@@ -3,45 +3,49 @@
 namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
-use ByJG\AnyDataset\Core\Row;
+use ByJG\AnyDataset\Core\RowInterface;
 use InvalidArgumentException;
 
 abstract class BaseFormatter implements FormatterInterface
 {
     /**
-     * @var GenericIterator|Row
+     * @var GenericIterator|RowInterface
      */
-    protected Row|GenericIterator $object;
+    protected RowInterface|GenericIterator $object;
 
     /**
      * @inheritDoc
      */
+    #[\Override]
     abstract public function raw(): mixed;
 
     /**
      * @inheritDoc
      */
-    abstract public function toText(): string;
+    #[\Override]
+    abstract public function toText(): string|false;
 
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function saveToFile(string $filename): void
     {
         if (empty($filename)) {
-            throw new InvalidArgumentException("Filename cannot be empty"); 
+            throw new InvalidArgumentException("Filename cannot be empty");
         }
-        file_put_contents($filename, $this->toText());
+        $text = $this->toText();
+        if ($text === false) {
+            throw new InvalidArgumentException("Unable to convert to text");
+        }
+        file_put_contents($filename, $text);
     }
 
     /**
-     * @param GenericIterator|Row $object
+     * @param GenericIterator|RowInterface $object
      */
-    public function __construct(GenericIterator|Row $object)
+    public function __construct(GenericIterator|RowInterface $object)
     {
-        if (!($object instanceof GenericIterator) && !($object instanceof Row)) {
-            throw new InvalidArgumentException("Constructor must have a GenericIterator or Row instance in the argument");
-        }
         $this->object = $object;
     }
 }

@@ -2,35 +2,55 @@
 
 namespace ByJG\AnyDataset\Core;
 
-interface IteratorInterface
+use Iterator;
+
+/**
+ * @extends Iterator<int|string, mixed>
+ */
+interface IteratorInterface extends Iterator
 {
-
-    /**
-     * Check if exists more records.
-     * 
-     * @return bool Return True if is possible get one or more records.
-     */
-    public function hasNext(): bool;
-
-    /**
-     * Get the next record.Return a Row object
-     * 
-     * @return Row|null
-     */
-    public function moveNext(): Row|null;
-
-    /**
-     * Get the record count. Some implementations may have return -1.
-     *
-     * @return int
-     */
-    public function count(): int;
-
     /**
      * Get an array of the iterator
-     * 
+     *
      * @param array $fields
      * @return array
      */
     public function toArray(array $fields = []): array;
+
+    /**
+     * Get an array of the underlying entities
+     *
+     * @return array
+     */
+    public function toEntities(): array;
+
+    /**
+     * Get the first element of the iterator, or null if empty
+     *
+     * @return mixed
+     */
+    public function first(): mixed;
+
+    /**
+     * Get the first element of the iterator, or throw an exception if empty
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     */
+    public function firstOrFail(): mixed;
+
+    /**
+     * Check if the iterator has any elements
+     *
+     * @return bool
+     */
+    public function exists(): bool;
+
+    /**
+     * Check if the iterator has any elements, or throw an exception if empty
+     *
+     * @return bool
+     * @throws Exception\NotFoundException
+     */
+    public function existsOrFail(): bool;
 }

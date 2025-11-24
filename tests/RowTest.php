@@ -6,6 +6,7 @@ use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
 use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
 use ByJG\AnyDataset\Core\Row;
 use ByJG\XmlUtil\XmlDocument;
+use Override;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Tests\Sample\ModelGetter;
@@ -15,32 +16,34 @@ use Tests\Sample\ModelPublic;
 class RowTest extends TestCase
 {
 
+    const NAME = 'New Name';
+
     /**
      * @var Row
      */
-    protected $object;
+    protected Row $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
+    #[Override]
     protected function setUp(): void
     {
-        $this->object = new Row;
+        $this->object = new Row();
     }
 
     protected function fill()
     {
-        $this->object->addField('field1', '10');
-        $this->object->addField('field1', '20');
-        $this->object->addField('field1', '30');
-        $this->object->addField('field2', '40');
-        $this->object->acceptChanges();
+        $this->object->set('field1', '10', append: true);
+        $this->object->set('field1', '20', append: true);
+        $this->object->set('field1', '30', append: true);
+        $this->object->set('field2', '40');
     }
 
-    public function testAddField()
+    public function testAppend()
     {
-        $this->object->addField('field1', '10');
+        $this->object->set('field1', '10');
         $this->assertEquals(
             array(
             'field1' => 10
@@ -48,7 +51,7 @@ class RowTest extends TestCase
             $this->object->toArray()
         );
 
-        $this->object->addField('field1', '20');
+        $this->object->set('field1', '20', append: true);
         $this->assertEquals(
             array(
             'field1' => array(10, 20)
@@ -56,7 +59,7 @@ class RowTest extends TestCase
             $this->object->toArray()
         );
 
-        $this->object->addField('field1', '30');
+        $this->object->set('field1', '30', append: true);
         $this->assertEquals(
             array(
             'field1' => array(10, 20, 30)
@@ -64,7 +67,7 @@ class RowTest extends TestCase
             $this->object->toArray()
         );
 
-        $this->object->addField('field2', '40');
+        $this->object->set('field2', '40', append: true);
         $this->assertEquals(
             array(
             'field1' => array(10, 20, 30),
@@ -73,7 +76,7 @@ class RowTest extends TestCase
             $this->object->toArray()
         );
 
-        $this->object->addField('field1', '20');
+        $this->object->set('field1', '20', append: true);
         $this->assertEquals(
             array(
             'field1' => array(10, 20, 30, 20),
@@ -83,34 +86,24 @@ class RowTest extends TestCase
         );
     }
 
-    public function testGetField()
-    {
-        $this->fill();
-
-        $this->assertEquals(10, $this->object->get('field1'));
-        $this->assertEquals(10, $this->object->get('field1'));  // Test it again, because is an array
-        $this->assertEquals(40, $this->object->get('field2'));
-        $this->assertEquals(null, $this->object->get('not-exists'));
-    }
-
     public function testGetFieldArray()
     {
         $this->fill();
 
-        $this->assertEquals(array(10, 20, 30), $this->object->getAsArray('field1'));
-        $this->assertEquals(array(40), $this->object->getAsArray('field2'));
+        $this->assertEquals(array(10, 20, 30), $this->object->get('field1'));
+        $this->assertEquals(40, $this->object->get('field2'));
 
-        $this->object->addField('field3', '');
-        $this->object->acceptChanges();
+        $this->object->set('field3', '');
 
-        $this->assertEquals(array(), $this->object->getAsArray('field3'));
+        $this->assertEquals('', $this->object->get('field3'));
+        $this->assertNull($this->object->get('field4'));
     }
 
     public function testGetFieldNames()
     {
         $this->fill();
 
-        $this->assertEquals(array('field1', 'field2'), $this->object->getFieldNames());
+        $this->assertEquals(array('field1', 'field2'), array_keys($this->object->toArray()));
     }
 
     public function testSetField()
@@ -133,7 +126,7 @@ class RowTest extends TestCase
 
         $this->assertEquals(["field1" => [10, 20, 30], "field2" => 40], $this->object->toArray());
 
-        $this->object->removeField('field1');
+        $this->object->unset('field1');
         $this->assertEquals(null, $this->object->get('field1'));
         $this->assertEquals(40, $this->object->get('field2'));
 
@@ -146,8 +139,8 @@ class RowTest extends TestCase
 
         $this->assertEquals(["field1" => [10, 20, 30], "field2" => 40], $this->object->toArray());
 
-        $this->object->removeField('field2');
-        $this->assertEquals(10, $this->object->get('field1'));
+        $this->object->unset('field2');
+        $this->assertEquals([10, 20, 30], $this->object->get('field1'));
         $this->assertEquals(null, $this->object->get('field2'));
 
         $this->assertEquals(["field1" => [10, 20, 30]], $this->object->toArray());
@@ -157,13 +150,13 @@ class RowTest extends TestCase
     {
         $this->fill();
 
-        $this->object->removeValue('field1', 20);
-        $this->assertEquals(array(10, 30), $this->object->getAsArray('field1'));
+        $this->object->unset('field1', 20);
+        $this->assertEquals(array(10, 30), $this->object->get('field1'));
 
-        $this->object->removeValue('field2', 100);
+        $this->object->unset('field2', 100);
         $this->assertEquals(40, $this->object->get('field2')); // Element was not removed
 
-        $this->object->removeValue('field2', 40);
+        $this->object->unset('field2', 40);
         $this->assertEquals(null, $this->object->get('field2'));
     }
 
@@ -171,17 +164,17 @@ class RowTest extends TestCase
     {
         $this->fill();
 
-        $this->object->replaceValue('field2', 100, 200);
+        $this->object->replace('field2', 100, 200);
         $this->assertEquals(40, $this->object->get('field2')); // Element was not changed
 
-        $this->object->replaceValue('field2', 40, 200);
+        $this->object->replace('field2', 40, 200);
         $this->assertEquals(200, $this->object->get('field2'));
 
-        $this->object->replaceValue('field1', 500, 190);
-        $this->assertEquals(array(10, 20, 30), $this->object->getAsArray('field1')); // Element was not changed
+        $this->object->replace('field1', 500, 190);
+        $this->assertEquals(array(10, 20, 30), $this->object->get('field1')); // Element was not changed
 
-        $this->object->replaceValue('field1', 20, 190);
-        $this->assertEquals(array(10, 190, 30), $this->object->getAsArray('field1'));
+        $this->object->replace('field1', 20, 190);
+        $this->assertEquals(array(10, 190, 30), $this->object->get('field1'));
     }
 
     public function testGetDomObject()
@@ -223,40 +216,9 @@ class RowTest extends TestCase
 
         $this->object->set('field2', 150);
         $this->assertEquals(
-            array('field1' => array(10, 20, 30), 'field2' => 40),
-            $this->object->getAsRaw()
+            array('field1' => array(10, 20, 30), 'field2' => 150),
+            $this->object->entity()
         );
-    }
-
-    public function testHasChanges()
-    {
-        $this->fill();
-
-        $this->assertFalse($this->object->hasChanges());
-        $this->object->set('field2', 150);
-        $this->assertTrue($this->object->hasChanges());
-    }
-
-    public function testAcceptChanges()
-    {
-        $this->fill();
-
-        $this->object->set('field2', 150);
-        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->getAsRaw());
-        $this->object->acceptChanges();
-        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->getAsRaw());
-    }
-
-    public function testRejectChanges()
-    {
-        $this->fill();
-
-        $this->object->set('field2', 150);
-        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 150), $this->object->toArray());
-        $this->assertEquals(150, $this->object->get('field2'));
-        $this->object->rejectChanges();
-        $this->assertEquals(array('field1' => array(10, 20, 30), 'field2' => 40), $this->object->toArray());
-        $this->assertEquals(40, $this->object->get('field2'));
     }
 
     public function testConstructor_ModelPublic()
@@ -268,6 +230,14 @@ class RowTest extends TestCase
         $this->assertEquals(10, $sr->get("Id"));
         $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
+
+        $sr->set("Id", 20);
+        $sr->set("Name", self::NAME);
+
+        $this->assertEquals(20, $sr->get("Id"));
+        $this->assertEquals(self::NAME, $sr->get("Name"));
+        $this->assertEquals(['Id' => 20, 'Name' => self::NAME], $sr->toArray());
+        $this->assertEquals(new ModelPublic(20, self::NAME), $sr->entity());
     }
 
     public function testConstructor_ModelGetter()
@@ -279,6 +249,14 @@ class RowTest extends TestCase
         $this->assertEquals(10, $sr->get("Id"));
         $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
+
+        $sr->set("Id", 20);
+        $sr->set("Name", self::NAME);
+
+        $this->assertEquals(20, $sr->get("Id"));
+        $this->assertEquals(self::NAME, $sr->get("Name"));
+        $this->assertEquals(['Id' => 20, 'Name' => self::NAME], $sr->toArray());
+        $this->assertEquals(new ModelGetter(20, self::NAME), $sr->entity());
     }
 
     public function testConstructor_stdClass()
@@ -292,6 +270,14 @@ class RowTest extends TestCase
         $this->assertEquals(10, $sr->get("Id"));
         $this->assertEquals("Testing", $sr->get("Name"));
         $this->assertEquals(['Id' => 10, 'Name' => 'Testing'], $sr->toArray());
+
+        $sr->set("Id", 20);
+        $sr->set("Name", self::NAME);
+
+        $this->assertEquals(20, $sr->get("Id"));
+        $this->assertEquals(self::NAME, $sr->get("Name"));
+        $this->assertEquals(['Id' => 20, 'Name' => self::NAME], $sr->toArray());
+        $this->assertEquals((object) ['Id' => 20, 'Name' => self::NAME], $sr->entity());
     }
 
     public function testConstructor_Array()
@@ -318,55 +304,19 @@ class RowTest extends TestCase
         // Because this, the field is Id_Model instead IdModel
         $this->assertEquals(10, $sr->get("IdModel"));
         $this->assertEquals("Testing", $sr->get("ClientName"));
-    }
+        $this->assertEquals(['IdModel' => 10, 'ClientName' => 'Testing'], $sr->toArray());
 
-    public function testCaseSensitive_1()
-    {
-        $row = new Row([
-            "fieldA" => "test",
-            "fieldB" => "new test"
-        ]);
+        $sr->set("IdModel", 20);
+        $sr->set("ClientName", self::NAME);
 
-        $this->assertTrue($row->isFieldNameCaseSensitive());
+        $this->assertEquals(20, $sr->get("IdModel"));
+        $this->assertEquals(self::NAME, $sr->get("ClientName"));
+        $this->assertEquals(['IdModel' => 20, 'ClientName' => self::NAME], $sr->toArray());
 
-        $this->assertEquals("test", $row->get("fieldA"));
-        $this->assertEquals("new test", $row->get("fieldB"));
-
-        $this->assertNull($row->get("fielda"));
-        $this->assertNull($row->get("fieldb"));
-
-        $row->enableFieldNameCaseInSensitive();
-
-        $this->assertFalse($row->isFieldNameCaseSensitive());
-
-        $this->assertEquals("test", $row->get("fielda"));
-        $this->assertEquals("new test", $row->get("FiEldb"));
-    }
-
-    public function testCaseSensitive_2()
-    {
-        $row = new Row([
-            "fieldA" => "test",
-            "fieldB" => "new test"
-        ]);
-
-        $row->set("FIELDA", "a");
-        $this->assertEquals("test", $row->get("fieldA"));
-        $this->assertEquals("a", $row->get("FIELDA"));
-
-        $row->enableFieldNameCaseInSensitive();
-        // When enable case insentive, the last field name overwrite the value
-        $this->assertEquals("a", $row->get("FieLda")); 
-        
-        $row->set("FIELDB", "new value");
-        $this->assertEquals("new value", $row->get("FieLdB")); 
-
-        $this->assertFalse($row->fieldExists("DelEteME")); 
-        $row->addField("DELETEME", "true");
-        $this->assertTrue($row->fieldExists("DelEteME")); 
-
-        $row->removeField("dELeTEme");
-        $this->assertFalse($row->fieldExists("DelEteME")); 
+        $expected = new ModelPropertyPattern();
+        $expected->setIdModel(20);
+        $expected->setClientName(self::NAME);
+        $this->assertEquals($expected, $sr->entity());
     }
 
     public function testToArrayFields()

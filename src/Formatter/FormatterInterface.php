@@ -14,9 +14,9 @@ interface FormatterInterface
     /**
      * Return the object transformed to string.
      *
-     * @return string
+     * @return string|false
      */
-    public function toText(): string;
+    public function toText(): string|false;
 
     /**
      * Save the contents to a file

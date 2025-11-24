@@ -2,37 +2,20 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use Iterator;
+use ByJG\AnyDataset\Core\Exception\NotFoundException;
+use ReturnTypeWillChange;
 
-abstract class GenericIterator implements IteratorInterface, Iterator
+/**
+ * @psalm-suppress MissingTemplateParam
+ */
+abstract class GenericIterator implements IteratorInterface
 {
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function hasNext(): bool;
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function moveNext(): Row|null;
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function count(): int;
-
-    /**
-     * @inheritDoc
-     */
-    #[\ReturnTypeWillChange]
-    abstract public function key();
-
     /**
      * @inheritDoc
      * @param array $fields
      * @return array
      */
+    #[\Override]
     public function toArray(array $fields = []): array
     {
         $retArray = [];
@@ -44,43 +27,108 @@ abstract class GenericIterator implements IteratorInterface, Iterator
         return $retArray;
     }
 
-    /* ------------------------------------- */
-    /* PHP 5 Specific functions for Iterator */
-    /* ------------------------------------- */
+    /**
+     * Return the underlying entities for each row in the iterator.
+     */
+    #[\Override]
+    public function toEntities(): array
+    {
+        $retArray = [];
+
+        foreach ($this as $singleRow) {
+            $retArray[] = $singleRow->entity();
+        }
+
+        return $retArray;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function first(): mixed
+    {
+        $this->rewind();
+        if (!$this->valid()) {
+            return null;
+        }
+        return $this->current()->entity();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function firstOrFail(): mixed
+    {
+        $this->rewind();
+        if (!$this->valid()) {
+            throw new NotFoundException("No results found in iterator");
+        }
+        return $this->current()->entity();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function exists(): bool
+    {
+        $this->rewind();
+        return $this->valid();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    public function existsOrFail(): bool
+    {
+        if (!$this->exists()) {
+            throw new NotFoundException("Iterator is empty");
+        }
+        return true;
+    }
+
+    /* --------------------------------------------- */
+    /* PHP Specific functions for Iterator interface */
+    /* --------------------------------------------- */
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    #[ReturnTypeWillChange]
+    abstract public function key(): mixed;
 
     /**
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    #[\Override]
+    #[ReturnTypeWillChange]
+    abstract public function current(): mixed;
+
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
+    #[ReturnTypeWillChange]
+    public function rewind(): void
     {
-        return $this->moveNext();
+        // Do nothing
     }
 
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function rewind()
-    {
-        // There is no necessary
-    }
+    #[\Override]
+    #[ReturnTypeWillChange]
+    abstract public function next(): void;
 
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function next()
-    {
-        // There is no necessary
-    }
-
-    /**
-     * @inheritDoc
-     */
-    #[\ReturnTypeWillChange]
-    public function valid()
-    {
-        return $this->hasNext();
-    }
+    #[\Override]
+    #[ReturnTypeWillChange]
+    abstract public function valid(): bool;
 }

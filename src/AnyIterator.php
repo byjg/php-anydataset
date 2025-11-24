@@ -2,6 +2,9 @@
 
 namespace ByJG\AnyDataset\Core;
 
+use Override;
+use ReturnTypeWillChange;
+
 /**
  * Iterator class is a structure used to navigate forward in a AnyDataset structure.
  */
@@ -12,20 +15,20 @@ class AnyIterator extends GenericIterator
      * Row Elements
      * @var array
      */
-    private $list;
+    private array $list;
 
     /**
      * Current row number
      * @var int
      */
-    private $curRow; //int
+    private int $curRow;
 
     /**
      * Iterator constructor
      *
-     * @param Row[] $list
+     * @param RowInterface[] $list
      */
-    public function __construct($list)
+    public function __construct(array $list)
     {
         $this->curRow = 0;
         $this->list = $list;
@@ -34,44 +37,34 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
-    public function count(): int
-    {
-        return count($this->list);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasNext(): bool
-    {
-        return ($this->curRow < $this->count());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function moveNext(): Row|null
-    {
-        if (!$this->hasNext()) {
-            return null;
-        }
-        return $this->list[$this->curRow++];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function key()
+    #[Override]
+    #[ReturnTypeWillChange]
+    public function key(): mixed
     {
         return $this->curRow;
     }
 
     /**
-     * @param IteratorFilter $filter
-     * @return AnyIterator
+     * @inheritDoc
      */
-    public function withFilter(IteratorFilter $filter)
+    #[Override]
+    #[ReturnTypeWillChange]
+    public function current(): mixed
     {
-        return new AnyIterator($filter->match($this->list));
+        return $this->list[$this->curRow] ?? null;
+    }
+
+    #[Override]
+    #[ReturnTypeWillChange]
+    public function next(): void
+    {
+        $this->curRow++;
+    }
+
+    #[Override]
+    #[ReturnTypeWillChange]
+    public function valid(): bool
+    {
+        return $this->curRow < count($this->list);
     }
 }

@@ -22,11 +22,11 @@ class RowOutput
     }
 
     /**
-     * @param Row $row
+     * @param RowInterface $row
      * @param string $field
      * @return mixed
      */
-    public function print(Row $row, string $field): mixed
+    public function print(RowInterface $row, string $field): mixed
     {
         if (!isset($this->fieldList[$field])) {
             return $row->get($field);
@@ -43,10 +43,10 @@ class RowOutput
     }
 
     /**
-     * @param Row $row
-     * @return Row
+     * @param RowInterface $row
+     * @return RowInterface
      */
-    public function apply(Row $row): Row
+    public function apply(RowInterface $row): RowInterface
     {
         $newRow = new Row();
 
@@ -61,12 +61,12 @@ class RowOutput
     }
 
     /**
-     * @param Row $row
+     * @param RowInterface $row
      * @param string $field
      * @param string $pattern
      * @return string
      */
-    protected function formatPattern(Row $row, string $field, string $pattern): string
+    protected function formatPattern(RowInterface $row, string $field, string $pattern): string
     {
         $rowParsed = $row->toArray();
         foreach ($rowParsed as $key => $value) {
@@ -80,12 +80,12 @@ class RowOutput
     }
 
     /**
-     * @param Row $row
+     * @param RowInterface $row
      * @param string $field
      * @param mixed $closure
      * @return string
      */
-    protected function formatCustom(Row $row, string $field, Closure $closure): string
+    protected function formatCustom(RowInterface $row, string $field, Closure $closure): string
     {
         return $closure($row, $field, $row->get($field));
     }

@@ -3,9 +3,8 @@
 namespace Tests;
 
 use ByJG\AnyDataset\Core\Row;
-use ByJG\AnyDataset\Core\RowValidator;
-use PHPUnit\Framework\TestCase;
 use ByJG\AnyDataset\Core\RowOutput;
+use PHPUnit\Framework\TestCase;
 
 class RowOutputTest extends TestCase
 {

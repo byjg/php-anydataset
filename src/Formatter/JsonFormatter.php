@@ -3,24 +3,27 @@
 namespace ByJG\AnyDataset\Core\Formatter;
 
 use ByJG\AnyDataset\Core\GenericIterator;
-use ByJG\Serializer\Exception\InvalidArgumentException;
 
 class JsonFormatter extends BaseFormatter
 {
     /**
      * @inheritDoc
-     * @throws InvalidArgumentException
      */
+    #[\Override]
     public function raw(): mixed
     {
-        return json_decode($this->toText());
+        $text = $this->toText();
+        if ($text === false) {
+            return false;
+        }
+        return json_decode($text);
     }
 
     /**
      * @inheritDoc
-     * @throws InvalidArgumentException
      */
-    public function toText(): string
+    #[\Override]
+    public function toText(): string|false
     {
         if ($this->object instanceof GenericIterator) {
             return json_encode($this->object->toArray());
