@@ -2,6 +2,8 @@
 
 namespace ByJG\AnyDataset\Core;
 
+use Override;
+
 class RowArray implements RowInterface
 {
     /**
@@ -15,13 +17,13 @@ class RowArray implements RowInterface
     }
 
 
-    #[\Override]
+    #[Override]
     public function get(string $name): mixed
     {
         return $this->entity[$name] ?? null;
     }
 
-    #[\Override]
+    #[Override]
     public function set(string $name, mixed $value, bool $append = false): void
     {
         if (!isset($this->entity[$name])) {
@@ -39,7 +41,7 @@ class RowArray implements RowInterface
         }
     }
 
-    #[\Override]
+    #[Override]
     public function unset(string $name, mixed $value = null): void
     {
         if (empty($value)) {
@@ -59,11 +61,9 @@ class RowArray implements RowInterface
         });
 
         $this->entity[$name] = array_values($this->entity[$name]);
-
-        return;
     }
 
-    #[\Override]
+    #[Override]
     public function replace(string $name, mixed $oldValue, mixed $newValue): void
     {
         if (!is_array($this->entity[$name])) {
@@ -76,7 +76,7 @@ class RowArray implements RowInterface
         }, $this->entity[$name]);
     }
 
-    #[\Override]
+    #[Override]
     public function toArray(?array $fields = []): array
     {
         if (empty($fields)) {
@@ -88,7 +88,7 @@ class RowArray implements RowInterface
 
     }
 
-    #[\Override]
+    #[Override]
     public function entity(): mixed
     {
         return $this->entity;

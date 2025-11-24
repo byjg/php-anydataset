@@ -13,10 +13,9 @@ class IteratorFilterFormatter
      * @param string $name
      * @param Relation $relation
      * @param array|string $value
-     * @param array $param
      * @return string
      */
-    public function getRelation(string $name, Relation $relation, mixed $value, array &$param): string
+    public function getRelation(string $name, Relation $relation, mixed $value): string
     {
         if (is_array($value)) {
             foreach ($value as $key => $val) {
@@ -76,12 +75,10 @@ class IteratorFilterFormatter
      * Get formatted field
      *
      * @param array $filters
-     * @param string|null $tableName
      * @param array $params
-     * @param string $returnFields
      * @return string
      */
-    public function format(array $filters, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    public function format(array $filters, array &$params = []): string
     {
         return $this->getFilter($filters, $params);
     }
@@ -107,7 +104,7 @@ class IteratorFilterFormatter
             if ($value[0] == ")") {
                 continue;
             }
-            $filter .= $this->getRelation($value[1], $value[2], $value[3], $param);
+            $filter .= $this->getRelation($value[1], $value[2], $value[3]);
         }
 
         return $filter;

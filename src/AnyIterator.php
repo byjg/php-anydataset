@@ -2,6 +2,7 @@
 
 namespace ByJG\AnyDataset\Core;
 
+use Override;
 use ReturnTypeWillChange;
 
 /**
@@ -36,7 +37,7 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     #[ReturnTypeWillChange]
     public function key(): mixed
     {
@@ -46,24 +47,24 @@ class AnyIterator extends GenericIterator
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     #[ReturnTypeWillChange]
     public function current(): mixed
     {
         return $this->list[$this->curRow] ?? null;
     }
 
-    #[\Override]
+    #[Override]
     #[ReturnTypeWillChange]
     public function next(): void
     {
         $this->curRow++;
     }
 
-    #[\Override]
+    #[Override]
     #[ReturnTypeWillChange]
     public function valid(): bool
     {
-        return ($this->curRow < count($this->list));
+        return $this->curRow < count($this->list);
     }
 }

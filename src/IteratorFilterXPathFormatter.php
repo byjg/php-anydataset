@@ -3,14 +3,16 @@
 namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Enum\Relation;
+use InvalidArgumentException;
+use Override;
 
 class IteratorFilterXPathFormatter extends IteratorFilterFormatter
 {
      /**
       * @inheritDoc
       */
-    #[\Override]
-    public function format(array $filters, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    #[Override]
+    public function format(array $filters, array &$params = []): string
     {
           $param = [];
           $xpathFilter = $this->getFilter($filters, $param);
@@ -25,11 +27,11 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
      /**
       * @inheritDoc
       */
-    #[\Override]
-    public function getRelation(string $name, Relation $relation, mixed $value, array &$param): string
+    #[Override]
+    public function getRelation(string $name, Relation $relation, mixed $value): string
     {
           if (is_array($value)) {
-               throw new \InvalidArgumentException('XPath does not support array values');
+               throw new InvalidArgumentException('XPath does not support array values');
           }
 
           $str = is_numeric($value) ? "" : "'";
@@ -68,10 +70,10 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
                     break;
 
                 case Relation::IN:
-                    throw new \InvalidArgumentException('XPath does not support IN');
+                    throw new InvalidArgumentException('XPath does not support IN');
 
                 case Relation::NOT_IN:
-                    throw new \InvalidArgumentException('XPath does not support NOT IN');
+                    throw new InvalidArgumentException('XPath does not support NOT IN');
 
                default: // Relation::CONTAINS:
                     $return = " contains($field, $value) ";

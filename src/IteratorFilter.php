@@ -3,6 +3,7 @@
 namespace ByJG\AnyDataset\Core;
 
 use ByJG\AnyDataset\Core\Enum\Relation;
+use InvalidArgumentException;
 
 class IteratorFilter
 {
@@ -67,14 +68,12 @@ class IteratorFilter
      * Get the filter
      *
      * @param IteratorFilterFormatter $formatter
-     * @param string|null $tableName
      * @param array $params
-     * @param string $returnFields
      * @return string
      */
-    public function format(IteratorFilterFormatter $formatter, ?string $tableName = null, array &$params = [], string $returnFields = "*"): string
+    public function format(IteratorFilterFormatter $formatter, array &$params = []): string
     {
-        return $formatter->format($this->filters, $tableName, $params, $returnFields);
+        return $formatter->format($this->filters, $params);
     }
 
 
@@ -117,7 +116,7 @@ class IteratorFilter
                 $result = $this->evaluateFilterRecursive($row, $subList, $previousOperator);
                 $subList = [];
                 continue;
-            } 
+            }
             
             // Handle opening parenthesis - start collecting a sublist
             if ($operator == self::OPEN_GROUP) {
@@ -128,13 +127,13 @@ class IteratorFilter
                 if ($previousOperator == self::AND_OPERATOR && $result === false) {
                     return false;
                 }
-                
+
                 $subList[] = $filter;
                 continue;
-            } 
-            
+            }
+
             // Add to sublist if we're in a grouped expression
-            if (count($subList) > 0) {
+            if (!empty($subList)) {
                 $subList[] = $filter;
                 continue;
             }
@@ -146,7 +145,7 @@ class IteratorFilter
             // First condition sets the initial result
             if ($position == 0) {
                 $result = $localEval;
-            } 
+            }
             // AND operator
             elseif ($operator == self::AND_OPERATOR) {
                 $result = $result && $localEval;
@@ -155,14 +154,14 @@ class IteratorFilter
                 if (!$result) {
                     break;
                 }
-            } 
-            // OR operator 
+            }
+            // OR operator
             elseif ($operator == self::OR_OPERATOR) {
                 $result = $result || $localEval;
-            } 
+            }
             // Invalid operator
             else {
-                throw new \InvalidArgumentException("Invalid operator: $operator");
+                throw new InvalidArgumentException("Invalid operator: $operator");
             }
 
             $previousOperator = $operator;
@@ -202,7 +201,7 @@ class IteratorFilter
 
     /**
      * Get field value and handle nulls for string operations
-     * 
+     *
      * @param RowInterface $row
      * @param string $field
      * @return mixed
@@ -210,12 +209,12 @@ class IteratorFilter
     private function getFieldValue(RowInterface $row, string $field): mixed
     {
         $value = $row->get($field);
-        
+
         // For string operations, we convert null to empty string
         if (is_null($value)) {
             return "";
         }
-        
+
         return $value;
     }
 
