@@ -96,7 +96,6 @@ class IteratorFilter
      */
     private function evaluateFilterRecursive(RowInterface $row, array $filterList, ?string $previousOperator = null): bool
     {
-        // If no filters, return true (matches everything)
         if (empty($filterList)) {
             return true;
         }
@@ -107,61 +106,31 @@ class IteratorFilter
 
         foreach ($filterList as $filter) {
             $operator = $filter[self::OPERATOR];
-            $field = $filter[self::FIELD];
-            $relation = $filter[self::RELATION];
-            $value = $filter[self::VALUE];
 
-            // Handle closing parenthesis - evaluate the sublist
             if ($operator == self::CLOSE_GROUP) {
-                $result = $this->evaluateFilterRecursive($row, $subList, $previousOperator);
+                $result = $this->handleCloseGroup($row, $subList, $previousOperator);
                 $subList = [];
                 continue;
             }
-            
-            // Handle opening parenthesis - start collecting a sublist
-            if ($operator == self::OPEN_GROUP) {
-                $filter[self::OPERATOR] = $previousOperator ?? self::AND_OPERATOR;
-                $previousOperator = $filter[self::OPERATOR];
-                
-                // Short-circuit for AND conditions
-                if ($previousOperator == self::AND_OPERATOR && $result === false) {
-                    return false;
-                }
 
-                $subList[] = $filter;
+            if ($operator == self::OPEN_GROUP) {
+                $shouldReturn = $this->handleOpenGroup($filter, $result, $previousOperator, $subList);
+                if ($shouldReturn !== null) {
+                    return $shouldReturn;
+                }
                 continue;
             }
 
-            // Add to sublist if we're in a grouped expression
             if (!empty($subList)) {
                 $subList[] = $filter;
                 continue;
             }
 
-            // Evaluate the current condition
-            $fieldValue = $this->getFieldValue($row, $field);
-            $localEval = $this->evaluateCondition($row, $field, $relation, $value, $fieldValue);
+            $localEval = $this->evaluateFilter($row, $filter);
+            $result = $this->applyOperatorToResult($operator, $result, $localEval, $position);
 
-            // First condition sets the initial result
-            if ($position == 0) {
-                $result = $localEval;
-            }
-            // AND operator
-            elseif ($operator == self::AND_OPERATOR) {
-                $result = $result && $localEval;
-                
-                // Short-circuit for AND conditions
-                if (!$result) {
-                    break;
-                }
-            }
-            // OR operator
-            elseif ($operator == self::OR_OPERATOR) {
-                $result = $result || $localEval;
-            }
-            // Invalid operator
-            else {
-                throw new InvalidArgumentException("Invalid operator: $operator");
+            if ($position > 0 && $operator == self::AND_OPERATOR && !$result) {
+                break;
             }
 
             $previousOperator = $operator;
@@ -169,6 +138,84 @@ class IteratorFilter
         }
 
         return $result;
+    }
+
+    /**
+     * Handle closing group by evaluating the sublist
+     *
+     * @param RowInterface $row
+     * @param array $subList
+     * @param string|null $previousOperator
+     * @return bool
+     */
+    private function handleCloseGroup(RowInterface $row, array $subList, ?string $previousOperator): bool
+    {
+        return $this->evaluateFilterRecursive($row, $subList, $previousOperator);
+    }
+
+    /**
+     * Handle opening group and check for short-circuit
+     *
+     * @param array $filter
+     * @param bool $result
+     * @param string|null &$previousOperator
+     * @param array &$subList
+     * @return bool|null Returns false if short-circuit, null otherwise
+     */
+    private function handleOpenGroup(array $filter, bool $result, ?string &$previousOperator, array &$subList): ?bool
+    {
+        $filter[self::OPERATOR] = $previousOperator ?? self::AND_OPERATOR;
+        $previousOperator = $filter[self::OPERATOR];
+
+        if ($previousOperator == self::AND_OPERATOR && $result === false) {
+            return false;
+        }
+
+        $subList[] = $filter;
+        return null;
+    }
+
+    /**
+     * Evaluate a single filter against a row
+     *
+     * @param RowInterface $row
+     * @param array $filter
+     * @return bool
+     */
+    private function evaluateFilter(RowInterface $row, array $filter): bool
+    {
+        $field = $filter[self::FIELD];
+        $relation = $filter[self::RELATION];
+        $value = $filter[self::VALUE];
+        $fieldValue = $this->getFieldValue($row, $field);
+
+        return $this->evaluateCondition($row, $field, $relation, $value, $fieldValue);
+    }
+
+    /**
+     * Apply the operator to combine the result with the local evaluation
+     *
+     * @param string $operator
+     * @param bool $result
+     * @param bool $localEval
+     * @param int $position
+     * @return bool
+     */
+    private function applyOperatorToResult(string $operator, bool $result, bool $localEval, int $position): bool
+    {
+        if ($position == 0) {
+            return $localEval;
+        }
+
+        if ($operator == self::AND_OPERATOR) {
+            return $result && $localEval;
+        }
+
+        if ($operator == self::OR_OPERATOR) {
+            return $result || $localEval;
+        }
+
+        throw new InvalidArgumentException("Invalid operator: $operator");
     }
 
     /**
