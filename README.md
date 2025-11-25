@@ -48,7 +48,7 @@ foreach ($iterator as $row) {
 ## Documentation
 
 ### Core Concepts
-- [AnyDataset Overview](docs/anydataset.md) - Core component overview and usage
+- [AnyDataset Overview](docs/anydataset-overview.md) - Core component overview and usage
 - [The Row Object](docs/row.md) - Working with data rows
 - [Iterators](docs/iterators.md) - Different ways to iterate through data
 
