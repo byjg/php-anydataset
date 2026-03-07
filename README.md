@@ -1,4 +1,11 @@
+---
+tags: [php, anydataset, databases]
+---
+
 # AnyDataset
+
+AnyDataset is a powerful data source abstraction layer for PHP that provides a **simple and consistent interface** to access different data sources.
+With AnyDataset, you can work with various data formats and storage systems using the same programming interface.
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-%23ea4aaa?logo=githubsponsors&logoColor=white&labelColor=0d1117)](https://github.com/sponsors/byjg)
 [![Build Status](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml)
@@ -6,9 +13,6 @@
 [![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/php-anydataset/)
 [![GitHub license](https://img.shields.io/github/license/byjg/php-anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
 [![GitHub release](https://img.shields.io/github/release/byjg/php-anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
-
-AnyDataset is a powerful data source abstraction layer for PHP that provides a **simple and consistent interface** to access different data sources. 
-With AnyDataset, you can work with various data formats and storage systems using the same programming interface.
 
 It is the core component of the [Anydataset project](https://packagist.org/providers/byjg/anydataset-implementation), an agnostic data source abstraction layer for PHP.
 
@@ -48,15 +52,15 @@ foreach ($iterator as $row) {
 ## Documentation
 
 ### Core Concepts
-- [AnyDataset Overview](docs/anydataset-overview.md) - Core component overview and usage
-- [The Row Object](docs/row.md) - Working with data rows
-- [Iterators](docs/iterators.md) - Different ways to iterate through data
+- [AnyDataset Overview](anydataset-overview) - Core component overview and usage
+- [The Row Object](row) - Working with data rows
+- [Iterators](iterators) - Different ways to iterate through data
 
 ### Advanced Features
-- [Filtering Results](docs/iteratorfilter.md) - How to filter your data
-- [Formatting Output](docs/rowoutput.md) - Transform your data into different formats
-- [Field Validation](docs/rowvalidator.md) - Validate your data against rules
-- [Data Population](docs/populate.md) - Populate objects with data
+- [Filtering Results](iteratorfilter) - How to filter your data
+- [Formatting Output](rowoutput) - Transform your data into different formats
+- [Field Validation](rowvalidator) - Validate your data against rules
+- [Data Population](populate) - Populate objects with data
 
 ## Available Implementations
 
