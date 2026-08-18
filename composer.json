@@ -16,8 +16,8 @@
   "require": {
     "php": ">=8.3 <8.6",
     "ext-dom": "*",
-    "byjg/xmlutil": "^6.0",
-    "byjg/serializer": "^6.0"
+    "byjg/xmlutil": "^7.0",
+    "byjg/serializer": "^7.0"
   },
   "suggest": {
   },
