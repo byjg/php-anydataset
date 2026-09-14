@@ -12,7 +12,7 @@ With AnyDataset, you can work with various data formats and storage systems usin
 [![Build Status](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml)
 [![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
 [![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/php-anydataset/)
-[![GitHub license](https://img.shields.io/github/license/byjg/php-anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
+[![GitHub license](https://img.shields.io/github/license/byjg/php-anydataset.svg)](https://opensource.byjg.com/license/)
 [![GitHub release](https://img.shields.io/github/release/byjg/php-anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
 
 It is the core component of the [Anydataset project](https://packagist.org/providers/byjg/anydataset-implementation), an agnostic data source abstraction layer for PHP.
@@ -103,14 +103,6 @@ $formatter->saveToFile("/path/to/file.xml"); // Save the XML Text to a file
 
 ```bash
 vendor/bin/phpunit
-```
-
-## Dependencies
-
-```mermaid
-flowchart TD
-    byjg/anydataset --> byjg/serializer
-    byjg/anydataset --> byjg/xmlutil
 ```
 
 ----
