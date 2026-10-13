@@ -27,43 +27,43 @@ class IteratorFilterFormatter
         }
 
         switch ($relation) {
-            case Relation::EQUAL:
+            case Relation::Equal:
                 $return = "%$name == $value";
                 break;
 
-            case Relation::GREATER_THAN:
+            case Relation::GreaterThan:
                 $return = "%$name > $value";
                 break;
 
-            case Relation::LESS_THAN:
+            case Relation::LessThan:
                 $return = "%$name < $value";
                 break;
 
-            case Relation::GREATER_OR_EQUAL_THAN:
+            case Relation::GreaterThanOrEqualTo:
                 $return = "%$name >= $value";
                 break;
 
-            case Relation::LESS_OR_EQUAL_THAN:
+            case Relation::LessThanOrEqualTo:
                 $return = "%$name <= $value";
                 break;
 
-            case Relation::NOT_EQUAL:
+            case Relation::NotEqual:
                 $return = "%$name != $value";
                 break;
 
-            case Relation::STARTS_WITH:
+            case Relation::StartsWith:
                 $return = " str_starts_with(%$name, $value) ";
                 break;
 
-            case Relation::IN:
+            case Relation::In:
                 $return = " in_array(%$name, $value) ";
                 break;
 
-            case Relation::NOT_IN:
+            case Relation::NotIn:
                 $return = " !in_array(%$name, $value) ";
                 break;
 
-            default: // Relation::CONTAINS:
+            default: // Relation::Contains:
                 $return = " str_contains(%$name, $value) ";
                 break;
         }

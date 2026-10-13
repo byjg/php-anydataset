@@ -41,41 +41,41 @@ class IteratorFilterXPathFormatter extends IteratorFilterFormatter
           }
 
           switch ($relation) {
-               case Relation::EQUAL:
+               case Relation::Equal:
                     $return = $field . "=" . $value;
                     break;
 
-               case Relation::GREATER_THAN:
+               case Relation::GreaterThan:
                     $return = $field . ">" . $value;
                     break;
 
-               case Relation::LESS_THAN:
+               case Relation::LessThan:
                     $return = $field . "<" . $value;
                     break;
 
-               case Relation::GREATER_OR_EQUAL_THAN:
+               case Relation::GreaterThanOrEqualTo:
                     $return = $field . ">=" . $value;
                     break;
 
-               case Relation::LESS_OR_EQUAL_THAN:
+               case Relation::LessThanOrEqualTo:
                     $return = $field . "<=" . $value;
                     break;
 
-               case Relation::NOT_EQUAL:
+               case Relation::NotEqual:
                     $return = $field . "!=" . $value;
                     break;
 
-               case Relation::STARTS_WITH:
+               case Relation::StartsWith:
                     $return = " starts-with($field, $value) ";
                     break;
 
-                case Relation::IN:
+                case Relation::In:
                     throw new InvalidArgumentException('XPath does not support IN');
 
-                case Relation::NOT_IN:
+                case Relation::NotIn:
                     throw new InvalidArgumentException('XPath does not support NOT IN');
 
-               default: // Relation::CONTAINS:
+               default: // Relation::Contains:
                     $return = " contains($field, $value) ";
                     break;
           }

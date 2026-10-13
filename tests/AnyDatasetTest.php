@@ -333,7 +333,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
 
         $filter = IteratorFilter::getInstance()
-            ->and("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LessThan, 40);
 
         $this->assertEquals([
             ['name' => 'jf', 'age' => 15],
@@ -511,7 +511,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
 
         $filter = IteratorFilter::getInstance()
-            ->and("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LessThan, 40);
 
         $first = $this->object->getIterator($filter)->first();
 
@@ -557,12 +557,12 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'fernanda', 'age' => 45]);
 
         $filter1 = IteratorFilter::getInstance()
-            ->and("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LessThan, 40);
 
         $this->assertFalse($this->object->getIterator($filter1)->exists());
 
         $filter2 = IteratorFilter::getInstance()
-            ->and("age", Relation::GREATER_THAN, 40);
+            ->and("age", Relation::GreaterThan, 40);
 
         $this->assertTrue($this->object->getIterator($filter2)->exists());
     }
@@ -624,7 +624,7 @@ class AnyDatasetTest extends TestCase
 
         // Apply filter to get the object
         $filter = IteratorFilter::getInstance()
-            ->and("Name", Relation::EQUAL, "John");
+            ->and("Name", Relation::Equal, "John");
 
         $firstFiltered = $this->object->getIterator($filter)->first();
         $this->assertInstanceOf(ModelPublic::class, $firstFiltered);

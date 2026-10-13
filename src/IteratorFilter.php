@@ -231,17 +231,17 @@ class IteratorFilter
     private function evaluateCondition(RowInterface $row, string $field, Relation $relation, mixed $value, mixed $fieldValue): bool
     {
         return match ($relation) {
-            Relation::EQUAL => $fieldValue == $value,
-            Relation::GREATER_THAN => $fieldValue > $value,
-            Relation::LESS_THAN => $fieldValue < $value,
-            Relation::GREATER_OR_EQUAL_THAN => $fieldValue >= $value,
-            Relation::LESS_OR_EQUAL_THAN => $fieldValue <= $value,
-            Relation::NOT_EQUAL => $fieldValue != $value,
-            Relation::STARTS_WITH => str_starts_with($fieldValue, $value),
-            Relation::IN => in_array($fieldValue, $value),
-            Relation::NOT_IN => !in_array($fieldValue, $value),
-            Relation::IS_NULL => is_null($row->get($field)),
-            Relation::IS_NOT_NULL => !is_null($row->get($field)),
+            Relation::Equal => $fieldValue == $value,
+            Relation::GreaterThan => $fieldValue > $value,
+            Relation::LessThan => $fieldValue < $value,
+            Relation::GreaterThanOrEqualTo => $fieldValue >= $value,
+            Relation::LessThanOrEqualTo => $fieldValue <= $value,
+            Relation::NotEqual => $fieldValue != $value,
+            Relation::StartsWith => str_starts_with($fieldValue, $value),
+            Relation::In => in_array($fieldValue, $value),
+            Relation::NotIn => !in_array($fieldValue, $value),
+            Relation::IsNull => is_null($row->get($field)),
+            Relation::IsNotNull => !is_null($row->get($field)),
             default => str_contains($fieldValue, $value),
         };
     }

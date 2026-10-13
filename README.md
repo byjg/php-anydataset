@@ -86,7 +86,7 @@ foreach ($iterator as $row) {
 ```php
 <?php
 $filter = new \ByJG\AnyDataset\Core\IteratorFilter();
-$filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
+$filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::Equal, 10);
 $iterator = $dataset->getIterator($filter);
 ```
 

@@ -157,7 +157,7 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 $dataset = new AnyDataset($data);
 
 $filter = new IteratorFilter();
-$filter->and('age', Relation::GREATER_THAN, 30);
+$filter->and('age', Relation::GreaterThan, 30);
 
 $iterator = $dataset->getIterator($filter);
 
@@ -184,7 +184,7 @@ $allData = $dataset->getIterator()->toArray();
 
 // Get filtered data
 $filter = new IteratorFilter();
-$filter->and('age', Relation::GREATER_THAN, 30);
+$filter->and('age', Relation::GreaterThan, 30);
 $filteredData = $dataset->getIterator($filter)->toArray();
 
 // Get only specific fields

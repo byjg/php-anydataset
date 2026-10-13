@@ -5,7 +5,17 @@
 
 ## Breaking Changes
 
-- None.
+### Enum cases renamed to PascalCase
+
+Enum cases follow the ByJG standard and are written in PascalCase. The backed values did not
+change, so `->value`, `from()`, `tryFrom()` and stored data are not affected; only code that
+names a case (or reads `->name`) has to be updated.
+
+| Enum | Before (6.x) | After (7.0) |
+|---|---|---|
+| `Relation` | `EQUAL`, `LESS_THAN`, `GREATER_THAN`, `LESS_OR_EQUAL_THAN`, `GREATER_OR_EQUAL_THAN`, `NOT_EQUAL`, `STARTS_WITH`, `CONTAINS`, `IN`, `NOT_IN`, `IS_NULL`, `IS_NOT_NULL` | `Equal`, `LessThan`, `GreaterThan`, `LessThanOrEqualTo`, `GreaterThanOrEqualTo`, `NotEqual`, `StartsWith`, `Contains`, `In`, `NotIn`, `IsNull`, `IsNotNull` |
+
+Not a plain change of casing: `Relation::LESS_OR_EQUAL_THAN` is now `Relation::LessThanOrEqualTo`; `Relation::GREATER_OR_EQUAL_THAN` is now `Relation::GreaterThanOrEqualTo`.
 
 ## Requirements
 
