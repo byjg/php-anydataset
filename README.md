@@ -27,15 +27,13 @@ It is the core component of the [Anydataset project](https://packagist.org/provi
 - **Validation**: Validate your data against rules
 - **Extensible**: Create your own data source implementations
 
-## Quick Start
-
-### Installation
+## Installation
 
 ```bash
 composer require "byjg/anydataset"
 ```
 
-### Basic Usage
+## Quick Start
 
 ```php
 <?php
@@ -86,7 +84,7 @@ foreach ($iterator as $row) {
 ```php
 <?php
 $filter = new \ByJG\AnyDataset\Core\IteratorFilter();
-$filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::Equal, 10);
+$filter->and("field1", \ByJG\AnyDataset\Core\Enum\Relation::Equal, 10);
 $iterator = $dataset->getIterator($filter);
 ```
 
@@ -94,11 +92,19 @@ $iterator = $dataset->getIterator($filter);
 
 ```php
 <?php
+use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
+
 $formatter = new XmlFormatter($anydataset->getIterator());
 $formatter->raw();                           // Return a DOM object
 $formatter->toText();                        // Return the XML as a text
 $formatter->saveToFile("/path/to/file.xml"); // Save the XML Text to a file
+
+// JsonFormatter has the same API; raw() returns the json_decode()d value
+$json = (new JsonFormatter($anydataset->getIterator()))->toText();
 ```
+
+Both formatters accept a `GenericIterator` or a single `RowInterface`.
 
 ## Running Tests
 

@@ -59,7 +59,8 @@ The `IteratorFilter` class provides the following methods:
 | `startGroup(string $name, Relation $relation, mixed $value)`                                           | Starts a group of conditions with the first condition            |
 | `endGroup()`                                                                                           | Ends a group of conditions                                       |
 | `match(array $array)`                                                                                  | Applies the filter to an array of rows and returns matching rows |
-| `format(IteratorFilterFormatter $formatter, ?string $tableName, array &$params, string $returnFields)` | Formats the filter for use with a specific formatter (e.g., SQL) |
+| `format(IteratorFilterFormatter $formatter, array &$params = [])`                                     | Formats the filter for use with a specific formatter (e.g., XPath) |
+| `getRawFilters()`                                                                                      | Returns the internal list of conditions                          |
 | `addRelation(string $name, Relation $relation, mixed $value)`                                          | Alias for `and()` (deprecated)                                   |
 | `addRelationOr(string $name, Relation $relation, mixed $value)`                                        | Alias for `or()` (deprecated)                                    |
 
@@ -128,11 +129,11 @@ $filter->and('age', Relation::GreaterThan, 30);
 
 // Format for XPath (useful when working with XML datasets)
 $params = [];
-$xpath = $filter->format(new IteratorFilterXPathFormatter(), null, $params);
-// Result: "/anydataset/row[contains(field[@name='name'], 'John') and field[@name='age'] > '30']"
+$xpath = $filter->format(new IteratorFilterXPathFormatter(), $params);
+// Result: "/anydataset/row[contains(field[@name='name'], 'John') and field[@name='age'] > 30]"
 
 // The base IteratorFilterFormatter can be used for custom formatting
-$formatted = $filter->format(new IteratorFilterFormatter(), null, $params);
+$formatted = $filter->format(new IteratorFilterFormatter(), $params);
 // Result: "str_contains(%name, 'John') and %age > 30"
 ```
 
