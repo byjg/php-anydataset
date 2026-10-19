@@ -267,6 +267,62 @@ class AnyDatasetTest extends TestCase
             ], $anydata->getIterator()->toArray());
     }
 
+    public function testRemoveRowInTheMiddle(): void
+    {
+        foreach (['a', 'b', 'c', 'd'] as $name) {
+            $this->object->appendRow(['name' => $name]);
+        }
+
+        $this->object->removeRow(2);
+
+        $this->assertEquals(
+            [['name' => 'a'], ['name' => 'b'], ['name' => 'd']],
+            $this->object->getIterator()->toArray()
+        );
+    }
+
+    public function testRemoveCurrentRow(): void
+    {
+        foreach (['a', 'b', 'c'] as $name) {
+            $this->object->appendRow(['name' => $name]);
+        }
+
+        // Removes "c", then "b": the previous row becomes the current one
+        $this->object->removeRow();
+        $this->object->removeRow();
+        $this->object->addField('extra', 'x');
+
+        $this->assertEquals(
+            [['name' => 'a', 'extra' => 'x']],
+            $this->object->getIterator()->toArray()
+        );
+    }
+
+    public function testRemoveRowBeforeTheCurrent(): void
+    {
+        foreach (['a', 'b', 'c'] as $name) {
+            $this->object->appendRow(['name' => $name]);
+        }
+
+        $this->object->removeRow(0);
+        $this->object->addField('extra', 'x');
+
+        $this->assertEquals(
+            [['name' => 'b'], ['name' => 'c', 'extra' => 'x']],
+            $this->object->getIterator()->toArray()
+        );
+    }
+
+    public function testRemoveRowOutOfRange(): void
+    {
+        $this->object->appendRow(['name' => 'a']);
+
+        $this->object->removeRow(5);
+        $this->object->removeRow(-1);
+
+        $this->assertEquals([['name' => 'a']], $this->object->getIterator()->toArray());
+    }
+
     public function testAddField()
     {
         $qtd = $this->object->getIterator();

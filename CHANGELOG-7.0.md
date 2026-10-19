@@ -17,6 +17,14 @@ names a case (or reads `->name`) has to be updated.
 
 Not a plain change of casing: `Relation::LESS_OR_EQUAL_THAN` is now `Relation::LessThanOrEqualTo`; `Relation::GREATER_OR_EQUAL_THAN` is now `Relation::GreaterThanOrEqualTo`.
 
+## Bug Fixes
+
+- `AnyDataset::removeRow()` with an index of 2 or more also dropped rows after it (removing
+  index 2 of `a, b, c, d` left `a, b`), and never moved the current row, so a later
+  `addField()` or `removeRow()` hit the wrong row or a missing index. It now removes only that
+  row; the current row keeps pointing at the same row, or at the previous one when it is the
+  one removed. An index out of range is ignored.
+
 ## Requirements
 
 - PHP 8.3, 8.4, 8.5 and 8.6 are now supported: `"php": ">=8.3 <8.7"`.
