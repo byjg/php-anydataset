@@ -61,3 +61,7 @@ While 7.0 is unreleased these resolve to `7.0.x-dev` from each component's
 ## Housekeeping
 
 - `phpunit.xml.dist` renamed to `phpunit.xml`.
+- Documentation pages renamed to kebab-case: `docs/iteratorfilter.md` → `docs/iterator-filter.md`,
+  `docs/rowoutput.md` → `docs/row-output.md` and `docs/rowvalidator.md` → `docs/row-validator.md`.
+  Links to the old pages have to be updated: the published URLs change too (e.g. `/docs/php/anydataset/iteratorfilter`
+  is now `/docs/php/anydataset/iterator-filter`), with no redirect.

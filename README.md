@@ -57,9 +57,9 @@ foreach ($iterator as $row) {
 - [Iterators](docs/iterators.md) - Different ways to iterate through data
 
 ### Advanced Features
-- [Filtering Results](docs/iteratorfilter.md) - How to filter your data
-- [Formatting Output](docs/rowoutput.md) - Transform your data into different formats
-- [Field Validation](docs/rowvalidator.md) - Validate your data against rules
+- [Filtering Results](docs/iterator-filter.md) - How to filter your data
+- [Formatting Output](docs/row-output.md) - Transform your data into different formats
+- [Field Validation](docs/row-validator.md) - Validate your data against rules
 - [Data Population](docs/populate.md) - Populate objects with data
 
 ## Available Implementations
