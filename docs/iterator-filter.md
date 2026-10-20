@@ -61,8 +61,6 @@ The `IteratorFilter` class provides the following methods:
 | `match(array $array)`                                                                                  | Applies the filter to an array of rows and returns matching rows |
 | `format(IteratorFilterFormatter $formatter, array &$params = [])`                                     | Formats the filter for use with a specific formatter (e.g., XPath) |
 | `getRawFilters()`                                                                                      | Returns the internal list of conditions                          |
-| `addRelation(string $name, Relation $relation, mixed $value)`                                          | Alias for `and()` (deprecated)                                   |
-| `addRelationOr(string $name, Relation $relation, mixed $value)`                                        | Alias for `or()` (deprecated)                                    |
 
 ## Complex Conditions with AND / OR
 
