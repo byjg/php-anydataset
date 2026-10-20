@@ -251,10 +251,15 @@ class AnyDataset
             return;
         }
 
-        if ($row == 0) {
-            $this->collection = array_slice($this->collection, 1);
-        } else {
-            $this->collection = array_slice($this->collection, 0, $row) + array_slice($this->collection, $row);
+        if ($row < 0 || $row >= count($this->collection)) {
+            return;
+        }
+
+        array_splice($this->collection, $row, 1);
+
+        // The current row moves with its position; when it is the one removed, the previous row becomes current
+        if ($row <= $this->currentRow) {
+            $this->currentRow--;
         }
     }
 

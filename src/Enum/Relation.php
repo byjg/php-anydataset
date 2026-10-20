@@ -9,16 +9,16 @@ namespace ByJG\AnyDataset\Core\Enum;
  */
 enum Relation: string
 {
-    case EQUAL = '=';
-    case LESS_THAN = '<';
-    case GREATER_THAN = '>';
-    case LESS_OR_EQUAL_THAN = '<=';
-    case GREATER_OR_EQUAL_THAN = '>=';
-    case NOT_EQUAL = '<>';
-    case STARTS_WITH = 'STARTS WITH';
-    case CONTAINS = 'CONTAINS';
-    case IN = 'IN';
-    case NOT_IN = 'NOT IN';
-    case IS_NULL = 'IS NULL';
-    case IS_NOT_NULL = 'IS NOT NULL';
+    case Equal = '=';
+    case LessThan = '<';
+    case GreaterThan = '>';
+    case LessThanOrEqualTo = '<=';
+    case GreaterThanOrEqualTo = '>=';
+    case NotEqual = '<>';
+    case StartsWith = 'STARTS WITH';
+    case Contains = 'CONTAINS';
+    case In = 'IN';
+    case NotIn = 'NOT IN';
+    case IsNull = 'IS NULL';
+    case IsNotNull = 'IS NOT NULL';
 }

@@ -9,3 +9,4 @@ node_modules
 .usdocker
 .phpunit.result.cache
 /phpunit.xml.dist.bak
+.vscode

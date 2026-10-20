@@ -122,7 +122,7 @@ use ByJG\AnyDataset\Core\Enum\Relation;
 $dataset = new AnyDataset($data);
 
 $filter = new IteratorFilter();
-$filter->and('age', Relation::GREATER_THAN, 30);
+$filter->and('age', Relation::GreaterThan, 30);
 
 $iterator = $dataset->getIterator($filter);
 
@@ -301,7 +301,7 @@ $dataset->appendRow(['name' => 'Jane', 'age' => 35]);
 $dataset->appendRow(['name' => 'Bob', 'age' => 45]);
 
 $filter = IteratorFilter::getInstance()
-    ->and('age', Relation::GREATER_THAN, 30);
+    ->and('age', Relation::GreaterThan, 30);
 
 // Get first person over 30
 $first = $dataset->getIterator($filter)->first();

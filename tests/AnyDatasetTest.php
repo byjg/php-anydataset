@@ -267,6 +267,62 @@ class AnyDatasetTest extends TestCase
             ], $anydata->getIterator()->toArray());
     }
 
+    public function testRemoveRowInTheMiddle(): void
+    {
+        foreach (['a', 'b', 'c', 'd'] as $name) {
+            $this->object->appendRow(['name' => $name]);
+        }
+
+        $this->object->removeRow(2);
+
+        $this->assertEquals(
+            [['name' => 'a'], ['name' => 'b'], ['name' => 'd']],
+            $this->object->getIterator()->toArray()
+        );
+    }
+
+    public function testRemoveCurrentRow(): void
+    {
+        foreach (['a', 'b', 'c'] as $name) {
+            $this->object->appendRow(['name' => $name]);
+        }
+
+        // Removes "c", then "b": the previous row becomes the current one
+        $this->object->removeRow();
+        $this->object->removeRow();
+        $this->object->addField('extra', 'x');
+
+        $this->assertEquals(
+            [['name' => 'a', 'extra' => 'x']],
+            $this->object->getIterator()->toArray()
+        );
+    }
+
+    public function testRemoveRowBeforeTheCurrent(): void
+    {
+        foreach (['a', 'b', 'c'] as $name) {
+            $this->object->appendRow(['name' => $name]);
+        }
+
+        $this->object->removeRow(0);
+        $this->object->addField('extra', 'x');
+
+        $this->assertEquals(
+            [['name' => 'b'], ['name' => 'c', 'extra' => 'x']],
+            $this->object->getIterator()->toArray()
+        );
+    }
+
+    public function testRemoveRowOutOfRange(): void
+    {
+        $this->object->appendRow(['name' => 'a']);
+
+        $this->object->removeRow(5);
+        $this->object->removeRow(-1);
+
+        $this->assertEquals([['name' => 'a']], $this->object->getIterator()->toArray());
+    }
+
     public function testAddField()
     {
         $qtd = $this->object->getIterator();
@@ -333,7 +389,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
 
         $filter = IteratorFilter::getInstance()
-            ->and("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LessThan, 40);
 
         $this->assertEquals([
             ['name' => 'jf', 'age' => 15],
@@ -511,7 +567,7 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'jg jr', 'age' => 4]);
 
         $filter = IteratorFilter::getInstance()
-            ->and("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LessThan, 40);
 
         $first = $this->object->getIterator($filter)->first();
 
@@ -557,12 +613,12 @@ class AnyDatasetTest extends TestCase
         $this->object->appendRow(['name' => 'fernanda', 'age' => 45]);
 
         $filter1 = IteratorFilter::getInstance()
-            ->and("age", Relation::LESS_THAN, 40);
+            ->and("age", Relation::LessThan, 40);
 
         $this->assertFalse($this->object->getIterator($filter1)->exists());
 
         $filter2 = IteratorFilter::getInstance()
-            ->and("age", Relation::GREATER_THAN, 40);
+            ->and("age", Relation::GreaterThan, 40);
 
         $this->assertTrue($this->object->getIterator($filter2)->exists());
     }
@@ -624,7 +680,7 @@ class AnyDatasetTest extends TestCase
 
         // Apply filter to get the object
         $filter = IteratorFilter::getInstance()
-            ->and("Name", Relation::EQUAL, "John");
+            ->and("Name", Relation::Equal, "John");
 
         $firstFiltered = $this->object->getIterator($filter)->first();
         $this->assertInstanceOf(ModelPublic::class, $firstFiltered);

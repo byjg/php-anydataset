@@ -10,9 +10,10 @@ With AnyDataset, you can work with various data formats and storage systems usin
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-%23ea4aaa?logo=githubsponsors&logoColor=white&labelColor=0d1117)](https://github.com/sponsors/byjg)
 [![Build Status](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml)
-[![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
+[![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](https://opensource.byjg.com)
+[![Install MCP Server](https://img.shields.io/badge/Install-MCP_Server-8A2BE2?logo=modelcontextprotocol&logoColor=white)](https://opensource.byjg.com/docs/ai/mcpserver-byjg-docs/)
 [![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/php-anydataset/)
-[![GitHub license](https://img.shields.io/github/license/byjg/php-anydataset.svg)](https://opensource.byjg.com/opensource/licensing.html)
+[![GitHub license](https://img.shields.io/github/license/byjg/php-anydataset.svg)](https://opensource.byjg.com/license/)
 [![GitHub release](https://img.shields.io/github/release/byjg/php-anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
 
 It is the core component of the [Anydataset project](https://packagist.org/providers/byjg/anydataset-implementation), an agnostic data source abstraction layer for PHP.
@@ -26,15 +27,13 @@ It is the core component of the [Anydataset project](https://packagist.org/provi
 - **Validation**: Validate your data against rules
 - **Extensible**: Create your own data source implementations
 
-## Quick Start
-
-### Installation
+## Installation
 
 ```bash
 composer require "byjg/anydataset"
 ```
 
-### Basic Usage
+## Quick Start
 
 ```php
 <?php
@@ -58,9 +57,9 @@ foreach ($iterator as $row) {
 - [Iterators](docs/iterators.md) - Different ways to iterate through data
 
 ### Advanced Features
-- [Filtering Results](docs/iteratorfilter.md) - How to filter your data
-- [Formatting Output](docs/rowoutput.md) - Transform your data into different formats
-- [Field Validation](docs/rowvalidator.md) - Validate your data against rules
+- [Filtering Results](docs/iterator-filter.md) - How to filter your data
+- [Formatting Output](docs/row-output.md) - Transform your data into different formats
+- [Field Validation](docs/row-validator.md) - Validate your data against rules
 - [Data Population](docs/populate.md) - Populate objects with data
 
 ## Available Implementations
@@ -85,7 +84,7 @@ foreach ($iterator as $row) {
 ```php
 <?php
 $filter = new \ByJG\AnyDataset\Core\IteratorFilter();
-$filter->addRelation("field1", \ByJG\AnyDataset\Core\Enum\Relation::EQUAL, 10);
+$filter->and("field1", \ByJG\AnyDataset\Core\Enum\Relation::Equal, 10);
 $iterator = $dataset->getIterator($filter);
 ```
 
@@ -93,25 +92,25 @@ $iterator = $dataset->getIterator($filter);
 
 ```php
 <?php
+use ByJG\AnyDataset\Core\Formatter\JsonFormatter;
+use ByJG\AnyDataset\Core\Formatter\XmlFormatter;
+
 $formatter = new XmlFormatter($anydataset->getIterator());
 $formatter->raw();                           // Return a DOM object
 $formatter->toText();                        // Return the XML as a text
 $formatter->saveToFile("/path/to/file.xml"); // Save the XML Text to a file
+
+// JsonFormatter has the same API; raw() returns the json_decode()d value
+$json = (new JsonFormatter($anydataset->getIterator()))->toText();
 ```
 
-## Running Unit Tests
+Both formatters accept a `GenericIterator` or a single `RowInterface`.
+
+## Running Tests
 
 ```bash
 vendor/bin/phpunit
 ```
 
-## Dependencies
-
-```mermaid
-flowchart TD
-    byjg/anydataset --> byjg/serializer
-    byjg/anydataset --> byjg/xmlutil
-```
-
 ----
-[Open source ByJG](http://opensource.byjg.com)
+[Open source ByJG](https://opensource.byjg.com)
