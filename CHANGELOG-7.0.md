@@ -17,6 +17,19 @@ names a case (or reads `->name`) has to be updated.
 
 Not a plain change of casing: `Relation::LESS_OR_EQUAL_THAN` is now `Relation::LessThanOrEqualTo`; `Relation::GREATER_OR_EQUAL_THAN` is now `Relation::GreaterThanOrEqualTo`.
 
+### Removed: `IteratorFilter::addRelation()` and `addRelationOr()`
+
+Deprecated since 5.0. They were aliases: use `and()` and `or()`, which take the same arguments.
+
+```php
+// Before
+$filter->addRelation('field', Relation::Equal, 'value');
+$filter->addRelationOr('field2', Relation::GreaterThan, 10);
+// After
+$filter->and('field', Relation::Equal, 'value');
+$filter->or('field2', Relation::GreaterThan, 10);
+```
+
 ## Bug Fixes
 
 - `AnyDataset::removeRow()` with an index of 2 or more also dropped rows after it (removing

@@ -271,37 +271,11 @@ class IteratorFilter
      * @param mixed $value Field string value
      * @return static
      * @desc Add a single string comparison to filter.
-     * @deprecated use and() instead
-     */
-    public function addRelation(string $name, Relation $relation, mixed $value): static
-    {
-        return $this->and($name, $relation, $value);
-    }
-
-    /**
-     * @param string $name Field name
-     * @param Relation $relation Relation enum
-     * @param mixed $value Field string value
-     * @return static
-     * @desc Add a single string comparison to filter.
      */
     public function and(string $name, Relation $relation, mixed $value = null): static
     {
         $this->filters[] = [self::AND_OPERATOR, $name, $relation, $value];
         return $this;
-    }
-
-    /**
-     * @param string $name Field name
-     * @param Relation $relation Relation enum
-     * @param mixed $value Field string value
-     * @return static
-     * @desc Add a single string comparison to filter. This comparison use the OR operator.
-     * @deprecated use or() instead
-     */
-    public function addRelationOr(string $name, Relation $relation, mixed $value): static
-    {
-        return $this->or($name, $relation, $value);
     }
 
     /**
