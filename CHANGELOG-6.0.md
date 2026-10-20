@@ -13,7 +13,7 @@ Version 6.0 is a major release that focuses on improving code architecture, enha
 - **Enhanced `set()` method**: Added optional `$append` parameter to support appending values to fields
 
 ### Filter Enhancements
-- **New Filter Relations**: Added support for `IsNull` and `IsNotNull` relations in `IteratorFilter` for better null value filtering
+- **New Filter Relations**: Added support for `IS_NULL` and `IS_NOT_NULL` relations in `IteratorFilter` for better null value filtering
 - **Improved Filter Logic**: Refactored `evaluateFilterRecursive()` method by extracting helper methods:
   - `handleCloseGroup()` - Manages closing of filter groups
   - `handleOpenGroup()` - Manages opening of filter groups
