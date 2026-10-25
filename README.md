@@ -1,5 +1,6 @@
 ---
 sidebar_key: anydataset
+sidebar_category: data-access
 tags: [php, anydataset, databases]
 ---
 
