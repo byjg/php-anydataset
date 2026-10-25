@@ -5,8 +5,8 @@ tags: [php, anydataset, databases]
 
 # AnyDataset
 
-AnyDataset is a powerful data source abstraction layer for PHP that provides a **simple and consistent interface** to access different data sources. 
-With AnyDataset, you can work with various data formats and storage systems using the same programming interface.
+Read any data source with the same code: a database, JSON, XML, a CSV or fixed-width file, a NoSQL store.
+Every one of them gives you the same iterator of rows.
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-%23ea4aaa?logo=githubsponsors&logoColor=white&labelColor=0d1117)](https://github.com/sponsors/byjg)
 [![Build Status](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/byjg/php-anydataset/actions/workflows/phpunit.yml)
@@ -17,6 +17,32 @@ With AnyDataset, you can work with various data formats and storage systems usin
 [![GitHub release](https://img.shields.io/github/release/byjg/php-anydataset.svg)](https://github.com/byjg/php-anydataset/releases/)
 
 It is the core component of the [Anydataset project](https://packagist.org/providers/byjg/anydataset-implementation), an agnostic data source abstraction layer for PHP.
+
+## Why
+
+Each kind of data has its own API: a PDO statement, `json_decode()` arrays, SimpleXML,
+an `fgetcsv()` loop, a MongoDB cursor. Code written for one cannot read another, and each
+needs its own loop, filter and conversion.
+
+AnyDataset gives every source the same result: an iterator of `Row` objects.
+
+```php
+$iterator = $executor->getIterator('select * from users');           // database (anydataset-db)
+$iterator = (new JsonDataset($json))->getIterator('/users');         // JSON (anydataset-json)
+$iterator = TextFileDataset::getInstance('users.csv')
+    ->withFieldParser(TextFileDataset::CSVFILE)
+    ->getIterator();                                                 // CSV (anydataset-text)
+
+foreach ($iterator as $row) {
+    echo $row->get('name');
+}
+```
+
+- **Change the source, keep the code.** The loop, `toArray()`, `toEntities()`, `first()`
+  and `exists()` are the same whatever produced the iterator.
+- **One filter, in memory or in SQL.** An `IteratorFilter` filters an in-memory
+  `AnyDataset`, and the same filter becomes the `WHERE` clause of a database query.
+- **Combine sources.** `import()` any iterator into an `AnyDataset` to sort, filter or save it.
 
 ## Key Features
 
