@@ -2,13 +2,53 @@
 
 namespace ByJG\AnyDataset\Core;
 
-use Iterator;
+use IteratorAggregate;
 
 /**
- * @extends Iterator<int|string, mixed>
+ * The rows of a dataset, read forward only.
+ *
+ * A foreach reads the rows through getIterator(); valid(), current(), key() and next() step the same rows by
+ * hand. Both move the same position: a foreach after next() continues from the current row.
+ *
+ * @extends IteratorAggregate<int|string, mixed>
  */
-interface IteratorInterface extends Iterator
+interface IteratorInterface extends IteratorAggregate
 {
+    /**
+     * Whether there is a current row
+     *
+     * @return bool
+     */
+    public function valid(): bool;
+
+    /**
+     * The current row, or null when there is none
+     *
+     * @return mixed
+     */
+    public function current(): mixed;
+
+    /**
+     * The key of the current row
+     *
+     * @return mixed
+     */
+    public function key(): mixed;
+
+    /**
+     * Moves to the next row
+     *
+     * @return void
+     */
+    public function next(): void;
+
+    /**
+     * Does nothing: the rows are read forward only. Get a new iterator from the dataset to read them again.
+     *
+     * @return void
+     */
+    public function rewind(): void;
+
     /**
      * Get an array of the iterator
      *
