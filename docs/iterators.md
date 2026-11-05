@@ -5,7 +5,7 @@ sidebar_label: Iterators
 
 # Iterators
 
-AnyDataset provides several iterator classes and interfaces to help you navigate through your data. These iterators follow the standard PHP `Iterator` interface, making them compatible with PHP's foreach loops and other iterator functions.
+AnyDataset provides several iterator classes and interfaces to help you navigate through your data. These iterators implement PHP's `IteratorAggregate`, so they work with `foreach`, `iterator_to_array()` and `yield from`, and they also have `valid()`, `current()`, `key()` and `next()` to step the rows by hand.
 
 ## Iterator Interfaces
 
@@ -14,8 +14,15 @@ AnyDataset provides several iterator classes and interfaces to help you navigate
 The base interface for all iterators in AnyDataset:
 
 ```php
-interface IteratorInterface extends Iterator
+interface IteratorInterface extends IteratorAggregate
 {
+    // Step the rows by hand (a foreach uses getIterator())
+    public function valid(): bool;
+    public function current(): mixed;
+    public function key(): mixed;
+    public function next(): void;
+    public function rewind(): void; // does nothing: forward only
+
     /**
      * Get an array representation of the iterator.
      */
@@ -52,23 +59,60 @@ interface IteratorInterface extends Iterator
 
 ### GenericIterator
 
-An abstract base class that implements both `IteratorInterface` and PHP's `Iterator` interface:
+The abstract base class of every iterator. A subclass only returns the generator of its rows in `rows()`:
 
 ```php
 abstract class GenericIterator implements IteratorInterface
 {
+    // The generator of the rows, from a static function (see below)
+    abstract protected function rows(): Generator;
+
+    // A foreach runs on the generators themselves: there is no PHP method call for each row
+    public function getIterator(): Generator;
+
+    public function valid(): bool;
+    public function current(): mixed;
+    public function key(): mixed;
+    public function next(): void;
+    public function rewind(): void; // does nothing
+
     public function toArray(array $fields = []): array;
-    
-    // Abstract methods that must be implemented by subclasses
-    abstract public function key(): mixed;
-    abstract public function current(): mixed;
-    abstract public function next(): void;
-    abstract public function valid(): bool;
-    
-    // Implemented method
-    public function rewind(): void;
+    // toEntities(), first(), firstOrFail(), exists(), existsOrFail()
 }
 ```
+
+The iterators move forward only: `rewind()` does nothing, because sources like a database cursor or a file
+handle cannot go back. A `foreach` continues from the current row: after `next()`, or after another `foreach`
+stopped with `break`. An iterator already walked has no more rows. To read the rows again, get a new iterator
+from the dataset (`getIterator()`).
+
+`rows()` must return the generator of a **static** function, not `yield` itself:
+
+```php
+class MyIterator extends GenericIterator
+{
+    public function __construct(private array $items)
+    {
+    }
+
+    protected function rows(): Generator
+    {
+        return self::walk($this->items);
+    }
+
+    private static function walk(array $items): Generator
+    {
+        foreach ($items as $item) {
+            yield new Row($item);
+        }
+    }
+}
+```
+
+A generator of a method keeps the iterator while it is not finished, and the iterator keeps the generator: the
+iterator would stay in memory, with its file or cursor open, until the garbage collector finds the cycle. From a
+static function, the generator is destroyed with the iterator, and a `finally` in it releases what it opened
+(`first()`, a `foreach` with `break`...). A `rows()` that yields itself throws `LogicException`.
 
 ### AnyIterator
 
@@ -78,10 +122,6 @@ A concrete implementation of `GenericIterator` that works with arrays of `Row` o
 class AnyIterator extends GenericIterator
 {
     public function __construct(array $list);
-    public function key(): mixed;
-    public function current(): mixed;
-    public function next(): void;
-    public function valid(): bool;
 }
 ```
 
@@ -103,8 +143,8 @@ while ($iterator->valid()) {
     $iterator->next();
 }
 
-// Or using foreach (preferred)
-foreach ($iterator as $row) {
+// Or using foreach (preferred), with a new iterator: the one above has no more rows
+foreach ($dataset->getIterator() as $row) {
     echo $row->get('name') . "\n";
 }
 ```

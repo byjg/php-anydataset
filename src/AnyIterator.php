@@ -2,8 +2,8 @@
 
 namespace ByJG\AnyDataset\Core;
 
+use Generator;
 use Override;
-use ReturnTypeWillChange;
 
 /**
  * Iterator class is a structure used to navigate forward in a AnyDataset structure.
@@ -13,15 +13,9 @@ class AnyIterator extends GenericIterator
 
     /**
      * Row Elements
-     * @var array
+     * @var RowInterface[]
      */
     private array $list;
-
-    /**
-     * Current row number
-     * @var int
-     */
-    private int $curRow;
 
     /**
      * Iterator constructor
@@ -30,41 +24,20 @@ class AnyIterator extends GenericIterator
      */
     public function __construct(array $list)
     {
-        $this->curRow = 0;
         $this->list = $list;
     }
 
-    /**
-     * @inheritDoc
-     */
     #[Override]
-    #[ReturnTypeWillChange]
-    public function key(): mixed
+    protected function rows(): Generator
     {
-        return $this->curRow;
+        return self::walk(array_values($this->list));
     }
 
     /**
-     * @inheritDoc
+     * @param RowInterface[] $list
      */
-    #[Override]
-    #[ReturnTypeWillChange]
-    public function current(): mixed
+    private static function walk(array $list): Generator
     {
-        return $this->list[$this->curRow] ?? null;
-    }
-
-    #[Override]
-    #[ReturnTypeWillChange]
-    public function next(): void
-    {
-        $this->curRow++;
-    }
-
-    #[Override]
-    #[ReturnTypeWillChange]
-    public function valid(): bool
-    {
-        return $this->curRow < count($this->list);
+        yield from $list;
     }
 }
