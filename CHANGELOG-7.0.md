@@ -30,6 +30,85 @@ $filter->and('field', Relation::Equal, 'value');
 $filter->or('field2', Relation::GreaterThan, 10);
 ```
 
+### `IteratorInterface` is an `IteratorAggregate`, not an `Iterator`
+
+The iterators are built on generators: a `foreach` runs on the generator itself, with no PHP
+method call for each row (see Performance). `IteratorInterface` extends `IteratorAggregate`
+instead of `Iterator`, and still declares `valid()`, `current()`, `key()`, `next()` and
+`rewind()` to step the rows by hand.
+
+| | 6.x | 7.0 |
+|---|---|---|
+| `foreach`, `iterator_to_array()`, `yield from` | works | works |
+| `valid()`, `current()`, `key()`, `next()`, `first()`, `exists()`, `toArray()`, `toEntities()` | works | works |
+| `$iterator instanceof \Iterator` | `true` | `false` (`instanceof \Traversable` is `true`) |
+| `new LimitIterator($iterator)`, `CachingIterator`, any wrapper that requires an `Iterator` | works | `TypeError`: wrap it with `new IteratorIterator($iterator)` |
+
+Only code that type-checks or wraps the iterator as an `Iterator` has to change.
+
+### A `GenericIterator` subclass implements `rows()`
+
+`GenericIterator` is the base of every iterator. A subclass no longer implements `key()`,
+`current()`, `next()` and `valid()`: it returns the generator of its rows from `rows()`, and that
+generator must come from a **static** function.
+
+```php
+// Before (6.x)
+class MyIterator extends GenericIterator
+{
+    private int $index = 0;
+    public function __construct(private array $items) {}
+    public function current(): mixed { return new Row($this->items[$this->index]); }
+    public function key(): mixed { return $this->index; }
+    public function next(): void { $this->index++; }
+    public function valid(): bool { return $this->index < count($this->items); }
+}
+
+// After (7.0)
+class MyIterator extends GenericIterator
+{
+    public function __construct(private array $items) {}
+
+    protected function rows(): Generator
+    {
+        return self::walk($this->items);
+    }
+
+    private static function walk(array $items): Generator
+    {
+        foreach ($items as $item) {
+            yield new Row($item);
+        }
+    }
+}
+```
+
+A generator of a method keeps the iterator (`$this`) while it is not finished, and the iterator
+keeps the generator: a partly read iterator (`first()`, a `foreach` with `break`) would stay in
+memory, with its file or database cursor open, until the garbage collector found the cycle. From
+a static function, the generator is destroyed with the iterator, and a `finally` in it releases
+what it opened. A `rows()` that yields itself throws `LogicException`.
+
+### The iterators move forward only
+
+`rewind()` does nothing (as it already did for the database and file iterators): a `foreach`
+continues from the current row, after `next()` or after another `foreach` stopped with `break`,
+and an iterator already walked has no more rows. To read the rows again, get a new iterator from
+the dataset (`getIterator()`).
+
+```php
+$iterator = $dataset->getIterator();
+$first = $iterator->current();   // reads the first row, does not move
+foreach ($iterator as $row) {}   // starts at that same first row
+foreach ($iterator as $row) {}   // no rows: get a new iterator to read them again
+```
+
+## Performance
+
+- Iterating is faster: a `foreach` runs on the generators, not on `valid()`/`current()`/`next()`
+  of the iterator object. `AnyIterator` over 200,000 rows: ~46 ms in 6.x, ~27 ms in 7.0
+  (PHP 8.5, Xdebug off).
+
 ## Bug Fixes
 
 - `AnyDataset::removeRow()` with an index of 2 or more also dropped rows after it (removing

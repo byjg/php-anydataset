@@ -114,6 +114,8 @@ iterator would stay in memory, with its file or cursor open, until the garbage c
 static function, the generator is destroyed with the iterator, and a `finally` in it releases what it opened
 (`first()`, a `foreach` with `break`...). A `rows()` that yields itself throws `LogicException`.
 
+A complete example, with a file opened and closed: [How to write your own dataset and iterator](custom-iterator.md).
+
 ### AnyIterator
 
 A concrete implementation of `GenericIterator` that works with arrays of `Row` objects:
@@ -148,6 +150,53 @@ foreach ($dataset->getIterator() as $row) {
     echo $row->get('name') . "\n";
 }
 ```
+
+### Reading forward only
+
+An iterator reads its rows once, from the first to the last, like the database cursor or the file it may be
+reading. `rewind()` does nothing. What that means in practice, with rows `John`, `Mary`, `Ana`:
+
+```php
+<?php
+// Look at the first row, then loop: the loop starts at that same row
+$iterator = $dataset->getIterator();
+$first = $iterator->current();                 // John (reading it does not move)
+foreach ($iterator as $row) { /* John, Mary, Ana */ }
+
+// Stop, then continue: a foreach starts where the iterator is
+$iterator = $dataset->getIterator();
+foreach ($iterator as $row) {
+    if ($row->get('name') === 'Mary') {
+        break;
+    }
+}
+foreach ($iterator as $row) { /* Mary, Ana */ }
+
+// After the last row there is nothing more: ask the dataset for a new iterator
+$iterator = $dataset->getIterator();
+$iterator->toArray();                          // the 3 rows
+$iterator->toArray();                          // []
+$dataset->getIterator()->toArray();            // the 3 rows again
+```
+
+- **Stopping early releases the source.** A database cursor or a file is released at the last row, or as soon
+  as the iterator is dropped: after `first()`, `exists()`, `getScalar()`, or a `foreach` with `break`, once the
+  iterator goes out of scope.
+- **Large results:** walk them with `foreach`, which keeps one row at a time; `toArray()` and `toEntities()`
+  load all the rows.
+- **SPL wrappers:** the iterators are an `IteratorAggregate` (a `Traversable`), not an `Iterator`. A wrapper
+  that requires an `Iterator` takes them through `IteratorIterator`:
+
+```php
+<?php
+// Rows 2 and 3 only
+foreach (new LimitIterator(new IteratorIterator($dataset->getIterator()), 1, 2) as $row) {
+    // Mary, Ana
+}
+```
+
+To read a source of your own with an iterator, see
+[How to write your own dataset and iterator](custom-iterator.md).
 
 ### Filtered Iteration
 

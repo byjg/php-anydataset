@@ -88,6 +88,7 @@ foreach ($iterator as $row) {
 - [Formatting Output](docs/row-output.md) - Transform your data into different formats
 - [Field Validation](docs/row-validator.md) - Validate your data against rules
 - [Data Population](docs/populate.md) - Populate objects with data
+- [Writing your own iterator](docs/custom-iterator.md) - How to read another source with a dataset and an iterator
 
 ## Available Implementations
 
